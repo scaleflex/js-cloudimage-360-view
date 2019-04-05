@@ -1,0 +1,50 @@
+{
+  "name": "js-cloudimage-360-view",
+  "version": "0.0.2",
+  "main": "dist/index.js",
+  "description": "",
+  "author": "scaleflex",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scaleflex/js-cloudimage-360-view"
+  },
+  "homepage": "#readme",
+  "keywords": [
+    "image",
+    "images",
+    "cloudimage"
+  ],
+  "scripts": {
+    "start-demo": "webpack-dev-server --mode development --config config/webpack-demo.config.js",
+    "clean-build": "rm -rf build",
+    "build": "npm run clean-build && webpack --mode production --config config/webpack-build.config.js",
+    "clean-dist": "rm -rf dist",
+    "dist": "npm run clean-dist && babel src -d dist --copy-files",
+    "clean-demo": "rm -rf examples/dist",
+    "build-demo": "npm run clean-demo && webpack --mode production  --config config/webpack-demo.config.js",
+    "deploy-demo": "gh-pages -d examples/dist",
+    "publish-demo": "npm run build-demo && npm run deploy-demo"
+  },
+  "dependencies": {
+    "core-js": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-array-includes": "^2.0.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-minify": "^0.5.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^2.1.1",
+    "gh-pages": "^2.0.1",
+    "highlight.js": "^9.15.6",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1"
+  }
+}
