@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <style>.on-load {
+    display: none
+  }
+
+  .spinner-grow {
+    color: #343a40 !important;
+    display: inline-block;
+    vertical-align: text-bottom;
+    background-color: currentColor;
+    border-radius: 50%;
+    opacity: 0;
+    -webkit-animation: spinner-grow .75s linear infinite;
+    animation: spinner-grow .75s linear infinite;
+    width: 100px;
+    height: 100px;
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+  }
+  </style>
+  <title>JS-cloudimage-360-view</title>
+</head>
+<body>
+<div id="spinner" class="spinner-grow text-dark" role="status"></div>
+
+<div id="main" class="wrapper" style="visibility: hidden;">
+  <section class="home">
+    <div class="container">
+      <a class="logo" href="https://scaleflex.github.io/js-cloudimage-360-view/">js-cloudimage-360-view</a>
+      <div style="margin-top: 10px;">
+        <a class="github-button" target="_blank"
+           href="https://github.com/Scaleflex/js-cloudimage-360-view/subscription" data-icon="octicon-eye"
+           aria-label="Watch Scaleflex/js-cloudimage-360-view on GitHub">Watch</a>
+        <a class="github-button" target="_blank" href="https://github.com/Scaleflex/js-cloudimage-360-view"
+           data-icon="octicon-star" aria-label="Star Scaleflex/js-cloudimage-360-view on GitHub">Star</a>
+        <a class="github-button" target="_blank" href="https://github.com/Scaleflex/js-cloudimage-360-view/fork"
+           data-icon="octicon-repo-forked" aria-label="Fork Scaleflex/js-cloudimage-360-view on GitHub">Fork</a>
+        <a class="twitter-share-button btn btn-info" target="_blank"
+           href="https://twitter.com/intent/tweet?text=Engage%20your%20customers%20with%20a%20stunning%20360%20viewvof%20your%20products&url=https://scaleflex.github.io/js-cloudimage-360-view/&via=cloudimage&hashtags=images,cloudimage">
+          <i> </i>
+          <span>Tweet</span>
+        </a>
+        <!--<a class="github-button" href="https://github.com/Scaleflex/filerobot-uploader/archive/master.zip" data-icon="octicon-cloud-download" aria-label="Download Scaleflex/filerobot-uploader on GitHub">Download</a>-->
+      </div>
+      <h1>Show every detail from any angle</h1>
+      <h2>Engage your customers with a stunning <strong>360 view of your products</strong></h2>
+
+
+      <div class="actions-wrapper">
+        <a
+           id="view-github-btn"
+           href="https://github.com/scaleflex/js-cloudimage-360-view"
+           class="btn btn-primary"
+           target="_blank"
+        >View on GitHub</a>
+        <a
+           href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"
+           class="btn btn-light"
+           target="_blank"
+        >Edit on CodeSandbox</a>
+        <!--<a href="#" class="btn btn-light btn-lg">Read on Medium</a>-->
+      </div>
+    </div>
+
+    <a href="https://github.com/scaleflex/js-cloudimage-360-view" target="_blank">
+      <img
+         class="fork-me-on-github"
+         src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
+         alt="Fork me on GitHub">
+    </a>
+
+    <a href="https://www.filerobot.com/" class="robot-icon">
+      <img style="width:100%;" id="robot-icon"
+           src="https://demo.cloudimg.io/width/800/q35.foil1/https://scaleflex.airstore.io/filerobot/assets/robot-icon-left.png"
+           alt="">
+    </a>
+  </section>
+
+  <!--<div style="max-width: 1000px;">-->
+  <!--<div-->
+  <!--class="cloudimage-360"-->
+  <!--data-folder="https://scaleflex.airstore.io/demo/360/"-->
+  <!--data-filename="chair_{index}.jpg"-->
+  <!--data-amount="72"-->
+  <!--&gt;</div>-->
+  <!--</div>-->
+  <section class="main-360-spin">
+    <div
+       class="cloudimage-360"
+       data-folder="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car/"
+       data-filename="iris-{index}.jpeg"
+       data-amount="36"
+       data-bottom-circle
+       data-bottom-circle-offset="5"
+       data-keys
+       data-autoplay
+       data-box-shadow="inset 0 0 100px #222"
+    ></div>
+    <p class="view-360-capture">36 images, autoplay, bottom 360 view circle, arrow keys support, inner box shadow</p>
+  </section>
+
+  <section class="container ready-to-start">
+    <h2 class="text-center">More examples</h2>
+
+    <p>A simple, interactive resource that can be used to provide a virtual tour of your product.</p>
+
+    <div class="row" style="margin-top: 40px;">
+      <div class="col-md-6">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360/"
+             data-filename="chair_{index}.jpg"
+             data-amount="72"
+          ></div>
+        </div>
+        <p class="view-360-capture">72 images</p>
+      </div>
+      <div class="col-md-6">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360-chair-36/"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+          ></div>
+        </div>
+        <p class="view-360-capture">36 images</p>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 40px;">
+      <div class="col-md-6">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360-chair-36/"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+          ></div>
+        </div>
+        <p class="view-360-capture">36 images, bottom 360 view circle</p>
+      </div>
+      <div class="col-md-6">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360-chair-36/"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+             data-box-shadow="inset 0 0 100px #222"
+          ></div>
+        </div>
+        <p class="view-360-capture">36 images, bottom 360 view circle, box-shadow</p>
+      </div>
+      <div class="row" style="margin-top: 40px;">
+        <div class="col-md-4">
+          <div style="max-width: 1000px;">
+            <div
+               class="cloudimage-360"
+               data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360/"
+               data-filename="chair_{index}.jpg"
+               data-amount="72"
+               data-bottom-circle
+               data-bottom-circle-offset="2"
+               data-autoplay
+               data-speed="150"
+            ></div>
+          </div>
+          <p class="view-360-capture">72 images, bottom 360 view circle, autoplay</p>
+        </div>
+        <div class="col-md-4">
+          <div style="max-width: 1000px;">
+            <div
+               class="cloudimage-360"
+               data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360-chair-36/"
+               data-filename="chair_{index}.jpg"
+               data-amount="36"
+               data-bottom-circle
+               data-bottom-circle-offset="2"
+               data-autoplay
+               data-speed="150"
+            ></div>
+          </div>
+          <p class="view-360-capture">36 images, bottom 360 view circle, autoplay</p>
+        </div>
+        <div class="col-md-4">
+          <div style="max-width: 1000px;">
+            <div
+               class="cloudimage-360"
+               data-folder="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/360-chair-36/"
+               data-filename="chair_{index}.jpg"
+               data-amount="36"
+               data-bottom-circle
+               data-bottom-circle-offset="2"
+               data-autoplay
+               data-autoplay-reverse
+               data-speed="150"
+            ></div>
+          </div>
+          <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, autoplay reverse</p>
+        </div>
+    </div>
+  </section>
+
+  <section class="container ready-to-start">
+    <h2 class="text-center">Ready to get started?</h2>
+  </section>
+
+  <section class="container">
+    <div id="js-version-box" class="">
+      <div class="action-wrapper first-action">
+        <p>Include the following script into your project after all content in body tag</p>
+        <figure class="highlight">
+        <pre><code class="javascript">
+&lt;script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v0.0.2.min.js"&gt;&lt;/script&gt;
+</code></pre>
+        </figure>
+      </div>
+
+      <div class="action-wrapper second-action">
+        <p>
+          Configure 360 view component with class="cloudimage-360", folder path, filename, and amount of images
+        </p>
+        <figure class="highlight">
+        <pre><code class="javascript">&lt;div&gt;
+   class="cloudimage-360"
+   data-folder="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car/"
+   data-filename="iris-{index}.jpeg"
+   data-amount="36"
+&gt;&lt;/div&gt;</code></pre>
+        </figure>
+      </div>
+
+      <div class="action-wrapper third-action">
+        <p>
+          …and you're done!
+          <a href="https://github.com/scaleflex/js-cloudimage-360-view#table-of-contents" target="_blank">
+            Visit the full documentation here.
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section style="text-align: center;">
+    <div class="container ready-to-start">
+      <h2>Any questions?</h2>
+      <p>
+        Contact us at <a href="mailto:hello@cloudimage.io">hello@cloudimage.io</a>, our experts will be happy to help!
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div style="background: #fff">
+      <section class="container ready-to-start filerobot-ui-family">
+        <div class="row">
+          <div class="col-sm-3 filerobot-ui-family-label" style="max-width: 200px; min-width: 200px;">
+            <h5>Filerobot UI family:</h5>
+          </div>
+          <div class="col-sm-9 filerobot-ui-family-libs" style="max-width: calc(100% - 200px);">
+            <ul>
+              <li><a target="_blank" href="https://github.com/scaleflex/react-cloudimage-responsive">React Cloudimage
+                Responsive</a></li>
+              <li><a target="_blank" href="https://github.com/scaleflex/ng-cloudimage-responsive">Angular Cloudimage
+                Responsive</a></li>
+              <li><a target="_blank" href="https://github.com/scaleflex/filerobot-uploader">Uploader</a></li>
+              <li><a target="_blank" href="https://github.com/scaleflex/filerobot-image-editor">Image Editor</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+    <hr/>
+    <div class="copyright">
+      <div class="container">
+        <div class="row">
+          <div class="team-desc col-sm-8">
+            <div>Made with ❤ in 2019 in Paris, Munich and Sofia by the Scaleflex team, the guys behind <a
+               href="https://www.cloudimage.io/en/home" target="_blank">Cloudimage.io</a>.
+            </div>
+            <div style="margin-top: 10px;">Powered by <a href="https://www.scaleflex.it/en/home" target="_blank">Scaleflex
+              team</a>.
+              All rights reserved.
+            </div>
+          </div>
+          <div class="footer-menu col-sm-4">
+            <ul>
+              <li><a href="https://github.com/scaleflex/js-cloudimage-360-view" target="_blank">View GitHub</a></li>
+              <li><a href="https://github.com/scaleflex/js-cloudimage-360-view/issues" target="_blank">Current
+                Issues</a>
+              </li>
+              <li><a href="https://github.com/scaleflex/js-cloudimage-360-view#table-of-contents" target="_blank">Documentation</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+<script type="text/javascript" src="bundlef3808188e30009533510.js"></script></body>
+</html>
