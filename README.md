@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v0.0.1-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v0.0.3-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -60,7 +60,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v0.0.2.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v0.0.3.min.js"></script>
 ```
 
 or using npm
@@ -120,6 +120,24 @@ Support for 360 spin by pressing arrow keys on keyboard.
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Autoplay 360 spin view on load.
+
+### data-full-screen (or full-screen)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+Open 360 spin view in full screen modal.
+
+### data-magnifier (or magnifier)
+
+###### Type: **Number** | Default: **none** | _optional_
+
+Magnifier to zoom image.
+
+### data-ratio (or ratio)
+
+###### Type: **Number** (height / width) | Default: **none** | _optional_
+
+Prevents page from jumping.
 
 ### data-autoplay-reverse (or autoplay-reverse)
 

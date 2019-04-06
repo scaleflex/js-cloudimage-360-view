@@ -8,7 +8,11 @@ const get360ViewProps = (image) => ({
   autoplay: (attr(image, 'autoplay') !== null) || (attr(image, 'data-autoplay') !== null),
   autoplayReverse: (attr(image, 'autoplay-reverse') !== null) || (attr(image, 'data-autoplay-reverse') !== null),
   bottomCircle: (attr(image, 'bottom-circle') !== null) || (attr(image, 'data-bottom-circle') !== null),
-  bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10)
+  fullScreen: (attr(image, 'full-screen') !== null) || (attr(image, 'data-full-screen') !== null),
+  magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
+  parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
+  bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
+  ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false
 });
 
 const attr = (element, attribute) => element.getAttribute(attribute);
@@ -26,13 +30,13 @@ const set360ViewIconStyles = (view360Icon) => {
   view360Icon.style.borderRadius = '50%';
   view360Icon.style.boxShadow = 'rgb(255, 255, 255, 0.5) 0px 0px 4px';
   view360Icon.style.transition = '0.5s all';
-  view360Icon.style.color = 'rgb(164,164,164)';
+  view360Icon.style.color = 'rgb(80,80,80)';
   view360Icon.style.textAlign = 'center';
   view360Icon.style.lineHeight = '100px';
 };
 
 const setView360Icon = (view360Icon) => {
-  view360Icon.style.background = `rgba(255,255,255,0.8) url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMS4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMDAgMTAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojQjNCM0IzO30NCjwvc3R5bGU+DQo8Zz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzQuMywzNC4yTDMyLDMzLjdjMC43LTIuMywyLjQtMy41LDQuOS0zLjVjMS41LDAsMi42LDAuMywzLjQsMWMwLjgsMC43LDEuMywxLjYsMS4zLDIuOA0KCQljMCwxLjUtMC44LDIuNi0yLjUsMy4yYzIsMC41LDIuOSwxLjYsMi45LDMuNWMwLDEuMy0wLjUsMi40LTEuNSwzLjFjLTEsMC44LTIuMiwxLjEtMy43LDEuMWMtMS40LDAtMi41LTAuMy0zLjUtMC45DQoJCWMtMS0wLjYtMS42LTEuNi0xLjgtMi45bDIuMy0wLjVjMC40LDEuNiwxLjQsMi40LDIuOSwyLjRjMC43LDAsMS4zLTAuMiwxLjgtMC42YzAuNS0wLjQsMC44LTEuMSwwLjgtMS45YzAtMC43LTAuMi0xLjMtMC43LTEuNw0KCQljLTAuNS0wLjQtMS4zLTAuNy0yLjUtMC43aC0xdi0xLjdoMWMwLjcsMCwxLjItMC4xLDEuNi0wLjJzMC43LTAuMywwLjktMC43czAuNC0wLjgsMC40LTEuNGMwLTAuNy0wLjItMS4yLTAuNi0xLjYNCgkJQzM4LDMyLjIsMzcuNSwzMiwzNi44LDMyQzM1LjUsMzIsMzQuNiwzMi43LDM0LjMsMzQuMnoiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTQuOCwzMy43bC0yLjIsMC42Yy0wLjQtMS41LTEuMi0yLjMtMi40LTIuM2MtMSwwLTEuNywwLjUtMi4yLDEuNHMtMC43LDIuMy0wLjgsNC4yYzAuNy0xLjQsMS44LTIuMSwzLjQtMi4xDQoJCWMxLjIsMCwyLjMsMC40LDMuMSwxLjNzMS4zLDIsMS4zLDMuNGMwLDEuNS0wLjUsMi42LTEuNCwzLjVjLTAuOSwwLjktMi4xLDEuMy0zLjYsMS4zYy0xLjYsMC0yLjktMC42LTMuOC0xLjcNCgkJYy0xLTEuMS0xLjUtMi45LTEuNS01LjRjMC0yLjUsMC41LTQuNCwxLjUtNS44YzEtMS4zLDIuMy0yLDQtMmMxLjEsMCwyLjEsMC4zLDIuOSwwLjhDNTMuOSwzMS42LDU0LjUsMzIuNSw1NC44LDMzLjd6IE01Mi40LDQwLjMNCgkJYzAtMS0wLjItMS43LTAuNi0yLjJjLTAuNC0wLjUtMS0wLjctMS43LTAuN2MtMC44LDAtMS41LDAuMy0xLjksMC44Yy0wLjQsMC42LTAuNywxLjItMC43LDIuMWMwLDAuOCwwLjIsMS41LDAuNywyLjENCgkJYzAuNSwwLjUsMS4xLDAuOCwxLjksMC44QzUxLjYsNDMuMiw1Mi40LDQyLjIsNTIuNCw0MC4zeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik02Ny4xLDM3LjVjMCwyLjctMC40LDQuNi0xLjMsNS44Yy0wLjksMS4yLTIuMiwxLjgtMy45LDEuOGMtMy41LDAtNS4yLTIuNC01LjItNy4zYzAtMi43LDAuNC00LjYsMS4zLTUuOA0KCQljMC45LTEuMiwyLjItMS44LDMuOS0xLjhDNjUuMywzMC4yLDY3LjEsMzIuNiw2Ny4xLDM3LjV6IE02NC4zLDM3LjZjMC0yLjEtMC4yLTMuNi0wLjYtNC40Yy0wLjQtMC44LTEtMS4zLTEuOS0xLjMNCgkJYy0wLjgsMC0xLjQsMC40LTEuOSwxLjJzLTAuNiwyLjMtMC42LDQuNGMwLDIuMywwLjIsMy44LDAuNyw0LjZzMS4xLDEuMSwxLjgsMS4xYzAuOCwwLDEuNS0wLjQsMS45LTEuMw0KCQlDNjQuMSw0MS4yLDY0LjMsMzkuNyw2NC4zLDM3LjZ6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTc1LDMzLjZjMCwwLjktMC4zLDEuNy0xLDIuNGMtMC43LDAuNy0xLjQsMS0yLjMsMWMtMC45LDAtMS43LTAuMy0yLjMtMXMtMS0xLjQtMS0yLjRjMC0wLjksMC4zLTEuNywxLTIuNA0KCQljMC42LTAuNywxLjQtMSwyLjMtMWMwLjksMCwxLjcsMC4zLDIuMywxUzc1LDMyLjYsNzUsMzMuNnogTTczLjMsMzMuNmMwLTAuNi0wLjItMS0wLjUtMS40Yy0wLjMtMC40LTAuNy0wLjUtMS4yLTAuNQ0KCQljLTAuNSwwLTAuOCwwLjItMS4yLDAuNlM3MCwzMyw3MCwzMy42YzAsMC41LDAuMiwxLDAuNSwxLjRjMC4zLDAuNCwwLjcsMC42LDEuMiwwLjZjMC40LDAsMC44LTAuMiwxLjItMC42UzczLjMsMzQuMSw3My4zLDMzLjZ6Ig0KCQkvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zOC42LDUwLjJoMS43bDEuNiw1LjVsMS42LTUuNWgxLjVsLTIuNCw3LjdoLTEuNkwzOC42LDUwLjJ6Ii8+DQoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTQ3LjgsNDkuMmgtMS45di0xLjdoMS45VjQ5LjJ6IE00Niw1MC4yaDEuOHY3LjdINDZWNTAuMnoiLz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTYuMSw1NC4zaC00LjljMCwxLDAuMiwxLjcsMC41LDIuMWMwLjMsMC4zLDAuNywwLjUsMS4yLDAuNWMwLjgsMCwxLjMtMC41LDEuNS0xLjRsMS42LDAuMg0KCQljLTAuNCwxLjYtMS41LDIuNC0zLjIsMi40Yy0xLDAtMS45LTAuMy0yLjUtMXMtMC45LTEuNi0wLjktMi45YzAtMS4zLDAuMy0yLjMsMC45LTMuMXMxLjUtMS4xLDIuNS0xLjFjMC43LDAsMS4zLDAuMiwxLjgsMC41DQoJCWMwLjUsMC40LDAuOCwwLjgsMS4xLDEuNEM1NS45LDUyLjUsNTYuMSw1My4zLDU2LjEsNTQuM3ogTTU0LjMsNTMuMmMwLTEuNC0wLjUtMi0xLjUtMmMtMC45LDAtMS40LDAuNy0xLjUsMkg1NC4zeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik01Ni41LDUwLjJoMS43bDEuMyw1LjNsMS4yLTUuM2gxLjZsMS4yLDUuM2wxLjQtNS4zaDEuNGwtMi4xLDcuN2gtMS41bC0xLjMtNS4zbC0xLjIsNS4zaC0xLjVMNTYuNSw1MC4yeiIvPg0KPC9nPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTI4LjQsNDUuN1Y1MGMwLDAtMTMsNS4yLDQuMywxMS4yYzAsMCw5LjUsMi42LDE5LDIuNnYtMy41bDEzLDYuMWwtMTMsNi45VjY5YzAsMC0zMy43LDAtMzMuNy0xMw0KCUMxOCw1NiwxOCw0OS4xLDI4LjQsNDUuN3oiLz4NCjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik02Ni40LDYwLjRjMC45LDAsMTAuNC0yLjYsMTAuNC02LjlzLTMuNS01LjItMy41LTUuMnYtMi42YzAsMCw4LjYsMS43LDguNiw5LjVjMCwwLDAsNi41LTkuNSw5LjVMNjYuNCw2MC40eiINCgkvPg0KPC9zdmc+DQo=') 50% 50% / contain no-repeat`;
+  view360Icon.style.background = `rgba(255,255,255,0.8) url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg') 50% 50% / contain no-repeat`;
 }
 
 const set360ViewCircleIconStyles = (view360CircleIcon, bottomCircleOffset) => {
@@ -69,7 +73,135 @@ const setBoxShadowStyles = (boxShadow, boxShadowValue) => {
   boxShadow.style.right = '0';
   boxShadow.style.bottom = '0';
   boxShadow.style.boxShadow = boxShadowValue;
-}
+};
+
+const setFullScreenImageStyles = (image, src, index) => {
+  image.style.background = `url('${src}') 50% 50% / contain no-repeat`;
+  image.style.width = '100%';
+  image.style.height = '100%';
+  image.style.margin = 'auto';
+  image.style.display = index === 0 ? 'block' : 'none';
+};
+
+const setMagnifyIconStyles = (magnifyIcon, fullScreen) => {
+  magnifyIcon.style.position = 'absolute';
+  magnifyIcon.style.top = fullScreen ? '35px' : '5px';
+  magnifyIcon.style.right = '5px';
+  magnifyIcon.style.width = '25px';
+  magnifyIcon.style.height = '25px';
+  magnifyIcon.style.zIndex = '101';
+  magnifyIcon.style.cursor = 'pointer';
+  magnifyIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% / cover no-repeat`;
+};
+
+const setFullScreenModalStyles = (fullScreenModal) => {
+  fullScreenModal.style.position = 'fixed';
+  fullScreenModal.style.top = '0';
+  fullScreenModal.style.bottom = '0';
+  fullScreenModal.style.left = '0';
+  fullScreenModal.style.right = '0';
+  fullScreenModal.style.width = '100%';
+  fullScreenModal.style.height = '100%';
+  fullScreenModal.style.zIndex = '999';
+  fullScreenModal.style.background = '#fff';
+};
+
+const setFullScreenIconStyles = (fullScreenIcon) => {
+  fullScreenIcon.style.position = 'absolute';
+  fullScreenIcon.style.top = '5px';
+  fullScreenIcon.style.right = '5px';
+  fullScreenIcon.style.width = '25px';
+  fullScreenIcon.style.height = '25px';
+  fullScreenIcon.style.zIndex = '101';
+  fullScreenIcon.style.cursor = 'pointer';
+  fullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
+};
+
+const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
+  closeFullScreenIcon.style.position = 'absolute';
+  closeFullScreenIcon.style.top = '5px';
+  closeFullScreenIcon.style.right = '5px';
+  closeFullScreenIcon.style.width = '25px';
+  closeFullScreenIcon.style.height = '25px';
+  closeFullScreenIcon.style.zIndex = '101';
+  closeFullScreenIcon.style.cursor = 'pointer';
+  closeFullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat`;
+};
+
+const magnify = (container, img, src, glass, zoom) => {
+  let w, h, bw;
+  glass.setAttribute("class", "img-magnifier-glass");
+  container.prepend(glass);
+
+  glass.style.backgroundImage = "url('" + src + "')";
+  glass.style.backgroundRepeat = "no-repeat";
+  glass.style.backgroundSize = (container.offsetWidth * zoom) + "px " + (container.offsetHeight * zoom) + "px";
+  glass.style.position = 'absolute';
+  glass.style.border = '3px solid #000';
+  glass.style.borderRadius = '50%';
+  glass.style.cursor = 'none';
+  glass.style.zIndex = '1000';
+
+  glass.style.width = '250px';
+  glass.style.height = '250px';
+  glass.style.top = '-75px';
+  glass.style.right = '-85px';
+
+  bw = 3;
+  w = glass.offsetWidth / 2;
+  h = glass.offsetHeight / 2;
+
+  glass.addEventListener("mousemove", moveMagnifier);
+  container.addEventListener("mousemove", moveMagnifier);
+
+  glass.addEventListener("touchmove", moveMagnifier);
+  container.addEventListener("touchmove", moveMagnifier);
+
+  function moveMagnifier(e) {
+    let pos, x, y;
+
+    e.preventDefault();
+
+    pos = getCursorPos(e);
+    x = pos.x;
+    y = pos.y;
+
+    if (x > container.offsetWidth - (w / zoom)) {
+      x = container.offsetWidth - (w / zoom);
+    }
+
+    if (x < w / zoom) {
+      x = w / zoom;
+    }
+
+    if (y > container.offsetHeight - (h / zoom)) {
+      y = container.offsetHeight - (h / zoom);
+    }
+
+    if (y < h / zoom) {
+      y = h / zoom;
+    }
+
+    glass.style.left = (x - w) + "px";
+    glass.style.top = (y - h) + "px";
+
+    glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+  }
+
+  function getCursorPos(e) {
+    let a, x = 0, y = 0;
+    e = e || window.event;
+    a = container.getBoundingClientRect();
+    x = e.pageX - a.left;
+    y = e.pageY - a.top;
+    x = x - window.pageXOffset;
+    y = y - window.pageYOffset;
+
+    return { x, y };
+  }
+};
+
+const getSrcInBackground = container => /(?:\(['"]?)(.*?)(?:['"]?\))/.exec(container.style.background)[1];
 
 export {
   get360ViewProps,
@@ -77,5 +209,12 @@ export {
   set360ViewCircleIconStyles,
   setLoaderStyles,
   setBoxShadowStyles,
-  setView360Icon
+  setView360Icon,
+  setFullScreenImageStyles,
+  magnify,
+  setMagnifyIconStyles,
+  setFullScreenModalStyles,
+  setFullScreenIconStyles,
+  getSrcInBackground,
+  setCloseFullScreenViewStyles
 }

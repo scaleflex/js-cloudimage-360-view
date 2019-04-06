@@ -1,9 +1,11 @@
 import {
-  get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles, setView360Icon
+  get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles,
+  setView360Icon, setFullScreenImageStyles, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
+  setFullScreenIconStyles, getSrcInBackground, setCloseFullScreenViewStyles
 } from './ci360.utils';
 
 class CI360Viewer {
-  constructor(container) {
+  constructor(container, fullScreen) {
     this.container = container;
     this.activeImage = 1;
     this.previousActiveImage = 1;
@@ -12,6 +14,7 @@ class CI360Viewer {
     this.loadedImages = 0;
     this.imagesLoaded = false;
     this.reversed = false;
+    this.fullScreenView = !!fullScreen;
 
     this.init(container);
   }
@@ -20,6 +23,10 @@ class CI360Viewer {
     event.preventDefault();
 
     if (!this.imagesLoaded) return;
+
+    if (this.glass) {
+      this.closeMagnifier();
+    }
 
     if (this.view360Icon) {
       this.remove360ViewIcon();
@@ -56,6 +63,10 @@ class CI360Viewer {
   touchstart(event) {
     if (!this.imagesLoaded) return;
 
+    if (this.glass) {
+      this.closeMagnifier();
+    }
+
     if (this.view360Icon) {
       this.remove360ViewIcon();
     }
@@ -85,8 +96,20 @@ class CI360Viewer {
     this.onMove(event.touches[0].clientX);
   }
 
+  keydownGeneral() {
+    if (!this.imagesLoaded) return;
+
+    if (this.glass) {
+      this.closeMagnifier();
+    }
+  }
+
   keydown(event) {
     if (!this.imagesLoaded) return;
+
+    if (this.glass) {
+      this.closeMagnifier();
+    }
 
     if ([37, 39].includes(event.keyCode)) {
       const reversed = 37 === event.keyCode;
@@ -192,7 +215,10 @@ class CI360Viewer {
       this.imagesLoaded = true;
       this.container.style.cursor = 'grab';
       this.removeLoader();
-      if (this.autoplay) this.play();
+
+      if (this.autoplay) {
+        this.play();
+      }
 
       if (this.view360Icon) {
         this.view360Icon.innerText = '';
@@ -201,9 +227,39 @@ class CI360Viewer {
 
     } else if (this.loadedImages === 1) {
       this.add360ViewIcon();
-      if (this.boxShadow) this.addBoxShadow();
-      if (this.bottomCircle) this.add360ViewCircleIcon();
+
+      if (this.ratio) {
+        this.container.style.minHeight = 'auto';
+      }
+
+      if (this.magnifier && !this.fullScreenView) {
+        this.addMagnifier();
+      }
+
+      if (this.boxShadow && !this.fullScreenView) {
+        this.addBoxShadow();
+      }
+
+      if (this.bottomCircle && !this.fullScreenView) {
+        this.add360ViewCircleIcon();
+      }
+
+      if (this.fullScreen && !this.fullScreenView) {
+        this.addFullScreenIcon();
+      } else if (this.fullScreenView) {
+        this.addCloseFullScreenView();
+      }
     }
+  }
+
+  addCloseFullScreenView() {
+    const closeFullScreenIcon = document.createElement('div');
+
+    setCloseFullScreenViewStyles(closeFullScreenIcon);
+
+    closeFullScreenIcon.onclick = this.closeFullScreenModal.bind(this);
+
+    this.container.appendChild(closeFullScreenIcon);
   }
 
   add360ViewIcon() {
@@ -217,6 +273,65 @@ class CI360Viewer {
     this.container.appendChild(view360Icon);
   }
 
+  addFullScreenIcon() {
+    const fullScreenIcon = document.createElement('div');
+
+    setFullScreenIconStyles(fullScreenIcon);
+
+    fullScreenIcon.onclick = this.openFullScreenModal.bind(this);
+
+    this.container.appendChild(fullScreenIcon);
+  }
+
+  addMagnifier() {
+    const magnifyIcon = document.createElement('div');
+
+    setMagnifyIconStyles(magnifyIcon, this.fullScreen);
+
+    magnifyIcon.onclick = this.magnify.bind(this);
+
+    this.container.appendChild(magnifyIcon);
+  }
+
+  magnify() {
+    const src = this.fullScreenView ?
+      getSrcInBackground(this.container.children[this.activeImage - 1]) :
+      this.container.children[this.activeImage - 1].src;
+    this.glass = document.createElement('div');
+
+    this.container.style.overflow = 'hidden';
+    magnify(this.container, this.container.children[this.activeImage], src, this.glass, this.magnifier || 3);
+  }
+
+  closeMagnifier() {
+    if (!this.glass) return;
+
+    this.container.style.overflow = 'visible';
+    this.container.removeChild(this.glass);
+    this.glass = null;
+  }
+
+  openFullScreenModal() {
+    const fullScreenModal = document.createElement('div');
+
+    setFullScreenModalStyles(fullScreenModal);
+
+    const fullScreenContainer = this.container.cloneNode();
+
+    fullScreenContainer.style.height = '100%';
+    fullScreenContainer.style.maxHeight = '100%';
+
+    new CI360Viewer(fullScreenContainer, true);
+
+    fullScreenModal.appendChild(fullScreenContainer);
+
+    window.document.body.appendChild(fullScreenModal);
+  }
+
+  closeFullScreenModal() {
+    document.body.removeChild(this.container.parentNode);
+  }
+
   add360ViewCircleIcon() {
     const view360CircleIcon = new Image();
 
@@ -227,14 +342,20 @@ class CI360Viewer {
   }
 
   hide360ViewCircleIcon() {
+    if (!this.view360CircleIcon) return;
+
     this.view360CircleIcon.style.opacity = 0;
   }
 
   show360ViewCircleIcon() {
+    if (!this.view360CircleIcon) return;
+
     this.view360CircleIcon.style.opacity = 1;
   }
 
   remove360ViewCircleIcon() {
+    if (!this.view360CircleIcon) return;
+
     this.container.removeChild(this.view360CircleIcon);
     this.view360CircleIcon = null;
   }
@@ -257,11 +378,15 @@ class CI360Viewer {
   }
 
   removeLoader() {
+    if (!this.loader) return;
+
     this.container.removeChild(this.loader);
     this.loader = null;
   }
 
   remove360ViewIcon() {
+    if (!this.view360Icon) return;
+
     this.container.removeChild(this.view360Icon);
     this.view360Icon = null;
   }
@@ -283,7 +408,7 @@ class CI360Viewer {
   init(container) {
     const {
       folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, speed, autoplayReverse
+      autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio
     } = get360ViewProps(container);
 
     [...new Array(amount)].map((item, index) => {
@@ -303,12 +428,26 @@ class CI360Viewer {
       this.autoplay = autoplay;
       this.speed = speed;
       this.reversed = autoplayReverse;
+      this.fullScreen = fullScreen;
+      this.magnifier = magnifier;
+      this.ratio = ratio;
 
       this.speedFactor = Math.floor(36 / this.amount * 25 * container.offsetWidth / 1500) || 1;
 
       container.style.position = 'relative';
       container.style.cursor = 'wait';
-      container.appendChild(image);
+
+      if (ratio) {
+        container.style.minHeight = container.offsetWidth * ratio + 'px';
+      }
+
+      if (this.fullScreenView) {
+        const imageBackground = document.createElement('div');
+        setFullScreenImageStyles(imageBackground, image.src, index);
+        container.appendChild(imageBackground);
+      } else {
+        container.appendChild(image);
+      }
     });
 
     if (draggable) {
@@ -326,6 +465,8 @@ class CI360Viewer {
     if (keys) {
       document.addEventListener('keydown', this.keydown.bind(this));
       document.addEventListener('keyup', this.keyup.bind(this));
+    } else {
+      document.addEventListener('keydown', this.keydownGeneral.bind(this));
     }
 
     this.addLoader();
