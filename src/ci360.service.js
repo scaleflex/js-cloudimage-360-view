@@ -88,21 +88,23 @@ class CI360Viewer {
   keydown(event) {
     if (!this.imagesLoaded) return;
 
-    if (this.view360Icon) {
-      this.remove360ViewIcon();
-    }
-
-    if (this.autoplay) {
-      this.stop();
-      this.autoplay = false;
-    }
-
     if ([37, 39].includes(event.keyCode)) {
       const reversed = 37 === event.keyCode;
 
       reversed ? this.prev() : this.next();
 
-      if (this.bottomCircle) this.hide360ViewCircleIcon();
+      if (this.bottomCircle) {
+        this.hide360ViewCircleIcon();
+      }
+
+      if (this.view360Icon) {
+        this.remove360ViewIcon();
+      }
+
+      if (this.autoplay) {
+        this.stop();
+        this.autoplay = false;
+      }
 
       this.loopTimeoutId = window.setTimeout(() => {
         this.loop(reversed);
