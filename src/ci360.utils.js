@@ -12,7 +12,12 @@ const get360ViewProps = (image) => ({
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
   parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
-  ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false
+  ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false,
+  responsive: (attr(image, 'responsive') !== null) || (attr(image, 'data-responsive') !== null),
+  ciToken: attr(image, 'responsive') || attr(image, 'data-responsive') || 'demo',
+  ciSize: attr(image, 'size') || attr(image, 'data-size'),
+  ciOperation: attr(image, 'operation') || attr(image, 'data-operation') || 'width',
+  ciFilters: attr(image, 'filters') || attr(image, 'data-filters') || 'q35'
 });
 
 const attr = (element, attribute) => element.getAttribute(attribute);
@@ -133,13 +138,16 @@ const magnify = (container, img, src, glass, zoom) => {
   glass.setAttribute("class", "img-magnifier-glass");
   container.prepend(glass);
 
+  glass.style.backgroundColor = '#fff';
   glass.style.backgroundImage = "url('" + src + "')";
   glass.style.backgroundRepeat = "no-repeat";
   glass.style.backgroundSize = (container.offsetWidth * zoom) + "px " + (container.offsetHeight * zoom) + "px";
   glass.style.position = 'absolute';
   glass.style.border = '3px solid #000';
   glass.style.borderRadius = '50%';
-  glass.style.cursor = 'none';
+  glass.style.cursor = 'wait';
+  glass.style.lineHeight = '200px';
+  glass.style.textAlign = 'center';
   glass.style.zIndex = '1000';
 
   glass.style.width = '250px';
@@ -201,7 +209,25 @@ const magnify = (container, img, src, glass, zoom) => {
   }
 };
 
-const getSrcInBackground = container => /(?:\(['"]?)(.*?)(?:['"]?\))/.exec(container.style.background)[1];
+const getSizeLimit = (currentSize) => {
+  if (currentSize <= 25) return '25';
+  if (currentSize <= 50) return '50';
+
+  return (Math.ceil(currentSize / 100) * 100).toString();
+};
+
+const getSizeAccordingToPixelRatio = size => {
+  const splittedSizes = size.toString().split('x');
+  const result = [];
+
+  [].forEach.call(splittedSizes, size => {
+    result.push(size * Math.round(window.devicePixelRatio || 1));
+  });
+
+  return result.join('x');
+}
+
+const getResponsiveWidthOfContainer = width => getSizeLimit(width);
 
 export {
   get360ViewProps,
@@ -215,6 +241,7 @@ export {
   setMagnifyIconStyles,
   setFullScreenModalStyles,
   setFullScreenIconStyles,
-  getSrcInBackground,
-  setCloseFullScreenViewStyles
+  setCloseFullScreenViewStyles,
+  getResponsiveWidthOfContainer,
+  getSizeAccordingToPixelRatio
 }

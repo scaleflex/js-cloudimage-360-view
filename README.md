@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v0.0.3-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v1.0.0-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -43,6 +43,7 @@ powered by [Cloudimage](https://www.cloudimage.io/)
 * [Step 1: Installation](#installation)
 * [Step 2: Initialize](#initialize)
 * [Configuration](#configuration)
+* [Cloudimage-responsive-integration](#cloudimage-responsive-integration)
 * [Best practices](#best-practices)
 * [Browser support](#browser_support)
 * [Filerobot UI Family](#ui_family)
@@ -60,17 +61,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v0.0.3.min.js"></script>
-```
-
-or using npm
-
-```
-$ npm install --save js-cloudimage-360-view
-```
-
-```javascript
-import 'js-cloudimage-360-view';
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.0.0.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
@@ -168,6 +159,32 @@ Display 360 view line at the bottom of container.
 ###### Type: **Number** | Default: **5** | _optional_
 
 Bottom offset for 360 view line.
+
+## <a name="cloudimage-responsive-integration"/> Cloudimage Responsive Integration
+
+### Requirements
+
+To use the Cloudimage Responsive plugin, you will need a
+Cloudimage token to deliver your images over CDN. Don't worry, it only takes seconds to get one by
+registering [here](https://www.cloudimage.io/en/register_page).
+Once your token is created, you can configure it as described below.
+This token allows you to use 25GB of image cache and 25GB of worldwide
+CDN traffic per month for free.
+
+### data-responsive (or responsive)
+
+###### Type: **String** - Cloudimage token | Default: **none** | _required for cloudimage responsive plugin_
+
+Enables cloudimage responsive plugin for 360 view.
+
+### data-filters (or filters)
+
+###### Type: **String** | Default: **q35** | _optional_
+
+Applies default Cloudimage filters to your image, e.g. fcontrast, fpixelate, fgaussian, backtransparent,
+rotation...  Multiple filters can be applied, separated by "```.```" (dot).
+
+[Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation/en/filters/)
 
 ## <a name="best-practices"/> Best practices
 
