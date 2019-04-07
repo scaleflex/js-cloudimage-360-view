@@ -162,6 +162,8 @@ Bottom offset for 360 view line.
 
 ## <a name="cloudimage-responsive-integration"/> Cloudimage Responsive Integration
 
+[See how it works (article on Medium)](https://medium.com/cloudimage/responsive-images-in-2019-now-easier-than-ever-b76e5a43c074)
+
 ### Requirements
 
 To use the Cloudimage Responsive plugin, you will need a
@@ -173,7 +175,7 @@ CDN traffic per month for free.
 
 ### data-responsive (or responsive)
 
-###### Type: **String** - Cloudimage token | Default: **none** | _required for cloudimage responsive plugin_
+###### Type: **String** (Cloudimage token) | Default: **none** | _required for cloudimage responsive plugin_
 
 Enables cloudimage responsive plugin for 360 view.
 
