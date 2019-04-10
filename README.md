@@ -31,7 +31,7 @@ A simple, interactive resource that can be used to provide a virtual tour of you
 <p align="center">
 	<img
 		alt="The Lounge"
-		src="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/demo-360-small.gif?sanitize=true">
+		src="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/demo-chair-500.gif?sanitize=true">
 </p>
 
 powered by [Cloudimage](https://www.cloudimage.io/)
