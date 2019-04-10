@@ -160,6 +160,18 @@ Display 360 view line at the bottom of container.
 
 Bottom offset for 360 view line.
 
+### data-lazyload (or lazyload)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+Only 360 view images close to the client's viewport will be loaded, hence accelerating the page loading time. If set to true, an additional script must be included, see [Lazy loading](#lazy-loading)
+
+### data-lazyload-selector (or lazyload-selector)
+
+###### Type: **String** | Default: **lazyload** | _optional_
+
+Helper class to apply lazy-loading depending on library you choose, see [Lazy loading](#lazy-loading)
+
 ## <a name="cloudimage-responsive-integration"/> Cloudimage Responsive Integration
 
 [See how it works (article on Medium)](https://medium.com/cloudimage/responsive-images-in-2019-now-easier-than-ever-b76e5a43c074)
@@ -187,6 +199,37 @@ Applies default Cloudimage filters to your image, e.g. fcontrast, fpixelate, fga
 rotation...  Multiple filters can be applied, separated by "```.```" (dot).
 
 [Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation/en/filters/)
+
+## <a name="lazy-loading"/> Lazy Loading
+
+Lazy loading is not included into js-cloudimage-360-view by default. There are well thought libraries to achieve that. If you enable lazy loading in the configuration, you need to add an additional library like [lazysizes](https://github.com/aFarkas/lazysizes), [yall.js (Yet Another Lazy Loader)](https://github.com/malchata/yall.js), [lozad.js](https://github.com/ApoorvSaxena/lozad.js) to handle it.
+
+[Implementation example with lazysizes](https://codesandbox.io/s/w7vx5w1ln7?fontsize=14)
+
+[Implementation example with yall.js](https://codesandbox.io/s/ym2xrk87xv?fontsize=14)
+
+[Implementation example with lozad.js](https://codesandbox.io/s/0185934m8p?fontsize=14)
+
+to save API calls you man want to use one of our cdn bundles:
+
+CDN link to js-cloudimage-360-view 1.1.0 + lazysizes 4.1.7
+
+```javascript
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.lazysizes.min.js"></script>
+```
+
+CDN link to js-cloudimage-360-view 1.1.0 + yall.js 3.1.1
+
+```javascript
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.yall.min.js"></script>
+```
+
+CDN link to js-cloudimage-360-view 1.1.0 + lozad.js 1.9.0
+
+```javascript
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.lozad.min.js"></script>
+```
+
 
 ## <a name="best-practices"/> Best practices
 
