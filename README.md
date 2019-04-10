@@ -37,7 +37,7 @@ A simple, interactive resource that can be used to provide a virtual tour of you
 powered by [Cloudimage](https://www.cloudimage.io/)
 ([Watch the video here](https://www.youtube.com/watch?time_continue=2&v=JFZSE1vYb0k))
 
-##<a name="table_of_contents"></a> Table of contents
+## <a name="table_of_contents"></a>Table of contents
 
 * [Demo](#demo)
 * [Step 1: Installation](#installation)
