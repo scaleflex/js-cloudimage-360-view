@@ -40,6 +40,7 @@ const set360ViewIconStyles = (view360Icon) => {
   view360Icon.style.color = 'rgb(80,80,80)';
   view360Icon.style.textAlign = 'center';
   view360Icon.style.lineHeight = '100px';
+  view360Icon.style.zIndex = '2';
 };
 
 const setView360Icon = (view360Icon) => {
@@ -57,6 +58,7 @@ const set360ViewCircleIconStyles = (view360CircleIcon, bottomCircleOffset) => {
   view360CircleIcon.style.height = 'auto';
   view360CircleIcon.style.margin = 'auto';
   view360CircleIcon.style.transition = '0.5s all';
+  view360CircleIcon.style.zIndex = '2';
 };
 
 const setLoaderStyles = (loader) => {
@@ -80,14 +82,6 @@ const setBoxShadowStyles = (boxShadow, boxShadowValue) => {
   boxShadow.style.right = '0';
   boxShadow.style.bottom = '0';
   boxShadow.style.boxShadow = boxShadowValue;
-};
-
-const setFullScreenImageStyles = (image, src, index) => {
-  image.style.background = `url('${src}') 50% 50% / contain no-repeat`;
-  image.style.width = '100%';
-  image.style.height = '100%';
-  image.style.margin = 'auto';
-  image.style.display = index === 0 ? 'block' : 'none';
 };
 
 const setMagnifyIconStyles = (magnifyIcon, fullScreen) => {
@@ -227,9 +221,33 @@ const getSizeAccordingToPixelRatio = size => {
   });
 
   return result.join('x');
-}
+};
 
 const getResponsiveWidthOfContainer = width => getSizeLimit(width);
+
+const fit = (contains) => {
+  return (parentWidth, parentHeight, childWidth, childHeight, scale = 1, offsetX = 0.5, offsetY = 0.5) => {
+    const childRatio = childWidth / childHeight
+    const parentRatio = parentWidth / parentHeight
+    let width = parentWidth * scale
+    let height = parentHeight * scale
+
+    if (contains ? (childRatio > parentRatio) : (childRatio < parentRatio)) {
+      height = width / childRatio
+    } else {
+      width = height * childRatio
+    }
+
+    return {
+      width,
+      height,
+      offsetX: (parentWidth - width) * offsetX,
+      offsetY: (parentHeight - height) * offsetY
+    }
+  }
+};
+
+const contain = fit(true);
 
 export {
   get360ViewProps,
@@ -238,12 +256,12 @@ export {
   setLoaderStyles,
   setBoxShadowStyles,
   setView360Icon,
-  setFullScreenImageStyles,
   magnify,
   setMagnifyIconStyles,
   setFullScreenModalStyles,
   setFullScreenIconStyles,
   setCloseFullScreenViewStyles,
   getResponsiveWidthOfContainer,
-  getSizeAccordingToPixelRatio
+  getSizeAccordingToPixelRatio,
+  contain
 }

@@ -1,21 +1,22 @@
 import {
   get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles,
-  setView360Icon, setFullScreenImageStyles, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
+  setView360Icon, contain, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
   setFullScreenIconStyles, setCloseFullScreenViewStyles, getResponsiveWidthOfContainer, getSizeAccordingToPixelRatio
 } from './ci360.utils';
+
 
 class CI360Viewer {
   constructor(container, fullScreen, ratio) {
     this.container = container;
     this.activeImage = 1;
-    this.previousActiveImage = 1;
     this.movementStart = 0;
     this.isClicked = false;
     this.loadedImages = 0;
     this.imagesLoaded = false;
     this.reversed = false;
     this.fullScreenView = !!fullScreen;
-    this.ratio = ratio
+    this.ratio = ratio;
+    this.images = [];
 
     this.init(container);
   }
@@ -150,7 +151,6 @@ class CI360Viewer {
       const itemsSkipped = Math.floor((event.pageX - this.movementStart) / this.speedFactor) || 1;
 
       this.movementStart = pageX;
-      this.previousActiveImage = this.activeImage;
 
       this.activeImage = (this.activeImage + itemsSkipped) % this.amount || 1;
 
@@ -160,7 +160,6 @@ class CI360Viewer {
       const itemsSkipped = Math.abs(Math.floor((pageX - this.movementStart) / this.speedFactor)) || 1;
 
       this.movementStart = pageX;
-      this.previousActiveImage = this.activeImage;
 
       if (this.activeImage - itemsSkipped < 1) {
         this.activeImage = this.amount + (this.activeImage - itemsSkipped);
@@ -178,14 +177,12 @@ class CI360Viewer {
   }
 
   next() {
-    this.previousActiveImage = this.activeImage;
     this.activeImage = this.activeImage % this.amount + 1;
 
     this.update(this.activeImage);
   }
 
   prev() {
-    this.previousActiveImage = this.activeImage;
     if (this.activeImage - 1 === 0) {
       this.activeImage = this.amount;
     } else {
@@ -196,18 +193,26 @@ class CI360Viewer {
   }
 
   update(activeImage) {
-    const prevImage = this.container.children[this.previousActiveImage - 1];
-    const nextImage = this.container.children[activeImage - 1];
+    const image = this.images[activeImage - 1];
+    const ctx = this.canvas.getContext("2d");
 
-    prevImage.style.display = 'none';
-    nextImage.style.display = 'block';
+    if (this.fullScreenView) {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+
+      const { offsetX, offsetY, width, height } =
+        contain(this.canvas.width, this.canvas.height, image.width, image.height);
+
+      ctx.drawImage(image, offsetX, offsetY, width, height);
+    } else {
+      this.canvas.width = this.container.offsetWidth;
+      this.canvas.height = this.container.offsetWidth / image.width * image.height;
+
+      ctx.drawImage(image, 0, 0, this.container.offsetWidth, this.canvas.height);
+    }
   }
 
-  onImageLoad() {
-    this.loadedImages += 1;
-
-    const percentage = Math.round(this.loadedImages / this.amount * 100);
-
+  updatePercentageInLoader(percentage) {
     if (this.loader) {
       this.loader.style.width = percentage + '%';
     }
@@ -215,42 +220,64 @@ class CI360Viewer {
     if (this.view360Icon) {
       this.view360Icon.innerText = percentage + '%';
     }
+  }
 
-    if (this.loadedImages === this.amount) {
-      this.imagesLoaded = true;
-      this.container.style.cursor = 'grab';
-      this.removeLoader();
+  onAllImagesLoaded(event) {
+    this.imagesLoaded = true;
+    this.container.style.cursor = 'grab';
+    this.removeLoader();
 
-      if (!this.fullScreenView) {
-        this.speedFactor = Math.floor(36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
-      } else {
-        const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
-        let imageOffsetWidth = this.container.offsetWidth;
+    if (!this.fullScreenView) {
+      this.speedFactor = Math.floor(36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
+    } else {
+      const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
+      let imageOffsetWidth = this.container.offsetWidth;
 
-        if (this.ratio > containerRatio) {
-          imageOffsetWidth = this.container.offsetHeight / this.ratio;
-        }
-
-        this.speedFactor = Math.floor(36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
+      if (this.ratio > containerRatio) {
+        imageOffsetWidth = this.container.offsetHeight / this.ratio;
       }
 
-      if (this.autoplay) {
-        this.play();
-      }
+      this.speedFactor = Math.floor(36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
+    }
 
-      if (this.view360Icon) {
-        this.view360Icon.innerText = '';
-        setView360Icon(this.view360Icon);
-      }
+    if (this.autoplay) {
+      this.play();
+    }
 
-    } else if (this.loadedImages === 1) {
-      this.add360ViewIcon();
+    if (this.view360Icon) {
+      this.view360Icon.innerText = '';
+      setView360Icon(this.view360Icon);
+    }
+  }
 
-      if (this.lazyload) {
-        [].slice.call(this.container.children)
-          .filter(image => image.nodeName === 'IMG')
-          .forEach((image, index) => {
-          if (index === 0) return;
+  onFirstImageLoaded(event) {
+    this.add360ViewIcon();
+
+    if (this.fullScreenView) {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+
+      const ctx = this.canvas.getContext("2d");
+      const { offsetX, offsetY, width, height } =
+        contain(this.canvas.width, this.canvas.height, event.target.width, event.target.height);
+
+      ctx.drawImage(event.target, offsetX, offsetY, width, height);
+    } else {
+      this.canvas.width = this.container.offsetWidth;
+      this.canvas.height = this.container.offsetWidth / event.target.width * event.target.height;
+
+      const ctx = this.canvas.getContext("2d");
+
+      ctx.drawImage(event.target, 0, 0, this.container.offsetWidth, this.canvas.height);
+    }
+
+    if (this.lazyload && !this.fullScreenView) {
+      this.images
+        .forEach((image, index) => {
+          if (index === 0) {
+            this.container.removeChild(this.lazyloadInitImage);
+            return;
+          }
 
           const dataSrc = image.getAttribute('data-src');
 
@@ -258,29 +285,41 @@ class CI360Viewer {
             image.src = image.getAttribute('data-src');
           }
         });
-      }
+    }
 
-      if (this.ratio) {
-        this.container.style.minHeight = 'auto';
-      }
+    if (this.ratio) {
+      this.container.style.minHeight = 'auto';
+    }
 
-      if (this.magnifier && !this.fullScreenView) {
-        this.addMagnifier();
-      }
+    if (this.magnifier && !this.fullScreenView) {
+      this.addMagnifier();
+    }
 
-      if (this.boxShadow && !this.fullScreenView) {
-        this.addBoxShadow();
-      }
+    if (this.boxShadow && !this.fullScreenView) {
+      this.addBoxShadow();
+    }
 
-      if (this.bottomCircle && !this.fullScreenView) {
-        this.add360ViewCircleIcon();
-      }
+    if (this.bottomCircle && !this.fullScreenView) {
+      this.add360ViewCircleIcon();
+    }
 
-      if (this.fullScreen && !this.fullScreenView) {
-        this.addFullScreenIcon();
-      } else if (this.fullScreenView) {
-        this.addCloseFullScreenView();
-      }
+    if (this.fullScreen && !this.fullScreenView) {
+      this.addFullScreenIcon();
+    } else if (this.fullScreenView) {
+      this.addCloseFullScreenView();
+    }
+  }
+
+  onImageLoad(event) {
+    const percentage = Math.round(this.loadedImages / this.amount * 100);
+
+    this.loadedImages += 1;
+    this.updatePercentageInLoader(percentage);
+
+    if (this.loadedImages === this.amount) {
+      this.onAllImagesLoaded(event);
+    } else if (this.loadedImages === 1) {
+      this.onFirstImageLoaded(event);
     }
   }
 
@@ -355,7 +394,7 @@ class CI360Viewer {
     setFullScreenModalStyles(fullScreenModal);
 
     const fullScreenContainer = this.container.cloneNode();
-    const image = this.container.children[0];
+    const image = this.images[0];
     const ratio = image.height / image.width;
 
     fullScreenContainer.style.height = '100%';
@@ -445,6 +484,55 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
+  getSrc(responsive, container, folder, filename, ciSize, ciToken, ciOperation, ciFilters) {
+    let src = `${folder}${filename}`;
+
+    if (responsive) {
+      let imageOffsetWidth = container.offsetWidth;
+
+      if (this.fullScreenView) {
+        const containerRatio = container.offsetHeight / container.offsetWidth;
+
+        if (this.ratio > containerRatio) {
+          imageOffsetWidth = container.offsetHeight / this.ratio;
+        }
+      }
+
+      const ciSizeNext = getSizeAccordingToPixelRatio(ciSize || getResponsiveWidthOfContainer(imageOffsetWidth));
+
+      src = `https://${ciToken}.cloudimg.io/${ciOperation}/${ciSizeNext}/${ciFilters}/${src}`;
+    }
+
+    return src;
+  }
+
+  preloadImages(amount, src, lazyload, lazySelector) {
+    [...new Array(amount)].map((item, index) => {
+      const image = new Image();
+      const resultSrc = src.replace('{index}', index + 1);
+
+      if (lazyload && !this.fullScreenView) {
+        image.setAttribute('data-src', resultSrc);
+        image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
+
+        if (index === 0) {
+          this.lazyloadInitImage = image;
+          image.style.position = 'absolute';
+          image.style.top = '0';
+          image.style.left = '0';
+          this.container.appendChild(image);
+        }
+      } else {
+        image.src = resultSrc;
+      }
+
+      image.onload = this.onImageLoad.bind(this);
+      image.onerror = this.onImageLoad.bind(this);
+
+      this.images.push(image);
+    });
+  }
+
   init(container) {
     let {
       folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
@@ -454,69 +542,38 @@ class CI360Viewer {
 
     this.addLoader();
 
-    [...new Array(amount)].map((item, index) => {
-      const image = new Image();
-      let src = `${folder}${filename.replace('{index}', index + 1)}`;
+    this.folder = folder;
+    this.filename = filename;
+    this.amount = amount;
+    this.bottomCircle = bottomCircle;
+    this.bottomCircleOffset = bottomCircleOffset;
+    this.boxShadow = boxShadow;
+    this.autoplay = autoplay;
+    this.speed = speed;
+    this.reversed = autoplayReverse;
+    this.fullScreen = fullScreen;
+    this.magnifier = magnifier;
+    this.lazyload = lazyload;
+    this.ratio = ratio;
 
-      if (responsive) {
-        let imageOffsetWidth = container.offsetWidth;
+    container.style.position = 'relative';
+    container.style.width = '100%';
+    container.style.cursor = 'wait';
 
-        if (this.fullScreenView) {
-          const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
+    this.canvas = document.createElement('canvas');
+    this.canvas.style.width = '100%';
+    this.canvas.style.fontSize = '0';
 
-          if (this.ratio > containerRatio) {
-            imageOffsetWidth = this.container.offsetHeight / this.ratio;
-          }
-        }
+    if (ratio) {
+      container.style.minHeight = container.offsetWidth * ratio + 'px';
+      this.canvas.height = container.style.minHeight;
+    }
 
-        const ciSizeNext = getSizeAccordingToPixelRatio(ciSize || getResponsiveWidthOfContainer(imageOffsetWidth));
+    this.container.appendChild(this.canvas);
 
-        src = `https://${ciToken}.cloudimg.io/${ciOperation}/${ciSizeNext}/${ciFilters}/${src}`;
-      }
+    let src = this.getSrc(responsive, container, folder, filename, ciSize, ciToken, ciOperation, ciFilters);
 
-      if (lazyload) {
-        image.setAttribute('data-src', src);
-        image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
-      } else {
-        image.src = src;
-      }
-
-      image.style.height = 'auto';
-      image.style.width = '100%';
-      image.style.display = index === 0 ? 'block' : 'none';
-      image.onload = this.onImageLoad.bind(this);
-      image.onerror = this.onImageLoad.bind(this);
-
-      this.folder = folder;
-      this.filename = filename;
-      this.amount = amount;
-      this.bottomCircle = bottomCircle;
-      this.bottomCircleOffset = bottomCircleOffset;
-      this.boxShadow = boxShadow;
-      this.autoplay = autoplay;
-      this.speed = speed;
-      this.reversed = autoplayReverse;
-      this.fullScreen = fullScreen;
-      this.magnifier = magnifier;
-      this.lazyload = lazyload;
-
-      container.style.position = 'relative';
-      container.style.cursor = 'wait';
-
-      if (this.fullScreenView) {
-        const imageBackground = document.createElement('div');
-        setFullScreenImageStyles(imageBackground, src, index);
-        container.appendChild(imageBackground);
-      } else {
-        this.ratio = ratio;
-
-        if (ratio) {
-          container.style.minHeight = container.offsetWidth * ratio + 'px';
-        }
-
-        container.appendChild(image);
-      }
-    });
+    this.preloadImages(amount, src, lazyload, lazySelector);
 
     if (draggable) {
       container.addEventListener('mousedown', this.mousedown.bind(this));
