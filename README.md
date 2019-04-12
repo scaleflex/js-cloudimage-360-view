@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v1.1.0-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v2.0.0-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -62,7 +62,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
@@ -216,19 +216,19 @@ to save API calls you man want to use one of our cdn bundles:
 CDN link to js-cloudimage-360-view 1.1.0 + lazysizes 4.1.7
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.lazysizes.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.lazysizes.min.js"></script>
 ```
 
 CDN link to js-cloudimage-360-view 1.1.0 + yall.js 3.1.1
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.yall.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.yall.min.js"></script>
 ```
 
 CDN link to js-cloudimage-360-view 1.1.0 + lozad.js 1.9.0
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v1.1.0.lozad.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.lozad.min.js"></script>
 ```
 
 
