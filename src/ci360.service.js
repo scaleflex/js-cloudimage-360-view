@@ -17,6 +17,7 @@ class CI360Viewer {
     this.fullScreenView = !!fullScreen;
     this.ratio = ratio;
     this.images = [];
+    this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
 
     this.init(container);
   }
@@ -78,7 +79,6 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
-    event.preventDefault();
     this.movementStart = event.touches[0].clientX;
     this.isClicked = true;
   }
@@ -148,7 +148,7 @@ class CI360Viewer {
 
   onMove(pageX) {
     if (pageX - this.movementStart > this.speedFactor) {
-      const itemsSkipped = Math.floor((event.pageX - this.movementStart) / this.speedFactor) || 1;
+      const itemsSkipped = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
 
       this.movementStart = pageX;
 
@@ -196,19 +196,25 @@ class CI360Viewer {
     const image = this.images[activeImage - 1];
     const ctx = this.canvas.getContext("2d");
 
+    ctx.scale(this.devicePixelRatio,this.devicePixelRatio);
+
     if (this.fullScreenView) {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
+      this.canvas.width = window.innerWidth * this.devicePixelRatio;
+      this.canvas.style.width = window.innerWidth + 'px';
+      this.canvas.height = window.innerHeight * this.devicePixelRatio;
+      this.canvas.style.height = window.innerHeight + 'px';
 
       const { offsetX, offsetY, width, height } =
         contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth;
-      this.canvas.height = this.container.offsetWidth / image.width * image.height;
+      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+      this.canvas.style.width = this.container.offsetWidth + 'px';
+      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
+      this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
 
-      ctx.drawImage(image, 0, 0, this.container.offsetWidth, this.canvas.height);
+      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
   }
 
@@ -254,21 +260,26 @@ class CI360Viewer {
     this.add360ViewIcon();
 
     if (this.fullScreenView) {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
+      this.canvas.width = window.innerWidth * this.devicePixelRatio;
+      this.canvas.style.width = window.innerWidth + 'px';
+      this.canvas.height = window.innerHeight * this.devicePixelRatio;
+      this.canvas.style.height = window.innerHeight + 'px';
 
       const ctx = this.canvas.getContext("2d");
+
       const { offsetX, offsetY, width, height } =
         contain(this.canvas.width, this.canvas.height, event.target.width, event.target.height);
 
       ctx.drawImage(event.target, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth;
-      this.canvas.height = this.container.offsetWidth / event.target.width * event.target.height;
+      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+      this.canvas.style.width = this.container.offsetWidth + 'px';
+      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
+      this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
 
       const ctx = this.canvas.getContext("2d");
 
-      ctx.drawImage(event.target, 0, 0, this.container.offsetWidth, this.canvas.height);
+      ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
     }
 
     if (this.lazyload && !this.fullScreenView) {
@@ -559,6 +570,7 @@ class CI360Viewer {
     container.style.position = 'relative';
     container.style.width = '100%';
     container.style.cursor = 'wait';
+    container.setAttribute('draggable', 'false');
 
     this.canvas = document.createElement('canvas');
     this.canvas.style.width = '100%';
@@ -582,8 +594,8 @@ class CI360Viewer {
     }
 
     if (swipeable) {
-      container.addEventListener('touchstart', this.touchstart.bind(this));
-      container.addEventListener('touchend', this.touchend.bind(this));
+      container.addEventListener('touchstart', this.touchstart.bind(this), { passive: true });
+      container.addEventListener('touchend', this.touchend.bind(this), { passive: true });
       container.addEventListener('touchmove', this.touchmove.bind(this));
     }
 
