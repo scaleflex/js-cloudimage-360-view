@@ -23,6 +23,8 @@
 		<a href="https://scaleflex.github.io/js-cloudimage-360-view/" target="_blank">Demo</a>
 		•
 		<a href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html" target="_blank">Code Sandbox</a>
+		•
+		<a href="https://medium.com/cloudimage/e-merchandising-how-can-a-360-view-of-your-products-boost-your-revenue-24b16eb9cd62" target="_blank">Why</a>
 	</strong>
 </p>
 
