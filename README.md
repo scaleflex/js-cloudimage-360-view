@@ -101,9 +101,9 @@ Your images folder on server.
 
 ###### Type: **String** | Default: **image-{index}.jpg** | _optional_
 
-The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and *data_amount*.
+The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and [data-amount](#data-amount).
 
-### data-amount (or amount)
+### <a name="data-amount"></a> data-amount (or amount)
 
 ###### Type: **Number** | Default: **36** | _optional_
 
