@@ -13,7 +13,13 @@
   "keywords": [
     "image",
     "images",
-    "cloudimage"
+    "cloudimage",
+    "360",
+    "photo",
+    "product",
+    "view",
+    "viewer",
+    "360 product view"
   ],
   "scripts": {
     "start-demo": "webpack-dev-server --mode development --config config/webpack-demo.config.js",
