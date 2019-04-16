@@ -97,6 +97,12 @@ The selector for js-cloudimage-360-view lib.
 
 Your images folder on server.
 
+### data-filename (or filename)
+
+###### Type: **String** | Default: **image-{index}.jpg** | _optional_
+
+The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and *data_amount*.
+
 ### data-amount (or amount)
 
 ###### Type: **Number** | Default: **36** | _optional_
