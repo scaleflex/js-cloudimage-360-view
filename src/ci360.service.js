@@ -147,28 +147,44 @@ class CI360Viewer {
   }
 
   onMove(pageX) {
-    if (pageX - this.movementStart > this.speedFactor) {
-      const itemsSkipped = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
+    if (pageX - this.movementStart >= this.speedFactor) {
+      const itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
 
       this.movementStart = pageX;
 
-      this.activeImage = (this.activeImage + itemsSkipped) % this.amount || 1;
-
-      if (this.bottomCircle) this.hide360ViewCircleIcon();
-      this.update(this.activeImage);
-    } else if (pageX - this.movementStart <= -this.speedFactor) {
-      const itemsSkipped = Math.abs(Math.floor((pageX - this.movementStart) / this.speedFactor)) || 1;
-
-      this.movementStart = pageX;
-
-      if (this.activeImage - itemsSkipped < 1) {
-        this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+      if (this.spinReverse) {
+        this.moveActiveIndexDown(itemsSkippedRight);
       } else {
-        this.activeImage = this.activeImage - itemsSkipped;
+        this.moveActiveIndexUp(itemsSkippedRight);
       }
 
       if (this.bottomCircle) this.hide360ViewCircleIcon();
       this.update(this.activeImage);
+    } else if (this.movementStart - pageX >= this.speedFactor) {
+      const itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+
+      this.movementStart = pageX;
+
+      if (this.spinReverse) {
+        this.moveActiveIndexUp(itemsSkippedLeft);
+      } else {
+        this.moveActiveIndexDown(itemsSkippedLeft);
+      }
+
+      if (this.bottomCircle) this.hide360ViewCircleIcon();
+      this.update(this.activeImage);
+    }
+  }
+
+  moveActiveIndexUp(itemsSkipped) {
+    this.activeImage = (this.activeImage + itemsSkipped) % this.amount || 1;
+  }
+
+  moveActiveIndexDown(itemsSkipped) {
+    if (this.activeImage - itemsSkipped < 1) {
+      this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+    } else {
+      this.activeImage = this.activeImage - itemsSkipped;
     }
   }
 
@@ -548,7 +564,7 @@ class CI360Viewer {
     let {
       folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector
+      ciFilters, lazyload, lazySelector, spinReverse
     } = get360ViewProps(container);
 
     this.addLoader();
@@ -566,6 +582,7 @@ class CI360Viewer {
     this.magnifier = magnifier;
     this.lazyload = lazyload;
     this.ratio = ratio;
+    this.spinReverse = spinReverse;
 
     container.style.position = 'relative';
     container.style.width = '100%';

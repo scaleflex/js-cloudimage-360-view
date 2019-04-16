@@ -19,7 +19,8 @@ const get360ViewProps = (image) => ({
   ciOperation: attr(image, 'operation') || attr(image, 'data-operation') || 'width',
   ciFilters: attr(image, 'filters') || attr(image, 'data-filters') || 'q35',
   lazyload: (attr(image, 'lazyload') !== null) || (attr(image, 'data-lazyload') !== null),
-  lazySelector: attr(image, 'lazyload-selector') || attr(image, 'data-lazyload-selector') || 'lazyload'
+  lazySelector: attr(image, 'lazyload-selector') || attr(image, 'data-lazyload-selector') || 'lazyload',
+  spinReverse: (attr(image, 'spin-reverse') !== null) || (attr(image, 'data-spin-reverse') !== null)
 });
 
 const attr = (element, attribute) => element.getAttribute(attribute);
