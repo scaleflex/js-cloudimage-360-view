@@ -69,7 +69,7 @@ Add script tag with CDN link to js-cloudimage-360-view lib after all content in 
 
 ## <a name="initialize"></a>Step 2: Initialize
 
-After adding the js-cloudimage-360-view lib, simply iniatialize it with **class name "cloudimage-360"**,
+After adding the js-cloudimage-360-view lib, simply initialize it with **class name "cloudimage-360"**,
 **server folder path**, **file name** and amount of images:
 
 ```html
@@ -81,7 +81,7 @@ After adding the js-cloudimage-360-view lib, simply iniatialize it with **class 
 ></div>
 ```
 
-<a href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edeit in codesandbox"/></a>
+<a href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
 ## <a name="configuration"></a> Config
 
