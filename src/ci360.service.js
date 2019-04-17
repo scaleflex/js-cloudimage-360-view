@@ -586,7 +586,7 @@ class CI360Viewer {
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.fullScreen = fullScreen;
-    this.magnifier = magnifier && !this.isMobile;
+    this.magnifier = !this.isMobile && magnifier ? magnifier : false;
     this.lazyload = lazyload;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
