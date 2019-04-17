@@ -1,3 +1,4 @@
+import './mobile.init';
 import '../../src';
 import './style.css';
 import './assets/fonts/helvetica-neue.css';
