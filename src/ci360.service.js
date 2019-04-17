@@ -18,6 +18,7 @@ class CI360Viewer {
     this.ratio = ratio;
     this.images = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
+    this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
 
     this.init(container);
   }
@@ -148,7 +149,10 @@ class CI360Viewer {
 
   onMove(pageX) {
     if (pageX - this.movementStart >= this.speedFactor) {
-      const itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
+      let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
+
+      if (itemsSkippedRight >= 3 * this.speedFactor)
+        itemsSkippedRight = 3 * this.speedFactor;
 
       this.movementStart = pageX;
 
@@ -161,7 +165,10 @@ class CI360Viewer {
       if (this.bottomCircle) this.hide360ViewCircleIcon();
       this.update(this.activeImage);
     } else if (this.movementStart - pageX >= this.speedFactor) {
-      const itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+      let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+
+      if (itemsSkippedLeft >= 3 * this.speedFactor)
+        itemsSkippedLeft = 3 * this.speedFactor;
 
       this.movementStart = pageX;
 
@@ -575,11 +582,11 @@ class CI360Viewer {
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
-    this.autoplay = autoplay;
+    this.autoplay = autoplay && !this.isMobile;
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.fullScreen = fullScreen;
-    this.magnifier = magnifier;
+    this.magnifier = magnifier && !this.isMobile;
     this.lazyload = lazyload;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
