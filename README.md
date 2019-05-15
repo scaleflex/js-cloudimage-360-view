@@ -151,7 +151,7 @@ Autoplay 360 spin view on load.
 
 Speed of changing frames for autoplay in milliseconds.
 
-### data-drag-speed (or speed)
+### data-drag-speed (or drag-speed)
 
 ###### Type: **Number** | Default: **150** | _optional_
 
