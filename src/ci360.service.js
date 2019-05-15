@@ -257,7 +257,7 @@ class CI360Viewer {
     this.removeLoader();
 
     if (!this.fullScreenView) {
-      this.speedFactor = Math.floor(this.speed / 150 * 36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
+      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
     } else {
       const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
       let imageOffsetWidth = this.container.offsetWidth;
@@ -266,7 +266,7 @@ class CI360Viewer {
         imageOffsetWidth = this.container.offsetHeight / this.ratio;
       }
 
-      this.speedFactor = Math.floor(this.speed / 150 * 36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
+      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
     }
 
     if (this.autoplay) {
@@ -571,7 +571,7 @@ class CI360Viewer {
     let {
       folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse
+      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed
     } = get360ViewProps(container);
 
     this.addLoader();
@@ -590,6 +590,7 @@ class CI360Viewer {
     this.lazyload = lazyload;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
+    this.dragSpeed = dragSpeed;
 
     container.style.position = 'relative';
     container.style.width = '100%';
