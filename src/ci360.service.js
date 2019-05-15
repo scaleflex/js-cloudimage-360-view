@@ -251,13 +251,13 @@ class CI360Viewer {
     }
   }
 
-  onAllImagesLoaded(event) {
+  onAllImagesLoaded() {
     this.imagesLoaded = true;
     this.container.style.cursor = 'grab';
     this.removeLoader();
 
     if (!this.fullScreenView) {
-      this.speedFactor = Math.floor(36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
+      this.speedFactor = Math.floor(this.speed / 150 * 36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
     } else {
       const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
       let imageOffsetWidth = this.container.offsetWidth;
@@ -266,7 +266,7 @@ class CI360Viewer {
         imageOffsetWidth = this.container.offsetHeight / this.ratio;
       }
 
-      this.speedFactor = Math.floor(36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
+      this.speedFactor = Math.floor(this.speed / 150 * 36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
     }
 
     if (this.autoplay) {
