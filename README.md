@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v2.0.6-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v2.0.7-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -64,7 +64,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.6.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.7.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
