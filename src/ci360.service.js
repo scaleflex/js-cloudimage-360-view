@@ -151,9 +151,6 @@ class CI360Viewer {
     if (pageX - this.movementStart >= this.speedFactor) {
       let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
 
-      if (itemsSkippedRight >= 3 * this.speedFactor)
-        itemsSkippedRight = 3 * this.speedFactor;
-
       this.movementStart = pageX;
 
       if (this.spinReverse) {
@@ -166,9 +163,6 @@ class CI360Viewer {
       this.update(this.activeImage);
     } else if (this.movementStart - pageX >= this.speedFactor) {
       let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
-
-      if (itemsSkippedLeft >= 3 * this.speedFactor)
-        itemsSkippedLeft = 3 * this.speedFactor;
 
       this.movementStart = pageX;
 
@@ -268,6 +262,8 @@ class CI360Viewer {
 
       this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
     }
+
+    console.log(this.speedFactor);
 
     if (this.autoplay) {
       this.play();
