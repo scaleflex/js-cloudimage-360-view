@@ -18,7 +18,7 @@ module.exports = {
   entry: path.join(__dirname, "../src/index.js"),
   output: {
     path: path.join(__dirname, "../build"),
-    filename: `v${pkg.version}.min.js`
+    filename: `${pkg.name}.min.js`
   },
   module: {
     rules: [

@@ -64,7 +64,13 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.7.min.js"></script>
+<script src="https://cdn.scaleflex.it/filerobot/360-view/2.0.7/js-cloudimage-360-view.min.js"></script>
+```
+
+You may also use major version number instead of fixed version to have the latest version available.
+
+```javascript
+<script src="https://cdn.scaleflex.it/filerobot/360-view/2/js-cloudimage-360-view.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
