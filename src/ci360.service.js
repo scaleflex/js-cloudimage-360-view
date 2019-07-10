@@ -263,8 +263,6 @@ class CI360Viewer {
       this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * imageOffsetWidth / 1500) || 1;
     }
 
-    console.log(this.speedFactor);
-
     if (this.autoplay) {
       this.play();
     }
