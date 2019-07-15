@@ -561,6 +561,21 @@ class CI360Viewer {
     });
   }
 
+  destroy() {
+    stop();
+
+    const oldElement = this.container;
+    const newElement = oldElement.cloneNode(false);
+
+    newElement.className = newElement.className.replace(' initialized', '');
+    newElement.style.position = 'relative';
+    newElement.style.width = '100%';
+    newElement.style.cursor = 'default';
+    newElement.setAttribute('draggable', 'false');
+    newElement.style.minHeight = 'auto';
+    oldElement.parentNode.replaceChild(newElement, oldElement);
+  }
+
   init(container) {
     let {
       folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
@@ -590,6 +605,7 @@ class CI360Viewer {
     container.style.width = '100%';
     container.style.cursor = 'wait';
     container.setAttribute('draggable', 'false');
+    container.className = `${container.className} initialized`;
 
     this.canvas = document.createElement('canvas');
     this.canvas.style.width = '100%';
