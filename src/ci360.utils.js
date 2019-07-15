@@ -2,7 +2,7 @@ const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
   amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 36, 10),
-  speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 150, 10),
+  speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),
   keys: isTrue(image, 'keys'),
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
@@ -138,7 +138,7 @@ const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
   closeFullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat`;
 };
 
-const magnify = (container, img, src, glass, zoom) => {
+const magnify = (container, src, glass, zoom) => {
   let w, h, bw;
   glass.setAttribute("class", "img-magnifier-glass");
   container.prepend(glass);
