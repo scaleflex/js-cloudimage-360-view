@@ -121,6 +121,8 @@ Destroy cloudimage 360 viewer instances.
 ```javascript
 window.CI360.destroy();
 ```
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-initdestroy-y1il9">
+	<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
 ## <a name="configuration"></a> Config
 
