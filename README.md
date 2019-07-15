@@ -46,7 +46,9 @@ powered by [Cloudimage](https://www.cloudimage.io/)
 * [Demo](#demo)
 * [Step 1: Installation](#installation)
 * [Step 2: Initialize](#initialize)
+* [Methods](#methods)
 * [Configuration](#configuration)
+* [Controls](#controls)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
 * [Lazy loading integration](#lazy-loading)
 * [Best practices](#best-practices)
@@ -90,6 +92,35 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 ```
 
 <a href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+
+## <a name="methods"></a> Methods
+
+### init
+
+###### Type: **Function**
+
+Initialization of js cloudimage 360 view plugin.
+
+```javascript
+window.CI360.init();
+```
+
+> NOTE: initialization of the plugin runs on the script load. In case you need to postpone the initialization of the plugin you can disable it with **notInitOnLoad** param
+> ```javascript
+> <script>window.CI360 = { notInitOnLoad: true }</script>
+> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2/js-cloudimage-360-view.min.js"></script>
+> <script>window.CI360.init(); // initialize the plugin when you need</script>
+> ```
+
+### destroy
+
+###### Type: **Function**
+
+Destroy cloudimage 360 viewer instances.
+
+```javascript
+window.CI360.destroy();
+```
 
 ## <a name="configuration"></a> Config
 
@@ -183,6 +214,18 @@ Apply box shadow for container.
 
 Display 360 view line at the bottom of container.
 
+### data-control-reverse (or control-reverse)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+Spin direction using controls, by default it uses counterclockwise (image indexes from 1 to data-amount).
+
+### data-stop-at-edges (or stop-at-edges)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+Blocks repeating images after reaching last image (or first image in oposite direction)
+
 ### data-bottom-circle-offset (or bottom-circle-offset)
 
 ###### Type: **Number** | Default: **5** | _optional_
@@ -200,6 +243,67 @@ Only 360 view images close to the client's viewport will be loaded, hence accele
 ###### Type: **String** | Default: **lazyload** | _optional_
 
 Helper class to apply lazy-loading depending on library you choose, see [Lazy loading](#lazy-loading)
+
+## <a name="controls"></a> Controls
+
+You can add controls by adding elements with the following classes: **cloudimage-360-prev**, **cloudimage-360-next**
+
+### Example CSS
+```css
+.cloudimage-360 .cloudimage-360-prev, .cloudimage-360 .cloudimage-360-next {
+	padding: 8px;
+	background: rgba(255, 255, 255, 0.5);
+	border: none;
+	border-radius: 4px;
+}
+.cloudimage-360 .cloudimage-360-prev:focus, .cloudimage-360 .cloudimage-360-next:focus {
+	outline: none;
+}
+.cloudimage-360 .cloudimage-360-prev {
+	display: none;
+	position: absolute;
+	z-index: 100;
+	top: calc(50% - 15px);
+	left: 20px;
+}
+.cloudimage-360 .cloudimage-360-next {
+	display: none;
+	position: absolute;
+	z-index: 100;
+	top: calc(50% - 15px);
+	right: 20px;
+}
+.cloudimage-360 .cloudimage-360-prev:before, .cloudimage-360 .cloudimage-360-next:before {
+	content: '';
+	display: block;
+	width: 30px;
+	height: 30px;
+	background: 50% 50% / cover no-repeat;
+}
+.cloudimage-360 .cloudimage-360-prev:before {
+	background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
+}
+.cloudimage-360 .cloudimage-360-next:before {
+	background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
+}
+.cloudimage-360 .cloudimage-360-prev.not-active, .cloudimage-360 .cloudimage-360-next.not-active {
+	opacity: 0.4;
+	cursor: default;
+}
+```
+### Example HTML
+```html
+<div
+	class="cloudimage-360"
+	data-folder="https://scaleflex.airstore.io/demo/indoor/"
+	data-filename="{index}.jpeg"
+>
+	<button class="cloudimage-360-prev"></button>
+	<button class="cloudimage-360-next"></button>
+</div>
+```
+
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-361eb?fontsize=14"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
 ## <a name="cloudimage-responsive-integration"/> Cloudimage Responsive Integration
 
