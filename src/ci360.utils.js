@@ -21,7 +21,9 @@ const get360ViewProps = (image) => ({
   ciFilters: attr(image, 'filters') || attr(image, 'data-filters') || 'q35',
   lazyload: isTrue(image, 'lazyload'),
   lazySelector: attr(image, 'lazyload-selector') || attr(image, 'data-lazyload-selector') || 'lazyload',
-  spinReverse: isTrue(image, 'spin-reverse')
+  spinReverse: isTrue(image, 'spin-reverse'),
+  controlReverse: isTrue(image, 'control-reverse'),
+  stopAtEdges: isTrue(image, 'stop-at-edges')
 });
 
 const isTrue = (image, type) => {
@@ -258,6 +260,20 @@ const fit = (contains) => {
 
 const contain = fit(true);
 
+const addClass = (el, className) => {
+  if (el.classList)
+    el.classList.add(className);
+  else
+    el.className += ' ' + className;
+};
+
+const removeClass = (el, className) => {
+  if (el.classList)
+    el.classList.remove(className);
+  else
+    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+}
+
 export {
   get360ViewProps,
   set360ViewIconStyles,
@@ -272,5 +288,7 @@ export {
   setCloseFullScreenViewStyles,
   getResponsiveWidthOfContainer,
   getSizeAccordingToPixelRatio,
-  contain
+  contain,
+  addClass,
+  removeClass
 }

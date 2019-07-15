@@ -1,7 +1,8 @@
 import {
   get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles,
   setView360Icon, contain, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
-  setFullScreenIconStyles, setCloseFullScreenViewStyles, getResponsiveWidthOfContainer, getSizeAccordingToPixelRatio
+  setFullScreenIconStyles, setCloseFullScreenViewStyles, getResponsiveWidthOfContainer, getSizeAccordingToPixelRatio,
+  addClass, removeClass
 } from './ci360.utils';
 
 
@@ -171,7 +172,7 @@ class CI360Viewer {
       }
 
       if (this.bottomCircle) this.hide360ViewCircleIcon();
-      this.update(this.activeImage);
+      this.update();
     } else if (this.movementStart - pageX >= this.speedFactor) {
       let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
 
@@ -184,19 +185,62 @@ class CI360Viewer {
       }
 
       if (this.bottomCircle) this.hide360ViewCircleIcon();
-      this.update(this.activeImage);
+      this.update();
     }
   }
 
   moveActiveIndexUp(itemsSkipped) {
-    this.activeImage = (this.activeImage + itemsSkipped) % this.amount || 1;
+    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+
+    if (this.stopAtEdges) {
+      if (this.activeImage + itemsSkipped >= this.amount) {
+        this.activeImage = this.amount;
+
+        if (isReverse ? this.prevElem : this.nextElem) {
+          addClass(isReverse ? this.prevElem : this.nextElem, 'not-active');
+        }
+      } else {
+        this.activeImage += itemsSkipped;
+
+        if (this.nextElem) {
+          removeClass(this.nextElem, 'not-active');
+        }
+
+        if (this.prevElem) {
+          removeClass(this.prevElem, 'not-active');
+        }
+      }
+    } else {
+      this.activeImage = (this.activeImage + itemsSkipped) % this.amount || 1;
+    }
   }
 
   moveActiveIndexDown(itemsSkipped) {
-    if (this.activeImage - itemsSkipped < 1) {
-      this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+
+    if (this.stopAtEdges) {
+      if (this.activeImage - itemsSkipped <= 1) {
+        this.activeImage = 1;
+
+        if (isReverse ? this.nextElem : this.prevElem) {
+          addClass(isReverse ? this.nextElem : this.prevElem, 'not-active');
+        }
+      } else {
+        this.activeImage -= itemsSkipped;
+
+        if (this.prevElem) {
+          removeClass(this.prevElem, 'not-active');
+        }
+        if (this.nextElem) {
+          removeClass(this.nextElem, 'not-active');
+        }
+      }
     } else {
-      this.activeImage = this.activeImage - itemsSkipped;
+      if (this.activeImage - itemsSkipped < 1) {
+        this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+      } else {
+        this.activeImage -= itemsSkipped;
+      }
     }
   }
 
@@ -205,23 +249,17 @@ class CI360Viewer {
   }
 
   next() {
-    this.activeImage = this.activeImage % this.amount + 1;
-
-    this.update(this.activeImage);
+    this.moveActiveIndexUp(1);
+    this.update();
   }
 
   prev() {
-    if (this.activeImage - 1 === 0) {
-      this.activeImage = this.amount;
-    } else {
-      this.activeImage -= 1;
-    }
-
-    this.update(this.activeImage);
+    this.moveActiveIndexDown(1);
+    this.update();
   }
 
-  update(activeImage) {
-    const image = this.images[activeImage - 1];
+  update() {
+    const image = this.images[this.activeImage - 1];
     const ctx = this.canvas.getContext("2d");
 
     ctx.scale(this.devicePixelRatio,this.devicePixelRatio);
@@ -282,6 +320,8 @@ class CI360Viewer {
       this.view360Icon.innerText = '';
       setView360Icon(this.view360Icon);
     }
+
+    this.initControls();
   }
 
   onFirstImageLoaded(event) {
@@ -590,8 +630,12 @@ class CI360Viewer {
   }
 
   initControls() {
+    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
     const prev = this.container.querySelector('.cloudimage-360-prev');
     const next = this.container.querySelector('.cloudimage-360-next');
+
+    if (!prev && !next) return;
+
 
     const onLeftStart = (event) => {
       event.stopPropagation();
@@ -615,17 +659,29 @@ class CI360Viewer {
     };
 
     if (prev) {
-      prev.addEventListener('mousedown', this.spinReverse ? onRightStart : onLeftStart);
-      prev.addEventListener('touchstart', this.spinReverse ? onRightStart : onLeftStart);
-      prev.addEventListener('mouseup', this.spinReverse ? onRightEnd : onLeftEnd);
-      prev.addEventListener('touchend', this.spinReverse ? onRightEnd : onLeftEnd);
+      prev.style.display = 'block';
+      prev.addEventListener('mousedown', isReverse ? onRightStart : onLeftStart);
+      prev.addEventListener('touchstart', isReverse ? onRightStart : onLeftStart);
+      prev.addEventListener('mouseup', isReverse ? onRightEnd : onLeftEnd);
+      prev.addEventListener('touchend', isReverse ? onRightEnd : onLeftEnd);
+
+      this.prevElem = prev;
     }
 
     if (next) {
-      next.addEventListener('mousedown', this.spinReverse ? onLeftStart : onRightStart);
-      next.addEventListener('touchstart', this.spinReverse ? onLeftStart : onRightStart);
-      next.addEventListener('mouseup', this.spinReverse ? onLeftEnd : onRightEnd);
-      next.addEventListener('touchend', this.spinReverse ? onLeftEnd : onRightEnd);
+      next.style.display = 'block';
+      next.addEventListener('mousedown', isReverse ? onLeftStart : onRightStart);
+      next.addEventListener('touchstart', isReverse ? onLeftStart : onRightStart);
+      next.addEventListener('mouseup', isReverse ? onLeftEnd : onRightEnd);
+      next.addEventListener('touchend', isReverse ? onLeftEnd : onRightEnd);
+
+      this.nextElem = next;
+    }
+
+    if (isReverse ? next : prev) {
+      if (this.stopAtEdges) {
+        addClass(isReverse ? next : prev, 'not-active');
+      }
     }
   }
 
@@ -635,11 +691,53 @@ class CI360Viewer {
     this.container.appendChild(this.innerBox);
   }
 
+  addCanvas() {
+    this.canvas = document.createElement('canvas');
+    this.canvas.style.width = '100%';
+    this.canvas.style.fontSize = '0';
+
+    if (this.ratio) {
+      this.container.style.minHeight = this.container.offsetWidth * this.ratio + 'px';
+      this.canvas.height = parseInt(this.container.style.minHeight);
+    }
+
+    this.innerBox.appendChild(this.canvas);
+  }
+
+  attachEvents(draggable, swipeable, keys) {
+    if (draggable) {
+      this.container.addEventListener('mousedown', this.mousedown.bind(this));
+      this.container.addEventListener('mouseup', this.mouseup.bind(this));
+      this.container.addEventListener('mousemove', this.mousemove.bind(this));
+    }
+
+    if (swipeable) {
+      this.container.addEventListener('touchstart', this.touchstart.bind(this), { passive: true });
+      this.container.addEventListener('touchend', this.touchend.bind(this), { passive: true });
+      this.container.addEventListener('touchmove', this.touchmove.bind(this));
+    }
+
+    if (keys) {
+      document.addEventListener('keydown', this.keydown.bind(this));
+      document.addEventListener('keyup', this.keyup.bind(this));
+    } else {
+      document.addEventListener('keydown', this.keydownGeneral.bind(this));
+    }
+  }
+
+  applyStylesToContainer() {
+    this.container.style.position = 'relative';
+    this.container.style.width = '100%';
+    this.container.style.cursor = 'wait';
+    this.container.setAttribute('draggable', 'false');
+    this.container.className = `${this.container.className} initialized`;
+  }
+
   init(container) {
     let {
       folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed
+      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse
     } = get360ViewProps(container);
 
     this.addInnerBox();
@@ -659,50 +757,20 @@ class CI360Viewer {
     this.lazyload = lazyload;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
+    this.controlReverse = controlReverse;
     this.dragSpeed = dragSpeed;
-    this.autoplaySpeed = this.speed * 36 / this.amount
+    this.autoplaySpeed = this.speed * 36 / this.amount;
+    this.stopAtEdges = stopAtEdges;
 
-    container.style.position = 'relative';
-    container.style.width = '100%';
-    container.style.cursor = 'wait';
-    container.setAttribute('draggable', 'false');
-    container.className = `${container.className} initialized`;
+    this.applyStylesToContainer();
 
-    this.canvas = document.createElement('canvas');
-    this.canvas.style.width = '100%';
-    this.canvas.style.fontSize = '0';
-
-    if (ratio) {
-      container.style.minHeight = container.offsetWidth * ratio + 'px';
-      this.canvas.height = container.style.minHeight;
-    }
-
-    this.innerBox.appendChild(this.canvas);
+    this.addCanvas();
 
     let src = this.getSrc(responsive, container, folder, filename, ciSize, ciToken, ciOperation, ciFilters);
 
     this.preloadImages(amount, src, lazyload, lazySelector);
 
-    this.initControls();
-
-    if (draggable) {
-      container.addEventListener('mousedown', this.mousedown.bind(this));
-      container.addEventListener('mouseup', this.mouseup.bind(this));
-      container.addEventListener('mousemove', this.mousemove.bind(this));
-    }
-
-    if (swipeable) {
-      container.addEventListener('touchstart', this.touchstart.bind(this), { passive: true });
-      container.addEventListener('touchend', this.touchend.bind(this), { passive: true });
-      container.addEventListener('touchmove', this.touchmove.bind(this));
-    }
-
-    if (keys) {
-      document.addEventListener('keydown', this.keydown.bind(this));
-      document.addEventListener('keyup', this.keyup.bind(this));
-    } else {
-      document.addEventListener('keydown', this.keydownGeneral.bind(this));
-    }
+    this.attachEvents(draggable, swipeable, keys);
   }
 }
 
