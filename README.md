@@ -116,7 +116,7 @@ window.CI360.init();
 
 ###### Type: **Function**
 
-Destroy cloudimage 360 viewer instances.
+Destroying a cloudimage 360 viewer instance will reset the HTML to its original state.
 
 ```javascript
 window.CI360.destroy();
