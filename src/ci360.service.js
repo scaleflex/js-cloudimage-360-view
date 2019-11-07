@@ -211,7 +211,7 @@ class CI360Viewer {
         }
       }
     } else {
-      this.activeImage = (this.activeImage + itemsSkipped) % this.amount || 1;
+      this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
     }
   }
 
