@@ -588,7 +588,12 @@ class CI360Viewer {
   preloadImages(amount, src, lazyload, lazySelector) {
     [...new Array(amount)].map((item, index) => {
       const image = new Image();
-      const resultSrc = src.replace('{index}', index + 1);
+
+      const resultSrc = (this.indexZeroBase === 0) ? src.replace('{index}', index + 1) : src.replace('{index}', () => {
+        let s = index + 1 + "";
+        while (s.length < this.indexZeroBase) s = "0" + s;
+        return s;
+      })
 
       if (lazyload && !this.fullScreenView) {
         image.setAttribute('data-src', resultSrc);
@@ -735,7 +740,7 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
+      folder, filename, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse
     } = get360ViewProps(container);
@@ -745,6 +750,7 @@ class CI360Viewer {
 
     this.folder = folder;
     this.filename = filename;
+    this.indexZeroBase = indexZeroBase;
     this.amount = amount;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
