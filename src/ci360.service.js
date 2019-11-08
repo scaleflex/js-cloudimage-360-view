@@ -2,7 +2,7 @@ import {
   get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles,
   setView360Icon, contain, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
   setFullScreenIconStyles, setCloseFullScreenViewStyles, getResponsiveWidthOfContainer, getSizeAccordingToPixelRatio,
-  addClass, removeClass
+  addClass, removeClass, pad
 } from './ci360.utils';
 
 
@@ -444,7 +444,8 @@ class CI360Viewer {
   }
 
   magnify() {
-    const src = `${this.folder}${this.filename.replace('{index}', this.activeImage)}`;
+    const nextZeroFilledIndex = pad(this.activeImage, this.indexZeroBase);
+    const src = `${this.folder}${this.filename.replace('{index}', nextZeroFilledIndex)}`;
     const image = new Image();
 
     image.src = src;
@@ -588,12 +589,8 @@ class CI360Viewer {
   preloadImages(amount, src, lazyload, lazySelector) {
     [...new Array(amount)].map((item, index) => {
       const image = new Image();
-
-      const resultSrc = (this.indexZeroBase === 0) ? src.replace('{index}', index + 1) : src.replace('{index}', () => {
-        let s = index + 1 + "";
-        while (s.length < this.indexZeroBase) s = "0" + s;
-        return s;
-      })
+      const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
+      const resultSrc = src.replace('{index}', nextZeroFilledIndex);
 
       if (lazyload && !this.fullScreenView) {
         image.setAttribute('data-src', resultSrc);

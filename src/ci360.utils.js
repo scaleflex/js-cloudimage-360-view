@@ -273,7 +273,13 @@ const removeClass = (el, className) => {
     el.classList.remove(className);
   else
     el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-}
+};
+
+const pad = (n, width = 0) => {
+  n = n + '';
+
+  return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+};
 
 export {
   get360ViewProps,
@@ -291,5 +297,6 @@ export {
   getSizeAccordingToPixelRatio,
   contain,
   addClass,
-  removeClass
+  removeClass,
+  pad
 }
