@@ -2,7 +2,7 @@ import {
   get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles,
   setView360Icon, contain, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
   setFullScreenIconStyles, setCloseFullScreenViewStyles, getResponsiveWidthOfContainer, getSizeAccordingToPixelRatio,
-  addClass, removeClass
+  addClass, removeClass, pad
 } from './ci360.utils';
 
 
@@ -444,7 +444,8 @@ class CI360Viewer {
   }
 
   magnify() {
-    const src = `${this.folder}${this.filename.replace('{index}', this.activeImage)}`;
+    const nextZeroFilledIndex = pad(this.activeImage, this.indexZeroBase);
+    const src = `${this.folder}${this.filename.replace('{index}', nextZeroFilledIndex)}`;
     const image = new Image();
 
     image.src = src;
@@ -588,7 +589,8 @@ class CI360Viewer {
   preloadImages(amount, src, lazyload, lazySelector) {
     [...new Array(amount)].map((item, index) => {
       const image = new Image();
-      const resultSrc = src.replace('{index}', index + 1);
+      const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
+      const resultSrc = src.replace('{index}', nextZeroFilledIndex);
 
       if (lazyload && !this.fullScreenView) {
         image.setAttribute('data-src', resultSrc);
@@ -735,7 +737,7 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
+      folder, filename, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse
     } = get360ViewProps(container);
@@ -745,6 +747,7 @@ class CI360Viewer {
 
     this.folder = folder;
     this.filename = filename;
+    this.indexZeroBase = indexZeroBase;
     this.amount = amount;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;

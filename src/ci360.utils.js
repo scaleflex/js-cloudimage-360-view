@@ -1,6 +1,7 @@
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
+  indexZeroBase: parseInt(attr(image, 'index-zero-base') || attr(image, 'data-index-zero-base') || 0, 10),
   amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 36, 10),
   speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),
@@ -272,7 +273,13 @@ const removeClass = (el, className) => {
     el.classList.remove(className);
   else
     el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-}
+};
+
+const pad = (n, width = 0) => {
+  n = n + '';
+
+  return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+};
 
 export {
   get360ViewProps,
@@ -290,5 +297,6 @@ export {
   getSizeAccordingToPixelRatio,
   contain,
   addClass,
-  removeClass
+  removeClass,
+  pad
 }
