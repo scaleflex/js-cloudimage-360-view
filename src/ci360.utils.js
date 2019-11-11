@@ -1,8 +1,9 @@
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
+  imageList: attr(image, 'image-list') || attr(image, 'data-image-list') || '[]',
   indexZeroBase: parseInt(attr(image, 'index-zero-base') || attr(image, 'data-index-zero-base') || 0, 10),
-  amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 36, 10),
+  amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 0, 10),
   speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),
   keys: isTrue(image, 'keys'),
@@ -12,7 +13,7 @@ const get360ViewProps = (image) => ({
   bottomCircle: isTrue(image, 'bottom-circle'),
   fullScreen: isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
-  parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
+    parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
   ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false,
   responsive: isTrue(image, 'responsive'),
