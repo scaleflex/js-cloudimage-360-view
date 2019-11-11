@@ -234,6 +234,30 @@ Blocks repeating images after reaching last image (or first image in oposite dir
 
 Bottom offset for 360 view line.
 
+### data-index-zero-base (or index-zero-base)
+
+###### Type: **Number** | _optional_
+
+Left zero padding on filename. For example: index-zero-base="4" => image index will be "0004"
+
+### data-image-list (or image-list)
+
+###### Type: **Array** | _optional_
+
+Option to add list of images instead of `folder` & `filename`.
+
+example:
+
+```javascript
+data-folder="https://scaleflex.airstore.io/demo/360-car/"
+data-image-list='[
+   "iris-1.jpeg",
+   "iris-4.jpeg",
+   "https://scaleflex.airstore.io/demo/360-car/iris-12.jpeg",
+   "https://scaleflex.airstore.io/demo/360-car/iris-15.jpeg"
+   ]’
+```
+
 ### data-lazyload (or lazyload)
 
 ###### Type: **Bool** | Default: **false** | _optional_
