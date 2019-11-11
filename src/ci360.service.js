@@ -1,8 +1,21 @@
 import {
-  get360ViewProps, set360ViewIconStyles, set360ViewCircleIconStyles, setLoaderStyles, setBoxShadowStyles,
-  setView360Icon, contain, magnify, setMagnifyIconStyles, setFullScreenModalStyles,
-  setFullScreenIconStyles, setCloseFullScreenViewStyles, getResponsiveWidthOfContainer, getSizeAccordingToPixelRatio,
-  addClass, removeClass, pad
+  addClass,
+  contain,
+  get360ViewProps,
+  getResponsiveWidthOfContainer,
+  getSizeAccordingToPixelRatio,
+  magnify,
+  pad,
+  removeClass,
+  set360ViewCircleIconStyles,
+  set360ViewIconStyles,
+  setBoxShadowStyles,
+  setCloseFullScreenViewStyles,
+  setFullScreenIconStyles,
+  setFullScreenModalStyles,
+  setLoaderStyles,
+  setMagnifyIconStyles,
+  setView360Icon
 } from './ci360.utils';
 
 
@@ -262,7 +275,7 @@ class CI360Viewer {
     const image = this.images[this.activeImage - 1];
     const ctx = this.canvas.getContext("2d");
 
-    ctx.scale(this.devicePixelRatio,this.devicePixelRatio);
+    ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
 
     if (this.fullScreenView) {
       this.canvas.width = window.innerWidth * this.devicePixelRatio;
@@ -564,7 +577,7 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  getSrc(responsive, container, folder, filename, ciSize, ciToken, ciOperation, ciFilters) {
+  getSrc(responsive, container, folder, filename, { ciSize, ciToken, ciOperation, ciFilters }) {
     let src = `${folder}${filename}`;
 
     if (responsive) {
@@ -586,32 +599,51 @@ class CI360Viewer {
     return src;
   }
 
-  preloadImages(amount, src, lazyload, lazySelector) {
-    [...new Array(amount)].map((item, index) => {
-      const image = new Image();
-      const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
-      const resultSrc = src.replace('{index}', nextZeroFilledIndex);
+  preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams) {
+    if (this.imageList) {
+      try {
+        const images = JSON.parse(this.imageList);
 
-      if (lazyload && !this.fullScreenView) {
-        image.setAttribute('data-src', resultSrc);
-        image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
+        this.amount = images.length;
+        images.forEach(src => {
+          const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
+          const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
 
-        if (index === 0) {
-          this.lazyloadInitImage = image;
-          image.style.position = 'absolute';
-          image.style.top = '0';
-          image.style.left = '0';
-          this.innerBox.appendChild(image);
-        }
-      } else {
-        image.src = resultSrc;
+          this.addImage(resultSrc, lazyload, lazySelector);
+        });
+      } catch (error) {
+        console.error(`Wrong format in image-list attribute: ${error.message}`);
       }
+    } else {
+      [...new Array(amount)].map((_item, index) => {
+        const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
+        const resultSrc = src.replace('{index}', nextZeroFilledIndex);
+        this.addImage(resultSrc, lazyload, lazySelector);
+      });
+    }
+  }
 
-      image.onload = this.onImageLoad.bind(this);
-      image.onerror = this.onImageLoad.bind(this);
+  addImage(resultSrc, lazyload, lazySelector) {
+    const image = new Image();
 
-      this.images.push(image);
-    });
+    if (lazyload && !this.fullScreenView) {
+      image.setAttribute('data-src', resultSrc);
+      image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
+
+      if (index === 0) {
+        this.lazyloadInitImage = image;
+        image.style.position = 'absolute';
+        image.style.top = '0';
+        image.style.left = '0';
+        this.innerBox.appendChild(image);
+      }
+    } else {
+      image.src = resultSrc;
+    }
+
+    image.onload = this.onImageLoad.bind(this);
+    image.onerror = this.onImageLoad.bind(this);
+    this.images.push(image);
   }
 
   destroy() {
@@ -637,7 +669,6 @@ class CI360Viewer {
     const next = this.container.querySelector('.cloudimage-360-next');
 
     if (!prev && !next) return;
-
 
     const onLeftStart = (event) => {
       event.stopPropagation();
@@ -737,16 +768,18 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
+      folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse
     } = get360ViewProps(container);
+    const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
     this.addInnerBox();
     this.addLoader();
 
     this.folder = folder;
     this.filename = filename;
+    this.imageList = imageList;
     this.indexZeroBase = indexZeroBase;
     this.amount = amount;
     this.bottomCircle = bottomCircle;
@@ -769,9 +802,9 @@ class CI360Viewer {
 
     this.addCanvas();
 
-    let src = this.getSrc(responsive, container, folder, filename, ciSize, ciToken, ciOperation, ciFilters);
+    let src = this.getSrc(responsive, container, folder, filename, ciParams);
 
-    this.preloadImages(amount, src, lazyload, lazySelector);
+    this.preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams);
 
     this.attachEvents(draggable, swipeable, keys);
   }
