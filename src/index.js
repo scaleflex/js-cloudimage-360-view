@@ -21,9 +21,16 @@ function destroy() {
   window.CI360._viewers = [];
 }
 
+function getActiveIndexByID(id) {
+  for (const viewer of window.CI360._viewers) {
+    if (viewer.id === id) return viewer.activeImage;
+  }
+}
+
 window.CI360 = window.CI360 || {};
 window.CI360.init = init;
 window.CI360.destroy = destroy;
+window.CI360.getActiveIndexByID = getActiveIndexByID;
 
 if (!window.CI360.notInitOnLoad) {
   init();

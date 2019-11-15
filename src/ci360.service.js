@@ -33,7 +33,7 @@ class CI360Viewer {
     this.images = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
-
+    this.id = container.id;
     this.init(container);
   }
 
