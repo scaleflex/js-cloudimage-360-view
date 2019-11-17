@@ -456,10 +456,16 @@ class CI360Viewer {
     this.innerBox.appendChild(magnifyIcon);
   }
 
+  getOriginalSrc() {
+    const currentImage = this.images[this.activeImage - 1];
+    const lastIndex = currentImage.src.lastIndexOf('//');
+
+    return lastIndex > 10 ? currentImage.src.slice(lastIndex) : currentImage.src;
+  }
+
   magnify() {
-    const nextZeroFilledIndex = pad(this.activeImage, this.indexZeroBase);
-    const src = `${this.folder}${this.filename.replace('{index}', nextZeroFilledIndex)}`;
     const image = new Image();
+    const src = this.getOriginalSrc();
 
     image.src = src;
     image.onload = () => {
