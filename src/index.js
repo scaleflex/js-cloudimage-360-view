@@ -26,7 +26,7 @@ function getActiveIndexByID(id) {
 
   let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
 
-  return currentViewer && currentViewer.activeImage
+  return currentViewer && (currentViewer.activeImage - 1);
 }
 
 function isNoViewers() {
