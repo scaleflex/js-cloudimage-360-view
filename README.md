@@ -124,6 +124,16 @@ window.CI360.destroy();
 <a href="https://codesandbox.io/s/js-cloudimage-360-view-initdestroy-y1il9">
 	<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
+### getActiveIndexByID
+
+###### Type: **Function**
+
+Get the {index} of the image that is being viewed.
+
+```javascript
+window.CI360.getActiveIndexByID('id_of_product');
+```
+
 ## <a name="configuration"></a> Config
 
 ### class
