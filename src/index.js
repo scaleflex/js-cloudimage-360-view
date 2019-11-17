@@ -14,17 +14,23 @@ function init() {
 }
 
 function destroy() {
-  if (!(window.CI360._viewers && window.CI360._viewers.length > 0)) return;
+  if (isNoViewers()) return;
 
-  [].slice.call(window.CI360._viewers).forEach(viewer => { viewer.destroy(); });
+  window.CI360._viewers.forEach(viewer => { viewer.destroy(); });
 
   window.CI360._viewers = [];
 }
 
 function getActiveIndexByID(id) {
-  for (const viewer of window.CI360._viewers) {
-    if (viewer.id === id) return viewer.activeImage;
-  }
+  if (isNoViewers()) return;
+
+  let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
+
+  return currentViewer && currentViewer.activeImage
+}
+
+function isNoViewers() {
+  return !(window.CI360._viewers && window.CI360._viewers.length > 0);
 }
 
 window.CI360 = window.CI360 || {};
