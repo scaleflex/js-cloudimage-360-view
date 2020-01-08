@@ -53,6 +53,38 @@
     }
   }
 
+  .buttons {
+    position: absolute;
+    top: 45%;
+    left: 0;
+
+    .next,
+    .prev {
+      display: block;
+      width: 30px;
+      height: 30px;
+      background: 50% 50% / cover no-repeat;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &.disabled {
+        pointer-events: none;
+        opacity: 0.4;
+        cursor: default;
+      }
+    }
+
+    .next {
+      background-image: url(https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg);
+    }
+
+    .prev {
+      background-image: url(https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg);
+    }
+  }
+
   .image {
     width: 100%;
     height: 100%;
@@ -71,8 +103,4 @@
     background-repeat: no-repeat;
     background-size: contain;
   }
-}
-
-h1 {
-  color: green;
 }

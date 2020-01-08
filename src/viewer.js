@@ -65,6 +65,8 @@ export class Viewer {
     this.image.classList.add('image');
     this.image.draggable = false;
 
+    this.isMobile = false;
+
     this.init();
   }
 
@@ -292,7 +294,7 @@ export class Viewer {
     this.menu = document.createElement('div');
     this.menu.classList.add('menu');
 
-    if (this.magnifier) {
+    if (this.magnifier && !this.isMobile) {
       this.addMagnifierButton();
     }
 
