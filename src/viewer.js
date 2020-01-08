@@ -19,7 +19,7 @@ export class Viewer {
     this.keys = Boolean(getAttr(container, 'data-keys'));
     this.container.style.boxShadow = getAttr(container, 'data-box-shadow');
     this.autoplay = Boolean(getAttr(container, 'data-autoplay'));
-    this.autoplayReverse = Boolean(getAttr(container, 'data-autoplay-reverse'));
+    this.autoplaySpeed = this.speed * 36 / this.amount;
     this.bottomCircle = Boolean(getAttr(container, 'data-bottom-circle'));
     this.fullScreen = Boolean(getAttr(container, 'data-full-screen'));
     this.magnifier = getAttr(container, 'data-magnifier') !== null &&
@@ -60,7 +60,7 @@ export class Viewer {
     this.maxColIndex = this.amount - 1;
     this.maxRowIndex = this.amount - 1;
 
-    this.cachedImages = {};
+    this.cachedImages = {}; //using it as key-value pair
     this.image = new Image();
     this.image.classList.add('image');
     this.image.draggable = false;
@@ -103,6 +103,18 @@ export class Viewer {
     if (!this.lazyload) {
       this.preloadImages();
     }
+
+    if (this.autoplay) {
+      this.autoplayInterval = setInterval(this.spin.bind(this), this.autoplaySpeed);
+    }
+
+    if (this.fullScreen) {
+      this.addFullScreenButton();
+    }
+
+    if (this.bottomCircle) {
+      this.addPreviewIcon();
+    }
   }
 
   updateIndexes() {
@@ -127,6 +139,14 @@ export class Viewer {
 
   onMouseDown() {
     this.isMouseDown = true;
+
+    if (this.autoplay) {
+      this.stopSpinning();
+    }
+
+    if (this.previewIcon) {
+      this.removePreviewIcon();
+    }
   }
 
   onMouseMove({ clientX, clientY }) {
@@ -229,4 +249,35 @@ export class Viewer {
   onImageLoad(src) {
     this.image.src = src;
   }
+
+  spin() {
+    if (this.spinReverse) {
+      this.colIndex--;
+    } else {
+      this.colIndex++;
+    }
+  }
+
+  stopSpinning() {
+    clearInterval(this.autoplayInterval);
+    this.autoplay = false;
+  }
+
+  addFullScreenButton() {
+
+  }
+
+  addPreviewIcon() {
+    const previewIcon = document.createElement('div');
+    previewIcon.classList.add('preview-icon');
+    previewIcon.draggable = false;
+
+    this.container.appendChild(previewIcon);
+    this.previewIcon = previewIcon;
+  }
+
+  removePreviewIcon() {
+    this.previewIcon.remove();
+  }
+
 }

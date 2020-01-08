@@ -1,4 +1,5 @@
 .cloudimage-360 {
+  position: relative;
   width: 100%;
   height: 100%;
 
@@ -12,13 +13,40 @@
     }
   }
 
+  &.fullscreen {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .menu {
+    .fullscreen-button {
+      &:hover {
+        cursor: pointer;
+      }
+
+      position: absolute;
+
+    }
+  }
+
   .image {
     width: 100%;
     height: 100%;
   }
 
   .preview-icon {
-    background: rgba(255, 255, 255, 0.8) url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg') 50% 50% / contain no-repeat;
+    position: absolute;
+    background-image: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg');
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 20%;
+    height: 50%;
+    border-radius: 50%;
+    top: 30%;
+    left: 41%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 }
 
