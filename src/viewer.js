@@ -108,12 +108,12 @@ export class Viewer {
       this.autoplayInterval = setInterval(this.spin.bind(this), this.autoplaySpeed);
     }
 
-    if (this.fullScreen) {
-      this.addFullScreenButton();
-    }
-
     if (this.bottomCircle) {
       this.addPreviewIcon();
+    }
+
+    if (this.fullScreen || this.magnifier) {
+      this.addMenu();
     }
   }
 
@@ -264,7 +264,44 @@ export class Viewer {
   }
 
   addFullScreenButton() {
+    this.fullscreenButton = document.createElement('div');
+    this.fullscreenButton.classList.add('fullscreen-button');
+    this.fullscreenButton.onclick = this.onFullscreenClick.bind(this);
+    this.menu.appendChild(this.fullscreenButton);
+  }
 
+  onFullscreenClick() {
+    if (this.fullScreen) {
+      this.fullscreenButton.classList.remove('fullscreen-mode');
+      this.container.classList.remove('fullscreen');
+    } else {
+      this.fullscreenButton.classList.add('fullscreen-mode');
+      this.container.classList.add('fullscreen');
+    }
+
+    this.fullScreen = this.container.classList.contains('fullscreen');
+  }
+
+  addMagnifierButton() {
+    this.magnifierButton = document.createElement('div');
+    this.magnifierButton.classList.add('magnifier-button');
+    this.menu.appendChild(this.magnifierButton);
+  }
+
+  addMenu() {
+    this.menu = document.createElement('div');
+    this.menu.classList.add('menu');
+
+    if (this.magnifier) {
+      this.addMagnifierButton();
+    }
+
+    if (this.fullScreen) {
+      this.fullScreen = false;
+      this.addFullScreenButton();
+    }
+
+    this.container.appendChild(this.menu);
   }
 
   addPreviewIcon() {
@@ -277,7 +314,8 @@ export class Viewer {
   }
 
   removePreviewIcon() {
-    this.previewIcon.remove();
+    this.container.removeChild(this.previewIcon);
+    delete this.previewIcon;
   }
 
 }
