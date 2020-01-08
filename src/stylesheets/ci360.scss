@@ -1,14 +1,6 @@
 .cloudimage-360 {
-  $min-length: 15px;
-
-  min-width: $min-length;
-  min-height: $min-length;
-
   width: 100%;
   height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
 
   &.initialized {
     &:hover {
@@ -18,6 +10,11 @@
     &:active {
       cursor: grabbing;
     }
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
   }
 
   .preview-icon {

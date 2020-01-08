@@ -3,8 +3,10 @@
 import { getAttr } from "./utils";
 
 export class Viewer {
+  /**
+   * @param {HTMLElement} container 
+   */
   constructor(container) {
-    /**@type {HTMLElement} */
     this.container = container;
 
     this.folder = getAttr(container, 'data-folder') || '/';
@@ -56,10 +58,13 @@ export class Viewer {
     this._rowIndex = getAttr(container, 'data-start-row') || this.indexZeroBase;
 
     this.maxColIndex = this.amount - 1;
-
     this.maxRowIndex = this.amount - 1;
 
     this.cachedImages = {};
+    this.image = new Image();
+    this.image.classList.add('image');
+    this.image.draggable = false;
+
     this.init();
   }
 
@@ -92,7 +97,8 @@ export class Viewer {
   }
 
   init() {
-    this.changeImage();
+    this.container.appendChild(this.image);
+    this.changeImage();// sets the initial image
 
     if (!this.lazyload) {
       this.preloadImages();
@@ -159,9 +165,8 @@ export class Viewer {
 
   changeImage() {
     const src = this.getImageSrc();
-    /**@type {HTMLImageElement} */
-    let image = this.cachedImages[src];
-    if (image) {
+
+    if (this.cachedImages[src]) {
       this.onImageLoad(src);
     } else {
       this.cacheImage(src);
@@ -183,9 +188,7 @@ export class Viewer {
     return file;
   }
 
-  /**
-   * @param {String} src 
-   */
+  /** @param {String} src*/
   cacheImage(src) {
     if (this.cachedImages[src]) { return; }
 
@@ -209,9 +212,9 @@ export class Viewer {
  * @returns {String}
  */
   getImageSrc(col = this.colIndex, row = this.rowIndex) {
-    let file = this.getImageFileName(col, row);
+    const filename = this.getImageFileName(col, row);
 
-    const url = `${this.folder}${file}`;
+    const url = `${this.folder}${filename}`;
     let src = url;
 
     if (this.responsive) {
@@ -224,6 +227,6 @@ export class Viewer {
   }
 
   onImageLoad(src) {
-    this.container.style.backgroundImage = `url("${src}")`;
+    this.image.src = src;
   }
 }
