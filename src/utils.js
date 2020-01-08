@@ -1,0 +1,1 @@
+export const getAttr = (element, attribute) => element.getAttribute(attribute);

@@ -1,43 +1,32 @@
-import 'core-js/features/array/for-each';
-import 'core-js/features/array/filter';
-import 'core-js/features/array/includes';
-import CI360Viewer from './ci360.service';
+'use strict';
 
+import { Viewer } from "./viewer";
+import './stylesheets/ci360.scss';
 
-function init() {
-  const viewers = [];
-  const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
+class CI360 {
+  static viewers = [];
 
-  [].slice.call(view360Array).forEach(container => { viewers.push(new CI360Viewer(container)); });
+  static test() {
+    const s = new Viewer();
+    console.log(s);
+  }
 
-  window.CI360._viewers = viewers;
+  static init() {
+    console.log('CI360 initialized !');
+
+    const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
+
+    for (const container of view360Array) {
+      console.log(container);
+
+      this.viewers.push(new Viewer(container));
+      container.classList.add('initialized');
+    }
+  }
 }
 
-function destroy() {
-  if (isNoViewers()) return;
-
-  window.CI360._viewers.forEach(viewer => { viewer.destroy(); });
-
-  window.CI360._viewers = [];
+if (!Boolean(window.CI360 && window.CI360.notInitOnLoad)) {
+  CI360.init();
 }
 
-function getActiveIndexByID(id) {
-  if (isNoViewers()) return;
-
-  let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
-
-  return currentViewer && (currentViewer.activeImage - 1);
-}
-
-function isNoViewers() {
-  return !(window.CI360._viewers && window.CI360._viewers.length > 0);
-}
-
-window.CI360 = window.CI360 || {};
-window.CI360.init = init;
-window.CI360.destroy = destroy;
-window.CI360.getActiveIndexByID = getActiveIndexByID;
-
-if (!window.CI360.notInitOnLoad) {
-  init();
-}
+window.CI360 = CI360;
