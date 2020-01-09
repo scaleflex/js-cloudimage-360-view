@@ -58,3 +58,15 @@ export const magnify = (container, src, glass, zoom) => {
     return { x, y };
   }
 }
+
+export const getClientHitPoint = ({ clientX, clientY, touches }) => {
+  let point;
+
+  if (touches != undefined) {
+    point = { clientX, clientY } = event.touches[0];
+  } else {
+    point = { clientX, clientY };
+  }
+
+  return point;
+}

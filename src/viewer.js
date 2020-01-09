@@ -1,6 +1,6 @@
 'use strict';
 
-import { getAttr, magnify } from "./utils";
+import { getAttr, magnify, getClientHitPoint } from "./utils";
 
 export class Viewer {
   /**
@@ -42,9 +42,16 @@ export class Viewer {
     this.dragSensitivity = getAttr(container, 'drag-sensitivity') || getAttr(container, 'data-drag-sensitivity') || 1;
 
     this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
+    this.container.addEventListener('touchmove', this.onMouseMove.bind(this));
+
     this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
+    this.container.addEventListener('touchend', this.onMouseUp.bind(this));
+
     this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
+    this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
+
     this.container.addEventListener('mouseout', this.onMouseOut.bind(this));
+    this.container.addEventListener('touchcancel', this.onMouseOut.bind(this));
 
     this.setInitialFlags();
 
@@ -183,7 +190,9 @@ export class Viewer {
     }
   }
 
-  onMouseMove({ clientX, clientY }) {
+  onMouseMove(event) {
+    const { clientX, clientY } = getClientHitPoint(event);
+
     const distanceX = Math.abs(Math.abs(clientX) - Math.abs(this.prevMouseX));
     const distanceY = Math.abs(Math.abs(clientY) - Math.abs(this.prevMouseY));
     const minX = (this.container.clientWidth * this.dragSensitivity) / 100
@@ -473,16 +482,28 @@ export class Viewer {
     this.controlsGoLeft.draggable = false;
     this.controlsGoLeft.classList.add('left');
     this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
+    this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
+
     this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp.bind(this));
+    this.controlsGoLeft.addEventListener('touchend', this.onGoLeftUp.bind(this));
+
     this.controlsGoLeft.addEventListener('mouseup', this.onGoLeftUp.bind(this));
+    this.controlsGoLeft.addEventListener('touchcancel', this.onGoLeftUp.bind(this));
+
     this.controls.appendChild(this.controlsGoLeft);
+
 
     this.controlsGoRigth = document.createElement('button');
     this.controlsGoRigth.draggable = false;
     this.controlsGoRigth.classList.add('right');
     this.controlsGoRigth.addEventListener('mousedown', this.onGoRightDown.bind(this));
+    this.controlsGoRigth.addEventListener('touchstart', this.onGoRightDown.bind(this));
+
     this.controlsGoRigth.addEventListener('mouseout', this.onGoRightUp.bind(this));
+    this.controlsGoRigth.addEventListener('touchend', this.onGoRightUp.bind(this));
+
     this.controlsGoRigth.addEventListener('mouseup', this.onGoRightUp.bind(this));
+    this.controlsGoRigth.addEventListener('touchcancel', this.onGoRightUp.bind(this));
     this.controls.appendChild(this.controlsGoRigth);
 
     this.container.appendChild(this.controls);
