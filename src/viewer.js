@@ -1,6 +1,6 @@
 'use strict';
 
-import { getAttr } from "./utils";
+import { getAttr, magnify } from "./utils";
 
 export class Viewer {
   /**
@@ -23,7 +23,7 @@ export class Viewer {
     this.bottomCircle = Boolean(getAttr(container, 'data-bottom-circle'));
     this.fullScreen = Boolean(getAttr(container, 'data-full-screen'));
     this.magnifier = getAttr(container, 'data-magnifier') !== null &&
-      parseInt(getAttr(container, 'data-magnifier'), 10);
+      parseInt(getAttr(container, 'data-magnifier'), 10) || 3;
 
     this.bottomCircleOffset = parseInt(getAttr(container, 'data-bottom-circle-offset') || 5, 10);
     this.ratio = (getAttr(container, 'data-ratio') || 0) || false;
@@ -65,7 +65,7 @@ export class Viewer {
     this.image.classList.add('image');
     this.image.draggable = false;
 
-    this.isMobile = false;
+    this.isMobile = Boolean('ontouchstart' in window || navigator.maxTouchPoints);
 
     this.init();
   }
@@ -268,11 +268,11 @@ export class Viewer {
   addFullScreenButton() {
     this.fullscreenButton = document.createElement('div');
     this.fullscreenButton.classList.add('fullscreen-button');
-    this.fullscreenButton.onclick = this.onFullscreenClick.bind(this);
+    this.fullscreenButton.onclick = this.onAddFullscreenButtonClick.bind(this);
     this.menu.appendChild(this.fullscreenButton);
   }
 
-  onFullscreenClick() {
+  onAddFullscreenButtonClick() {
     if (this.fullScreen) {
       this.fullscreenButton.classList.remove('fullscreen-mode');
       this.container.classList.remove('fullscreen');
@@ -287,7 +287,28 @@ export class Viewer {
   addMagnifierButton() {
     this.magnifierButton = document.createElement('div');
     this.magnifierButton.classList.add('magnifier-button');
+    this.magnifierButton.onclick = this.onAddMagnifierButtonClick.bind(this);
     this.menu.appendChild(this.magnifierButton);
+  }
+
+  addMagnifierGlass() {
+    this.magnifierGlass = new Image();
+    this.magnifierGlass.classList.add('img-magnifier-glass');
+    this.magnifierGlass.onmousedown = this.removeMagnifierGlass.bind(this);
+    this.container.appendChild(this.magnifierGlass);
+  }
+
+  removeMagnifierGlass() {
+    this.container.removeChild(this.magnifierGlass);
+    delete this.magnifierGlass;
+  }
+
+  onAddMagnifierButtonClick() {
+    if (!this.magnifierGlass) {
+      this.addMagnifierGlass();
+    }
+
+    magnify(this.container, this.getImageSrc(), this.magnifierGlass, this.magnifier);
   }
 
   addMenu() {
