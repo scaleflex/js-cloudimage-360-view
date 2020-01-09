@@ -9,8 +9,9 @@ export class Viewer {
   constructor(container) {
     this.container = container;
 
+    this.imageList = getAttr(container, 'data-image-list');
     this.folder = getAttr(container, 'data-folder') || '/';
-    this.filenamePattern = getAttr(container, 'data-filename') || 'container-{index}.jpg';
+    this.fileNamePattern = getAttr(container, 'data-filename') || 'container-{index}.jpg';
     this.containerList = getAttr(container, 'data-container-list');
     this.indexZeroBase = parseInt(getAttr(container, 'data-index-zero-base') || 0, 10);
     this.amount = parseInt(getAttr(container, 'data-amount') || 36, 10);
@@ -98,6 +99,10 @@ export class Viewer {
     this.changeImage();
   }
 
+  get isBottomCircleVisible() {
+    return Boolean(this.bottomCircleContainer && this.bottomCircleContainer.classList.contains('hidden')) == false;
+  }
+
   init() {
     this.container.appendChild(this.image);
     this.changeImage();// sets the initial image
@@ -110,12 +115,13 @@ export class Viewer {
       this.autoplayInterval = setInterval(this.spin.bind(this), this.autoplaySpeed);
     }
 
-    if (this.bottomCircle) {
-      this.addPreviewIcon();
-    }
-
     if (this.fullScreen || this.magnifier) {
       this.addMenu();
+    }
+
+    if (this.bottomCircle) {
+      this.addPreviewIcon();
+      this.addBottomCircle();
     }
   }
 
@@ -137,6 +143,10 @@ export class Viewer {
 
   onMouseUp() {
     this.resetDragging();
+
+    if (this.bottomCircleContainer && !this.isBottomCircleVisible) {
+      this.showBottomCircle();
+    }
   }
 
   onMouseDown() {
@@ -171,6 +181,10 @@ export class Viewer {
 
       this.updateIndexes();
     }
+
+    if (this.isMouseDown && this.isBottomCircleVisible) {
+      this.hideBottomCircle();
+    }
   }
 
   resetDragging() {
@@ -201,7 +215,7 @@ export class Viewer {
    * @returns {String} file name
    */
   getImageFileName(col, row) {
-    let file = this.filenamePattern;
+    let file = this.fileNamePattern;
 
     file = file.replace('{index}', col);
     file = file.replace('{row}', row);
@@ -339,6 +353,23 @@ export class Viewer {
   removePreviewIcon() {
     this.container.removeChild(this.previewIcon);
     delete this.previewIcon;
+  }
+
+  addBottomCircle() {
+    this.bottomCircleContainer = new Image();
+    this.bottomCircleContainer.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg';
+    this.bottomCircleContainer.classList.add('bottom-circle');
+    this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
+
+    this.container.appendChild(this.bottomCircleContainer);
+  }
+
+  hideBottomCircle() {
+    this.bottomCircleContainer.classList.add('hidden');
+  }
+
+  showBottomCircle() {
+    this.bottomCircleContainer.classList.remove('hidden');
   }
 
 }
