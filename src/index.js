@@ -6,19 +6,10 @@ import './stylesheets/ci360.scss';
 class CI360 {
   static viewers = [];
 
-  static test() {
-    const s = new Viewer();
-    console.log(s);
-  }
-
   static init() {
-    console.log('CI360 initialized !');
-
     const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
 
     for (const container of view360Array) {
-      console.log(container);
-
       this.viewers.push(new Viewer(container));
       container.classList.add('initialized');
     }

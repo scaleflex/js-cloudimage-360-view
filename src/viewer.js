@@ -9,36 +9,37 @@ export class Viewer {
   constructor(container) {
     this.container = container;
 
-    this.imageList = getAttr(container, 'data-image-list');
-    this.folder = getAttr(container, 'data-folder') || '/';
-    this.fileNamePattern = getAttr(container, 'data-filename') || 'container-{index}.jpg';
-    this.containerList = getAttr(container, 'data-container-list');
-    this.indexZeroBase = parseInt(getAttr(container, 'data-index-zero-base') || 0, 10);
-    this.amount = parseInt(getAttr(container, 'data-amount') || 36, 10);
-    this.speed = parseInt(getAttr(container, 'data-speed') || 80, 10);
-    this.dragSpeed = parseInt(getAttr(container, 'data-drag-speed') || 150, 10);
-    this.keys = Boolean(getAttr(container, 'data-keys'));
-    this.container.style.boxShadow = getAttr(container, 'data-box-shadow');
-    this.autoplay = Boolean(getAttr(container, 'data-autoplay'));
+    this.imageList = getAttr(container, 'image-list') || getAttr(container, 'data-image-list');
+    this.folder = getAttr(container, 'folder') || getAttr(container, 'data-folder') || '/';
+    this.fileNamePattern = getAttr(container, 'filename') || getAttr(container, 'data-filename') || 'container-{index}.jpg';
+    this.containerList = getAttr(container, 'container-list') || getAttr(container, 'data-container-list');
+    this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 0, 10);
+    this.amount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
+    this.speed = parseInt(getAttr(container, 'speed') || 80, 10);
+    this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
+    this.keys = Boolean(getAttr(container, 'keys') || getAttr(container, 'data-keys'));
+    this.container.style.boxShadow = getAttr(container, 'box-shadow') || getAttr(container, 'data-box-shadow');
+    this.autoplay = Boolean(getAttr(container, 'autoplay') || getAttr(container, 'data-autoplay'));
     this.autoplaySpeed = this.speed * 36 / this.amount;
-    this.bottomCircle = Boolean(getAttr(container, 'data-bottom-circle'));
-    this.fullScreen = Boolean(getAttr(container, 'data-full-screen'));
-    this.magnifier = getAttr(container, 'data-magnifier') !== null &&
-      parseInt(getAttr(container, 'data-magnifier'), 10) || 3;
+    this.bottomCircle = Boolean(getAttr(container, 'bottom-circle') || getAttr(container, 'data-bottom-circle'));
+    this.fullScreen = Boolean(getAttr(container, 'full-screen') || getAttr(container, 'data-full-screen'));
+    this.magnifier = (getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier')) &&
+      parseInt(getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier'), 10) || 3;
 
-    this.bottomCircleOffset = parseInt(getAttr(container, 'data-bottom-circle-offset') || 5, 10);
-    this.ratio = (getAttr(container, 'data-ratio') || 0) || false;
-    this.responsive = Boolean(getAttr(container, 'data-responsive'));
-    this.ciToken = getAttr(container, 'data-responsive') || 'demo';
-    this.ciSize = getAttr(container, 'data-size');
-    this.ciOperation = getAttr(container, 'data-operation') || 'width';
-    this.ciFilters = getAttr(container, 'data-filters') || 'q35';
-    this.lazyload = Boolean(getAttr(container, 'data-lazyload'));
-    this.lazySelector = Boolean(getAttr(container, 'data-lazyload-selector') || 'lazyload');
-    this.spinReverse = Boolean(getAttr(container, 'data-spin-reverse'));
-    this.controlReverse = Boolean(getAttr(container, 'data-control-reverse'));
-    this.showControls = Boolean(getAttr(container, 'data-controls'));
-    this.stopAtEdges = Boolean(getAttr(container, 'data-stop-at-edges'));
+    this.bottomCircleOffset = parseInt(getAttr(container, 'bottom-circle-offset') || getAttr(container, 'data-bottom-circle-offset') || 5, 10);
+    this.ratio = (getAttr(container, 'ratio') || getAttr(container, 'data-ratio') || 0) || false;
+    this.responsive = Boolean(getAttr(container, 'responsive') || getAttr(container, 'data-responsive'));
+    this.ciToken = getAttr(container, 'responsive') || getAttr(container, 'data-responsive') || 'demo';
+    this.ciSize = getAttr(container, 'size') || getAttr(container, 'data-size');
+    this.ciOperation = getAttr(container, 'operation') || getAttr(container, 'data-operation') || 'width';
+    this.ciFilters = getAttr(container, 'filters') || getAttr(container, 'data-filters') || 'q35';
+    this.lazyload = Boolean(getAttr(container, 'lazyload') || getAttr(container, 'data-lazyload'));
+    this.lazySelector = Boolean(getAttr(container, 'lazyload-selector') || getAttr(container, 'data-lazyload-selector') || 'lazyload');
+    this.spinReverse = Boolean(getAttr(container, 'spin-reverse') || getAttr(container, 'data-spin-reverse'));
+    this.controlReverse = Boolean(getAttr(container, 'control-reverse') || getAttr(container, 'data-control-reverse'));
+    this.showControls = Boolean(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
+    this.stopAtEdges = Boolean(getAttr(container, 'stop-at-edges') || getAttr(container, 'data-stop-at-edges'));
+    this.dragSensitivity = getAttr(container, 'drag-sensitivity') || getAttr(container, 'data-drag-sensitivity') || 1;
 
     this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
     this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -47,13 +48,11 @@ export class Viewer {
 
     this.setInitialFlags();
 
-    this.dragThresoldPerc = getAttr(container, 'data-drag-threshold') || 1;
-
     this.prevMouseX = 0;
     this.prevMouseY = 0;
 
-    this._colIndex = getAttr(container, 'data-start-col') || this.indexZeroBase;
-    this._rowIndex = getAttr(container, 'data-start-row') || this.indexZeroBase;
+    this._colIndex = this.indexZeroBase;
+    this._rowIndex = this.indexZeroBase;
 
     this.maxColIndex = this.amount - 1;
     this.maxRowIndex = this.amount - 1;
@@ -80,6 +79,7 @@ export class Viewer {
     else { this._colIndex = value; }
 
     this.changeImage();
+    this.updateControls();
   }
 
   get rowIndex() {
@@ -94,6 +94,7 @@ export class Viewer {
     else { this._rowIndex = value; }
 
     this.changeImage();
+    this.updateControls();
   }
 
   get isBottomCircleVisible() {
@@ -185,8 +186,8 @@ export class Viewer {
   onMouseMove({ clientX, clientY }) {
     const distanceX = Math.abs(Math.abs(clientX) - Math.abs(this.prevMouseX));
     const distanceY = Math.abs(Math.abs(clientY) - Math.abs(this.prevMouseY));
-    const minX = (this.container.clientWidth * this.dragThresoldPerc) / 100
-    const minY = (this.container.clientHeight * this.dragThresoldPerc) / 100
+    const minX = (this.container.clientWidth * this.dragSensitivity) / 100
+    const minY = (this.container.clientHeight * this.dragSensitivity) / 100
 
     if (this.prevMouseX !== undefined && this.prevMouseY != undefined) {
       this.isDraggingLeft = this.isMouseDown && clientX < this.prevMouseX;
@@ -201,7 +202,6 @@ export class Viewer {
       this.prevMouseY = clientY;
 
       this.updateIndexes();
-      this.updateControls();
     }
 
     if (this.isMouseDown && this.isBottomCircleVisible) {
@@ -331,27 +331,35 @@ export class Viewer {
     this.fullscreenButton = document.createElement('div');
     this.fullscreenButton.draggable = false;
     this.fullscreenButton.classList.add('fullscreen-button');
-    this.fullscreenButton.onclick = this.onAddFullscreenButtonClick.bind(this);
+    this.fullscreenButton.addEventListener('click', this.onAddFullscreenButtonClick.bind(this));
     this.menu.appendChild(this.fullscreenButton);
   }
 
   onAddFullscreenButtonClick() {
     if (this.fullScreen) {
-      this.fullscreenButton.classList.remove('fullscreen-mode');
-      this.container.classList.remove('fullscreen');
+      this.exitFullscreen();
     } else {
-      this.fullscreenButton.classList.add('fullscreen-mode');
-      this.container.classList.add('fullscreen');
+      this.setFullscreen();
     }
 
     this.fullScreen = this.container.classList.contains('fullscreen');
+  }
+
+  exitFullscreen() {
+    this.fullscreenButton.classList.remove('fullscreen-mode');
+    this.container.classList.remove('fullscreen');
+  }
+
+  setFullscreen() {
+    this.fullscreenButton.classList.add('fullscreen-mode');
+    this.container.classList.add('fullscreen');
   }
 
   addMagnifierButton() {
     this.magnifierButton = document.createElement('div');
     this.magnifierButton.draggable = false;
     this.magnifierButton.classList.add('magnifier-button');
-    this.magnifierButton.onclick = this.onAddMagnifierButtonClick.bind(this);
+    this.magnifierButton.addEventListener('click', this.onAddMagnifierButtonClick.bind(this));
     this.menu.appendChild(this.magnifierButton);
   }
 
@@ -477,8 +485,6 @@ export class Viewer {
     this.controlsGoRigth.addEventListener('mouseup', this.onGoRightUp.bind(this));
     this.controls.appendChild(this.controlsGoRigth);
 
-    this.updateControls();
-
     this.container.appendChild(this.controls);
   }
 
@@ -490,7 +496,6 @@ export class Viewer {
       }
 
       this.updateIndexes({ goLeft: true });
-      this.updateControls();
     }).bind(this), this.autoplaySpeed);
   }
 
@@ -506,7 +511,6 @@ export class Viewer {
       }
 
       this.updateIndexes({ goRight: true });
-      this.updateControls();
     }).bind(this), this.autoplaySpeed);
   }
 
