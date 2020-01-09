@@ -37,6 +37,7 @@ export class Viewer {
     this.lazySelector = Boolean(getAttr(container, 'data-lazyload-selector') || 'lazyload');
     this.spinReverse = Boolean(getAttr(container, 'data-spin-reverse'));
     this.controlReverse = Boolean(getAttr(container, 'data-control-reverse'));
+    this.showControls = Boolean(getAttr(container, 'data-controls'));
     this.stopAtEdges = Boolean(getAttr(container, 'data-stop-at-edges'));
 
     this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -44,11 +45,7 @@ export class Viewer {
     this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
     this.container.addEventListener('mouseout', this.onMouseOut.bind(this));
 
-    this.isMouseDown = false;
-    this.isDraggingLeft = false;
-    this.isDraggingRight = false;
-    this.isDraggingUp = false;
-    this.isDraggingDown = false;
+    this.setInitialFlags();
 
     this.dragThresoldPerc = getAttr(container, 'data-drag-threshold') || 1;
 
@@ -103,9 +100,22 @@ export class Viewer {
     return Boolean(this.bottomCircleContainer && this.bottomCircleContainer.classList.contains('hidden')) == false;
   }
 
+  get isGoLeftDisabled() {
+    return Boolean(this.controlsGoLeft && this.controlsGoLeft.classList.contains('disabled'));
+  }
+
+  get isGoRightDisabled() {
+    return Boolean(this.controlsGoRigth && this.controlsGoRigth.classList.contains('disabled'));
+  }
+
   init() {
     this.container.appendChild(this.image);
     this.changeImage();// sets the initial image
+
+    if (this.keys) {
+      this.container.addEventListener('keydown', this.onKeyDown.bind(this));
+      this.container.addEventListener('keyup', this.onKeyUp.bind(this));
+    }
 
     if (!this.lazyload) {
       this.preloadImages();
@@ -119,30 +129,41 @@ export class Viewer {
       this.addMenu();
     }
 
+    if (this.showControls) {
+      this.addControls();
+    }
+
     if (this.bottomCircle) {
       this.addPreviewIcon();
       this.addBottomCircle();
     }
   }
 
-  updateIndexes() {
-    if (this.isDraggingUp) {
+  /**
+   * @param {Object} options 
+   * @param {Boolean} options.goLeft 
+   * @param {Boolean} options.goRight 
+   * @param {Boolean} options.goUp 
+   * @param {Boolean} options.goDown 
+   */
+  updateIndexes({ goLeft = false, goRight = false, goUp = false, goDown = false } = {}) {
+    if (this.isDraggingUp || goUp) {
       this.controlReverse ? this.rowIndex++ : this.rowIndex--;
     }
-    if (this.isDraggingDown) {
+    if (this.isDraggingDown || goDown) {
       this.controlReverse ? this.rowIndex-- : this.rowIndex++;
     }
 
-    if (this.isDraggingLeft) {
+    if (this.isDraggingLeft || goLeft) {
       this.controlReverse ? this.colIndex++ : this.colIndex--;
     }
-    if (this.isDraggingRight) {
+    if (this.isDraggingRight || goRight) {
       this.controlReverse ? this.colIndex-- : this.colIndex++;
     }
   }
 
   onMouseUp() {
-    this.resetDragging();
+    this.setInitialFlags();
 
     if (this.bottomCircleContainer && !this.isBottomCircleVisible) {
       this.showBottomCircle();
@@ -180,6 +201,7 @@ export class Viewer {
       this.prevMouseY = clientY;
 
       this.updateIndexes();
+      this.updateControls();
     }
 
     if (this.isMouseDown && this.isBottomCircleVisible) {
@@ -187,7 +209,33 @@ export class Viewer {
     }
   }
 
-  resetDragging() {
+  onKeyDown(event) {
+    if (this.magnifierGlass) {
+      this.removeMagnifierGlass();
+    }
+
+    switch (event.keyCode) {
+      case 37://left arrow
+        this.onGoLeftDown();
+        break;
+      case 39://rigth arrow
+        this.onGoRightDown();
+        break;
+    }
+  }
+
+  onKeyUp(event) {
+    switch (event.keyCode) {
+      case 37://left arrow
+        this.onGoLeftUp();
+        break;
+      case 39://rigth arrow
+        this.onGoRightUp();
+        break;
+    }
+  }
+
+  setInitialFlags() {
     this.isMouseDown = false;
     this.isDraggingUp = false;
     this.isDraggingDown = false;
@@ -196,7 +244,7 @@ export class Viewer {
   }
 
   onMouseOut() {
-    this.resetDragging();
+    this.setInitialFlags();
   }
 
   changeImage() {
@@ -281,6 +329,7 @@ export class Viewer {
 
   addFullScreenButton() {
     this.fullscreenButton = document.createElement('div');
+    this.fullscreenButton.draggable = false;
     this.fullscreenButton.classList.add('fullscreen-button');
     this.fullscreenButton.onclick = this.onAddFullscreenButtonClick.bind(this);
     this.menu.appendChild(this.fullscreenButton);
@@ -300,6 +349,7 @@ export class Viewer {
 
   addMagnifierButton() {
     this.magnifierButton = document.createElement('div');
+    this.magnifierButton.draggable = false;
     this.magnifierButton.classList.add('magnifier-button');
     this.magnifierButton.onclick = this.onAddMagnifierButtonClick.bind(this);
     this.menu.appendChild(this.magnifierButton);
@@ -308,7 +358,7 @@ export class Viewer {
   addMagnifierGlass() {
     this.magnifierGlass = new Image();
     this.magnifierGlass.classList.add('img-magnifier-glass');
-    this.magnifierGlass.onmousedown = this.removeMagnifierGlass.bind(this);
+    this.magnifierGlass.addEventListener('mousedown', this.removeMagnifierGlass.bind(this));
     this.container.appendChild(this.magnifierGlass);
   }
 
@@ -327,6 +377,7 @@ export class Viewer {
 
   addMenu() {
     this.menu = document.createElement('div');
+    this.menu.draggable = false;
     this.menu.classList.add('menu');
 
     if (this.magnifier && !this.isMobile) {
@@ -342,12 +393,11 @@ export class Viewer {
   }
 
   addPreviewIcon() {
-    const previewIcon = document.createElement('div');
-    previewIcon.classList.add('preview-icon');
-    previewIcon.draggable = false;
+    this.previewIcon = document.createElement('div');
+    this.previewIcon.draggable = false;
+    this.previewIcon.classList.add('preview-icon');
 
-    this.container.appendChild(previewIcon);
-    this.previewIcon = previewIcon;
+    this.container.appendChild(this.previewIcon);
   }
 
   removePreviewIcon() {
@@ -357,6 +407,7 @@ export class Viewer {
 
   addBottomCircle() {
     this.bottomCircleContainer = new Image();
+    this.bottomCircleContainer.draggable = false;
     this.bottomCircleContainer.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg';
     this.bottomCircleContainer.classList.add('bottom-circle');
     this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
@@ -372,4 +423,94 @@ export class Viewer {
     this.bottomCircleContainer.classList.remove('hidden');
   }
 
+  updateControls() {
+    if (!this.controls || !this.stopAtEdges) { return; }
+
+    if (this.colIndex === this.indexZeroBase) {
+      this.disableGoLeftControl();
+    } else {
+      this.enableGoLeftControl();
+    }
+
+    if (this.colIndex === this.maxColIndex) {
+      this.disableGoRightControl();
+    }
+    else {
+      this.enableGoRightControl();
+    }
+  }
+
+  disableGoLeftControl() {
+    this.controlsGoLeft.classList.add('disabled');
+  }
+
+  enableGoLeftControl() {
+    this.controlsGoLeft.classList.remove('disabled');
+  }
+
+  disableGoRightControl() {
+    this.controlsGoRigth.classList.add('disabled');
+  }
+
+  enableGoRightControl() {
+    this.controlsGoRigth.classList.remove('disabled');
+  }
+
+  addControls() {
+    this.controls = document.createElement('div');
+    this.controls.draggable = false;
+    this.controls.classList.add('controls');
+
+    this.controlsGoLeft = document.createElement('button');
+    this.controlsGoLeft.draggable = false;
+    this.controlsGoLeft.classList.add('left');
+    this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
+    this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp.bind(this));
+    this.controlsGoLeft.addEventListener('mouseup', this.onGoLeftUp.bind(this));
+    this.controls.appendChild(this.controlsGoLeft);
+
+    this.controlsGoRigth = document.createElement('button');
+    this.controlsGoRigth.draggable = false;
+    this.controlsGoRigth.classList.add('right');
+    this.controlsGoRigth.addEventListener('mousedown', this.onGoRightDown.bind(this));
+    this.controlsGoRigth.addEventListener('mouseout', this.onGoRightUp.bind(this));
+    this.controlsGoRigth.addEventListener('mouseup', this.onGoRightUp.bind(this));
+    this.controls.appendChild(this.controlsGoRigth);
+
+    this.updateControls();
+
+    this.container.appendChild(this.controls);
+  }
+
+  onGoLeftDown() {
+    this.goLeftInterval = setInterval((() => {
+      if (this.isGoLeftDisabled) {
+        this.onGoLeftUp();
+        return;
+      }
+
+      this.updateIndexes({ goLeft: true });
+      this.updateControls();
+    }).bind(this), this.autoplaySpeed);
+  }
+
+  onGoLeftUp() {
+    clearInterval(this.goLeftInterval);
+  }
+
+  onGoRightDown() {
+    this.goRightInterval = setInterval((() => {
+      if (this.isGoRightDisabled) {
+        this.onGoRightUp();
+        return;
+      }
+
+      this.updateIndexes({ goRight: true });
+      this.updateControls();
+    }).bind(this), this.autoplaySpeed);
+  }
+
+  onGoRightUp() {
+    clearInterval(this.goRightInterval);
+  }
 }
