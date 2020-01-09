@@ -22,6 +22,10 @@
 
   .menu {
     position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    width: 60px;
+    height: 5%;
     top: 5px;
     right: 5px;
     z-index: 101;
@@ -29,26 +33,30 @@
     .fullscreen-button,
     .magnifier-button {
       display: inline-flex;
-      margin: 0 3px;
+      flex: 1;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 2%;
 
       &:hover {
         cursor: pointer;
       }
 
-      width: 25px;
-      height: 25px;
+      width: auto;
+      height: 100%;
     }
 
     .fullscreen-button {
-      background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg) 50% 50% / cover no-repeat;
+      background-image: url("https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg");
 
       &.fullscreen-mode {
-        background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
+        background-image: url("https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg");
       }
     }
 
     .magnifier-button {
-      background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
+      background-image: url("https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg");
     }
   }
 
