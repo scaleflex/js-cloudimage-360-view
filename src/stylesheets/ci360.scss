@@ -95,13 +95,13 @@
       }
     }
 
-    $controlsOffset: 95%;
-
     .right {
+      float: right;
       background-image: url("https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg");
     }
 
     .left {
+      float: left;
       background-image: url("https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg");
     }
   }

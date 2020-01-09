@@ -34,6 +34,7 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
+    "classlist.js": "^1.1.20150312",
     "core-js": "^3.0.0"
   },
   "devDependencies": {
