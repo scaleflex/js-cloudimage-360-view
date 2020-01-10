@@ -1,6 +1,24 @@
 'use strict';
 
-import { getAttr, magnify, getClientHitPoint } from "./utils";
+import {
+  getAttr,
+  magnify,
+  getClientHitPoint,
+} from "../utils/dom-helper";
+import {
+  IMAGE,
+  FULLSCREEN_BUTTON,
+  MAGNIFIER_BUTTON,
+  IMG_MAGNIFIER_GLASS,
+  BOTTOM_CIRCLE,
+  CONTROLS,
+  TOP_MENU,
+  PREVIEW_ICON,
+} from './classes';
+import { CONTAINER } from "../ci360/classes";
+import { BOTTOM_CIRCLE_IMAGE_SRC } from "./constants";
+
+import './stylesheets/main.scss';
 
 export class Viewer {
   /**
@@ -66,7 +84,7 @@ export class Viewer {
 
     this.cachedImages = {}; //using it as key-value pair
     this.image = new Image();
-    this.image.classList.add('image');
+    this.image.classList.add(IMAGE.INDEX);
     this.image.draggable = false;
 
     this.isMobile = Boolean('ontouchstart' in window || navigator.maxTouchPoints);
@@ -339,7 +357,11 @@ export class Viewer {
   addFullScreenButton() {
     this.fullscreenButton = document.createElement('div');
     this.fullscreenButton.draggable = false;
-    this.fullscreenButton.classList.add('fullscreen-button');
+    this.fullscreenButton.classList.add(FULLSCREEN_BUTTON.INDEX);
+    if (this.fullScreen) {
+      this.fullscreenButton.classList.add(FULLSCREEN_BUTTON.FULLSCREEN_MODE);
+      this.container.classList.add(CONTAINER.FULLSCREEN);
+    }
     this.fullscreenButton.addEventListener('click', this.onAddFullscreenButtonClick.bind(this));
     this.menu.appendChild(this.fullscreenButton);
   }
@@ -350,31 +372,31 @@ export class Viewer {
     } else {
       this.setFullscreen();
     }
-
-    this.fullScreen = this.container.classList.contains('fullscreen');
   }
 
   exitFullscreen() {
-    this.fullscreenButton.classList.remove('fullscreen-mode');
-    this.container.classList.remove('fullscreen');
+    this.fullscreenButton.classList.remove(FULLSCREEN_BUTTON.FULLSCREEN_MODE);
+    this.container.classList.remove(CONTAINER.FULLSCREEN);
+    this.fullScreen = false;
   }
 
   setFullscreen() {
-    this.fullscreenButton.classList.add('fullscreen-mode');
-    this.container.classList.add('fullscreen');
+    this.fullscreenButton.classList.add(FULLSCREEN_BUTTON.FULLSCREEN_MODE);
+    this.container.classList.add(CONTAINER.FULLSCREEN);
+    this.fullScreen = true;
   }
 
   addMagnifierButton() {
     this.magnifierButton = document.createElement('div');
     this.magnifierButton.draggable = false;
-    this.magnifierButton.classList.add('magnifier-button');
+    this.magnifierButton.classList.add(MAGNIFIER_BUTTON.INDEX);
     this.magnifierButton.addEventListener('click', this.onAddMagnifierButtonClick.bind(this));
     this.menu.appendChild(this.magnifierButton);
   }
 
   addMagnifierGlass() {
     this.magnifierGlass = new Image();
-    this.magnifierGlass.classList.add('img-magnifier-glass');
+    this.magnifierGlass.classList.add(IMG_MAGNIFIER_GLASS.INDEX);
     this.magnifierGlass.addEventListener('mousedown', this.removeMagnifierGlass.bind(this));
     this.container.appendChild(this.magnifierGlass);
   }
@@ -395,14 +417,14 @@ export class Viewer {
   addMenu() {
     this.menu = document.createElement('div');
     this.menu.draggable = false;
-    this.menu.classList.add('menu');
+    this.menu.classList.add(TOP_MENU.INDEX);
 
     if (this.magnifier && !this.isMobile) {
       this.addMagnifierButton();
     }
 
     if (this.fullScreen) {
-      this.fullScreen = false;
+      this.fullScreen = this.container.classList.contains(CONTAINER.FULLSCREEN);
       this.addFullScreenButton();
     }
 
@@ -412,7 +434,7 @@ export class Viewer {
   addPreviewIcon() {
     this.previewIcon = document.createElement('div');
     this.previewIcon.draggable = false;
-    this.previewIcon.classList.add('preview-icon');
+    this.previewIcon.classList.add(PREVIEW_ICON.INDEX);
 
     this.container.appendChild(this.previewIcon);
   }
@@ -425,19 +447,19 @@ export class Viewer {
   addBottomCircle() {
     this.bottomCircleContainer = new Image();
     this.bottomCircleContainer.draggable = false;
-    this.bottomCircleContainer.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg';
-    this.bottomCircleContainer.classList.add('bottom-circle');
+    this.bottomCircleContainer.src = BOTTOM_CIRCLE_IMAGE_SRC;
+    this.bottomCircleContainer.classList.add(BOTTOM_CIRCLE.INDEX);
     this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
 
     this.container.appendChild(this.bottomCircleContainer);
   }
 
   hideBottomCircle() {
-    this.bottomCircleContainer.classList.add('hidden');
+    this.bottomCircleContainer.classList.add(BOTTOM_CIRCLE.HIDDEN);
   }
 
   showBottomCircle() {
-    this.bottomCircleContainer.classList.remove('hidden');
+    this.bottomCircleContainer.classList.remove(BOTTOM_CIRCLE.HIDDEN);
   }
 
   updateControls() {
@@ -458,29 +480,29 @@ export class Viewer {
   }
 
   disableGoLeftControl() {
-    this.controlsGoLeft.classList.add('disabled');
+    this.controlsGoLeft.classList.add(CONTROLS.DISABLED);
   }
 
   enableGoLeftControl() {
-    this.controlsGoLeft.classList.remove('disabled');
+    this.controlsGoLeft.classList.remove(CONTROLS.DISABLED);
   }
 
   disableGoRightControl() {
-    this.controlsGoRigth.classList.add('disabled');
+    this.controlsGoRigth.classList.add(CONTROLS.DISABLED);
   }
 
   enableGoRightControl() {
-    this.controlsGoRigth.classList.remove('disabled');
+    this.controlsGoRigth.classList.remove(CONTROLS.DISABLED);
   }
 
   addControls() {
     this.controls = document.createElement('div');
     this.controls.draggable = false;
-    this.controls.classList.add('controls');
+    this.controls.classList.add(CONTROLS.INDEX);
 
     this.controlsGoLeft = document.createElement('button');
     this.controlsGoLeft.draggable = false;
-    this.controlsGoLeft.classList.add('left');
+    this.controlsGoLeft.classList.add(CONTROLS.LEFT);
     this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
     this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
 
@@ -495,7 +517,7 @@ export class Viewer {
 
     this.controlsGoRigth = document.createElement('button');
     this.controlsGoRigth.draggable = false;
-    this.controlsGoRigth.classList.add('right');
+    this.controlsGoRigth.classList.add(CONTROLS.RIGHT);
     this.controlsGoRigth.addEventListener('mousedown', this.onGoRightDown.bind(this));
     this.controlsGoRigth.addEventListener('touchstart', this.onGoRightDown.bind(this));
 
