@@ -33,7 +33,7 @@ export class Viewer {
     this.containerList = getAttr(container, 'container-list') || getAttr(container, 'data-container-list');
     this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 0, 10);
     this.amount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
-    this.speed = parseInt(getAttr(container, 'speed') || 80, 10);
+    this.speed = parseInt(getAttr(container, 'speed') || getAttr(container, 'data-speed') || 80, 10);
     this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
     this.keys = Boolean(getAttr(container, 'keys') || getAttr(container, 'data-keys'));
     this.container.style.boxShadow = getAttr(container, 'box-shadow') || getAttr(container, 'data-box-shadow');
