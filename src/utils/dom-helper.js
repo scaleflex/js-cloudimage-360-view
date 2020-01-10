@@ -1,4 +1,9 @@
-export const getAttr = (element, attribute) => element.getAttribute(attribute);
+/**
+ * @param {HTMLElement} element 
+ * @param {String} attribute atribute name
+ * @param {any} defaultValue returns this if the attribute value is falsy
+ */
+export const getAttr = (element, attribute, defaultValue = null) => element.getAttribute(attribute) || defaultValue;
 
 export const magnify = (container, src, glass, zoom) => {
   let w, h;
@@ -70,3 +75,27 @@ export const getClientHitPoint = ({ clientX, clientY, touches }) => {
 
   return point;
 }
+
+/**
+ * @param {HTMLElement} element 
+ * @param {Number} distanceBeforeDetection  pixels
+ * */
+export const isAboutToEnterViewport = (element, distanceBeforeDetection = 200) => {
+  const { top, left } = element.getBoundingClientRect();
+
+  const elementTop = top - distanceBeforeDetection;
+  const elementLeft = left - distanceBeforeDetection;
+
+  const elementWidth = element.clientWidth;
+  const elementHeight = element.clientHeight;
+
+  const documentWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const documentHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+  return (
+    (elementTop < documentHeight &&
+      elementTop + elementHeight > 0) &&
+    (elementLeft < documentWidth &&
+      elementLeft + elementWidth > 0)
+  );
+};

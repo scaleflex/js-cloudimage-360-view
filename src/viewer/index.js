@@ -15,7 +15,7 @@ import {
   TOP_MENU,
   PREVIEW_ICON,
 } from './classes';
-import { CONTAINER } from "../ci360/classes";
+import { CONTAINER } from "../core/classes";
 import { BOTTOM_CIRCLE_IMAGE_SRC } from "./constants";
 
 import './stylesheets/main.scss';
@@ -45,14 +45,12 @@ export class Viewer {
       parseInt(getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier'), 10) || 3;
 
     this.bottomCircleOffset = parseInt(getAttr(container, 'bottom-circle-offset') || getAttr(container, 'data-bottom-circle-offset') || 5, 10);
-    this.ratio = (getAttr(container, 'ratio') || getAttr(container, 'data-ratio') || 0) || false;
     this.responsive = Boolean(getAttr(container, 'responsive') || getAttr(container, 'data-responsive'));
     this.ciToken = getAttr(container, 'responsive') || getAttr(container, 'data-responsive') || 'demo';
     this.ciSize = getAttr(container, 'size') || getAttr(container, 'data-size');
     this.ciOperation = getAttr(container, 'operation') || getAttr(container, 'data-operation') || 'width';
     this.ciFilters = getAttr(container, 'filters') || getAttr(container, 'data-filters') || 'q35';
-    this.lazyload = Boolean(getAttr(container, 'lazyload') || getAttr(container, 'data-lazyload'));
-    this.lazySelector = Boolean(getAttr(container, 'lazyload-selector') || getAttr(container, 'data-lazyload-selector') || 'lazyload');
+    this.preloadImages = Boolean(getAttr(container, 'preload-images', true) || getAttr(container, 'data-preload-images', true));
     this.spinReverse = Boolean(getAttr(container, 'spin-reverse') || getAttr(container, 'data-spin-reverse'));
     this.controlReverse = Boolean(getAttr(container, 'control-reverse') || getAttr(container, 'data-control-reverse'));
     this.showControls = Boolean(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
@@ -143,8 +141,8 @@ export class Viewer {
       this.container.addEventListener('keyup', this.onKeyUp.bind(this));
     }
 
-    if (!this.lazyload) {
-      this.preloadImages();
+    if (this.preloadImages) {
+      this.preloadAllImages();
     }
 
     if (this.autoplay) {
@@ -163,6 +161,16 @@ export class Viewer {
       this.addPreviewIcon();
       this.addBottomCircle();
     }
+
+    this.container.classList.add(CONTAINER.INITIALIZED);
+  }
+
+  destroy() {
+    while (this.container.firstChild) {
+      this.container.firstChild.remove();
+    }
+
+    this.container.classList.remove(CONTAINER.INITIALIZED);
   }
 
   /**
@@ -309,7 +317,7 @@ export class Viewer {
     this.cachedImages[src] = image;
   }
 
-  preloadImages() {
+  preloadAllImages() {
     for (let col = this.indexZeroBase; col <= this.maxColIndex; col++) {
       for (let row = this.indexZeroBase; row <= this.maxRowIndex; row++) {
         this.cacheImage(this.getImageSrc(col, row));
