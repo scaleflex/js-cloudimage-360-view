@@ -21,9 +21,11 @@ export class Core {
   /**@param {HTMLElement} container */
   static loadContainer(container) {
     const lazyLoad = Boolean(getAttr(container, 'lazyload') || getAttr(container, 'data-lazyload'));
+    const lazyLoadWithinRange = parseInt(getAttr(container, 'lazyload-within-range') || getAttr(container, 'data-lazyload-within-range') || 200, 10);
+
     if (lazyLoad) {
       document.addEventListener('scroll', function listener(event) {
-        if (isAboutToEnterViewport(container)) {
+        if (isAboutToEnterViewport(container, lazyLoadWithinRange)) {
           event.currentTarget.removeEventListener(event.type, listener);
           Core.viewers.push(new Viewer(container));
         }
