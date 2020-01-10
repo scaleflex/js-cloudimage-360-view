@@ -3,6 +3,8 @@
   width: 100%;
   height: 100%;
   visibility: hidden;
+  display: flex;
+  justify-content: center;
 
   $tier1-z-index: 10;
   $tier2-z-index: 11;
@@ -93,8 +95,8 @@
     .left,
     .right {
       position: relative;
-      width: 7%;
-      height: 100%;
+      width: 9%;
+      padding-bottom: 8%;
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center;
@@ -153,13 +155,13 @@
 
   .preview-icon {
     position: absolute;
+    display: flex;
+    align-self: center;
     background-image: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg');
     background-color: rgba(255, 255, 255, 0.8);
-    width: 20%;
-    height: 50%;
+    width: 30%;
+    padding-bottom: 24%;
     border-radius: 50%;
-    top: 30%;
-    left: 41%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;

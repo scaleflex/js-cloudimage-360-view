@@ -27,11 +27,9 @@ export class Viewer {
   constructor(container) {
     this.container = container;
 
-    this.imageList = getAttr(container, 'image-list') || getAttr(container, 'data-image-list');
     this.folder = getAttr(container, 'folder') || getAttr(container, 'data-folder') || '/';
     this.fileNamePattern = getAttr(container, 'filename') || getAttr(container, 'data-filename') || 'container-{index}.jpg';
-    this.containerList = getAttr(container, 'container-list') || getAttr(container, 'data-container-list');
-    this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 0, 10);
+    this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 1, 10);
     this.amount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
     this.speed = parseInt(getAttr(container, 'speed') || getAttr(container, 'data-speed') || 80, 10);
     this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
@@ -121,15 +119,15 @@ export class Viewer {
   }
 
   get isBottomCircleVisible() {
-    return Boolean(this.bottomCircleContainer && this.bottomCircleContainer.classList.contains('hidden')) == false;
+    return Boolean(this.bottomCircleContainer) && this.bottomCircleContainer.classList.contains('hidden') == false;
   }
 
   get isGoLeftDisabled() {
-    return Boolean(this.controlsGoLeft && this.controlsGoLeft.classList.contains('disabled'));
+    return Boolean(this.controlsGoLeft) && this.controlsGoLeft.classList.contains('disabled');
   }
 
   get isGoRightDisabled() {
-    return Boolean(this.controlsGoRigth && this.controlsGoRigth.classList.contains('disabled'));
+    return Boolean(this.controlsGoRigth) && this.controlsGoRigth.classList.contains('disabled');
   }
 
   init() {
@@ -337,7 +335,7 @@ export class Viewer {
     let src = url;
 
     if (this.responsive) {
-      const ciSizeNext = this.container.style.width;
+      const ciSizeNext = this.container.clientWidth;
 
       src = `https://${this.ciToken}.cloudimg.io/${this.ciOperation}/${ciSizeNext}/${this.ciFilters}/${url}`;
     }
