@@ -624,12 +624,12 @@ class CI360Viewer {
       [...new Array(amount)].map((_item, index) => {
         const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
         const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        this.addImage(resultSrc, lazyload, lazySelector);
+        this.addImage(resultSrc, lazyload, lazySelector, index);
       });
     }
   }
 
-  addImage(resultSrc, lazyload, lazySelector) {
+  addImage(resultSrc, lazyload, lazySelector, index) {
     const image = new Image();
 
     if (lazyload && !this.fullScreenView) {
