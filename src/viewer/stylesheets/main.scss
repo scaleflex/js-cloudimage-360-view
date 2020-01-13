@@ -10,6 +10,8 @@
   $tier2-z-index: 11;
   $tier3-z-index: 12;
   $tier4-z-index: 12;
+  $tier5-z-index: 13;
+  $tier6-z-index: 14;
 
   &,
   & * {
@@ -33,8 +35,8 @@
   }
 
   &.fullscreen {
-    position: absolute;
-    z-index: $tier4-z-index;
+    position: fixed;
+    z-index: $tier6-z-index;
 
     left: 0;
     top: 0;
@@ -44,28 +46,29 @@
     position: absolute;
     display: flex;
     justify-content: flex-end;
-    width: 60px;
-    height: 5%;
     top: 5px;
     right: 5px;
-    z-index: $tier2-z-index;
+    z-index: $tier3-z-index;
 
     .fullscreen-button,
     .magnifier-button {
       display: inline-flex;
-      flex: 1;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      margin: 2%;
-      z-index: $tier2-z-index;
+      margin: 0 1%;
+      width: 10%;
+      min-width: 25px;
+      min-height: 25px;
+
+      &::before {
+        content: "";
+        padding-top: 100%;
+      }
 
       &:hover {
         cursor: pointer;
       }
-
-      width: auto;
-      height: 100%;
     }
 
     .fullscreen-button {
@@ -88,22 +91,30 @@
     top: 45%;
     left: 0;
     right: 0;
-    z-index: $tier2-z-index;
-    height: 17%;
+    z-index: $tier3-z-index;
     margin: 0 5%;
 
     .left,
     .right {
       position: relative;
       width: 9%;
-      padding-bottom: 8%;
+      padding: 0;
+      min-width: 46px;
+      min-height: 46px;
       background-repeat: no-repeat;
-      background-size: contain;
+      background-size: 70%;
       background-position: center;
       background-color: rgb(244, 244, 244);
       outline: none;
       border: none;
       border-radius: 4px;
+
+
+      &::before {
+        content: "";
+        display: block;
+        padding-top: 100%;
+      }
 
       &:hover:not(.disabled) {
         cursor: pointer;
@@ -141,7 +152,7 @@
     border-radius: 50%;
     line-height: 200px;
     text-align: center;
-    z-index: $tier3-z-index;
+    z-index: $tier4-z-index;
     width: 250px;
     height: 250px;
     top: -75px;
@@ -159,18 +170,22 @@
     align-self: center;
     background-image: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg');
     background-color: rgba(255, 255, 255, 0.8);
-    width: 30%;
-    padding-bottom: 24%;
+    width: 20%;
     border-radius: 50%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    z-index: $tier4-z-index;
+    z-index: $tier5-z-index;
+
+    &::before {
+      content: "";
+      padding-top: 100%;
+    }
   }
 
   .bottom-circle {
     position: absolute;
-    top: 55%;
+    top: auto;
     bottom: 5%;
     left: 0px;
     right: 0px;

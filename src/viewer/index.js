@@ -30,13 +30,14 @@ export class Viewer {
     this.folder = getAttr(container, 'folder') || getAttr(container, 'data-folder') || '/';
     this.fileNamePattern = getAttr(container, 'filename') || getAttr(container, 'data-filename') || 'container-{index}.jpg';
     this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 1, 10);
-    this.amount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
+    this.colsAmount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
+    this.rowsAmount = parseInt(getAttr(container, 'rows-amount') || getAttr(container, 'data-rows-amount') || 1, 10);
     this.speed = parseInt(getAttr(container, 'speed') || getAttr(container, 'data-speed') || 80, 10);
     this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
     this.keys = Boolean(getAttr(container, 'keys') || getAttr(container, 'data-keys'));
     this.container.style.boxShadow = getAttr(container, 'box-shadow') || getAttr(container, 'data-box-shadow');
     this.autoplay = Boolean(getAttr(container, 'autoplay') || getAttr(container, 'data-autoplay'));
-    this.autoplaySpeed = this.speed * 36 / this.amount;
+    this.autoplaySpeed = this.speed * 36 / this.colsAmount;
     this.bottomCircle = Boolean(getAttr(container, 'bottom-circle') || getAttr(container, 'data-bottom-circle'));
     this.fullScreen = Boolean(getAttr(container, 'full-screen') || getAttr(container, 'data-full-screen'));
     this.magnifier = (getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier')) &&
@@ -64,9 +65,6 @@ export class Viewer {
     this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
     this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
 
-    this.container.addEventListener('mouseout', this.onMouseOut.bind(this));
-    this.container.addEventListener('touchcancel', this.onMouseOut.bind(this));
-
     this.setInitialFlags();
 
     this.prevMouseX = 0;
@@ -75,8 +73,8 @@ export class Viewer {
     this._colIndex = this.indexZeroBase;
     this._rowIndex = this.indexZeroBase;
 
-    this.maxColIndex = this.amount - 1;
-    this.maxRowIndex = this.amount - 1;
+    this.maxColIndex = this.colsAmount - 1;
+    this.maxRowIndex = this.rowsAmount - 1;
 
     this.cachedImages = {}; //using it as key-value pair
     this.image = new Image();
@@ -101,6 +99,10 @@ export class Viewer {
 
     this.changeImage();
     this.updateControls();
+    this.isSpinning = true;
+    if (this.isSpinning && this.isBottomCircleVisible) {
+      this.hideBottomCircle();
+    }
   }
 
   get rowIndex() {
@@ -116,6 +118,10 @@ export class Viewer {
 
     this.changeImage();
     this.updateControls();
+    this.isSpinning = true;
+    if (this.isSpinning && this.isBottomCircleVisible) {
+      this.hideBottomCircle();
+    }
   }
 
   get isBottomCircleVisible() {
@@ -130,21 +136,21 @@ export class Viewer {
     return Boolean(this.controlsGoRigth) && this.controlsGoRigth.classList.contains('disabled');
   }
 
+  get hasMultipleRows() {
+    return this.rowsAmount > 1;
+  }
+
   init() {
     this.container.appendChild(this.image);
     this.changeImage();// sets the initial image
 
     if (this.keys) {
-      this.container.addEventListener('keydown', this.onKeyDown.bind(this));
-      this.container.addEventListener('keyup', this.onKeyUp.bind(this));
+      this.container.addEventListener('keydown', this.onControlDown.bind(this));
+      this.container.addEventListener('keyup', this.onControlUp.bind(this));
     }
 
     if (this.preloadImages) {
       this.preloadAllImages();
-    }
-
-    if (this.autoplay) {
-      this.autoplayInterval = setInterval(this.spin.bind(this), this.autoplaySpeed);
     }
 
     if (this.fullScreen || this.magnifier) {
@@ -158,6 +164,10 @@ export class Viewer {
     if (this.bottomCircle) {
       this.addPreviewIcon();
       this.addBottomCircle();
+    }
+
+    if (this.autoplay) {
+      this.autoplayInterval = setInterval(this.spin.bind(this), this.autoplaySpeed);
     }
 
     this.container.classList.add(CONTAINER.INITIALIZED);
@@ -196,10 +206,8 @@ export class Viewer {
 
   onMouseUp() {
     this.setInitialFlags();
-
-    if (this.bottomCircleContainer && !this.isBottomCircleVisible) {
-      this.showBottomCircle();
-    }
+    this.showBottomCircle();
+    this.isSpinning = false;
   }
 
   onMouseDown() {
@@ -236,13 +244,9 @@ export class Viewer {
 
       this.updateIndexes();
     }
-
-    if (this.isMouseDown && this.isBottomCircleVisible) {
-      this.hideBottomCircle();
-    }
   }
 
-  onKeyDown(event) {
+  onControlDown(event) {
     if (this.magnifierGlass) {
       this.removeMagnifierGlass();
     }
@@ -257,7 +261,9 @@ export class Viewer {
     }
   }
 
-  onKeyUp(event) {
+  onControlUp(event) {
+    this.isSpinning = false;
+
     switch (event.keyCode) {
       case 37://left arrow
         this.onGoLeftUp();
@@ -274,10 +280,7 @@ export class Viewer {
     this.isDraggingDown = false;
     this.isDraggingLeft = false;
     this.isDraggingRight = false;
-  }
-
-  onMouseOut() {
-    this.setInitialFlags();
+    this.isSpinning = false;
   }
 
   changeImage() {
@@ -287,6 +290,7 @@ export class Viewer {
       this.onImageLoad(src);
     } else {
       this.cacheImage(src);
+      this.onImageLoad(src);
     }
   }
 
@@ -310,15 +314,20 @@ export class Viewer {
     if (this.cachedImages[src]) { return; }
 
     const image = new Image();
-    image.onload = this.onImageLoad.bind(this, src);
     image.src = src;
     this.cachedImages[src] = image;
   }
 
   preloadAllImages() {
-    for (let col = this.indexZeroBase; col <= this.maxColIndex; col++) {
-      for (let row = this.indexZeroBase; row <= this.maxRowIndex; row++) {
-        this.cacheImage(this.getImageSrc(col, row));
+    if (this.hasMultipleRows) {
+      for (let col = this.indexZeroBase; col <= this.maxColIndex; col++) {
+        for (let row = this.indexZeroBase; row <= this.maxRowIndex; row++) {
+          this.cacheImage(this.getImageSrc(col, row));
+        }
+      }
+    } else {
+      for (let col = this.indexZeroBase; col <= this.maxColIndex; col++) {
+        this.cacheImage(this.getImageSrc(col, this.maxRowIndex));
       }
     }
   }
@@ -455,6 +464,9 @@ export class Viewer {
     this.bottomCircleContainer.draggable = false;
     this.bottomCircleContainer.src = BOTTOM_CIRCLE_IMAGE_SRC;
     this.bottomCircleContainer.classList.add(BOTTOM_CIRCLE.INDEX);
+    if (this.autoplay) {
+      this.bottomCircleContainer.classList.add(BOTTOM_CIRCLE.HIDDEN);
+    }
     this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
 
     this.container.appendChild(this.bottomCircleContainer);
@@ -465,7 +477,9 @@ export class Viewer {
   }
 
   showBottomCircle() {
-    this.bottomCircleContainer.classList.remove(BOTTOM_CIRCLE.HIDDEN);
+    if (this.bottomCircleContainer && !this.isBottomCircleVisible) {
+      this.bottomCircleContainer.classList.remove(BOTTOM_CIRCLE.HIDDEN);
+    }
   }
 
   updateControls() {
@@ -550,6 +564,7 @@ export class Viewer {
 
   onGoLeftUp() {
     clearInterval(this.goLeftInterval);
+    this.showBottomCircle();
   }
 
   onGoRightDown() {
@@ -565,5 +580,6 @@ export class Viewer {
 
   onGoRightUp() {
     clearInterval(this.goRightInterval);
+    this.showBottomCircle();
   }
 }
