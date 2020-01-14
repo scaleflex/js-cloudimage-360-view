@@ -1,5 +1,6 @@
 'use strict';
 
+import 'custom-event-polyfill';
 import {
   getAttr,
   magnify,
@@ -14,10 +15,13 @@ import {
   CONTROLS,
   TOP_MENU,
   PREVIEW_ICON,
+  TOP_LOADER,
+  CENTER_LOADER,
 } from './classes';
 import { CONTAINER } from "../core/classes";
-import { BOTTOM_CIRCLE_IMAGE_SRC } from "./constants";
+import { BOTTOM_CIRCLE_IMAGE_SRC, EVENTS } from "./constants";
 
+import { getPercentage } from "../utils/number-helper";
 import './stylesheets/main.scss';
 
 export class Viewer {
@@ -55,15 +59,6 @@ export class Viewer {
     this.showControls = Boolean(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
     this.stopAtEdges = Boolean(getAttr(container, 'stop-at-edges') || getAttr(container, 'data-stop-at-edges'));
     this.dragSensitivity = getAttr(container, 'drag-sensitivity') || getAttr(container, 'data-drag-sensitivity') || 1;
-
-    this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
-    this.container.addEventListener('touchmove', this.onMouseMove.bind(this));
-
-    this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
-    this.container.addEventListener('touchend', this.onMouseUp.bind(this));
-
-    this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
-    this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
 
     this.setInitialFlags();
 
@@ -125,29 +120,33 @@ export class Viewer {
   }
 
   get isBottomCircleVisible() {
-    return Boolean(this.bottomCircleContainer) && this.bottomCircleContainer.classList.contains('hidden') == false;
+    return Boolean(this.bottomCircleContainer) && this.bottomCircleContainer.classList.contains(BOTTOM_CIRCLE.HIDDEN) == false;
   }
 
   get isGoLeftDisabled() {
-    return Boolean(this.controlsGoLeft) && this.controlsGoLeft.classList.contains('disabled');
+    return Boolean(this.controlsGoLeft) && this.controlsGoLeft.classList.contains(CONTROLS.DISABLED);
   }
 
   get isGoRightDisabled() {
-    return Boolean(this.controlsGoRigth) && this.controlsGoRigth.classList.contains('disabled');
+    return Boolean(this.controlsGoRigth) && this.controlsGoRigth.classList.contains(CONTROLS.DISABLED);
   }
 
-  get hasMultipleRows() {
-    return this.rowsAmount > 1;
+  get isTopLoaderVisible() {
+    return Boolean(this.topLoader) && this.topLoader.classList.contains(TOP_LOADER.HIDDEN) == false;
+  }
+
+  get isCenterLoaderVisible() {
+    return Boolean(this.centerLoader) && this.centerLoader.classList.contains(CENTER_LOADER.HIDDEN) == false;
   }
 
   init() {
     this.container.appendChild(this.image);
     this.changeImage();// sets the initial image
 
-    if (this.keys) {
-      this.container.addEventListener('keydown', this.onControlDown.bind(this));
-      this.container.addEventListener('keyup', this.onControlUp.bind(this));
-    }
+    this.addLoaders();
+    this.container.addEventListener(EVENTS.LOADING, this.loadingEventHandler.bind(this));
+    this.container.addEventListener(EVENTS.LOADED, this.loadedEventHandler.bind(this));
+    this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, { detail: 0 }));
 
     if (this.preloadImages) {
       this.preloadAllImages();
@@ -162,15 +161,8 @@ export class Viewer {
     }
 
     if (this.bottomCircle) {
-      this.addPreviewIcon();
       this.addBottomCircle();
     }
-
-    if (this.autoplay) {
-      this.autoplayInterval = setInterval(this.spin.bind(this), this.autoplaySpeed);
-    }
-
-    this.container.classList.add(CONTAINER.INITIALIZED);
   }
 
   destroy() {
@@ -179,6 +171,46 @@ export class Viewer {
     }
 
     this.container.classList.remove(CONTAINER.INITIALIZED);
+  }
+
+  loadingEventHandler({ detail: percentage }) {
+    if (!this.isTopLoaderVisible) {
+      this.showTopLoader();
+    }
+    if (!this.isCenterLoaderVisible) {
+      this.showCenterLoader();
+    }
+
+    this.setTopLoaderPercentage(percentage);
+    this.setCenterLoaderPercentage(percentage);
+
+    if (percentage === 100) {
+      this.container.dispatchEvent(new CustomEvent(EVENTS.LOADED));
+    }
+  }
+
+  loadedEventHandler() {
+    if (this.autoplay) {
+      this.autoplayInterval = setInterval(this.autoSpin.bind(this), this.autoplaySpeed);
+    } else {
+      this.addPreviewIcon();
+    }
+
+    this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
+    this.container.addEventListener('touchmove', this.onMouseMove.bind(this));
+
+    this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
+    this.container.addEventListener('touchend', this.onMouseUp.bind(this));
+
+    this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
+    this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
+
+    if (this.keys) {
+      this.container.addEventListener('keydown', this.onControlDown.bind(this));
+      this.container.addEventListener('keyup', this.onControlUp.bind(this));
+    }
+
+    this.container.classList.add(CONTAINER.INITIALIZED);
   }
 
   /**
@@ -285,12 +317,12 @@ export class Viewer {
 
   changeImage() {
     const src = this.getImageSrc();
-
     if (this.cachedImages[src]) {
+      console.log('loaded cached');
       this.onImageLoad(src);
     } else {
-      this.cacheImage(src);
-      this.onImageLoad(src);
+      this.cacheImage(src, this.onImageLoad.bind(this, src));
+      console.log(src);
     }
   }
 
@@ -309,25 +341,36 @@ export class Viewer {
     return file;
   }
 
-  /** @param {String} src*/
-  cacheImage(src) {
+  /** @param {String} src
+   * @param {Function} callback
+  */
+  cacheImage(src, callback) {
     if (this.cachedImages[src]) { return; }
 
     const image = new Image();
     image.src = src;
-    this.cachedImages[src] = image;
+    image.onload = this.onImageCached.bind(this, callback, src);
+  }
+
+  /**
+   * @param {Function} callback 
+   * @param {String} src 
+   */
+  onImageCached(callback, src) {
+    this.cachedImages[src] = true;
+
+    const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
+    this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, { detail: loaderPercentage }));
+
+    if (callback) {
+      callback();
+    }
   }
 
   preloadAllImages() {
-    if (this.hasMultipleRows) {
-      for (let col = this.indexZeroBase; col <= this.maxColIndex; col++) {
-        for (let row = this.indexZeroBase; row <= this.maxRowIndex; row++) {
-          this.cacheImage(this.getImageSrc(col, row));
-        }
-      }
-    } else {
-      for (let col = this.indexZeroBase; col <= this.maxColIndex; col++) {
-        this.cacheImage(this.getImageSrc(col, this.maxRowIndex));
+    for (let row = this.indexZeroBase; row <= this.rowsAmount; row++) {
+      for (let col = this.indexZeroBase; col <= this.colsAmount; col++) {
+        this.cacheImage(this.getImageSrc(col, row));
       }
     }
   }
@@ -356,7 +399,7 @@ export class Viewer {
     this.image.src = src;
   }
 
-  spin() {
+  autoSpin() {
     if (this.spinReverse) {
       this.colIndex--;
     } else {
@@ -446,6 +489,81 @@ export class Viewer {
     this.container.appendChild(this.menu);
   }
 
+  addLoaders() {
+    this.addTopLoader();
+    this.addCenterLoader();
+  }
+
+  addTopLoader() {
+    this.topLoader = document.createElement('div');
+    this.topLoader.draggable = false;
+    this.topLoader.classList.add(TOP_LOADER.INDEX);
+
+    this.container.appendChild(this.topLoader);
+  }
+
+  /**
+   *  @param {Number} percentage
+   *  @param {Boolean} hideOnCompletion
+   */
+  setTopLoaderPercentage(percentage, hideOnCompletion = true) {
+    this.topLoader.style.width = `${percentage}%`;
+    if (hideOnCompletion && percentage === 100) {
+      this.hideTopLoader();
+    }
+  }
+
+  hideTopLoader() {
+    if (!this.topLoader) { return; }
+    this.topLoader.classList.add(TOP_LOADER.HIDDEN);
+  }
+
+  showTopLoader() {
+    if (!this.topLoader) { return; }
+    this.topLoader.classList.remove(TOP_LOADER.HIDDEN);
+  }
+
+  removeTopLoader() {
+    if (!this.topLoader) { return; }
+    this.container.removeChild(this.topLoader);
+    delete this.topLoader;
+  }
+
+  addCenterLoader() {
+    this.centerLoader = document.createElement('div');
+    this.centerLoader.draggable = false;
+    this.centerLoader.classList.add(CENTER_LOADER.INDEX);
+
+    this.container.appendChild(this.centerLoader);
+  }
+
+  showCenterLoader() {
+    if (!this.centerLoader) { return; }
+    this.centerLoader.classList.remove(CENTER_LOADER.HIDDEN);
+  }
+
+  hideCenterLoader() {
+    if (!this.centerLoader) { return; }
+    this.centerLoader.classList.add(CENTER_LOADER.HIDDEN);
+  }
+
+  /**
+   *  @param {Number} percentage 
+   *  @param {Boolean} hideOnCompletion
+  */
+  setCenterLoaderPercentage(percentage, hideOnCompletion = true) {
+    this.centerLoader.innerHTML = `${Math.floor(percentage)}%`;
+    if (hideOnCompletion && percentage === 100) {
+      this.hideCenterLoader();
+    }
+  }
+
+  removeCenterLoader() {
+    if (!this.centerLoader) { return; }
+    this.container.removeChild(this.centerLoader);
+    delete this.centerLoader;
+  }
+
   addPreviewIcon() {
     this.previewIcon = document.createElement('div');
     this.previewIcon.draggable = false;
@@ -467,6 +585,7 @@ export class Viewer {
     if (this.autoplay) {
       this.bottomCircleContainer.classList.add(BOTTOM_CIRCLE.HIDDEN);
     }
+    this.bottomCircleContainer.style.top = `${80 - this.bottomCircleOffset}%`;
     this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
 
     this.container.appendChild(this.bottomCircleContainer);
@@ -523,29 +642,33 @@ export class Viewer {
     this.controlsGoLeft = document.createElement('button');
     this.controlsGoLeft.draggable = false;
     this.controlsGoLeft.classList.add(CONTROLS.LEFT);
-    this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
-    this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
+    this.container.addEventListener(EVENTS.LOADED, (() => {
+      this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
+      this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
 
-    this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp.bind(this));
-    this.controlsGoLeft.addEventListener('touchend', this.onGoLeftUp.bind(this));
+      this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp.bind(this));
+      this.controlsGoLeft.addEventListener('touchend', this.onGoLeftUp.bind(this));
 
-    this.controlsGoLeft.addEventListener('mouseup', this.onGoLeftUp.bind(this));
-    this.controlsGoLeft.addEventListener('touchcancel', this.onGoLeftUp.bind(this));
+      this.controlsGoLeft.addEventListener('mouseup', this.onGoLeftUp.bind(this));
+      this.controlsGoLeft.addEventListener('touchcancel', this.onGoLeftUp.bind(this));
+    }).bind(this));
 
     this.controls.appendChild(this.controlsGoLeft);
-
 
     this.controlsGoRigth = document.createElement('button');
     this.controlsGoRigth.draggable = false;
     this.controlsGoRigth.classList.add(CONTROLS.RIGHT);
-    this.controlsGoRigth.addEventListener('mousedown', this.onGoRightDown.bind(this));
-    this.controlsGoRigth.addEventListener('touchstart', this.onGoRightDown.bind(this));
+    this.container.addEventListener(EVENTS.LOADED, (() => {
+      this.controlsGoRigth.addEventListener('mousedown', this.onGoRightDown.bind(this));
+      this.controlsGoRigth.addEventListener('touchstart', this.onGoRightDown.bind(this));
 
-    this.controlsGoRigth.addEventListener('mouseout', this.onGoRightUp.bind(this));
-    this.controlsGoRigth.addEventListener('touchend', this.onGoRightUp.bind(this));
+      this.controlsGoRigth.addEventListener('mouseout', this.onGoRightUp.bind(this));
+      this.controlsGoRigth.addEventListener('touchend', this.onGoRightUp.bind(this));
 
-    this.controlsGoRigth.addEventListener('mouseup', this.onGoRightUp.bind(this));
-    this.controlsGoRigth.addEventListener('touchcancel', this.onGoRightUp.bind(this));
+      this.controlsGoRigth.addEventListener('mouseup', this.onGoRightUp.bind(this));
+      this.controlsGoRigth.addEventListener('touchcancel', this.onGoRightUp.bind(this));
+    }).bind(this));
+
     this.controls.appendChild(this.controlsGoRigth);
 
     this.container.appendChild(this.controls);

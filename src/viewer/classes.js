@@ -1,6 +1,14 @@
 export const IMAGE = {
   INDEX: 'image'
 };
+export const TOP_LOADER = {
+  INDEX: 'top-loader',
+  HIDDEN: 'hidden',
+};
+export const CENTER_LOADER = {
+  INDEX: 'center-loader',
+  HIDDEN: 'hidden',
+};
 export const FULLSCREEN_BUTTON = {
   INDEX: 'fullscreen-button',
   FULLSCREEN_MODE: 'fullscreen-mode',
