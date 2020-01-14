@@ -53,7 +53,10 @@ export class Core {
     for (const viewer of this.viewers) {
       viewer.destroy();
     }
+  }
 
-    this.viewers = [];
+  /**@param {Viewer} viewer */
+  static removeViewer(viewer) {
+    this.viewers = this.viewers.filter(v => v !== viewer);
   }
 }

@@ -24,8 +24,9 @@ import { CONTAINER } from "../core/classes";
 import { BOTTOM_CIRCLE_IMAGE_SRC, EVENTS } from "./constants";
 
 import { getPercentage } from "../utils/number-helper";
-import './stylesheets/main.scss';
 import { KEYCODES } from '../utils/keys';
+import { Core } from '../core';
+import './stylesheets/main.scss';
 
 export class Viewer {
   /**
@@ -169,6 +170,7 @@ export class Viewer {
       this.container.firstChild.remove();
     }
 
+    Core.removeViewer(this);
     this.container.classList.remove(CONTAINER.INITIALIZED);
   }
 
