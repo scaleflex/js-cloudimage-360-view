@@ -6,6 +6,7 @@ import {
   magnify,
   getClientHitPoint,
   isTrue,
+  setDefault,
 } from "../utils/dom-helper";
 import {
   IMAGE,
@@ -55,7 +56,7 @@ export class Viewer {
     this.ciSize = getAttr(container, 'size') || getAttr(container, 'data-size');
     this.ciOperation = getAttr(container, 'operation') || getAttr(container, 'data-operation') || 'width';
     this.ciFilters = getAttr(container, 'filters') || getAttr(container, 'data-filters') || 'q35';
-    this.preloadImages = isTrue(getAttr(container, 'preload-images') || getAttr(container, 'data-preload-images'));
+    this.preloadImages = isTrue(setDefault(getAttr(container, 'preload-images') || getAttr(container, 'data-preload-images'), true));
     this.spinReverse = isTrue(getAttr(container, 'spin-reverse') || getAttr(container, 'data-spin-reverse'));
     this.controlReverse = isTrue(getAttr(container, 'control-reverse') || getAttr(container, 'data-control-reverse'));
     this.showControls = isTrue(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
@@ -334,15 +335,16 @@ export class Viewer {
 
     const image = new Image();
     image.src = src;
-    image.onload = this.onImageCached.bind(this, callback, src);
+    image.onload = this.onImageCached.bind(this, { callback, image, src });
   }
 
   /**
-   * @param {Function} callback 
-   * @param {String} src 
+   * @param {Object} params 
+   * @param {Function} params.callback 
+   * @param {String} params.src 
    */
-  onImageCached(callback, src) {
-    this.cachedImages[src] = true;
+  onImageCached({ callback, image, src }) {
+    this.cachedImages[src] = image; // save the image instance to preserve it from the garbage collector(prevents countless network requests) 
 
     const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
     if (this.preloadImages) {

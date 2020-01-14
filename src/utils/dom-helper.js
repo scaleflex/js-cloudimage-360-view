@@ -4,6 +4,10 @@
  */
 export const getAttr = (element, attribute) => element.getAttribute(attribute);
 
+export const setDefault = (value, defaultValue) => {
+  return value === undefined || value === null ? defaultValue : value;
+}
+
 export const isTrue = (value) => {
   if (typeof value === 'string') {
     const trimmedString = value.trim();
