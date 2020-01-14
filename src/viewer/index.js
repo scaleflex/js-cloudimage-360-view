@@ -23,6 +23,7 @@ import { BOTTOM_CIRCLE_IMAGE_SRC, EVENTS } from "./constants";
 
 import { getPercentage } from "../utils/number-helper";
 import './stylesheets/main.scss';
+import { KEYCODES } from '../utils/keys';
 
 export class Viewer {
   /**
@@ -128,7 +129,7 @@ export class Viewer {
   }
 
   get isGoRightDisabled() {
-    return Boolean(this.controlsGoRigth) && this.controlsGoRigth.classList.contains(CONTROLS.DISABLED);
+    return Boolean(this.controlsGoRight) && this.controlsGoRight.classList.contains(CONTROLS.DISABLED);
   }
 
   get isTopLoaderVisible() {
@@ -207,7 +208,6 @@ export class Viewer {
 
     if (this.keys) {
       this.container.addEventListener('keydown', this.onControlDown.bind(this));
-      this.container.addEventListener('keyup', this.onControlUp.bind(this));
     }
 
     this.container.classList.add(CONTAINER.INITIALIZED);
@@ -284,24 +284,11 @@ export class Viewer {
     }
 
     switch (event.keyCode) {
-      case 37://left arrow
-        this.onGoLeftDown();
+      case KEYCODES.LEFT_ARROW:
+        this.updateIndexes({ goLeft: true });
         break;
-      case 39://rigth arrow
-        this.onGoRightDown();
-        break;
-    }
-  }
-
-  onControlUp(event) {
-    this.isSpinning = false;
-
-    switch (event.keyCode) {
-      case 37://left arrow
-        this.onGoLeftUp();
-        break;
-      case 39://rigth arrow
-        this.onGoRightUp();
+      case KEYCODES.RIGHT_ARROW:
+        this.updateIndexes({ goRight: true });
         break;
     }
   }
@@ -318,11 +305,9 @@ export class Viewer {
   changeImage() {
     const src = this.getImageSrc();
     if (this.cachedImages[src]) {
-      console.log('loaded cached');
       this.onImageLoad(src);
     } else {
       this.cacheImage(src, this.onImageLoad.bind(this, src));
-      console.log(src);
     }
   }
 
@@ -627,11 +612,11 @@ export class Viewer {
   }
 
   disableGoRightControl() {
-    this.controlsGoRigth.classList.add(CONTROLS.DISABLED);
+    this.controlsGoRight.classList.add(CONTROLS.DISABLED);
   }
 
   enableGoRightControl() {
-    this.controlsGoRigth.classList.remove(CONTROLS.DISABLED);
+    this.controlsGoRight.classList.remove(CONTROLS.DISABLED);
   }
 
   addControls() {
@@ -644,6 +629,7 @@ export class Viewer {
     this.controlsGoLeft.classList.add(CONTROLS.LEFT);
     this.container.addEventListener(EVENTS.LOADED, (() => {
       this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
+      this.controlsGoLeft.addEventListener('click', this.onGoLeftClick.bind(this));
       this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
 
       this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp.bind(this));
@@ -655,23 +641,34 @@ export class Viewer {
 
     this.controls.appendChild(this.controlsGoLeft);
 
-    this.controlsGoRigth = document.createElement('button');
-    this.controlsGoRigth.draggable = false;
-    this.controlsGoRigth.classList.add(CONTROLS.RIGHT);
+    this.controlsGoRight = document.createElement('button');
+    this.controlsGoRight.draggable = false;
+    this.controlsGoRight.classList.add(CONTROLS.RIGHT);
     this.container.addEventListener(EVENTS.LOADED, (() => {
-      this.controlsGoRigth.addEventListener('mousedown', this.onGoRightDown.bind(this));
-      this.controlsGoRigth.addEventListener('touchstart', this.onGoRightDown.bind(this));
+      this.controlsGoRight.addEventListener('mousedown', this.onGoRightDown.bind(this));
+      this.controlsGoRight.addEventListener('click', this.onGoRightClick.bind(this));
+      this.controlsGoRight.addEventListener('touchstart', this.onGoRightDown.bind(this));
 
-      this.controlsGoRigth.addEventListener('mouseout', this.onGoRightUp.bind(this));
-      this.controlsGoRigth.addEventListener('touchend', this.onGoRightUp.bind(this));
+      this.controlsGoRight.addEventListener('mouseout', this.onGoRightUp.bind(this));
+      this.controlsGoRight.addEventListener('touchend', this.onGoRightUp.bind(this));
 
-      this.controlsGoRigth.addEventListener('mouseup', this.onGoRightUp.bind(this));
-      this.controlsGoRigth.addEventListener('touchcancel', this.onGoRightUp.bind(this));
+      this.controlsGoRight.addEventListener('mouseup', this.onGoRightUp.bind(this));
+      this.controlsGoRight.addEventListener('touchcancel', this.onGoRightUp.bind(this));
     }).bind(this));
 
-    this.controls.appendChild(this.controlsGoRigth);
+    this.controls.appendChild(this.controlsGoRight);
 
     this.container.appendChild(this.controls);
+  }
+
+  onGoLeftClick() {
+    if (this.isGoLeftDisabled) { return; }
+    this.updateIndexes({ goLeft: true });
+  }
+
+  onGoRightClick() {
+    if (this.isGoRightDisabled) { return; }
+    this.updateIndexes({ goRight: true });
   }
 
   onGoLeftDown() {
