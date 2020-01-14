@@ -4,6 +4,15 @@
  */
 export const getAttr = (element, attribute) => element.getAttribute(attribute);
 
+export const isTrue = (value) => {
+  if (typeof value === 'string') {
+    const trimmedString = value.trim();
+    return trimmedString !== 'false' && trimmedString !== '';
+  }
+
+  return Boolean(value);
+};
+
 export const magnify = (container, src, glass, zoom) => {
   let w, h;
 
