@@ -1,9 +1,8 @@
 /**
  * @param {HTMLElement} element 
  * @param {String} attribute atribute name
- * @param {any} defaultValue returns this if the attribute value is falsy
  */
-export const getAttr = (element, attribute, defaultValue = null) => element.getAttribute(attribute) || defaultValue;
+export const getAttr = (element, attribute) => element.getAttribute(attribute);
 
 export const magnify = (container, src, glass, zoom) => {
   let w, h;

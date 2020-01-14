@@ -54,7 +54,7 @@ export class Viewer {
     this.ciSize = getAttr(container, 'size') || getAttr(container, 'data-size');
     this.ciOperation = getAttr(container, 'operation') || getAttr(container, 'data-operation') || 'width';
     this.ciFilters = getAttr(container, 'filters') || getAttr(container, 'data-filters') || 'q35';
-    this.preloadImages = Boolean(getAttr(container, 'preload-images', true) || getAttr(container, 'data-preload-images', true));
+    this.preloadImages = Boolean(getAttr(container, 'preload-images') || getAttr(container, 'data-preload-images'));
     this.spinReverse = Boolean(getAttr(container, 'spin-reverse') || getAttr(container, 'data-spin-reverse'));
     this.controlReverse = Boolean(getAttr(container, 'control-reverse') || getAttr(container, 'data-control-reverse'));
     this.showControls = Boolean(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
@@ -344,7 +344,9 @@ export class Viewer {
     this.cachedImages[src] = true;
 
     const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
-    this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: loaderPercentage }));
+    if (this.preloadImages) {
+      this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: loaderPercentage }));
+    }
 
     if (callback) {
       callback();
