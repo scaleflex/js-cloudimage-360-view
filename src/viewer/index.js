@@ -95,10 +95,7 @@ export class Viewer {
 
     this.changeImage();
     this.updateControls();
-    this.isSpinning = true;
-    if (this.isSpinning && this.isBottomCircleVisible) {
-      this.hideBottomCircle();
-    }
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING));
   }
 
   get rowIndex() {
@@ -114,10 +111,7 @@ export class Viewer {
 
     this.changeImage();
     this.updateControls();
-    this.isSpinning = true;
-    if (this.isSpinning && this.isBottomCircleVisible) {
-      this.hideBottomCircle();
-    }
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING));
   }
 
   get isBottomCircleVisible() {
@@ -145,13 +139,9 @@ export class Viewer {
     this.changeImage();// sets the initial image
 
     this.addLoaders();
-    this.container.addEventListener(EVENTS.LOADING, this.loadingEventHandler.bind(this));
-    this.container.addEventListener(EVENTS.LOADED, this.loadedEventHandler.bind(this));
-    this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, { detail: 0 }));
-
-    if (this.preloadImages) {
-      this.preloadAllImages();
-    }
+    this.container.addEventListener(EVENTS.INITIALIZING, this.initializingEventHandler.bind(this));
+    this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, this.initializingFinishedEventHandler.bind(this));
+    this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: 0 }));
 
     if (this.fullScreen || this.magnifier) {
       this.addMenu();
@@ -164,6 +154,12 @@ export class Viewer {
     if (this.bottomCircle) {
       this.addBottomCircle();
     }
+
+    if (this.preloadImages) {
+      this.preloadAllImages();
+    } else {
+      this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: 100 }));
+    }
   }
 
   destroy() {
@@ -174,7 +170,7 @@ export class Viewer {
     this.container.classList.remove(CONTAINER.INITIALIZED);
   }
 
-  loadingEventHandler({ detail: percentage }) {
+  initializingEventHandler({ detail: percentage }) {
     if (!this.isTopLoaderVisible) {
       this.showTopLoader();
     }
@@ -186,11 +182,11 @@ export class Viewer {
     this.setCenterLoaderPercentage(percentage);
 
     if (percentage === 100) {
-      this.container.dispatchEvent(new CustomEvent(EVENTS.LOADED));
+      this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING_FINISHED));
     }
   }
 
-  loadedEventHandler() {
+  initializingFinishedEventHandler() {
     if (this.autoplay) {
       this.autoplayInterval = setInterval(this.autoSpin.bind(this), this.autoplaySpeed);
     } else {
@@ -208,6 +204,7 @@ export class Viewer {
 
     if (this.keys) {
       this.container.addEventListener('keydown', this.onControlDown.bind(this));
+      this.container.addEventListener('keyup', this.onControlUp.bind(this));
     }
 
     this.container.classList.add(CONTAINER.INITIALIZED);
@@ -238,8 +235,7 @@ export class Viewer {
 
   onMouseUp() {
     this.setInitialFlags();
-    this.showBottomCircle();
-    this.isSpinning = false;
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
   }
 
   onMouseDown() {
@@ -293,13 +289,16 @@ export class Viewer {
     }
   }
 
+  onControlUp() {
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+  }
+
   setInitialFlags() {
     this.isMouseDown = false;
     this.isDraggingUp = false;
     this.isDraggingDown = false;
     this.isDraggingLeft = false;
     this.isDraggingRight = false;
-    this.isSpinning = false;
   }
 
   changeImage() {
@@ -345,7 +344,7 @@ export class Viewer {
     this.cachedImages[src] = true;
 
     const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
-    this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, { detail: loaderPercentage }));
+    this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: loaderPercentage }));
 
     if (callback) {
       callback();
@@ -573,6 +572,16 @@ export class Viewer {
     this.bottomCircleContainer.style.top = `${80 - this.bottomCircleOffset}%`;
     this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
 
+    this.container.addEventListener(EVENTS.SPINNING, (() => {
+      if (!this.isBottomCircleVisible) { return; }
+      this.hideBottomCircle();
+    }).bind(this));
+
+    this.container.addEventListener(EVENTS.SPINNING_STOPPED, (() => {
+      if (this.isBottomCircleVisible) { return; }
+      this.showBottomCircle();
+    }).bind(this));
+
     this.container.appendChild(this.bottomCircleContainer);
   }
 
@@ -581,9 +590,7 @@ export class Viewer {
   }
 
   showBottomCircle() {
-    if (this.bottomCircleContainer && !this.isBottomCircleVisible) {
-      this.bottomCircleContainer.classList.remove(BOTTOM_CIRCLE.HIDDEN);
-    }
+    this.bottomCircleContainer.classList.remove(BOTTOM_CIRCLE.HIDDEN);
   }
 
   updateControls() {
@@ -627,7 +634,7 @@ export class Viewer {
     this.controlsGoLeft = document.createElement('button');
     this.controlsGoLeft.draggable = false;
     this.controlsGoLeft.classList.add(CONTROLS.LEFT);
-    this.container.addEventListener(EVENTS.LOADED, (() => {
+    this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, (() => {
       this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
       this.controlsGoLeft.addEventListener('click', this.onGoLeftClick.bind(this));
       this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
@@ -644,7 +651,7 @@ export class Viewer {
     this.controlsGoRight = document.createElement('button');
     this.controlsGoRight.draggable = false;
     this.controlsGoRight.classList.add(CONTROLS.RIGHT);
-    this.container.addEventListener(EVENTS.LOADED, (() => {
+    this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, (() => {
       this.controlsGoRight.addEventListener('mousedown', this.onGoRightDown.bind(this));
       this.controlsGoRight.addEventListener('click', this.onGoRightClick.bind(this));
       this.controlsGoRight.addEventListener('touchstart', this.onGoRightDown.bind(this));
@@ -664,11 +671,13 @@ export class Viewer {
   onGoLeftClick() {
     if (this.isGoLeftDisabled) { return; }
     this.updateIndexes({ goLeft: true });
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
   }
 
   onGoRightClick() {
     if (this.isGoRightDisabled) { return; }
     this.updateIndexes({ goRight: true });
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
   }
 
   onGoLeftDown() {
@@ -684,7 +693,7 @@ export class Viewer {
 
   onGoLeftUp() {
     clearInterval(this.goLeftInterval);
-    this.showBottomCircle();
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
   }
 
   onGoRightDown() {
@@ -700,6 +709,6 @@ export class Viewer {
 
   onGoRightUp() {
     clearInterval(this.goRightInterval);
-    this.showBottomCircle();
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
   }
 }
