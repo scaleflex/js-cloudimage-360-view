@@ -81,6 +81,7 @@ export class Viewer {
     this.image.draggable = false;
 
     this.isMobile = Boolean('ontouchstart' in window || navigator.maxTouchPoints);
+    this.isInitalized = false;
 
     this.init();
   }
@@ -142,9 +143,9 @@ export class Viewer {
     this.changeImage();// sets the initial image
 
     this.addLoaders();
-    this.container.addEventListener(EVENTS.INITIALIZING, this.initializingEventHandler.bind(this));
+    this.container.addEventListener(EVENTS.LOADING, this.loadingEventHandler.bind(this));
     this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, this.initializingFinishedEventHandler.bind(this));
-    this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: 0 }));
+    this.initializing(0);
 
     if (this.fullScreen || this.magnifier) {
       this.addMenu();
@@ -161,7 +162,7 @@ export class Viewer {
     if (this.preloadImages) {
       this.preloadAllImages();
     } else {
-      this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: 100 }));
+      this.initializing(100);
     }
   }
 
@@ -172,27 +173,24 @@ export class Viewer {
 
     Core.removeViewer(this);
     this.container.classList.remove(CONTAINER.INITIALIZED);
+    this.isInitalized = false;
   }
 
-  initializingEventHandler({ detail: percentage }) {
-    if (!this.isTopLoaderVisible) {
-      this.showTopLoader();
-    }
-    if (!this.isCenterLoaderVisible) {
-      this.showCenterLoader();
-    }
-
-    this.setTopLoaderPercentage(percentage);
-    this.setCenterLoaderPercentage(percentage);
-
-    if (percentage === 100) {
-      this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING_FINISHED));
-    }
+  /**@param {Number} percentage */
+  initializing(percentage) {
+    this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, {
+      detail: {
+        percentage,
+        onComplete: (() => {
+          this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING_FINISHED));
+        }).bind(this)
+      }
+    }));
   }
 
   initializingFinishedEventHandler() {
     if (this.autoplay) {
-      this.autoplayInterval = setInterval(this.autoSpin.bind(this), this.autoplaySpeed);
+      this.startAutoSpinning();
     } else {
       this.addPreviewIcon();
     }
@@ -206,12 +204,31 @@ export class Viewer {
     this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
     this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
 
+    window.addEventListener('resize', this.onWindowResize.bind(this));
+
     if (this.keys) {
       this.container.addEventListener('keydown', this.onControlDown.bind(this));
       this.container.addEventListener('keyup', this.onControlUp.bind(this));
     }
 
     this.container.classList.add(CONTAINER.INITIALIZED);
+    this.isInitalized = true;
+  }
+
+  loadingEventHandler({ detail: { percentage, onComplete } }) {
+    if (!this.isTopLoaderVisible) {
+      this.showTopLoader();
+    }
+    if (!this.isCenterLoaderVisible) {
+      this.showCenterLoader();
+    }
+
+    this.setTopLoaderPercentage(percentage);
+    this.setCenterLoaderPercentage(percentage);
+
+    if (percentage === 100 && typeof onComplete === 'function') {
+      onComplete();
+    }
   }
 
   /**
@@ -237,6 +254,17 @@ export class Viewer {
     }
   }
 
+  onWindowResize() {
+    if (this.responsive && this.preloadImages) {
+      this.stopAutoSpinning();
+      this.preloadAllImages();
+
+      if (this.autoplay) {
+        this.startAutoSpinning();
+      }
+    }
+  }
+
   onMouseUp() {
     this.setInitialFlags();
     this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
@@ -246,7 +274,7 @@ export class Viewer {
     this.isMouseDown = true;
 
     if (this.autoplay) {
-      this.stopSpinning();
+      this.stopAutoSpinning();
     }
 
     if (this.previewIcon) {
@@ -349,16 +377,21 @@ export class Viewer {
     this.cachedImages[src] = image; // save the image instance to preserve it from the garbage collector(prevents countless network requests) 
 
     const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
-    if (this.preloadImages) {
-      this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING, { detail: loaderPercentage }));
+    if (this.isInitalized) {
+      this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, { detail: { percentage: loaderPercentage } }))
+      console.log(Object.keys(this.cachedImages).length);
+    } else {
+      this.initializing(loaderPercentage);
     }
 
-    if (callback) {
+    if (typeof callback === 'function') {
       callback();
     }
   }
 
   preloadAllImages() {
+    this.cachedImages = {};
+
     for (let row = this.indexZeroBase; row <= this.rowsAmount; row++) {
       for (let col = this.indexZeroBase; col <= this.colsAmount; col++) {
         this.cacheImage(this.getImageSrc(col, row));
@@ -398,9 +431,16 @@ export class Viewer {
     }
   }
 
-  stopSpinning() {
+  startAutoSpinning() {
+    this.autoplay = true;
+    this.autoplayInterval = setInterval(this.autoSpin.bind(this), this.autoplaySpeed);
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING));
+  }
+
+  stopAutoSpinning() {
     clearInterval(this.autoplayInterval);
     this.autoplay = false;
+    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
   }
 
   addFullScreenButton() {
@@ -543,7 +583,7 @@ export class Viewer {
    *  @param {Boolean} hideOnCompletion
   */
   setCenterLoaderPercentage(percentage, hideOnCompletion = true) {
-    this.centerLoader.innerHTML = `${Math.floor(percentage)}%`;
+    this.centerLoader.innerHTML = `${parseInt(percentage, 10)}%`;
     if (hideOnCompletion && percentage === 100) {
       this.hideCenterLoader();
     }
