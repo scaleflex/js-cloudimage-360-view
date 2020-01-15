@@ -425,9 +425,9 @@ export class Viewer {
 
   autoSpin() {
     if (this.spinReverse) {
-      this.colIndex--;
-    } else {
       this.colIndex++;
+    } else {
+      this.colIndex--;
     }
   }
 
