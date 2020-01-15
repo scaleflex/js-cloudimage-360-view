@@ -7,6 +7,7 @@ import {
   getClientHitPoint,
   isTrue,
   setDefault,
+  contain,
 } from "../utils/dom-helper";
 import {
   IMAGE,
@@ -26,6 +27,7 @@ import { BOTTOM_CIRCLE_IMAGE_SRC, EVENTS } from "./constants";
 import { getPercentage } from "../utils/number-helper";
 import { KEYCODES } from '../utils/keys';
 import { Core } from '../core';
+import { EventEmitter } from '../utils/event-emitter';
 import './stylesheets/main.scss';
 
 export class Viewer {
@@ -63,6 +65,7 @@ export class Viewer {
     this.showControls = isTrue(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
     this.stopAtEdges = isTrue(getAttr(container, 'stop-at-edges') || getAttr(container, 'data-stop-at-edges'));
     this.dragSensitivity = getAttr(container, 'drag-sensitivity') || getAttr(container, 'data-drag-sensitivity') || 1;
+    this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
 
     this.setInitialFlags();
 
@@ -76,12 +79,10 @@ export class Viewer {
     this.maxRowIndex = this.rowsAmount - 1;
 
     this.cachedImages = {}; //using it as key-value pair
-    this.image = new Image();
-    this.image.classList.add(IMAGE.INDEX);
-    this.image.draggable = false;
 
     this.isMobile = Boolean('ontouchstart' in window || navigator.maxTouchPoints);
     this.isInitalized = false;
+    this.eventEmitter = new EventEmitter();
 
     this.init();
   }
@@ -99,7 +100,7 @@ export class Viewer {
 
     this.changeImage();
     this.updateControls();
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING));
+    this.eventEmitter.emit(EVENTS.SPINNING);
   }
 
   get rowIndex() {
@@ -115,11 +116,15 @@ export class Viewer {
 
     this.changeImage();
     this.updateControls();
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING));
+    this.eventEmitter.emit(EVENTS.SPINNING);
   }
 
   get isBottomCircleVisible() {
     return Boolean(this.bottomCircleContainer) && this.bottomCircleContainer.classList.contains(BOTTOM_CIRCLE.HIDDEN) == false;
+  }
+
+  get isPreviewIconVisible() {
+    return Boolean(this.previewIcon) && this.previewIcon.classList.contains(PREVIEW_ICON.HIDDEN) == false;
   }
 
   get isGoLeftDisabled() {
@@ -139,12 +144,12 @@ export class Viewer {
   }
 
   init() {
-    this.container.appendChild(this.image);
+    this.addCanvas();
     this.changeImage();// sets the initial image
-
     this.addLoaders();
-    this.container.addEventListener(EVENTS.LOADING, this.loadingEventHandler.bind(this));
-    this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, this.initializingFinishedEventHandler.bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING, this.container, this.loadingEventHandler.bind(this));
+    this.eventEmitter.addListener(EVENTS.INITIALIZING_FINISHED, this.container, this.initializingFinishedEventHandler.bind(this));
+    this.eventEmitter.addListener(EVENTS.CONTAINER_RESIZED, this.container, this.rescale.bind(this));
     this.initializing(0);
 
     if (this.fullScreen || this.magnifier) {
@@ -155,9 +160,45 @@ export class Viewer {
       this.addControls();
     }
 
+    if (!this.autoplay) {
+      this.addPreviewIcon();
+    }
+
     if (this.bottomCircle) {
       this.addBottomCircle();
     }
+
+    this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.container, (() => {
+      this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
+      this.container.addEventListener('touchmove', this.onMouseMove.bind(this));
+
+      this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
+      this.container.addEventListener('touchend', this.onMouseUp.bind(this));
+
+      this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
+      this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
+
+      if (this.keys) {
+        this.container.addEventListener('keydown', this.onControlDown.bind(this));
+        this.container.addEventListener('keyup', this.onControlUp.bind(this));
+      }
+    }).bind(this));
+
+    this.eventEmitter.addListener(EVENTS.LOADING, this.container, (() => {
+      this.container.removeEventListener('mousemove', this.onMouseMove.bind(this));
+      this.container.removeEventListener('touchmove', this.onMouseMove.bind(this));
+
+      this.container.removeEventListener('mouseup', this.onMouseUp.bind(this));
+      this.container.removeEventListener('touchend', this.onMouseUp.bind(this));
+
+      this.container.removeEventListener('mousedown', this.onMouseDown.bind(this));
+      this.container.removeEventListener('touchstart', this.onMouseDown.bind(this));
+
+      if (this.keys) {
+        this.container.removeEventListener('keydown', this.onControlDown.bind(this));
+        this.container.removeEventListener('keyup', this.onControlUp.bind(this));
+      }
+    }).bind(this));
 
     if (this.preloadImages) {
       this.preloadAllImages();
@@ -178,38 +219,20 @@ export class Viewer {
 
   /**@param {Number} percentage */
   initializing(percentage) {
-    this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, {
-      detail: {
-        percentage,
-        onComplete: (() => {
-          this.container.dispatchEvent(new CustomEvent(EVENTS.INITIALIZING_FINISHED));
-        }).bind(this)
-      }
-    }));
+    this.eventEmitter.emit(EVENTS.LOADING, {
+      percentage,
+      onComplete: (() => {
+        this.eventEmitter.emit(EVENTS.INITIALIZING_FINISHED);
+      }).bind(this)
+    });
   }
 
   initializingFinishedEventHandler() {
     if (this.autoplay) {
       this.startAutoSpinning();
-    } else {
-      this.addPreviewIcon();
     }
 
-    this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
-    this.container.addEventListener('touchmove', this.onMouseMove.bind(this));
-
-    this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
-    this.container.addEventListener('touchend', this.onMouseUp.bind(this));
-
-    this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
-    this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
-
-    window.addEventListener('resize', this.onWindowResize.bind(this));
-
-    if (this.keys) {
-      this.container.addEventListener('keydown', this.onControlDown.bind(this));
-      this.container.addEventListener('keyup', this.onControlUp.bind(this));
-    }
+    window.addEventListener('resize', this.onWindowResizeDebounced.bind(this));
 
     this.container.classList.add(CONTAINER.INITIALIZED);
     this.isInitalized = true;
@@ -226,9 +249,19 @@ export class Viewer {
     this.setTopLoaderPercentage(percentage);
     this.setCenterLoaderPercentage(percentage);
 
-    if (percentage === 100 && typeof onComplete === 'function') {
-      onComplete();
+    if (percentage === 100) {
+      this.eventEmitter.emit(EVENTS.LOADING_COMPLETED);
+
+      if (typeof onComplete === 'function')
+        onComplete();
     }
+  }
+
+  addCanvas() {
+    this.canvas = document.createElement('canvas');
+    this.canvas.classList.add(IMAGE.INDEX);
+    this.canvas.draggable = false;
+    this.container.appendChild(this.canvas);
   }
 
   /**
@@ -265,9 +298,22 @@ export class Viewer {
     }
   }
 
+  onWindowResizeDebounced() {
+    this.eventEmitter.emit(EVENTS.CONTAINER_RESIZED);
+  }
+
+  rescale() {
+    if (this.cachedImages[this.currentImageSrc]) {
+      this.onImageLoad(this.currentImageSrc);
+    }
+
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(this.onWindowResize.bind(this), 1000);
+  }
+
   onMouseUp() {
     this.setInitialFlags();
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
   onMouseDown() {
@@ -322,7 +368,7 @@ export class Viewer {
   }
 
   onControlUp() {
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
   setInitialFlags() {
@@ -334,11 +380,11 @@ export class Viewer {
   }
 
   changeImage() {
-    const src = this.getImageSrc();
-    if (this.cachedImages[src]) {
-      this.onImageLoad(src);
+    this.currentImageSrc = this.getImageSrc();
+    if (this.cachedImages[this.currentImageSrc]) {
+      this.onImageLoad(this.currentImageSrc);
     } else {
-      this.cacheImage(src, this.onImageLoad.bind(this, src));
+      this.cacheImage(this.currentImageSrc, this.onImageLoad.bind(this, this.currentImageSrc));
     }
   }
 
@@ -366,6 +412,11 @@ export class Viewer {
     const image = new Image();
     image.src = src;
     image.onload = this.onImageCached.bind(this, { callback, image, src });
+    image.onerror = this.onCachingError.bind(this, src, callback);
+  }
+
+  onCachingError(src, callback) {
+    setTimeout(this.cacheImage.bind(this, src, callback), 10000);
   }
 
   /**
@@ -378,8 +429,7 @@ export class Viewer {
 
     const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
     if (this.isInitalized) {
-      this.container.dispatchEvent(new CustomEvent(EVENTS.LOADING, { detail: { percentage: loaderPercentage } }))
-      console.log(Object.keys(this.cachedImages).length);
+      this.eventEmitter.emit(EVENTS.LOADING, { percentage: loaderPercentage });
     } else {
       this.initializing(loaderPercentage);
     }
@@ -420,7 +470,29 @@ export class Viewer {
   }
 
   onImageLoad(src) {
-    this.image.src = src;
+    const image = this.cachedImages[src];
+    const ctx = this.canvas.getContext('2d');
+    ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
+    const { width: containerWidth, height: containerHeight } = this.container.getBoundingClientRect();
+
+    if (this.fullScreen) {
+      this.canvas.width = containerWidth * this.devicePixelRatio;
+      this.canvas.style.width = `${containerWidth}px`;
+      this.canvas.height = containerHeight * this.devicePixelRatio;
+      this.canvas.style.height = `${containerHeight}px`;
+
+      const { offsetX, offsetY, width, height } =
+        contain(this.canvas.width, this.canvas.height, image.width, image.height);
+
+      ctx.drawImage(image, offsetX, offsetY, width, height);
+    } else {
+      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+      this.canvas.style.width = `${this.container.offsetWidth}px`;
+      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
+      this.canvas.style.height = `${this.container.offsetWidth / image.width * image.height}px`;
+
+      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+    }
   }
 
   autoSpin() {
@@ -434,13 +506,13 @@ export class Viewer {
   startAutoSpinning() {
     this.autoplay = true;
     this.autoplayInterval = setInterval(this.autoSpin.bind(this), this.autoplaySpeed);
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING));
+    this.eventEmitter.emit(EVENTS.SPINNING);
   }
 
   stopAutoSpinning() {
     clearInterval(this.autoplayInterval);
     this.autoplay = false;
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
   addFullScreenButton() {
@@ -467,12 +539,14 @@ export class Viewer {
     this.fullscreenButton.classList.remove(FULLSCREEN_BUTTON.FULLSCREEN_MODE);
     this.container.classList.remove(CONTAINER.FULLSCREEN);
     this.fullScreen = false;
+    this.eventEmitter.emit(EVENTS.CONTAINER_RESIZED);
   }
 
   setFullscreen() {
     this.fullscreenButton.classList.add(FULLSCREEN_BUTTON.FULLSCREEN_MODE);
     this.container.classList.add(CONTAINER.FULLSCREEN);
     this.fullScreen = true;
+    this.eventEmitter.emit(EVENTS.CONTAINER_RESIZED);
   }
 
   addMagnifierButton() {
@@ -600,12 +674,32 @@ export class Viewer {
     this.previewIcon.draggable = false;
     this.previewIcon.classList.add(PREVIEW_ICON.INDEX);
 
+    this.eventEmitter.addListener(EVENTS.LOADING, this.previewIcon, (() => {
+      if (!this.previewIcon || !this.isPreviewIconVisible) { return; }
+      this.hidePreviewIcon();
+    }).bind(this))
+
+    this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.previewIcon, (() => {
+      if (!this.previewIcon) { return; }
+      this.showPreviewIcon();
+    }).bind(this))
+
     this.container.appendChild(this.previewIcon);
   }
 
   removePreviewIcon() {
     this.container.removeChild(this.previewIcon);
     delete this.previewIcon;
+  }
+
+  hidePreviewIcon() {
+    this.previewIcon.classList.add(PREVIEW_ICON.HIDDEN);
+    console.log('hidden');
+  }
+
+  showPreviewIcon() {
+    this.previewIcon.classList.remove(PREVIEW_ICON.HIDDEN);
+    console.log('shown');
   }
 
   addBottomCircle() {
@@ -619,12 +713,12 @@ export class Viewer {
     this.bottomCircleContainer.style.top = `${80 - this.bottomCircleOffset}%`;
     this.bottomCircleContainer.style.bottom = `${this.bottomCircleOffset}%`;
 
-    this.container.addEventListener(EVENTS.SPINNING, (() => {
+    this.eventEmitter.addListener(EVENTS.SPINNING, this.bottomCircleContainer, (() => {
       if (!this.isBottomCircleVisible) { return; }
       this.hideBottomCircle();
     }).bind(this));
 
-    this.container.addEventListener(EVENTS.SPINNING_STOPPED, (() => {
+    this.eventEmitter.addListener(EVENTS.SPINNING_STOPPED, this.bottomCircleContainer, (() => {
       if (this.isBottomCircleVisible) { return; }
       this.showBottomCircle();
     }).bind(this));
@@ -681,7 +775,7 @@ export class Viewer {
     this.controlsGoLeft = document.createElement('button');
     this.controlsGoLeft.draggable = false;
     this.controlsGoLeft.classList.add(CONTROLS.LEFT);
-    this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, (() => {
+    this.eventEmitter.addListener(EVENTS.INITIALIZING_FINISHED, this.controlsGoLeft, (() => {
       this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
       this.controlsGoLeft.addEventListener('click', this.onGoLeftClick.bind(this));
       this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
@@ -698,7 +792,7 @@ export class Viewer {
     this.controlsGoRight = document.createElement('button');
     this.controlsGoRight.draggable = false;
     this.controlsGoRight.classList.add(CONTROLS.RIGHT);
-    this.container.addEventListener(EVENTS.INITIALIZING_FINISHED, (() => {
+    this.eventEmitter.addListener(EVENTS.INITIALIZING_FINISHED, this.controlsGoRight, (() => {
       this.controlsGoRight.addEventListener('mousedown', this.onGoRightDown.bind(this));
       this.controlsGoRight.addEventListener('click', this.onGoRightClick.bind(this));
       this.controlsGoRight.addEventListener('touchstart', this.onGoRightDown.bind(this));
@@ -718,13 +812,13 @@ export class Viewer {
   onGoLeftClick() {
     if (this.isGoLeftDisabled) { return; }
     this.updateIndexes({ goLeft: true });
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
   onGoRightClick() {
     if (this.isGoRightDisabled) { return; }
     this.updateIndexes({ goRight: true });
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
   onGoLeftDown() {
@@ -740,7 +834,7 @@ export class Viewer {
 
   onGoLeftUp() {
     clearInterval(this.goLeftInterval);
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
   onGoRightDown() {
@@ -756,6 +850,6 @@ export class Viewer {
 
   onGoRightUp() {
     clearInterval(this.goRightInterval);
-    this.container.dispatchEvent(new CustomEvent(EVENTS.SPINNING_STOPPED));
+    this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 }

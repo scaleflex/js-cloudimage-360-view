@@ -209,6 +209,10 @@
 
   .preview-icon {
     background-image: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg');
+
+    &.hidden {
+      display: none;
+    }
   }
 
   .center-loader {

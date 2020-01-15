@@ -2,7 +2,11 @@ export const BOTTOM_CIRCLE_IMAGE_SRC = 'https://scaleflex.ultrafast.io/https://s
 
 export const EVENTS = {
   LOADING: 'LOADING',
+  LOADING_COMPLETED: 'LOADING_COMPLETED',
   INITIALIZING_FINISHED: 'initializing_finished',
   SPINNING: 'spinning',
   SPINNING_STOPPED: 'spinning_stopped',
+  LOCK_CONTROLS: 'LOCK_CONTROLS',
+  UNLOCK_CONTROLS: 'UNLOCK_CONTROLS',
+  CONTAINER_RESIZED: 'CONTAINER_RESIZED',
 }

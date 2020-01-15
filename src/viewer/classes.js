@@ -34,5 +34,6 @@ export const CONTROLS = {
 };
 export const PREVIEW_ICON = {
   INDEX: 'preview-icon',
+  HIDDEN: 'hidden',
   DISABLED: 'disabled',
 };
