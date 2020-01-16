@@ -69,6 +69,7 @@
   .menu {
     position: absolute;
     display: flex;
+    flex-direction: row;
     justify-content: flex-end;
     top: 5px;
     right: 5px;
@@ -195,6 +196,10 @@
     align-self: center;
     background-color: rgba(255, 255, 255, 0.8);
     width: 20%;
+    min-width: 100px;
+    min-height: 100px;
+    left: 40%;
+    top: 40%;
     border-radius: 50%;
     background-position: center;
     background-repeat: no-repeat;

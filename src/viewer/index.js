@@ -68,6 +68,7 @@ export class Viewer {
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
 
     this.setInitialFlags();
+    this.setBindings();
 
     this.prevMouseX = 0;
     this.prevMouseY = 0;
@@ -85,6 +86,26 @@ export class Viewer {
     this.eventEmitter = new EventEmitter();
 
     this.init();
+  }
+
+  setBindings() {
+    this.onMouseMove = this._onMouseMove.bind(this);
+    this.onMouseUp = this._onMouseUp.bind(this);
+    this.onMouseDown = this._onMouseDown.bind(this);
+    this.onControlDown = this._onControlDown.bind(this);
+    this.onControlUp = this._onControlUp.bind(this);
+
+    this.onAddFullscreenButtonClick = this._onAddFullscreenButtonClick.bind(this);
+    this.onAddMagnifierButtonClick = this._onAddMagnifierButtonClick.bind(this);
+
+
+    this.onGoLeftDown = this._onGoLeftDown.bind(this);
+    this.onGoLeftClick = this._onGoLeftClick.bind(this);
+    this.onGoLeftUp = this._onGoLeftUp.bind(this);
+
+    this.onGoRightDown = this._onGoRightDown.bind(this);
+    this.onGoRightClick = this._onGoRightClick.bind(this);
+    this.onGoRightUp = this._onGoRightUp.bind(this);
   }
 
   get colIndex() {
@@ -169,34 +190,34 @@ export class Viewer {
     }
 
     this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.container, (() => {
-      this.container.addEventListener('mousemove', this.onMouseMove.bind(this));
-      this.container.addEventListener('touchmove', this.onMouseMove.bind(this));
+      this.container.addEventListener('mousemove', this.onMouseMove);
+      this.container.addEventListener('touchmove', this.onMouseMove);
 
-      this.container.addEventListener('mouseup', this.onMouseUp.bind(this));
-      this.container.addEventListener('touchend', this.onMouseUp.bind(this));
+      this.container.addEventListener('mouseup', this.onMouseUp);
+      this.container.addEventListener('touchend', this.onMouseUp);
 
-      this.container.addEventListener('mousedown', this.onMouseDown.bind(this));
-      this.container.addEventListener('touchstart', this.onMouseDown.bind(this));
+      this.container.addEventListener('mousedown', this.onMouseDown);
+      this.container.addEventListener('touchstart', this.onMouseDown);
 
       if (this.keys) {
-        this.container.addEventListener('keydown', this.onControlDown.bind(this));
-        this.container.addEventListener('keyup', this.onControlUp.bind(this));
+        this.container.addEventListener('keydown', this.onControlDown);
+        this.container.addEventListener('keyup', this.onControlUp);
       }
     }).bind(this));
 
     this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.container, (() => {
-      this.container.removeEventListener('mousemove', this.onMouseMove.bind(this));
-      this.container.removeEventListener('touchmove', this.onMouseMove.bind(this));
+      this.container.removeEventListener('mousemove', this.onMouseMove);
+      this.container.removeEventListener('touchmove', this.onMouseMove);
 
-      this.container.removeEventListener('mouseup', this.onMouseUp.bind(this));
-      this.container.removeEventListener('touchend', this.onMouseUp.bind(this));
+      this.container.removeEventListener('mouseup', this.onMouseUp);
+      this.container.removeEventListener('touchend', this.onMouseUp);
 
-      this.container.removeEventListener('mousedown', this.onMouseDown.bind(this));
-      this.container.removeEventListener('touchstart', this.onMouseDown.bind(this));
+      this.container.removeEventListener('mousedown', this.onMouseDown);
+      this.container.removeEventListener('touchstart', this.onMouseDown);
 
       if (this.keys) {
-        this.container.removeEventListener('keydown', this.onControlDown.bind(this));
-        this.container.removeEventListener('keyup', this.onControlUp.bind(this));
+        this.container.removeEventListener('keydown', this.onControlDown);
+        this.container.removeEventListener('keyup', this.onControlUp);
       }
     }).bind(this));
 
@@ -253,7 +274,7 @@ export class Viewer {
     this.setTopLoaderPercentage(percentage);
     this.setCenterLoaderPercentage(percentage);
 
-    if (percentage === 100) {
+    if (percentage >= 100) {
       this.isLoading = false;
       this.eventEmitter.emit(EVENTS.LOADING_COMPLETED);
 
@@ -319,12 +340,12 @@ export class Viewer {
     this.resizeTimeout = setTimeout(this.onResize.bind(this), 1000);
   }
 
-  onMouseUp() {
+  _onMouseUp() {
     this.setInitialFlags();
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  onMouseDown() {
+  _onMouseDown() {
     this.isMouseDown = true;
 
     if (this.autoplay) {
@@ -336,7 +357,7 @@ export class Viewer {
     }
   }
 
-  onMouseMove(event) {
+  _onMouseMove(event) {
     const { clientX, clientY } = getClientHitPoint(event);
 
     const distanceX = Math.abs(Math.abs(clientX) - Math.abs(this.prevMouseX));
@@ -360,7 +381,7 @@ export class Viewer {
     }
   }
 
-  onControlDown(event) {
+  _onControlDown(event) {
     if (this.magnifierGlass) {
       this.removeMagnifierGlass();
     }
@@ -375,7 +396,7 @@ export class Viewer {
     }
   }
 
-  onControlUp() {
+  _onControlUp() {
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
@@ -533,11 +554,16 @@ export class Viewer {
       this.fullscreenButton.classList.add(FULLSCREEN_BUTTON.FULLSCREEN_MODE);
       this.container.classList.add(CONTAINER.FULLSCREEN);
     }
-    this.fullscreenButton.addEventListener('click', this.onAddFullscreenButtonClick.bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.fullscreenButton, (() => {
+      this.fullscreenButton.removeEventListener('click', this.onAddFullscreenButtonClick);
+    }).bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.fullscreenButton, (() => {
+      this.fullscreenButton.addEventListener('click', this.onAddFullscreenButtonClick);
+    }).bind(this));
     this.menu.appendChild(this.fullscreenButton);
   }
 
-  onAddFullscreenButtonClick() {
+  _onAddFullscreenButtonClick() {
     if (this.fullScreen) {
       this.exitFullscreen();
     } else {
@@ -563,7 +589,12 @@ export class Viewer {
     this.magnifierButton = document.createElement('div');
     this.magnifierButton.draggable = false;
     this.magnifierButton.classList.add(MAGNIFIER_BUTTON.INDEX);
-    this.magnifierButton.addEventListener('click', this.onAddMagnifierButtonClick.bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.magnifierButton, (() => {
+      this.magnifierButton.removeEventListener('click', this.onAddMagnifierButtonClick);
+    }).bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.magnifierButton, (() => {
+      this.magnifierButton.addEventListener('click', this.onAddMagnifierButtonClick);
+    }).bind(this));
     this.menu.appendChild(this.magnifierButton);
   }
 
@@ -579,7 +610,7 @@ export class Viewer {
     delete this.magnifierGlass;
   }
 
-  onAddMagnifierButtonClick() {
+  _onAddMagnifierButtonClick() {
     if (!this.magnifierGlass) {
       this.addMagnifierGlass();
     }
@@ -623,7 +654,7 @@ export class Viewer {
    */
   setTopLoaderPercentage(percentage, hideOnCompletion = true) {
     this.topLoader.style.width = `${percentage}%`;
-    if (hideOnCompletion && percentage === 100) {
+    if (hideOnCompletion && percentage >= 100) {
       this.hideTopLoader();
     }
   }
@@ -668,7 +699,7 @@ export class Viewer {
   */
   setCenterLoaderPercentage(percentage, hideOnCompletion = true) {
     this.centerLoader.innerHTML = `${parseInt(percentage, 10)}%`;
-    if (hideOnCompletion && percentage === 100) {
+    if (hideOnCompletion && percentage >= 100) {
       this.hideCenterLoader();
     }
   }
@@ -783,56 +814,71 @@ export class Viewer {
     this.controlsGoLeft = document.createElement('button');
     this.controlsGoLeft.draggable = false;
     this.controlsGoLeft.classList.add(CONTROLS.LEFT);
-    this.eventEmitter.addListener(EVENTS.INITIALIZING_FINISHED, this.controlsGoLeft, (() => {
-      this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown.bind(this));
-      this.controlsGoLeft.addEventListener('click', this.onGoLeftClick.bind(this));
-      this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown.bind(this));
 
-      this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp.bind(this));
-      this.controlsGoLeft.addEventListener('touchend', this.onGoLeftUp.bind(this));
-
-      this.controlsGoLeft.addEventListener('mouseup', this.onGoLeftUp.bind(this));
-      this.controlsGoLeft.addEventListener('touchcancel', this.onGoLeftUp.bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.controlsGoLeft, (() => {
+      this.controlsGoLeft.removeEventListener('mousedown', this.onGoLeftDown);
+      this.controlsGoLeft.removeEventListener('click', this.onGoLeftClick);
+      this.controlsGoLeft.removeEventListener('touchstart', this.onGoLeftDown);
+      this.controlsGoLeft.removeEventListener('mouseout', this.onGoLeftUp);
+      this.controlsGoLeft.removeEventListener('touchend', this.onGoLeftUp);
+      this.controlsGoLeft.removeEventListener('mouseup', this.onGoLeftUp);
+      this.controlsGoLeft.removeEventListener('touchcancel', this.onGoLeftUp);
     }).bind(this));
-
+    this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.controlsGoLeft, (() => {
+      this.controlsGoLeft.addEventListener('mousedown', this.onGoLeftDown);
+      this.controlsGoLeft.addEventListener('click', this.onGoLeftClick);
+      this.controlsGoLeft.addEventListener('touchstart', this.onGoLeftDown);
+      this.controlsGoLeft.addEventListener('mouseout', this.onGoLeftUp);
+      this.controlsGoLeft.addEventListener('touchend', this.onGoLeftUp);
+      this.controlsGoLeft.addEventListener('mouseup', this.onGoLeftUp);
+      this.controlsGoLeft.addEventListener('touchcancel', this.onGoLeftUp);
+    }).bind(this));
     this.controls.appendChild(this.controlsGoLeft);
 
     this.controlsGoRight = document.createElement('button');
     this.controlsGoRight.draggable = false;
     this.controlsGoRight.classList.add(CONTROLS.RIGHT);
-    this.eventEmitter.addListener(EVENTS.INITIALIZING_FINISHED, this.controlsGoRight, (() => {
-      this.controlsGoRight.addEventListener('mousedown', this.onGoRightDown.bind(this));
-      this.controlsGoRight.addEventListener('click', this.onGoRightClick.bind(this));
-      this.controlsGoRight.addEventListener('touchstart', this.onGoRightDown.bind(this));
 
-      this.controlsGoRight.addEventListener('mouseout', this.onGoRightUp.bind(this));
-      this.controlsGoRight.addEventListener('touchend', this.onGoRightUp.bind(this));
-
-      this.controlsGoRight.addEventListener('mouseup', this.onGoRightUp.bind(this));
-      this.controlsGoRight.addEventListener('touchcancel', this.onGoRightUp.bind(this));
+    this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.controlsGoRight, (() => {
+      this.controlsGoRight.removeEventListener('mousedown', this.onGoRightDown);
+      this.controlsGoRight.removeEventListener('click', this.onGoRightClick);
+      this.controlsGoRight.removeEventListener('touchstart', this.onGoRightDown);
+      this.controlsGoRight.removeEventListener('mouseout', this.onGoRightUp);
+      this.controlsGoRight.removeEventListener('touchend', this.onGoRightUp);
+      this.controlsGoRight.removeEventListener('mouseup', this.onGoRightUp);
+      this.controlsGoRight.removeEventListener('touchcancel', this.onGoRightUp);
     }).bind(this));
 
+    this.eventEmitter.addListener(EVENTS.LOADING_COMPLETED, this.controlsGoRight, (() => {
+      this.controlsGoRight.addEventListener('mousedown', this.onGoRightDown);
+      this.controlsGoRight.addEventListener('click', this.onGoRightClick);
+      this.controlsGoRight.addEventListener('touchstart', this.onGoRightDown);
+      this.controlsGoRight.addEventListener('mouseout', this.onGoRightUp);
+      this.controlsGoRight.addEventListener('touchend', this.onGoRightUp);
+      this.controlsGoRight.addEventListener('mouseup', this.onGoRightUp);
+      this.controlsGoRight.addEventListener('touchcancel', this.onGoRightUp);
+    }).bind(this));
     this.controls.appendChild(this.controlsGoRight);
 
     this.container.appendChild(this.controls);
   }
 
-  onGoLeftClick() {
+  _onGoLeftClick() {
     if (this.isGoLeftDisabled) { return; }
     this.updateIndexes({ goLeft: true });
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  onGoRightClick() {
+  _onGoRightClick() {
     if (this.isGoRightDisabled) { return; }
     this.updateIndexes({ goRight: true });
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  onGoLeftDown() {
+  _onGoLeftDown() {
     this.goLeftInterval = setInterval((() => {
       if (this.isGoLeftDisabled) {
-        this.onGoLeftUp();
+        this._onGoLeftUp();
         return;
       }
 
@@ -840,15 +886,15 @@ export class Viewer {
     }).bind(this), this.autoplaySpeed);
   }
 
-  onGoLeftUp() {
+  _onGoLeftUp() {
     clearInterval(this.goLeftInterval);
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  onGoRightDown() {
+  _onGoRightDown() {
     this.goRightInterval = setInterval((() => {
       if (this.isGoRightDisabled) {
-        this.onGoRightUp();
+        this._onGoRightUp();
         return;
       }
 
@@ -856,7 +902,7 @@ export class Viewer {
     }).bind(this), this.autoplaySpeed);
   }
 
-  onGoRightUp() {
+  _onGoRightUp() {
     clearInterval(this.goRightInterval);
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
