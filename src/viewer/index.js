@@ -149,7 +149,7 @@ export class Viewer {
     this.addLoaders();
     this.eventEmitter.addListener(EVENTS.LOADING, this.container, this.loadingEventHandler.bind(this));
     this.eventEmitter.addListener(EVENTS.INITIALIZING_FINISHED, this.container, this.initializingFinishedEventHandler.bind(this));
-    this.eventEmitter.addListener(EVENTS.CONTAINER_RESIZED, this.container, this.rescale.bind(this));
+    this.eventEmitter.addListener(EVENTS.CONTAINER_RESIZED, this.container, this.resizeDebounced.bind(this));
     this.initializing(0);
 
     if (this.fullScreen || this.magnifier) {
@@ -184,7 +184,7 @@ export class Viewer {
       }
     }).bind(this));
 
-    this.eventEmitter.addListener(EVENTS.LOADING, this.container, (() => {
+    this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.container, (() => {
       this.container.removeEventListener('mousemove', this.onMouseMove.bind(this));
       this.container.removeEventListener('touchmove', this.onMouseMove.bind(this));
 
@@ -232,13 +232,17 @@ export class Viewer {
       this.startAutoSpinning();
     }
 
-    window.addEventListener('resize', this.onWindowResizeDebounced.bind(this));
+    window.addEventListener('resize', this.onWindowResize.bind(this));
 
     this.container.classList.add(CONTAINER.INITIALIZED);
     this.isInitalized = true;
   }
 
   loadingEventHandler({ detail: { percentage, onComplete } }) {
+    if (!this.isLoading) {
+      this.eventEmitter.emit(EVENTS.LOADING_STARTED);
+      this.isLoading = true;
+    }
     if (!this.isTopLoaderVisible) {
       this.showTopLoader();
     }
@@ -250,6 +254,7 @@ export class Viewer {
     this.setCenterLoaderPercentage(percentage);
 
     if (percentage === 100) {
+      this.isLoading = false;
       this.eventEmitter.emit(EVENTS.LOADING_COMPLETED);
 
       if (typeof onComplete === 'function')
@@ -287,7 +292,7 @@ export class Viewer {
     }
   }
 
-  onWindowResize() {
+  onResize() {
     if (this.responsive && this.preloadImages) {
       this.stopAutoSpinning();
       this.preloadAllImages();
@@ -298,17 +303,20 @@ export class Viewer {
     }
   }
 
-  onWindowResizeDebounced() {
+  onWindowResize() {
     this.eventEmitter.emit(EVENTS.CONTAINER_RESIZED);
   }
 
-  rescale() {
+  resizeDebounced() {
+    const { width, height } = this.container.getBoundingClientRect();
+    if (this.containerWidth === width && this.containerHeight === height) { return; }
+
     if (this.cachedImages[this.currentImageSrc]) {
       this.onImageLoad(this.currentImageSrc);
     }
 
     clearTimeout(this.resizeTimeout);
-    this.resizeTimeout = setTimeout(this.onWindowResize.bind(this), 1000);
+    this.resizeTimeout = setTimeout(this.onResize.bind(this), 1000);
   }
 
   onMouseUp() {
@@ -474,6 +482,8 @@ export class Viewer {
     const ctx = this.canvas.getContext('2d');
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
     const { width: containerWidth, height: containerHeight } = this.container.getBoundingClientRect();
+    this.containerWidth = containerWidth;
+    this.containerHeight = containerHeight;
 
     if (this.fullScreen) {
       this.canvas.width = containerWidth * this.devicePixelRatio;
@@ -674,7 +684,7 @@ export class Viewer {
     this.previewIcon.draggable = false;
     this.previewIcon.classList.add(PREVIEW_ICON.INDEX);
 
-    this.eventEmitter.addListener(EVENTS.LOADING, this.previewIcon, (() => {
+    this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.previewIcon, (() => {
       if (!this.previewIcon || !this.isPreviewIconVisible) { return; }
       this.hidePreviewIcon();
     }).bind(this))
@@ -694,12 +704,10 @@ export class Viewer {
 
   hidePreviewIcon() {
     this.previewIcon.classList.add(PREVIEW_ICON.HIDDEN);
-    console.log('hidden');
   }
 
   showPreviewIcon() {
     this.previewIcon.classList.remove(PREVIEW_ICON.HIDDEN);
-    console.log('shown');
   }
 
   addBottomCircle() {
