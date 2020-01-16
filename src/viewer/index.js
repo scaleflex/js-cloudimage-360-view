@@ -332,9 +332,7 @@ export class Viewer {
     const { width, height } = this.container.getBoundingClientRect();
     if (this.containerWidth === width && this.containerHeight === height) { return; }
 
-    if (this.cachedImages[this.currentImageSrc]) {
-      this.onImageLoad(this.currentImageSrc);
-    }
+    this.changeImage();
 
     clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(this.onResize.bind(this), 1000);
@@ -506,10 +504,11 @@ export class Viewer {
     this.containerWidth = containerWidth;
     this.containerHeight = containerHeight;
 
+    this.canvas.width = containerWidth;
+    this.canvas.style.width = `${containerWidth}px`;
+
     if (this.fullScreen) {
-      this.canvas.width = containerWidth * this.devicePixelRatio;
-      this.canvas.style.width = `${containerWidth}px`;
-      this.canvas.height = containerHeight * this.devicePixelRatio;
+      this.canvas.height = containerHeight;
       this.canvas.style.height = `${containerHeight}px`;
 
       const { offsetX, offsetY, width, height } =
@@ -517,10 +516,8 @@ export class Viewer {
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-      this.canvas.style.width = `${this.container.offsetWidth}px`;
-      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
-      this.canvas.style.height = `${this.container.offsetWidth / image.width * image.height}px`;
+      this.canvas.height = containerWidth / image.width * image.height;
+      this.canvas.style.height = `${containerWidth / image.width * image.height}px`;
 
       ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
