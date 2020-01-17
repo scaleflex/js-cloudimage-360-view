@@ -19,7 +19,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: [
+          "style-loader",
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+        ]
       },
       {
         test: /\.s[ac]ss$/i,
@@ -28,8 +31,17 @@ module.exports = {
           'style-loader',
           // Translates CSS into CommonJS
           'css-loader',
-          // Compiles Sass to CSS
-          'sass-loader',
+          {
+            loader: 'postcss-sass-loader',
+            options: {
+              ident: 'postcss',
+              plugins: (loader) => [
+                require('postcss-import')({ root: loader.resourcePath }),
+                require('postcss-preset-env')(),
+                require('cssnano')()
+              ]
+            }
+          },
         ],
       },
     ]

@@ -641,6 +641,7 @@ export class Viewer {
     this.topLoader = document.createElement('div');
     this.topLoader.draggable = false;
     this.topLoader.classList.add(TOP_LOADER.INDEX);
+    this.topLoader.classList.add(TOP_LOADER.HIDDEN);
 
     this.container.appendChild(this.topLoader);
   }
@@ -674,8 +675,11 @@ export class Viewer {
 
   addCenterLoader() {
     this.centerLoader = document.createElement('div');
+    const span = document.createElement('span');
+    this.centerLoader.appendChild(span);
     this.centerLoader.draggable = false;
     this.centerLoader.classList.add(CENTER_LOADER.INDEX);
+    this.centerLoader.classList.add(CENTER_LOADER.HIDDEN);
 
     this.container.appendChild(this.centerLoader);
   }
@@ -695,7 +699,7 @@ export class Viewer {
    *  @param {Boolean} hideOnCompletion
   */
   setCenterLoaderPercentage(percentage, hideOnCompletion = true) {
-    this.centerLoader.innerHTML = `${parseInt(percentage, 10)}%`;
+    this.centerLoader.children[0].innerHTML = `${parseInt(percentage, 10)}%`;
     if (hideOnCompletion && percentage >= 100) {
       this.hideCenterLoader();
     }
@@ -711,6 +715,7 @@ export class Viewer {
     this.previewIcon = document.createElement('div');
     this.previewIcon.draggable = false;
     this.previewIcon.classList.add(PREVIEW_ICON.INDEX);
+    this.previewIcon.classList.add(PREVIEW_ICON.HIDDEN);
 
     this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.previewIcon, (() => {
       if (!this.previewIcon || !this.isPreviewIconVisible) { return; }
