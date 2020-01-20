@@ -1,12 +1,15 @@
 .cloudimage-360 {
+  $min-container-width: 330px;
+  $min-container-height: 330px;
   position: relative;
   width: 100%;
-  min-width: 210px;
+  min-width: $min-container-width;
   height: 100%;
-  min-height: 116px;
+  min-height: $min-container-height;
   cursor: wait;
   display: flex;
   justify-content: center;
+  background-color: rgb(244, 244, 244);
 
   $tier1-z-index: 10;
   $tier2-z-index: 11;
@@ -33,6 +36,14 @@
   }
 
   &.initialized {
+    background-color: rgb(255, 255, 255);
+
+    &,
+    .image {
+      min-width: auto;
+      min-height: auto;
+    }
+
     &:hover {
       cursor: pointer;
       cursor: grab;
@@ -40,6 +51,15 @@
 
     &:active {
       cursor: grabbing;
+    }
+
+    &:not(.fullscreen) {
+
+      &,
+      .image {
+        $transition-config: all 0.20s ease-out;
+        transition: $transition-config;
+      }
     }
   }
 
@@ -164,8 +184,10 @@
   }
 
   .image {
-    width: 100%;
-    height: 100%;
+    width: $min-container-width;
+    height: $min-container-height;
+    min-width: $min-container-width;
+    min-height: $min-container-height;
     z-index: $tier1-z-index;
   }
 

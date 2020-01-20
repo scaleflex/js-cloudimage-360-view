@@ -42,6 +42,7 @@ export class Viewer {
     this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 1, 10);
     this.colsAmount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
     this.rowsAmount = parseInt(getAttr(container, 'rows-amount') || getAttr(container, 'data-rows-amount') || 1, 10);
+    this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
     this.speed = parseInt(getAttr(container, 'speed') || getAttr(container, 'data-speed') || 80, 10);
     this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
     this.keys = isTrue(getAttr(container, 'keys') || getAttr(container, 'data-keys'));
@@ -360,8 +361,8 @@ export class Viewer {
 
     const distanceX = Math.abs(Math.abs(clientX) - Math.abs(this.prevMouseX));
     const distanceY = Math.abs(Math.abs(clientY) - Math.abs(this.prevMouseY));
-    const minX = (this.container.clientWidth * this.dragSensitivity) / 100
-    const minY = (this.container.clientHeight * this.dragSensitivity) / 100
+    const minX = ((this.container.clientWidth / this.colsAmount) / this.speedFactor)
+    const minY = ((this.container.clientHeight / this.rowsAmount) / this.speedFactor)
 
     if (this.prevMouseX !== undefined && this.prevMouseY != undefined) {
       this.isDraggingLeft = this.isMouseDown && clientX < this.prevMouseX;
@@ -508,6 +509,7 @@ export class Viewer {
     this.canvas.style.width = `${containerWidth}px`;
 
     if (this.fullScreen) {
+      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * containerWidth / 1500) || 1;
       this.canvas.height = containerHeight;
       this.canvas.style.height = `${containerHeight}px`;
 
@@ -516,6 +518,8 @@ export class Viewer {
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
+      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * containerWidth / 1500) || 1;
+
       this.canvas.height = containerWidth / image.width * image.height;
       this.canvas.style.height = `${containerWidth / image.width * image.height}px`;
 
