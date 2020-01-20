@@ -42,7 +42,6 @@ export class Viewer {
     this.indexZeroBase = parseInt(getAttr(container, 'index-zero-base') || getAttr(container, 'data-index-zero-base') || 1, 10);
     this.colsAmount = parseInt(getAttr(container, 'amount') || getAttr(container, 'data-amount') || 36, 10);
     this.rowsAmount = parseInt(getAttr(container, 'rows-amount') || getAttr(container, 'data-rows-amount') || 1, 10);
-    this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
     this.speed = parseInt(getAttr(container, 'speed') || getAttr(container, 'data-speed') || 80, 10);
     this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
     this.keys = isTrue(getAttr(container, 'keys') || getAttr(container, 'data-keys'));
@@ -65,7 +64,6 @@ export class Viewer {
     this.controlReverse = isTrue(getAttr(container, 'control-reverse') || getAttr(container, 'data-control-reverse'));
     this.showControls = isTrue(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
     this.stopAtEdges = isTrue(getAttr(container, 'stop-at-edges') || getAttr(container, 'data-stop-at-edges'));
-    this.dragSensitivity = getAttr(container, 'drag-sensitivity') || getAttr(container, 'data-drag-sensitivity') || 1;
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
 
     this.setInitialFlags();
