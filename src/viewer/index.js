@@ -499,30 +499,31 @@ export class Viewer {
     const image = this.cachedImages[src];
     const ctx = this.canvas.getContext('2d');
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
-    const { width: containerWidth, height: containerHeight } = this.container.getBoundingClientRect();
-    this.containerWidth = containerWidth;
-    this.containerHeight = containerHeight;
+    const { width: newContainerWidth, height: newContainerHeight } = this.container.getBoundingClientRect();
 
-    this.canvas.width = containerWidth;
-    this.canvas.style.width = `${containerWidth}px`;
+    this.canvas.width = newContainerWidth;
+    this.canvas.style.width = `${newContainerWidth}px`;
 
     if (this.fullScreen) {
-      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * containerWidth / 1500) || 1;
-      this.canvas.height = containerHeight;
-      this.canvas.style.height = `${containerHeight}px`;
+      this.speedFactor = (Math.floor((this.dragSpeed / 150 * 36 / this.amount * 25 * newContainerWidth / 1500)) || 1) * 3;
+
+      this.canvas.height = newContainerHeight;
+      this.canvas.style.height = `${newContainerHeight}px`;
 
       const { offsetX, offsetY, width, height } =
         contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * containerWidth / 1500) || 1;
-
-      this.canvas.height = containerWidth / image.width * image.height;
-      this.canvas.style.height = `${containerWidth / image.width * image.height}px`;
+      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * newContainerWidth / 1500) || 1;
+      this.canvas.height = newContainerWidth / image.width * image.height;
+      this.canvas.style.height = `${newContainerWidth / image.width * image.height}px`;
 
       ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
+
+    this.containerWidth = newContainerWidth;
+    this.containerHeight = newContainerHeight;
   }
 
   autoSpin() {
