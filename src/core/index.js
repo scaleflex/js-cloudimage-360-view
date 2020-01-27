@@ -2,7 +2,7 @@
 
 import { Viewer } from "../viewer";
 import { CONTAINER } from './classes';
-import { getAttr, isAboutToEnterViewport } from "../utils/dom-helper";
+import { getAttr, isAboutToEnterViewport, isTrue } from "../utils/dom-helper";
 
 export class Core {
   /** @type {HTMLElement[]} */
@@ -20,7 +20,7 @@ export class Core {
 
   /**@param {HTMLElement} container */
   static loadContainer(container) {
-    const lazyLoad = Boolean(getAttr(container, 'lazyload') || getAttr(container, 'data-lazyload'));
+    const lazyLoad = isTrue(container, 'lazyload') || isTrue(container, 'data-lazyload');
     const lazyLoadWithinRange = parseInt(getAttr(container, 'lazyload-within-range') || getAttr(container, 'data-lazyload-within-range') || 200, 10);
 
     if (lazyLoad) {

@@ -6,7 +6,6 @@ import {
   magnify,
   getClientHitPoint,
   isTrue,
-  setDefault,
   contain,
 } from "../utils/dom-helper";
 import {
@@ -44,26 +43,26 @@ export class Viewer {
     this.rowsAmount = parseInt(getAttr(container, 'rows-amount') || getAttr(container, 'data-rows-amount') || 1, 10);
     this.speed = parseInt(getAttr(container, 'speed') || getAttr(container, 'data-speed') || 80, 10);
     this.dragSpeed = parseInt(getAttr(container, 'drag-speed') || getAttr(container, 'data-drag-speed') || 150, 10);
-    this.keys = isTrue(getAttr(container, 'keys') || getAttr(container, 'data-keys'));
+    this.keys = isTrue(container, 'keys') || isTrue(container, 'data-keys');
     this.container.style.boxShadow = getAttr(container, 'box-shadow') || getAttr(container, 'data-box-shadow');
-    this.autoplay = isTrue(getAttr(container, 'autoplay') || getAttr(container, 'data-autoplay'));
+    this.autoplay = isTrue(container, 'autoplay') || isTrue(container, 'data-autoplay');
     this.autoplaySpeed = this.speed * 36 / this.colsAmount;
-    this.bottomCircle = isTrue(getAttr(container, 'bottom-circle') || getAttr(container, 'data-bottom-circle'));
-    this.fullScreen = isTrue(getAttr(container, 'full-screen') || getAttr(container, 'data-full-screen'));
+    this.bottomCircle = isTrue(container, 'bottom-circle') || isTrue(container, 'data-bottom-circle');
+    this.fullScreen = isTrue(container, 'full-screen') || isTrue(container, 'data-full-screen');
     this.magnifier = (getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier')) &&
       parseInt(getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier'), 10) || 3;
 
     this.bottomCircleOffset = parseInt(getAttr(container, 'bottom-circle-offset') || getAttr(container, 'data-bottom-circle-offset') || 5, 10);
-    this.responsive = isTrue(getAttr(container, 'responsive') || getAttr(container, 'data-responsive'));
+    this.responsive = isTrue(container, 'responsive') || isTrue(container, 'data-responsive');
     this.ciToken = getAttr(container, 'responsive') || getAttr(container, 'data-responsive') || 'demo';
     this.ciSize = getAttr(container, 'size') || getAttr(container, 'data-size');
     this.ciOperation = getAttr(container, 'operation') || getAttr(container, 'data-operation') || 'width';
     this.ciFilters = getAttr(container, 'filters') || getAttr(container, 'data-filters') || 'q35';
-    this.preloadImages = isTrue(setDefault(getAttr(container, 'preload-images') || getAttr(container, 'data-preload-images'), true));
-    this.spinReverse = isTrue(getAttr(container, 'spin-reverse') || getAttr(container, 'data-spin-reverse'));
-    this.controlReverse = isTrue(getAttr(container, 'control-reverse') || getAttr(container, 'data-control-reverse'));
-    this.showControls = isTrue(getAttr(container, 'controls') || getAttr(container, 'data-controls'));
-    this.stopAtEdges = isTrue(getAttr(container, 'stop-at-edges') || getAttr(container, 'data-stop-at-edges'));
+    this.preloadImages = true;
+    this.spinReverse = isTrue(container, 'spin-reverse') || isTrue(container, 'data-spin-reverse');
+    this.controlReverse = isTrue(container, 'control-reverse') || isTrue(container, 'data-control-reverse');
+    this.showControls = isTrue(container, 'controls') || isTrue(container, 'data-controls');
+    this.stopAtEdges = isTrue(container, 'stop-at-edges') || isTrue(container, 'data-stop-at-edges');
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
 
     this.setInitialFlags();

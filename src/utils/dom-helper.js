@@ -8,7 +8,17 @@ export const setDefault = (value, defaultValue) => {
   return value === undefined || value === null ? defaultValue : value;
 }
 
-export const isTrue = (value) => {
+/**
+ * @param {HTMLElement} element 
+ * @param {String} attribute atribute name
+ */
+export const isTrue = (element, attribute) => {
+  const value = getAttr(element, attribute);
+
+  if (element.hasAttribute(attribute) && (value === null || value === undefined || value === '')) {
+    return true;
+  }
+
   if (typeof value === 'string') {
     const trimmedString = value.trim();
     return trimmedString !== 'false' && trimmedString !== '';
