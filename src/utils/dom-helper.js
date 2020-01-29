@@ -122,6 +122,18 @@ export const isAboutToEnterViewport = (element, distanceBeforeDetection = 200) =
   );
 };
 
+/** @param {HTMLElement} element */
+export const isInViewport = (element) => {
+  var rect = element.getBoundingClientRect();
+
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
 export const fit = (contains) => {
   return (parentWidth, parentHeight, childWidth, childHeight, scale = 1, offsetX = 0.5, offsetY = 0.5) => {
     const childRatio = childWidth / childHeight

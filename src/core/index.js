@@ -2,7 +2,7 @@
 
 import { Viewer } from "../viewer";
 import { CONTAINER } from './classes';
-import { getAttr, isAboutToEnterViewport, isTrue } from "../utils/dom-helper";
+import { getAttr, isAboutToEnterViewport, isTrue, isInViewport } from "../utils/dom-helper";
 
 export class Core {
   /** @type {HTMLElement[]} */
@@ -23,7 +23,7 @@ export class Core {
     const lazyLoad = isTrue(container, 'lazyload') || isTrue(container, 'data-lazyload');
     const lazyLoadWithinRange = parseInt(getAttr(container, 'lazyload-within-range') || getAttr(container, 'data-lazyload-within-range') || 200, 10);
 
-    if (lazyLoad) {
+    if (lazyLoad && !isInViewport(container)) {
       document.addEventListener('scroll', function listener(event) {
         if (isAboutToEnterViewport(container, lazyLoadWithinRange)) {
           event.currentTarget.removeEventListener(event.type, listener);
