@@ -865,21 +865,31 @@ export class Viewer {
     this.controls.appendChild(this.controlsGoRight);
 
     this.container.appendChild(this.controls);
+    this.updateControls();
   }
 
-  _onGoLeftClick() {
+  _onGoLeftClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (this.isGoLeftDisabled) { return; }
     this.updateIndexes({ goLeft: true });
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  _onGoRightClick() {
+  _onGoRightClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (this.isGoRightDisabled) { return; }
     this.updateIndexes({ goRight: true });
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  _onGoLeftDown() {
+  _onGoLeftDown(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     this.goLeftInterval = setInterval((() => {
       if (this.isGoLeftDisabled) {
         this._onGoLeftUp();
@@ -890,12 +900,18 @@ export class Viewer {
     }).bind(this), this.autoplaySpeed);
   }
 
-  _onGoLeftUp() {
+  _onGoLeftUp(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     clearInterval(this.goLeftInterval);
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
 
-  _onGoRightDown() {
+  _onGoRightDown(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     this.goRightInterval = setInterval((() => {
       if (this.isGoRightDisabled) {
         this._onGoRightUp();
@@ -906,7 +922,10 @@ export class Viewer {
     }).bind(this), this.autoplaySpeed);
   }
 
-  _onGoRightUp() {
+  _onGoRightUp(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     clearInterval(this.goRightInterval);
     this.eventEmitter.emit(EVENTS.SPINNING_STOPPED);
   }
