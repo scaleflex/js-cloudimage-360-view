@@ -25,7 +25,7 @@ import {
 import { CONTAINER } from "../core/classes";
 import { BOTTOM_CIRCLE_IMAGE_SRC, EVENTS } from "./constants";
 
-import { getPercentage } from "../utils/number-helper";
+import { getPercentage, parseNumberOrDefault } from "../utils/number-helper";
 import { KEYCODES } from '../utils/keys';
 import { Core } from '../core';
 import { EventEmitter } from '../utils/event-emitter';
@@ -51,7 +51,7 @@ export class Viewer {
     this.autoplaySpeed = this.speed * 36 / this.colsAmount;
     this.bottomCircle = isTrue(container, 'bottom-circle') || isTrue(container, 'data-bottom-circle');
     this.fullScreen = isTrue(container, 'full-screen') || isTrue(container, 'data-full-screen');
-    this.ratio = parseFloat((getAttr(container, 'ratio') || getAttr(container, 'data-ratio')));
+    this.ratio = parseNumberOrDefault((getAttr(container, 'ratio') || getAttr(container, 'data-ratio')), parseFloat, 0);
     this.magnifier = (getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier')) &&
       parseInt(getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier'), 10) || 3;
 
@@ -363,12 +363,22 @@ export class Viewer {
   }
 
   _onMouseMove(event) {
+    let mouseSpeed = 1;
+
+    if (this.prevEvent && event) {
+      const movementX = Math.abs(event.screenX - this.prevEvent.screenX);
+      const movementY = Math.abs(event.screenY - this.prevEvent.screenY);
+      const movement = Math.sqrt(movementX * movementX + movementY * movementY);
+
+      mouseSpeed = movement; //if too slow make speed=movement/100ms= movement/0.1s= 10*movement/s
+    }
+
     const { clientX, clientY } = getClientHitPoint(event);
 
     const distanceX = Math.abs(Math.abs(clientX) - Math.abs(this.prevMouseX));
     const distanceY = Math.abs(Math.abs(clientY) - Math.abs(this.prevMouseY));
-    const minX = ((this.container.clientWidth / this.colsAmount) / this.speedFactor)
-    const minY = ((this.container.clientHeight / this.rowsAmount) / this.speedFactor)
+    const minX = ((this.container.clientWidth / this.colsAmount) / this.speedFactor / mouseSpeed)
+    const minY = ((this.container.clientHeight / this.rowsAmount) / this.speedFactor / mouseSpeed)
 
     if (this.prevMouseX !== undefined && this.prevMouseY != undefined) {
       this.isDraggingLeft = this.isMouseDown && clientX < this.prevMouseX;
@@ -384,6 +394,8 @@ export class Viewer {
 
       this.updateIndexes();
     }
+
+    this.prevEvent = event;
   }
 
   _onControlDown(event) {
@@ -523,9 +535,9 @@ export class Viewer {
     this.canvas.width = newContainerWidth;
     this.canvas.style.width = `${newContainerWidth}px`;
 
-    if (this.fullScreen) {
-      this.speedFactor = (Math.floor((this.dragSpeed / 150 * 36 / this.amount * 25 * newContainerWidth / 1500)) || 1) * 3;
+    this.speedFactor = Math.floor((this.dragSpeed / 150 * 36 / this.amount * 25 * newContainerWidth / 1500)) || 1;
 
+    if (this.fullScreen) {
       this.canvas.height = newContainerHeight;
       this.canvas.style.height = `${newContainerHeight}px`;
 
@@ -534,7 +546,6 @@ export class Viewer {
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * newContainerWidth / 1500) || 1;
       this.canvas.height = newContainerWidth / image.width * image.height;
       this.canvas.style.height = `${newContainerWidth / image.width * image.height}px`;
 
