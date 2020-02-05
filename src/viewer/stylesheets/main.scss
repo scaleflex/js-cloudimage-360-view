@@ -1,11 +1,7 @@
 .cloudimage-360 {
-  $min-container-width: 330px;
-  $min-container-height: 330px;
   position: relative;
   width: 100%;
-  min-width: $min-container-width;
   height: 100%;
-  min-height: $min-container-height;
   cursor: wait;
   display: flex;
   justify-content: center;
@@ -184,10 +180,6 @@
   }
 
   .image {
-    width: $min-container-width;
-    height: $min-container-height;
-    min-width: $min-container-width;
-    min-height: $min-container-height;
     z-index: $tier1-z-index;
   }
 

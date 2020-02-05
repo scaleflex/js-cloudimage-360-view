@@ -157,3 +157,23 @@ export const fit = (contains) => {
 };
 
 export const contain = fit(true);
+
+export const getSizeLimit = (currentSize) => {
+  if (currentSize <= 25) return '25';
+  if (currentSize <= 50) return '50';
+
+  return (Math.ceil(currentSize / 100) * 100).toString();
+};
+
+export const getSizeAccordingToPixelRatio = size => {
+  const splittedSizes = size.toString().split('x');
+  const result = [];
+
+  [].forEach.call(splittedSizes, size => {
+    result.push(size * Math.round(window.devicePixelRatio || 1));
+  });
+
+  return result.join('x');
+};
+
+export const getResponsiveWidthOfContainer = width => getSizeLimit(width);

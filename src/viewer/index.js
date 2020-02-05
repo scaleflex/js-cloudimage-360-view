@@ -7,6 +7,8 @@ import {
   getClientHitPoint,
   isTrue,
   contain,
+  getSizeAccordingToPixelRatio,
+  getResponsiveWidthOfContainer,
 } from "../utils/dom-helper";
 import {
   IMAGE,
@@ -49,6 +51,7 @@ export class Viewer {
     this.autoplaySpeed = this.speed * 36 / this.colsAmount;
     this.bottomCircle = isTrue(container, 'bottom-circle') || isTrue(container, 'data-bottom-circle');
     this.fullScreen = isTrue(container, 'full-screen') || isTrue(container, 'data-full-screen');
+    this.ratio = parseFloat((getAttr(container, 'ratio') || getAttr(container, 'data-ratio')));
     this.magnifier = (getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier')) &&
       parseInt(getAttr(container, 'magnifier') || getAttr(container, 'data-magnifier'), 10) || 3;
 
@@ -285,6 +288,12 @@ export class Viewer {
     this.canvas = document.createElement('canvas');
     this.canvas.classList.add(IMAGE.INDEX);
     this.canvas.draggable = false;
+
+    if (this.ratio) {
+      this.container.style.minHeight = this.container.offsetWidth * this.ratio + 'px';
+      this.canvas.height = parseInt(this.container.style.minHeight);
+    }
+
     this.container.appendChild(this.canvas);
   }
 
@@ -451,6 +460,9 @@ export class Viewer {
    */
   onImageCached({ callback, image, src }) {
     this.cachedImages[src] = image; // save the image instance to preserve it from the garbage collector(prevents countless network requests) 
+    if (this.ratio && Object.keys(this.cachedImages).length === 1) {
+      this.container.style.minHeight = 'auto';
+    }
 
     const loaderPercentage = getPercentage(this.rowsAmount * this.colsAmount, Object.keys(this.cachedImages).length);
     if (this.isInitalized) {
@@ -486,7 +498,15 @@ export class Viewer {
     let src = url;
 
     if (this.responsive) {
-      const ciSizeNext = this.container.clientWidth;
+      const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
+
+      let imageOffsetWidth;
+      if (this.ratio > containerRatio) {
+        imageOffsetWidth = this.container.offsetHeight / this.ratio;
+      }
+      const ciSizeNext = getSizeAccordingToPixelRatio(this.container.clientWidth || getResponsiveWidthOfContainer(imageOffsetWidth));
+
+      // const ciSizeNext = this.container.clientWidth;
 
       src = `https://${this.ciToken}.cloudimg.io/${this.ciOperation}/${ciSizeNext}/${this.ciFilters}/${url}`;
     }
