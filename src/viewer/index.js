@@ -370,7 +370,7 @@ export class Viewer {
       const movementY = Math.abs(event.screenY - this.prevEvent.screenY);
       const movement = Math.sqrt(movementX * movementX + movementY * movementY);
 
-      mouseSpeed = movement; //if too slow make speed=movement/100ms= movement/0.1s= 10*movement/s
+      mouseSpeed = movement * 10; //if too slow make speed=movement/100ms= movement/0.1s= 10*movement/s
     }
 
     const { clientX, clientY } = getClientHitPoint(event);
@@ -629,7 +629,7 @@ export class Viewer {
   }
 
   addMagnifierGlass() {
-    this.magnifierGlass = new Image();
+    this.magnifierGlass = document.createElement('div');
     this.magnifierGlass.classList.add(IMG_MAGNIFIER_GLASS.INDEX);
     this.magnifierGlass.addEventListener('mousedown', this.removeMagnifierGlass.bind(this));
     this.container.appendChild(this.magnifierGlass);
@@ -751,7 +751,10 @@ export class Viewer {
     this.previewIcon.classList.add(PREVIEW_ICON.HIDDEN);
 
     this.eventEmitter.addListener(EVENTS.LOADING_STARTED, this.previewIcon, (() => {
-      if (!this.previewIcon || !this.isPreviewIconVisible) { return; }
+      this.hidePreviewIcon();
+    }).bind(this))
+
+    this.eventEmitter.addListener(EVENTS.SPINNING, this.previewIcon, (() => {
       this.hidePreviewIcon();
     }).bind(this))
 
@@ -769,6 +772,7 @@ export class Viewer {
   }
 
   hidePreviewIcon() {
+    if (!this.previewIcon || !this.isPreviewIconVisible) { return; }
     this.previewIcon.classList.add(PREVIEW_ICON.HIDDEN);
   }
 
