@@ -113,15 +113,15 @@
     }
 
     .fullscreen-button {
-      background-image: url("https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg");
+      background-image: url("https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/full_screen.svg");
 
       &.fullscreen-mode {
-        background-image: url("https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg");
+        background-image: url("https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/cross.svg");
       }
     }
 
     .magnifier-button {
-      background-image: url("https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg");
+      background-image: url("https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/loupe.svg");
     }
   }
 
@@ -235,7 +235,7 @@
   }
 
   .preview-icon {
-    background-image: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg');
+    background-image: url('https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/360_view.svg');
 
     &.hidden {
       display: none;

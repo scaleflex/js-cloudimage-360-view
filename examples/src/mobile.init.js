@@ -15,7 +15,7 @@ if (isMobile) {
 
   mercedes360View.setAttribute(
     'data-folder',
-    'https://scaleflex.cloudimg.io/crop/600x400/n/https://scaleflex.airstore.io/demo/360-car/'
+    'https://scaleflex.cloudimg.io/crop/600x400/n/https://cdn.scaleflex.it/demo/360-car/'
   );
   mercedes360View.setAttribute('data-ratio', '0.666');
   mercedes360View.setAttribute('data-bottom-circle-offset', '22');
