@@ -259,7 +259,7 @@ body, html {
 }
 
 .arrow {
-  background: url('https://scaleflex.airstore.io/filerobot/assets/arrow_1.png') 50% 50% / contain no-repeat;
+  background: url('https://cdn.scaleflex.it/filerobot/assets/arrow_1.png') 50% 50% / contain no-repeat;
   width: 100px;
   height: 250px;
   position: absolute;

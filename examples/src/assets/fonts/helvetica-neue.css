@@ -1,23 +1,23 @@
 @font-face {
   font-family: 'Helvetica Neue';
-  src: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.eot');
-  src: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.eot?#iefix') format('embedded-opentype'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.woff2') format('woff2'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.woff') format('woff'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.ttf') format('truetype'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.svg#HelveticaNeue-Medium') format('svg');
+  src: url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.eot');
+  src: url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.woff2') format('woff2'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.woff') format('woff'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.ttf') format('truetype'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-Medium.svg#HelveticaNeue-Medium') format('svg');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Helvetica Neue';
-  src: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.eot');
-  src: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.eot?#iefix') format('embedded-opentype'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.woff2') format('woff2'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.woff') format('woff'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.ttf') format('truetype'),
-  url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.svg#HelveticaNeue-LightExt') format('svg');
+  src: url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.eot');
+  src: url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.woff2') format('woff2'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.woff') format('woff'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.ttf') format('truetype'),
+  url('https://cdn.scaleflex.it/filerobot/assets/fonts/helvetica-neue/HelveticaNeue-LightExt.svg#HelveticaNeue-LightExt') format('svg');
   font-weight: 300;
   font-style: normal;
 }
