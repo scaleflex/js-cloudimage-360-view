@@ -15,7 +15,8 @@ import {
   setFullScreenModalStyles,
   setLoaderStyles,
   setMagnifyIconStyles,
-  setView360Icon
+  setView360Icon,
+  getCookie
 } from './ci360.utils';
 
 
@@ -274,6 +275,10 @@ class CI360Viewer {
   update() {
     const image = this.images[this.activeImage - 1];
     const ctx = this.canvas.getContext("2d");
+
+    if(this.saveCookie){
+      document.cookie = 'ci360lastimage='+image.id+'; expires=Fri, 31 Dec 2024 23:59:59 GMT';
+    }
 
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
 
@@ -606,31 +611,48 @@ class CI360Viewer {
   }
 
   preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams) {
-    if (this.imageList) {
-      try {
-        const images = JSON.parse(this.imageList);
-
-        this.amount = images.length;
-        images.forEach(src => {
-          const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
-          const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
-
-          this.addImage(resultSrc, lazyload, lazySelector);
-        });
-      } catch (error) {
-        console.error(`Wrong format in image-list attribute: ${error.message}`);
-      }
-    } else {
-      [...new Array(amount)].map((_item, index) => {
-        const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
-        const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        this.addImage(resultSrc, lazyload, lazySelector, index);
+    if(this.entryImage && this.entryImage <= this.amount) {
+      const xRoad = Array.from(Array(amount), (x, index) => index);
+      const indexRoad = [];
+      xRoad.map((_item) => {
+        indexRoad.push(_item);
       });
+      const partsBefore = indexRoad.splice(this.entryImage);
+      const newRoad = partsBefore.concat(indexRoad);
+      newRoad.map((imageNumber, index) => {
+        const nextZeroFilledIndex = pad(imageNumber + 1, this.indexZeroBase);
+        const resultSrc = src.replace('{index}', nextZeroFilledIndex);
+        this.addImage(resultSrc, lazyload, lazySelector, imageNumber);
+      });
+    }else {
+      if (this.imageList) {
+        try {
+          const images = JSON.parse(this.imageList);
+
+          this.amount = images.length;
+          images.forEach(src => {
+            const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
+            const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
+
+            this.addImage(resultSrc, lazyload, lazySelector);
+          });
+        } catch (error) {
+          console.error(`Wrong format in image-list attribute: ${error.message}`);
+        }
+      } else {
+        [...new Array(amount)].map((_item, index) => {
+          const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
+          const resultSrc = src.replace('{index}', nextZeroFilledIndex);
+          this.addImage(resultSrc, lazyload, lazySelector, index);
+        });
+      }
     }
   }
 
   addImage(resultSrc, lazyload, lazySelector, index) {
     const image = new Image();
+
+    image.id = index;
 
     if (lazyload && !this.fullScreenView) {
       image.setAttribute('data-src', resultSrc);
@@ -640,6 +662,7 @@ class CI360Viewer {
         this.lazyloadInitImage = image;
         image.style.position = 'absolute';
         image.style.top = '0';
+        image.style.left = '0';
         image.style.left = '0';
         this.innerBox.appendChild(image);
       }
@@ -776,7 +799,7 @@ class CI360Viewer {
     let {
       folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse
+      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, entryImage, loadCookie, saveCookie
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
@@ -803,6 +826,14 @@ class CI360Viewer {
     this.dragSpeed = dragSpeed;
     this.autoplaySpeed = this.speed * 36 / this.amount;
     this.stopAtEdges = stopAtEdges;
+    this.entryImage = entryImage;
+    this.saveCookie = saveCookie;
+    if(loadCookie){
+      const lastImage = getCookie('ci360lastimage');
+      if(lastImage){
+        this.entryImage = parseInt(lastImage);
+      }
+    }
 
     this.applyStylesToContainer();
 

@@ -21,12 +21,28 @@ function destroy() {
   window.CI360._viewers = [];
 }
 
+function update() {
+  if (isNoViewers()) return;
+
+  window.CI360._viewers.forEach(viewer => { viewer.update(); });
+
+  window.CI360._viewers = [];
+}
+
 function getActiveIndexByID(id) {
   if (isNoViewers()) return;
 
   let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
 
   return currentViewer && (currentViewer.activeImage - 1);
+}
+
+function getActiveImageNumberByID(id) {
+  if (isNoViewers()) return;
+
+  let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
+
+  return currentViewer && (parseInt(currentViewer.images[currentViewer.activeImage - 1].id));
 }
 
 function isNoViewers() {
@@ -37,6 +53,7 @@ window.CI360 = window.CI360 || {};
 window.CI360.init = init;
 window.CI360.destroy = destroy;
 window.CI360.getActiveIndexByID = getActiveIndexByID;
+window.CI360.getActiveImageNumberByID = getActiveImageNumberByID;
 
 if (!window.CI360.notInitOnLoad) {
   init();

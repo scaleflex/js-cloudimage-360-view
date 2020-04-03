@@ -25,7 +25,10 @@ const get360ViewProps = (image) => ({
   lazySelector: attr(image, 'lazyload-selector') || attr(image, 'data-lazyload-selector') || 'lazyload',
   spinReverse: isTrue(image, 'spin-reverse'),
   controlReverse: isTrue(image, 'control-reverse'),
-  stopAtEdges: isTrue(image, 'stop-at-edges')
+  stopAtEdges: isTrue(image, 'stop-at-edges'),
+  entryImage: parseInt(attr(image, 'entryimage') || attr(image, 'data-entryimage') || 1, 10),
+  loadCookie: isTrue(image, 'load-cookie'),
+  saveCookie: isTrue(image, 'save-cookie')
 });
 
 const isTrue = (image, type) => {
@@ -282,6 +285,13 @@ const pad = (n, width = 0) => {
   return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
 };
 
+const getCookie = function (name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
+};
+
+
 export {
   get360ViewProps,
   set360ViewIconStyles,
@@ -299,5 +309,6 @@ export {
   contain,
   addClass,
   removeClass,
-  pad
+  pad,
+  getCookie
 }

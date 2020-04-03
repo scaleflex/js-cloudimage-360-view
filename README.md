@@ -142,6 +142,31 @@ window.CI360.getActiveIndexByID('id_of_product');
 
 The selector for js-cloudimage-360-view lib.
 
+### id
+
+###### Type: **String** | Value: **""** | _optional_
+
+The id for this image.
+
+### entryimage
+
+###### Type: **Number** | Value: **""** | _optional_
+
+Set the start imagenumber for rotation 
+
+### data-save-cookie (or save-cookie)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+Save last imagenumber to cookie named by 'ci360lastimage'
+
+### data-load-cookie (or load-cookie)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+Load cookie named by 'ci360lastimage' to set Entryimage.
+
+
 ### data-folder (or folder)
 
 ###### Type: **String(url)** | _required_

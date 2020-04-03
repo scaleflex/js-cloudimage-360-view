@@ -1,13 +1,13 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "2.3.2",
+  "version": "2.3.3x",
   "main": "dist/index.js",
   "description": "",
-  "author": "scaleflex",
+  "author": "scaleflex; ecentral",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/scaleflex/js-cloudimage-360-view"
+    "url": "https://github.com/simkea/js-cloudimage-360-view"
   },
   "homepage": "#readme",
   "keywords": [
