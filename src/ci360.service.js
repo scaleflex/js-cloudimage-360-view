@@ -402,7 +402,7 @@ class CI360Viewer {
     }
   }
 
-  onImageLoad(event) {
+  onImageLoad(index, event) {
     const percentage = Math.round(this.loadedImages / this.amount * 100);
 
     this.loadedImages += 1;
@@ -410,7 +410,7 @@ class CI360Viewer {
 
     if (this.loadedImages === this.amount) {
       this.onAllImagesLoaded(event);
-    } else if (this.loadedImages === 1) {
+    } else if (index === 0) {
       this.onFirstImageLoaded(event);
     }
   }
@@ -647,8 +647,8 @@ class CI360Viewer {
       image.src = resultSrc;
     }
 
-    image.onload = this.onImageLoad.bind(this);
-    image.onerror = this.onImageLoad.bind(this);
+    image.onload = this.onImageLoad.bind(this, index);
+    image.onerror = this.onImageLoad.bind(this, index);
     this.images.push(image);
   }
 
