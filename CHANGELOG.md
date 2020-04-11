@@ -26,6 +26,11 @@ Types of changes:
 
 -------------
 
+## 2.4.1 - 2020-04-11
+
+### Fixed
+- initialize first image using data-image-list #33
+
 
 ## 2.4.0 - 2020-04-09
 
