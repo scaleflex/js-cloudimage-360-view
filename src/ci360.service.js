@@ -611,11 +611,11 @@ class CI360Viewer {
         const images = JSON.parse(this.imageList);
 
         this.amount = images.length;
-        images.forEach(src => {
+        images.forEach((src, index) => {
           const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
           const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
 
-          this.addImage(resultSrc, lazyload, lazySelector);
+          this.addImage(resultSrc, lazyload, lazySelector, index);
         });
       } catch (error) {
         console.error(`Wrong format in image-list attribute: ${error.message}`);
