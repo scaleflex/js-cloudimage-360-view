@@ -338,7 +338,9 @@ class CI360Viewer {
   }
 
   onFirstImageLoaded(event) {
-    this.add360ViewIcon();
+    if (!this.hide360Logo) {
+      this.add360ViewIcon();
+    }
 
     if (this.fullScreenView) {
       this.canvas.width = window.innerWidth * this.devicePixelRatio;
@@ -776,7 +778,7 @@ class CI360Viewer {
     let {
       folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse
+      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
@@ -803,6 +805,7 @@ class CI360Viewer {
     this.dragSpeed = dragSpeed;
     this.autoplaySpeed = this.speed * 36 / this.amount;
     this.stopAtEdges = stopAtEdges;
+    this.hide360Logo = hide360Logo;
 
     this.applyStylesToContainer();
 

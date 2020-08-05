@@ -25,7 +25,8 @@ const get360ViewProps = (image) => ({
   lazySelector: attr(image, 'lazyload-selector') || attr(image, 'data-lazyload-selector') || 'lazyload',
   spinReverse: isTrue(image, 'spin-reverse'),
   controlReverse: isTrue(image, 'control-reverse'),
-  stopAtEdges: isTrue(image, 'stop-at-edges')
+  stopAtEdges: isTrue(image, 'stop-at-edges'),
+  hide360Logo: isTrue(image, 'hide-360-logo')
 });
 
 const isTrue = (image, type) => {
