@@ -26,6 +26,11 @@ Types of changes:
 
 -------------
 
+## 2.5.0 - 2020-07-05
+
+### Feat
+- possibility to hide 360 view icon
+
 ## 2.4.1 - 2020-04-11
 
 ### Fixed
