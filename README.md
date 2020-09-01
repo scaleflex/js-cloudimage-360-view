@@ -242,7 +242,7 @@ Spin direction using controls, by default it uses counterclockwise (image indexe
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
-Blocks repeating images after reaching last image (or first image in oposite direction)
+Blocks repeating images after reaching last image (or first image in opposite direction)
 
 ### data-bottom-circle-offset (or bottom-circle-offset)
 
