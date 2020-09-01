@@ -331,7 +331,7 @@ class CI360Viewer {
 
     if (this.view360Icon) {
       this.view360Icon.innerText = '';
-      setView360Icon(this.view360Icon);
+      setView360Icon(this.view360Icon, this.logoSrc);
     }
 
     this.initControls();
@@ -778,7 +778,7 @@ class CI360Viewer {
     let {
       folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo
+      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
@@ -806,6 +806,7 @@ class CI360Viewer {
     this.autoplaySpeed = this.speed * 36 / this.amount;
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
+    this.logoSrc = logoSrc;
 
     this.applyStylesToContainer();
 
