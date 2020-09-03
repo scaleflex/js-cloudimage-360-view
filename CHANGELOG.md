@@ -26,6 +26,11 @@ Types of changes:
 
 -------------
 
+## 2.6.0 - 2020-09-03
+
+### Feat
+- add ability to specify custom 360 view logo
+
 ## 2.5.0 - 2020-07-05
 
 ### Feat
