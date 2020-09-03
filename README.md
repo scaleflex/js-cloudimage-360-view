@@ -232,6 +232,12 @@ Display 360 view line at the bottom of container.
 
 Hide 360 view icon.
 
+### data-logo-src (or logo-src)
+
+###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_
+
+URL of asset to use as the 360 view icon.
+
 ### data-control-reverse (or control-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
@@ -242,7 +248,7 @@ Spin direction using controls, by default it uses counterclockwise (image indexe
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
-Blocks repeating images after reaching last image (or first image in oposite direction)
+Blocks repeating images after reaching last image (or first image in opposite direction)
 
 ### data-bottom-circle-offset (or bottom-circle-offset)
 

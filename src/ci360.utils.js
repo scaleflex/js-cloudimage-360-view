@@ -26,7 +26,8 @@ const get360ViewProps = (image) => ({
   spinReverse: isTrue(image, 'spin-reverse'),
   controlReverse: isTrue(image, 'control-reverse'),
   stopAtEdges: isTrue(image, 'stop-at-edges'),
-  hide360Logo: isTrue(image, 'hide-360-logo')
+  hide360Logo: isTrue(image, 'hide-360-logo'),
+  logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg'
 });
 
 const isTrue = (image, type) => {
@@ -57,8 +58,8 @@ const set360ViewIconStyles = (view360Icon) => {
   view360Icon.style.zIndex = '2';
 };
 
-const setView360Icon = (view360Icon) => {
-  view360Icon.style.background = `rgba(255,255,255,0.8) url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg') 50% 50% / contain no-repeat`;
+const setView360Icon = (view360Icon, logoSrc) => {
+  view360Icon.style.background = `rgba(255,255,255,0.8) url('${logoSrc}') 50% 50% / contain no-repeat`;
 }
 
 const set360ViewCircleIconStyles = (view360CircleIcon, bottomCircleOffset) => {
