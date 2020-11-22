@@ -3,6 +3,7 @@ const get360ViewProps = (image) => ({
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
   imageList: attr(image, 'image-list') || attr(image, 'data-image-list') || null,
   indexZeroBase: parseInt(attr(image, 'index-zero-base') || attr(image, 'data-index-zero-base') || 0, 10),
+  countIndexFrom: parseInt(attr(image, 'count-index-from') || attr(image, 'data-count-index-from') || 1, 10),
   amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 36, 10),
   speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),

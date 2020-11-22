@@ -624,7 +624,7 @@ class CI360Viewer {
       }
     } else {
       [...new Array(amount)].map((_item, index) => {
-        const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
+        const nextZeroFilledIndex = pad(index + this.countIndexFrom, this.indexZeroBase);
         const resultSrc = src.replace('{index}', nextZeroFilledIndex);
         this.addImage(resultSrc, lazyload, lazySelector, index);
       });
@@ -776,7 +776,7 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
+      folder, filename, imageList, countIndexFrom, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
     } = get360ViewProps(container);
@@ -788,6 +788,7 @@ class CI360Viewer {
     this.folder = folder;
     this.filename = filename;
     this.imageList = imageList;
+    this.countIndexFrom = countIndexFrom;
     this.indexZeroBase = indexZeroBase;
     this.amount = amount;
     this.bottomCircle = bottomCircle;
