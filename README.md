@@ -256,6 +256,12 @@ Bottom offset for 360 view line.
 
 Left zero padding on filename. For example: index-zero-base="4" => image index will be "0004"
 
+### <a name="data-count-index-from"></a> data-count-index-from (or count-index-from)
+
+###### Type: **Integer** | Default: **1** | _optional_
+
+When loading file names, the `{index}` tag will be replaced from an integer starting from this value. By defaults it start to count from 1 to the value defined by **amount**. Change this to another number to start from.
+
 ### data-image-list (or image-list)
 
 ###### Type: **Array** | _optional_
