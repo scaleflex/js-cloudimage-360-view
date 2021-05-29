@@ -488,12 +488,15 @@ class CI360Viewer {
     this.container.removeChild(this.glass);
     this.glass = null;
   }
-
+  hideScrollBarModalOpen() {
+    const body = document.body;
+    body.style.overflow = "hidden";
+  }
   openFullScreenModal() {
     const fullScreenModal = document.createElement('div');
 
     setFullScreenModalStyles(fullScreenModal);
-
+    this.hideScrollBarModalOpen();
     const fullScreenContainer = this.container.cloneNode();
     const image = this.images[0];
     const ratio = image.height / image.width;
@@ -507,9 +510,14 @@ class CI360Viewer {
 
     new CI360Viewer(fullScreenContainer, true, ratio);
   }
+  showScrollBarModalClose() {
+    const body = document.body;
+    body.style.overflow = 'visible';
+  }
 
   closeFullScreenModal() {
     document.body.removeChild(this.container.parentNode);
+    this.showScrollBarModalClose();
   }
 
   add360ViewCircleIcon() {
