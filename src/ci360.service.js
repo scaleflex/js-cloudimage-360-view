@@ -488,36 +488,28 @@ class CI360Viewer {
     this.container.removeChild(this.glass);
     this.glass = null;
   }
-  hideScrollBarModalOpen() {
-    const body = document.body;
-    body.style.overflow = "hidden";
-  }
+
   openFullScreenModal() {
     const fullScreenModal = document.createElement('div');
 
     setFullScreenModalStyles(fullScreenModal);
-    this.hideScrollBarModalOpen();
     const fullScreenContainer = this.container.cloneNode();
     const image = this.images[0];
     const ratio = image.height / image.width;
 
     fullScreenContainer.style.height = '100%';
     fullScreenContainer.style.maxHeight = '100%';
-
     fullScreenModal.appendChild(fullScreenContainer);
 
     window.document.body.appendChild(fullScreenModal);
+    window.document.body.style.overflow = 'hidden';
 
     new CI360Viewer(fullScreenContainer, true, ratio);
-  }
-  showScrollBarModalClose() {
-    const body = document.body;
-    body.style.overflow = 'visible';
   }
 
   closeFullScreenModal() {
     document.body.removeChild(this.container.parentNode);
-    this.showScrollBarModalClose();
+    document.body.style.overflow = 'visible';
   }
 
   add360ViewCircleIcon() {
