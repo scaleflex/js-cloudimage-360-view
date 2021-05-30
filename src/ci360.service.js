@@ -39,7 +39,6 @@ class CI360Viewer {
 
   mousedown(event) {
     event.preventDefault();
-
     if (!this.imagesLoaded) return;
 
     if (this.glass) {
@@ -317,7 +316,6 @@ class CI360Viewer {
     } else {
       const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
       let imageOffsetWidth = this.container.offsetWidth;
-
       if (this.ratio > containerRatio) {
         imageOffsetWidth = this.container.offsetHeight / this.ratio;
       }
@@ -341,7 +339,6 @@ class CI360Viewer {
     if (!this.hide360Logo) {
       this.add360ViewIcon();
     }
-
     if (this.fullScreenView) {
       this.canvas.width = window.innerWidth * this.devicePixelRatio;
       this.canvas.style.width = window.innerWidth + 'px';
@@ -355,14 +352,23 @@ class CI360Viewer {
 
       ctx.drawImage(event.target, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-      this.canvas.style.width = this.container.offsetWidth + 'px';
-      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
-      this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
-
       const ctx = this.canvas.getContext("2d");
+     
+      if (this.container.offsetWidth > 0) {
+        this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+        this.canvas.style.width = this.container.offsetWidth + 'px';
+        this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
+        this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
+        ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
+      }
+     
+      if (this.container.offsetWidth === 0) {
+        const modalRef = document.getElementById("modal-content-ref");
+        this.canvas.style.width = modalRef.style.width;
+        this.canvas.style.height = modalRef.style.height;
+        ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
+      }
 
-      ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
     }
 
     if (this.lazyload && !this.fullScreenView) {
@@ -815,7 +821,6 @@ class CI360Viewer {
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
-
     this.applyStylesToContainer();
 
     this.addCanvas();
