@@ -26,7 +26,6 @@ class CI360Viewer {
     this.movementStart = 0;
     this.isClicked = false;
     this.loadedImages = 0;
-    this.rotation = 1;
     this.imagesLoaded = false;
     this.reversed = false;
     this.fullScreenView = !!fullScreen;
@@ -226,12 +225,6 @@ class CI360Viewer {
       }
     } else {
       this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
-      if(this.playOnce){
-        this.rotation += itemsSkipped;
-        if(this.rotation === this.amount) {
-          this.stop();
-        }
-      }
     }
   }
 
@@ -260,11 +253,6 @@ class CI360Viewer {
         this.activeImage = this.amount + (this.activeImage - itemsSkipped);
       } else {
         this.activeImage -= itemsSkipped;
-        if(this.playOnce){
-          if(this.activeImage === this.rotation) {
-            this.stop();
-          }
-        }
       }
     }
   }
@@ -597,9 +585,16 @@ class CI360Viewer {
 
     this.loopTimeoutId = window.setInterval(() => {
       this.loop(this.reversed);
+      if (this.playOnce) {
+        
+        if (this.reversed && this.activeImage === 1) {
+          window.clearTimeout(this.loopTimeoutId);
+        }else if (!this.reversed && this.activeImage === this.amount) {
+          window.clearTimeout(this.loopTimeoutId);
+        }
+      }
     }, this.autoplaySpeed);
   }
-
   stop() {
     if (this.bottomCircle) this.show360ViewCircleIcon();
     window.clearTimeout(this.loopTimeoutId);
