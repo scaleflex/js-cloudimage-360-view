@@ -9,6 +9,7 @@ const get360ViewProps = (image) => ({
   keys: isTrue(image, 'keys'),
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
+  playOnce: isTrue(image, 'playOnce'),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   fullScreen: isTrue(image, 'full-screen'),
