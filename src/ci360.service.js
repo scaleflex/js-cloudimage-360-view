@@ -491,6 +491,7 @@ class CI360Viewer {
 
   openFullScreenModal() {
     const fullScreenModal = document.createElement('div');
+
     setFullScreenModalStyles(fullScreenModal);
 
     const fullScreenContainer = this.container.cloneNode();
@@ -577,12 +578,13 @@ class CI360Viewer {
     this.loopTimeoutId = window.setInterval(() => {
       this.loop(this.reversed);
 
-      if (this.playOnce) {
-        if (this.reversed && this.activeImage === 1) {
-          window.clearTimeout(this.loopTimeoutId);
-        }else if (!this.reversed && this.activeImage === this.amount) {
-          window.clearTimeout(this.loopTimeoutId);
-        }
+      const isPlayedOnce = (
+        (this.reversed && this.activeImage === 1) ||
+        (!this.reversed && (this.activeImage === this.amount))
+      );
+
+      if (this.playOnce && isPlayedOnce) {
+        window.clearTimeout(this.loopTimeoutId);
       }
     }, this.autoplaySpeed);
   }
