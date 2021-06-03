@@ -571,3 +571,31 @@ img {
   background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 42%,#222 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#222',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
+.modal-title {
+  padding-top: 2rem;
+}
+.toggle-modal {
+  margin: 4rem auto;
+  width: 8rem;
+  display: block;
+  border: 0;
+  padding: 1rem;
+  color: black;
+  background-color: #CCC;
+}
+.toggle-modal:focus {
+  border: 0;
+  outline: 0;
+}
+.modal-view {
+  display: none;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.2);
+  width: 80%;
+  height: 100%;
+  padding: 2rem 0;
+  z-index: 100;
+  margin: 4rem auto;
+  align-items: center;
+  justify-content: center;
+}

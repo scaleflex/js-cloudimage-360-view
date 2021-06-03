@@ -355,13 +355,15 @@ class CI360Viewer {
 
       ctx.drawImage(event.target, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-      this.canvas.style.width = this.container.offsetWidth + 'px';
-      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
-      this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
-
       const ctx = this.canvas.getContext("2d");
-
+      
+      if (this.container.offsetWidth > 0) {
+        this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+        this.canvas.style.width = this.container.offsetWidth + 'px';
+        this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
+        this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
+      }
+      
       ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
     }
 
