@@ -417,15 +417,17 @@ class CI360Viewer {
     }
   }
 
-  addCloseFullScreenView() {
+  addCloseFullScreenView(event) {
     const closeFullScreenIcon = document.createElement('div');
 
     setCloseFullScreenViewStyles(closeFullScreenIcon);
 
-    closeFullScreenIcon.onclick = this.closeFullScreenModal.bind(this);
-
+    closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
+    window.onkeyup = this.setFullScreenEvents.bind(this, event);
+    
     this.innerBox.appendChild(closeFullScreenIcon);
   }
+  
 
   add360ViewIcon() {
     const view360Icon = document.createElement('div');
@@ -506,6 +508,18 @@ class CI360Viewer {
     window.document.body.appendChild(fullScreenModal);
 
     new CI360Viewer(fullScreenContainer, true, ratio);
+  }
+
+  setFullScreenEvents(_, event) {
+    if (event.type === 'click') return this.closeFullScreenModal();
+    if (event.key === 'Escape') return this.closeFullScreenModalOnEsc();
+  }
+
+  closeFullScreenModalOnEsc() {
+
+    if (this.container.parentNode.parentNode === document.body) {
+      document.body.removeChild(this.container.parentNode)
+    };
   }
 
   closeFullScreenModal() {
