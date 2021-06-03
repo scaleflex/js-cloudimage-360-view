@@ -591,6 +591,15 @@ class CI360Viewer {
 
     this.loopTimeoutId = window.setInterval(() => {
       this.loop(this.reversed);
+
+      const isPlayedOnce = (
+        (this.reversed && this.activeImage === 1) ||
+        (!this.reversed && (this.activeImage === this.amount))
+      );
+
+      if (this.playOnce && isPlayedOnce) {
+        window.clearTimeout(this.loopTimeoutId);
+      }
     }, this.autoplaySpeed);
   }
 
@@ -791,7 +800,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
+      autoplay, playOnce, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
@@ -808,6 +817,7 @@ class CI360Viewer {
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
     this.autoplay = autoplay && !this.isMobile;
+    this.playOnce = playOnce,
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.fullScreen = fullScreen;
