@@ -428,7 +428,6 @@ class CI360Viewer {
     this.innerBox.appendChild(closeFullScreenIcon);
   }
   
-
   add360ViewIcon() {
     const view360Icon = document.createElement('div');
 
