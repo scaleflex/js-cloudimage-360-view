@@ -362,15 +362,9 @@ class CI360Viewer {
         this.canvas.style.width = this.container.offsetWidth + 'px';
         this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
-        ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
       }
-
-      if (this.container.offsetWidth === 0) {
-        const modalRef = document.getElementById("modal-content-ref");
-        this.canvas.style.width = modalRef.style.width;
-        this.canvas.style.height = modalRef.style.height;
-        ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
-      }
+      
+      ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
     }
 
     if (this.lazyload && !this.fullScreenView) {

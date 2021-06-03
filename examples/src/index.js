@@ -10,6 +10,21 @@ hljs.registerLanguage('javascript', javascript);
 hljs.initHighlightingOnLoad();
 
 
+const toggleModalBtn = document.getElementById('toggle-modal');
+toggleModalBtn.onclick = toggleModal;
+
+function toggleModal() {
+    const modalView = document.getElementById('modal-view');
+
+    if ( (!modalView.style.display) || (modalView.style.display === 'none') ) {
+        modalView.style.display = 'flex';
+        toggleModalBtn.innerHTML = 'hide modal';
+    } else {
+        modalView.style.display = 'none';
+        toggleModalBtn.innerHTML = 'show modal';
+    }
+}
+
 const spinner = document.getElementById('spinner');
 const wrapper = document.getElementById('main');
 
