@@ -504,6 +504,7 @@ class CI360Viewer {
 
     fullScreenModal.appendChild(fullScreenContainer);
 
+    window.document.body.style.overflow = 'hidden';
     window.document.body.appendChild(fullScreenModal);
 
     new CI360Viewer(fullScreenContainer, true, ratio);
@@ -517,12 +518,13 @@ class CI360Viewer {
   closeFullScreenModalOnEsc() {
 
     if (this.container.parentNode.parentNode === document.body) {
-      document.body.removeChild(this.container.parentNode)
+      this.closeFullScreenModal()
     };
   }
 
   closeFullScreenModal() {
     document.body.removeChild(this.container.parentNode);
+    window.document.body.style.overflow = 'visible';
   }
 
   add360ViewCircleIcon() {
