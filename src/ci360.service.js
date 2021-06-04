@@ -309,7 +309,10 @@ class CI360Viewer {
 
   onAllImagesLoaded() {
     this.imagesLoaded = true;
+    
     this.container.style.cursor = 'grab';
+    if (this.disableDrag) this.container.style.cursor = 'default';
+
     this.removeLoader();
 
     if (!this.fullScreenView) {
@@ -778,13 +781,13 @@ class CI360Viewer {
   }
 
   attachEvents(draggable, swipeable, keys) {
-    if (draggable) {
+    if ( (draggable) && (!this.disableDrag) ) {
       this.container.addEventListener('mousedown', this.mousedown.bind(this));
       this.container.addEventListener('mouseup', this.mouseup.bind(this));
       this.container.addEventListener('mousemove', this.mousemove.bind(this));
     }
 
-    if (swipeable) {
+    if ( (swipeable) && (!this.disableDrag) ) {
       this.container.addEventListener('touchstart', this.touchstart.bind(this), { passive: true });
       this.container.addEventListener('touchend', this.touchend.bind(this), { passive: true });
       this.container.addEventListener('touchmove', this.touchmove.bind(this));
@@ -809,7 +812,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, speed, autoplayReverse, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
+      autoplay, playOnce, speed, autoplayReverse, disableDrag, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
@@ -829,6 +832,7 @@ class CI360Viewer {
     this.playOnce = playOnce,
     this.speed = speed;
     this.reversed = autoplayReverse;
+    this.disableDrag = disableDrag;
     this.fullScreen = fullScreen;
     this.magnifier = !this.isMobile && magnifier ? magnifier : false;
     this.lazyload = lazyload;

@@ -12,6 +12,7 @@ const get360ViewProps = (image) => ({
   playOnce: isTrue(image, 'playOnce'),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
+  disableDrag: isTrue(image, 'disable-drag'),
   fullScreen: isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
     parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
