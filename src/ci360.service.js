@@ -35,6 +35,10 @@ class CI360Viewer {
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
+    this.zoomWidth = 0;
+    this.zoomHeight = 0;
+    this.zoomOffset = 0;
+    this.zoomPos = 0;
   }
 
   mousedown(event) {
@@ -74,8 +78,10 @@ class CI360Viewer {
 
   mousemove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
-
+    
     this.onMove(event.pageX);
+    this.mousezoom(event);
+    this.zoomPos = event.pageY;
   }
 
   touchstart(event) {
@@ -118,6 +124,30 @@ class CI360Viewer {
 
     if (this.glass) {
       this.closeMagnifier();
+    }
+  }
+  mousezoom (event) {
+    if (!this.isClicked) return;
+
+    this.mouseScrollZoom(event);
+  }
+
+  mouseScrollZoom (event) {
+    if (!this.imagesLoaded) return;
+
+    event.preventDefault();
+    const zoomSpeed = 0.01;
+
+    if ( (event.deltaY < 0) || (event.pageY < this.zoomPos) ) {
+        this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
+        this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
+        this.update();
+    } else {
+      if (this.zoomWidth > this.canvas.width) {
+        this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
+        this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
+        this.update();
+      }
     }
   }
 
@@ -293,7 +323,8 @@ class CI360Viewer {
       this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
 
-      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+      ctx.drawImage(image, this.zoomOffset , this.zoomOffset , this.zoomWidth, this.zoomHeight);
+
     }
   }
 
@@ -374,7 +405,9 @@ class CI360Viewer {
         this.canvas.style.width = this.container.offsetWidth + 'px';
         this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
-        
+        this.zoomWidth = this.container.offsetWidth * this.devicePixelRatio;
+        this.zoomHeight = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
+
         ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
       }
 
@@ -795,6 +828,7 @@ class CI360Viewer {
       this.container.addEventListener('mousedown', this.mousedown.bind(this));
       this.container.addEventListener('mouseup', this.mouseup.bind(this));
       this.container.addEventListener('mousemove', this.mousemove.bind(this));
+      this.container.addEventListener('wheel', this.mouseScrollZoom.bind(this));
     }
 
     if ( (swipeable) && (!this.disableDrag) ) {
@@ -855,7 +889,7 @@ class CI360Viewer {
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
-
+    
     this.applyStylesToContainer();
 
     this.addCanvas();
