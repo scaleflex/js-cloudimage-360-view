@@ -35,6 +35,10 @@ class CI360Viewer {
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
+    this.zoomWidth = 0;
+    this.zoomHeight = 0;
+    this.zoomOffset = 0;
+    this.scrolling = false;
   }
 
   mousedown(event) {
@@ -53,6 +57,10 @@ class CI360Viewer {
     if (this.autoplay || this.loopTimeoutId) {
       this.stop();
       this.autoplay = false;
+    }
+
+    if (this.scrollZoom) {
+      this.container.addEventListener('wheel', this.mouseScrollZoom.bind(this));
     }
 
     this.movementStart = event.pageX;
@@ -74,7 +82,7 @@ class CI360Viewer {
 
   mousemove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
-
+    
     this.onMove(event.pageX);
   }
 
@@ -119,6 +127,26 @@ class CI360Viewer {
     if (this.glass) {
       this.closeMagnifier();
     }
+  }
+
+  mouseScrollZoom (event) {
+    if ((!this.imagesLoaded) || (!this.scrollZoom)) return;
+
+    event.preventDefault();
+    const zoomSpeed = this.zoomSpeed / 100;
+    const maxZoom = this.canvas.width + (this.canvas.width * this.maxZoomScale / 10);
+
+    if ((event.deltaY < 0) && (this.zoomWidth < maxZoom)) {
+      this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
+      this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
+      this.update();
+    } else if ((this.zoomWidth > this.canvas.width) && (event.deltaY > 0)) {
+      this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
+      this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
+      this.update();
+    }
+    
+    this.scrolling = true;
   }
 
   keydown(event) {
@@ -292,8 +320,15 @@ class CI360Viewer {
       this.canvas.style.width = this.container.offsetWidth + 'px';
       this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
+      
+      if (this.scrolling) {
+        this.zoomOffset =  (this.canvas.width - this.zoomWidth) / 2
 
-      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+        this.scrolling = false;
+      }
+
+      ctx.drawImage(image, this.zoomOffset , this.zoomOffset , this.zoomWidth, this.zoomHeight);
+
     }
   }
 
@@ -374,7 +409,9 @@ class CI360Viewer {
         this.canvas.style.width = this.container.offsetWidth + 'px';
         this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
-        
+        this.zoomWidth = this.container.offsetWidth * this.devicePixelRatio;
+        this.zoomHeight = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
+
         ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
       }
 
@@ -822,7 +859,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
+      autoplay, playOnce, scrollZoom, zoomSpeed, maxZoomScale, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
@@ -840,7 +877,10 @@ class CI360Viewer {
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
     this.autoplay = autoplay && !this.isMobile;
-    this.playOnce = playOnce,
+    this.playOnce = playOnce;
+    this.scrollZoom = scrollZoom;
+    this.zoomSpeed = zoomSpeed;
+    this.maxZoomScale = maxZoomScale;
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;
@@ -855,7 +895,7 @@ class CI360Viewer {
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
-
+    
     this.applyStylesToContainer();
 
     this.addCanvas();
