@@ -135,7 +135,7 @@ class CI360Viewer {
     event.preventDefault();
     const zoomSpeed = this.zoomSpeed / 100;
     const maxZoom = this.canvas.width + (this.canvas.width * this.maxZoomScale / 10);
-    const zoominCond = ((event.deltaY < 0) || (event.pageY < this.zoomPos)) && (this.zoomWidth < maxZoom);
+    const zoominCond = (event.deltaY < 0) && (this.zoomWidth < maxZoom);
 
     if (zoominCond) {
         this.scrolling = true;
