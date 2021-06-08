@@ -135,19 +135,18 @@ class CI360Viewer {
     event.preventDefault();
     const zoomSpeed = this.zoomSpeed / 100;
     const maxZoom = this.canvas.width + (this.canvas.width * this.maxZoomScale / 10);
-    const zoominCond = (event.deltaY < 0) && (this.zoomWidth < maxZoom);
 
-    if (zoominCond) {
-        this.scrolling = true;
-        this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
-        this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
-        this.update();
+    if ((event.deltaY < 0) && (this.zoomWidth < maxZoom)) {
+      this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
+      this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
+      this.update();
     } else if ((this.zoomWidth > this.canvas.width) && (event.deltaY > 0)) {
-        this.scrolling = true;
-        this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
-        this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
-        this.update();
-      }
+      this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
+      this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
+      this.update();
+    }
+    
+    this.scrolling = true;
   }
 
   keydown(event) {
