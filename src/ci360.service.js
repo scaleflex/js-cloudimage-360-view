@@ -39,7 +39,6 @@ class CI360Viewer {
     this.zoomHeight = 0;
     this.zoomOffset = 0;
     this.scrolling = false;
-    this.scrollIn = false;
   }
 
   mousedown(event) {
@@ -140,13 +139,11 @@ class CI360Viewer {
 
     if (zoominCond) {
         this.scrolling = true;
-        this.scrollIn = true;
         this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
         this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
         this.update();
     } else if ((this.zoomWidth > this.canvas.width) && (event.deltaY > 0)) {
         this.scrolling = true;
-        this.scrollIn = false;
         this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
         this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
         this.update();
