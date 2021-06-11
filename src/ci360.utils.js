@@ -33,7 +33,9 @@ const get360ViewProps = (image) => ({
   controlReverse: isTrue(image, 'control-reverse'),
   stopAtEdges: isTrue(image, 'stop-at-edges'),
   hide360Logo: isTrue(image, 'hide-360-logo'),
-  logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg'
+  logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg',
+  magnifyIconSelector: attr(image, 'magnify-icon-selector') || attr(image, 'data-magnify-icon-selector') || 'magnify-icon',
+  fullscreenIconSelector: attr(image, 'fullscreen-icon-selector') || attr(image, 'data-fullscreen-icon-selector') || 'fullscreen-icon',
 });
 
 const isTrue = (image, type) => {
@@ -105,7 +107,7 @@ const setBoxShadowStyles = (boxShadow, boxShadowValue) => {
   boxShadow.style.boxShadow = boxShadowValue;
 };
 
-const setMagnifyIconStyles = (magnifyIcon, fullScreen) => {
+const setMagnifyIconStyles = (magnifyIcon, fullScreen, magnifySelector) => {
   magnifyIcon.style.position = 'absolute';
   magnifyIcon.style.top = fullScreen ? '35px' : '5px';
   magnifyIcon.style.right = '5px';
@@ -114,6 +116,7 @@ const setMagnifyIconStyles = (magnifyIcon, fullScreen) => {
   magnifyIcon.style.zIndex = '101';
   magnifyIcon.style.cursor = 'pointer';
   magnifyIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% / cover no-repeat`;
+  magnifyIcon.className = magnifySelector;
 };
 
 const setFullScreenModalStyles = (fullScreenModal) => {
@@ -128,7 +131,7 @@ const setFullScreenModalStyles = (fullScreenModal) => {
   fullScreenModal.style.background = '#fff';
 };
 
-const setFullScreenIconStyles = (fullScreenIcon) => {
+const setFullScreenIconStyles = (fullScreenIcon, fullscreenSelector) => {
   fullScreenIcon.style.position = 'absolute';
   fullScreenIcon.style.top = '5px';
   fullScreenIcon.style.right = '5px';
@@ -137,6 +140,7 @@ const setFullScreenIconStyles = (fullScreenIcon) => {
   fullScreenIcon.style.zIndex = '101';
   fullScreenIcon.style.cursor = 'pointer';
   fullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
+  fullScreenIcon.className = fullscreenSelector;
 };
 
 const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {

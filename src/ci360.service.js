@@ -500,7 +500,7 @@ class CI360Viewer {
   addFullScreenIcon() {
     const fullScreenIcon = document.createElement('div');
 
-    setFullScreenIconStyles(fullScreenIcon);
+    setFullScreenIconStyles(fullScreenIcon, this.fullscreenIconSelector);
 
     fullScreenIcon.onclick = this.openFullScreenModal.bind(this);
 
@@ -510,8 +510,8 @@ class CI360Viewer {
   addMagnifier() {
     const magnifyIcon = document.createElement('div');
 
-    setMagnifyIconStyles(magnifyIcon, this.fullScreen);
-
+    setMagnifyIconStyles(magnifyIcon, this.fullScreen, this.magnifyIconSelector);
+        
     magnifyIcon.onclick = this.magnify.bind(this);
 
     this.innerBox.appendChild(magnifyIcon);
@@ -860,7 +860,7 @@ class CI360Viewer {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, playOnce, scrollZoom, zoomSpeed, maxZoomScale, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
+      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
@@ -895,6 +895,8 @@ class CI360Viewer {
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
+    this.magnifyIconSelector = magnifyIconSelector;
+    this.fullscreenIconSelector = fullscreenIconSelector;
     
     this.applyStylesToContainer();
 

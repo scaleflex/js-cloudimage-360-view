@@ -571,3 +571,15 @@ img {
   background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 42%,#222 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#222',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
+.magnify-glass-icon, 
+.fullscreen-icon {
+  background-color:#f5f5f5 !important;
+  background-size: 2rem !important;
+  padding: 1.5rem !important;
+  border-radius: 0.3rem;
+  background-position: center !important;
+  margin-bottom: 0.2rem;
+} 
+.magnify-glass-icon {
+  top: 50px !important
+}
