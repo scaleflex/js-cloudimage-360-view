@@ -35,10 +35,10 @@ class CI360Viewer {
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
-    this.zoomWidth = 0;
-    this.zoomHeight = 0;
-    this.zoomOffset = 0;
-    this.scrolling = false;
+    // this.zoomWidth = 0;
+    // this.zoomHeight = 0;
+    // this.zoomOffset = 0;
+    // this.scrolling = false;
   }
 
   mousedown(event) {
@@ -59,9 +59,9 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
-    if (this.scrollZoom) {
-      this.container.addEventListener('wheel', this.mouseScrollZoom.bind(this));
-    }
+    // if (this.scrollZoom) {
+    //   this.container.addEventListener('wheel', this.mouseScrollZoom.bind(this));
+    // }
 
     this.movementStart = event.pageX;
     this.isClicked = true;
@@ -129,25 +129,25 @@ class CI360Viewer {
     }
   }
 
-  mouseScrollZoom (event) {
-    if ((!this.imagesLoaded) || (!this.scrollZoom)) return;
+  // mouseScrollZoom (event) {
+  //   if ((!this.imagesLoaded) || (!this.scrollZoom)) return;
 
-    event.preventDefault();
-    const zoomSpeed = this.zoomSpeed / 100;
-    const maxZoom = this.canvas.width + (this.canvas.width * this.maxZoomScale / 10);
+  //   event.preventDefault();
+  //   const zoomSpeed = this.zoomSpeed / 100;
+  //   const maxZoom = this.canvas.width + (this.canvas.width * this.maxZoomScale / 10);
 
-    if ((event.deltaY < 0) && (this.zoomWidth < maxZoom)) {
-      this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
-      this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
-      this.update();
-    } else if ((this.zoomWidth > this.canvas.width) && (event.deltaY > 0)) {
-      this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
-      this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
-      this.update();
-    }
+  //   if ((event.deltaY < 0) && (this.zoomWidth < maxZoom)) {
+  //     this.zoomWidth += Math.floor(this.zoomWidth * zoomSpeed);
+  //     this.zoomHeight +=  Math.floor(this.zoomHeight * zoomSpeed);
+  //     this.update();
+  //   } else if ((this.zoomWidth > this.canvas.width) && (event.deltaY > 0)) {
+  //     this.zoomWidth -= Math.floor(this.zoomWidth * zoomSpeed);
+  //     this.zoomHeight -=  Math.floor(this.zoomHeight * zoomSpeed);
+  //     this.update();
+  //   }
     
-    this.scrolling = true;
-  }
+  //   this.scrolling = true;
+  // }
 
   keydown(event) {
     if (!this.imagesLoaded) return;
@@ -321,13 +321,13 @@ class CI360Viewer {
       this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
       
-      if (this.scrolling) {
-        this.zoomOffset =  (this.canvas.width - this.zoomWidth) / 2
+      // if (this.scrolling) {
+      //   this.zoomOffset =  (this.canvas.width - this.zoomWidth) / 2
 
-        this.scrolling = false;
-      }
+      //   this.scrolling = false;
+      // }
 
-      ctx.drawImage(image, this.zoomOffset , this.zoomOffset , this.zoomWidth, this.zoomHeight);
+      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
   }
 
@@ -412,8 +412,8 @@ class CI360Viewer {
         this.canvas.height = parseInt(modalRef.style.height) * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = parseInt(modalRef.style.width) / event.target.width * event.target.height + 'px';
 
-        this.zoomWidth = parseInt(modalRef.style.width) * this.devicePixelRatio;
-        this.zoomHeight =parseInt(modalRef.style.width) * this.devicePixelRatio / event.target.width * event.target.height;
+        // this.zoomWidth = parseInt(modalRef.style.width) * this.devicePixelRatio;
+        // this.zoomHeight =parseInt(modalRef.style.width) * this.devicePixelRatio / event.target.width * event.target.height;
       }
 
       if (this.container.offsetWidth > 0) {
@@ -423,8 +423,8 @@ class CI360Viewer {
         this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
 
-        this.zoomWidth = this.container.offsetWidth * this.devicePixelRatio;
-        this.zoomHeight = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
+        // this.zoomWidth = this.container.offsetWidth * this.devicePixelRatio;
+        // this.zoomHeight = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
       }
 
       ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
@@ -885,9 +885,9 @@ class CI360Viewer {
     this.boxShadow = boxShadow;
     this.autoplay = autoplay;
     this.playOnce = playOnce;
-    this.scrollZoom = scrollZoom;
-    this.zoomSpeed = zoomSpeed;
-    this.maxZoomScale = maxZoomScale;
+    // this.scrollZoom = scrollZoom;
+    // this.zoomSpeed = zoomSpeed;
+    // // this.maxZoomScale = maxZoomScale;
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;
