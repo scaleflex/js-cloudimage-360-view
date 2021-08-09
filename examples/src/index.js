@@ -15,3 +15,25 @@ const wrapper = document.getElementById('main');
 
 wrapper.classList.add('active');
 spinner.style.display = 'none';
+
+
+const cloudimageModalOverlay = document.getElementById('cloudimage-modal-overlay');
+const showModalBtn = document.getElementById('show-modal-btn');
+const cloudimageModal = document.getElementById('cloudimage-modal');
+
+
+showModalBtn.onclick = openModalPreview;
+cloudimageModalOverlay.onclick = closeModalPreview;
+
+
+function openModalPreview() {
+  cloudimageModal.style.display = 'flex';
+  cloudimageModalOverlay.style.display = 'block';
+  document.body.style.overflowY = 'hidden';
+}
+
+function closeModalPreview() {
+  cloudimageModal.style.display = 'none';
+  cloudimageModalOverlay.style.display = 'none';
+  document.body.style.overflowY = 'visible';
+}

@@ -328,7 +328,6 @@ class CI360Viewer {
       }
 
       ctx.drawImage(image, this.zoomOffset , this.zoomOffset , this.zoomWidth, this.zoomHeight);
-
     }
   }
 
@@ -404,23 +403,31 @@ class CI360Viewer {
         imagePreview = this.images[this.imageOffset];
       }
 
+      if (this.container.offsetWidth === 0) {
+        const modalRef = this.container.parentElement;
+
+        this.canvas.width = parseInt(modalRef.style.width) * this.devicePixelRatio;
+        this.canvas.style.width = modalRef.style.width;
+
+        this.canvas.height = parseInt(modalRef.style.height) * this.devicePixelRatio / event.target.width * event.target.height;
+        this.canvas.style.height = parseInt(modalRef.style.width) / event.target.width * event.target.height + 'px';
+
+        this.zoomWidth = parseInt(modalRef.style.width) * this.devicePixelRatio;
+        this.zoomHeight =parseInt(modalRef.style.width) * this.devicePixelRatio / event.target.width * event.target.height;
+      }
+
       if (this.container.offsetWidth > 0) {
         this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
         this.canvas.style.width = this.container.offsetWidth + 'px';
+
         this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
+
         this.zoomWidth = this.container.offsetWidth * this.devicePixelRatio;
         this.zoomHeight = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
-
-        ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
       }
 
-      if (this.container.offsetWidth === 0) {
-        const modalRef = document.getElementById("modal-content-ref");
-        this.canvas.style.width = modalRef.style.width;
-        this.canvas.style.height = modalRef.style.height;
-        ctx.drawImage(event.target, 0, 0, this.canvas.width, this.canvas.height);
-      }
+      ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
     }
 
     if (this.lazyload && !this.fullScreenView) {

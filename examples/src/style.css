@@ -583,3 +583,29 @@ img {
 .magnify-glass-icon {
   top: 50px !important
 }
+#cloudimage-modal-overlay {
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: #bdbdbd8c;
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  left: 0;
+}
+#show-modal-btn {
+  display: block;
+  margin: 50px auto;
+  border: 0;
+  background-color: #808080;
+  color: #F5F5F5;
+  padding: 6px 10px;
+}
+#cloudimage-modal {
+  display: none;
+  position: fixed;
+  top: 60px;
+  left: 440px;
+  justify-content: center;
+  z-index: 999;
+}
