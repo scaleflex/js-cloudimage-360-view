@@ -883,7 +883,7 @@ class CI360Viewer {
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
-    this.autoplay = autoplay && !this.isMobile;
+    this.autoplay = autoplay;
     this.playOnce = playOnce;
     this.scrollZoom = scrollZoom;
     this.zoomSpeed = zoomSpeed;
