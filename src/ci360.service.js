@@ -23,14 +23,18 @@ class CI360Viewer {
   constructor(container, fullScreen, ratio) {
     this.container = container;
     this.activeImage = 1;
+    this.activeYImage = 1;
     this.movementStart = 0;
+    this.movementStartY = 0;
     this.isClicked = false;
     this.loadedImages = 0;
+    this.loadedYImages = 0;
     this.imagesLoaded = false;
     this.reversed = false;
     this.fullScreenView = !!fullScreen;
     this.ratio = ratio;
     this.images = [];
+    this.imagesY = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
@@ -38,6 +42,8 @@ class CI360Viewer {
     this.panning = false;
     this.intensity = 0;
     this.cursorCurrentPosition = {};
+    this.prevPosition = {};
+    this.moveInY = false;
   }
 
   mousedown(event) {
@@ -64,7 +70,9 @@ class CI360Viewer {
       this.container.addEventListener('mouseleave', this.resetZoom.bind(this));
     }
 
+    this.prevPosition = {x: event.pageX, y: event.pageY};
     this.movementStart = event.pageX;
+    this.movementStartY = event.pageY;
     this.isClicked = true;
     this.container.style.cursor = 'grabbing';
   }
@@ -73,7 +81,9 @@ class CI360Viewer {
     if (!this.imagesLoaded) return;
 
     this.movementStart = 0;
+    this.movementStartY = 0;
     this.isClicked = false;
+    this.moveInY = false;
     this.container.style.cursor = 'grab';
 
     if (this.bottomCircle) {
@@ -83,8 +93,10 @@ class CI360Viewer {
 
   mousemove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
-    
-    this.onMove(event.pageX);
+
+    if (Math.abs(this.prevPosition.y - event.pageY) >= 5 && this.filenameY) this.moveInY = true;
+
+    this.onMove(event.pageX, event.pageY);
   }
 
   touchstart(event) {
@@ -103,7 +115,9 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
+    this.prevPosition = {x: event.touches[0].clientX, y: event.touches[0].clientY};
     this.movementStart = event.touches[0].clientX;
+    this.movementStartY = event.touches[0].clientY;
     this.isClicked = true;
   }
 
@@ -111,6 +125,8 @@ class CI360Viewer {
     if (!this.imagesLoaded) return;
 
     this.movementStart = 0;
+    this.movementStartY = 0;
+    this.moveInY = false;
     this.isClicked = false;
 
     if (this.bottomCircle) this.show360ViewCircleIcon();
@@ -119,7 +135,11 @@ class CI360Viewer {
   touchmove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
-    this.onMove(event.touches[0].clientX);
+    event.preventDefault();
+
+    if (Math.abs(this.prevPosition.y - event.touches[0].clientY) >= 50 && this.filenameY) this.moveInY = true;
+
+    this.onMove(event.touches[0].clientX, event.touches[0].clientY);
   }
 
   keydownGeneral() {
@@ -217,34 +237,53 @@ class CI360Viewer {
     if (this.bottomCircle) this.show360ViewCircleIcon();
   }
 
-  onMove(pageX) {
-    if (pageX - this.movementStart >= this.speedFactor) {
-      let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
-
-      this.movementStart = pageX;
-
-      if (this.spinReverse) {
-        this.moveActiveIndexDown(itemsSkippedRight);
-      } else {
-        this.moveActiveIndexUp(itemsSkippedRight);
+  onMove(pageX, pageY) {
+    if (this.moveInY) {
+      if (pageY - this.movementStartY >= this.speedFactor) {
+        this.movementStartY = pageY;
+        let itemsSkippedTop = Math.floor((pageY - this.movementStartY) / this.speedFactor) || 1;
+  
+        if (this.spinReverse) {
+          this.moveActiveIndexUp(itemsSkippedTop);
+        } else {
+          this.moveActiveIndexDown(itemsSkippedTop);
+        }
+      } else if (this.movementStartY - pageY >= this.speedFactor) {
+        this.movementStartY = pageY;
+        let itemsSkippedBottom = Math.floor((this.movementStartY - pageY) / this.speedFactor) || 1;
+  
+        if (this.spinReverse) {
+          this.moveActiveIndexDown(itemsSkippedBottom);
+        } else {
+          this.moveActiveIndexUp(itemsSkippedBottom);
+        }
       }
+    } else {
+      if (pageX - this.movementStart >= this.speedFactor) {
+        let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
 
-      if (this.bottomCircle) this.hide360ViewCircleIcon();
-      this.update();
-    } else if (this.movementStart - pageX >= this.speedFactor) {
-      let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+        this.movementStart = pageX;
 
-      this.movementStart = pageX;
+        if (this.spinReverse) {
+          this.moveActiveIndexDown(itemsSkippedRight);
+        } else {
+          this.moveActiveIndexUp(itemsSkippedRight);
+        }
+      } else if (this.movementStart - pageX >= this.speedFactor) {
+        let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
 
-      if (this.spinReverse) {
-        this.moveActiveIndexUp(itemsSkippedLeft);
-      } else {
-        this.moveActiveIndexDown(itemsSkippedLeft);
+        this.movementStart = pageX;
+  
+        if (this.spinReverse) {
+          this.moveActiveIndexUp(itemsSkippedLeft);
+        } else {
+          this.moveActiveIndexDown(itemsSkippedLeft);
+        }
       }
-
-      if (this.bottomCircle) this.hide360ViewCircleIcon();
-      this.update();
     }
+
+    if (this.bottomCircle) this.hide360ViewCircleIcon();  
+    this.update();
   }
 
   moveActiveIndexUp(itemsSkipped) {
@@ -269,8 +308,20 @@ class CI360Viewer {
         }
       }
     } else {
-      this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
-    }
+        if (this.moveInY || (this.autoplay && this.spinY)) {
+          this.activeYImage = (this.activeYImage + itemsSkipped) % this.amountY || this.amountY;
+        } else if (this.autoplay && this.spinXY) {
+            if (this.activeImage < this.amount) {
+              this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
+            } else if (this.activeYImage < this.amountY) {
+                this.activeYImage = (this.activeYImage + itemsSkipped) % this.amountY || this.amountY;
+            } else {
+                this.activeImage = 1;
+            }
+        } else {
+          this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
+        }
+      }
   }
 
   moveActiveIndexDown(itemsSkipped) {
@@ -294,10 +345,27 @@ class CI360Viewer {
         }
       }
     } else {
-      if (this.activeImage - itemsSkipped < 1) {
-        this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+      if (this.moveInY || (this.autoplay && this.spinY)) {
+        if (this.activeYImage - itemsSkipped < 1) {
+          this.activeYImage = this.amountY + (this.activeYImage - itemsSkipped);
+        } else {
+          this.activeYImage -= itemsSkipped;
+        }
+      } else if (this.autoplay && this.spinXY) {
+        if (this.activeImage > 1) {
+          this.activeImage -= itemsSkipped;
+          this.activeYImage = this.amountY + (this.activeYImage - itemsSkipped);
+        } else if (this.activeYImage > 1) {
+            this.activeYImage -= itemsSkipped;
+        } else if ((this.activeImage - itemsSkipped < 1) && (this.activeYImage - itemsSkipped < 1)){
+          this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+        }
       } else {
-        this.activeImage -= itemsSkipped;
+          if (this.activeImage - itemsSkipped < 1) {
+            this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+          } else {
+            this.activeImage -= itemsSkipped;
+          }
       }
     }
   }
@@ -317,7 +385,19 @@ class CI360Viewer {
   }
 
   update() {
-    const image = this.images[this.activeImage - 1];
+    let image = this.images[this.activeImage - 1];
+    const isSpinXY = this.autoplay && this.spinXY && this.activeImage === this.amount && !this.reversed;
+    const isSpinXYReversed = this.autoplay && this.spinXY && this.activeImage === 1 && this.reversed;
+
+    if (this.moveInY || (this.autoplay && this.spinY)) {
+      image = this.imagesY[this.activeYImage - 1];
+      this.activeImage = 1;
+    } else if (isSpinXY || isSpinXYReversed) {
+        image = this.imagesY[this.activeYImage - 1];
+    } else {
+      this.activeYImage = 1;
+    }
+
     const ctx = this.canvas.getContext("2d");
 
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
@@ -368,7 +448,7 @@ class CI360Viewer {
 
   onAllImagesLoaded() {
     this.imagesLoaded = true;
-
+  
     this.container.style.cursor = 'grab';
     if (this.disableDrag) this.container.style.cursor = 'default';
 
@@ -390,7 +470,6 @@ class CI360Viewer {
     if (this.imageOffset) {
       this.activeImage = this.imageOffset;
     };
-    
     if (this.autoplay) {
       this.play();
     }
@@ -436,7 +515,6 @@ class CI360Viewer {
 
         this.canvas.height = parseInt(modalRef.style.height) * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = parseInt(modalRef.style.width) / event.target.width * event.target.height + 'px';
-
       }
 
       if (this.container.offsetWidth > 0) {
@@ -489,16 +567,29 @@ class CI360Viewer {
     }
   }
 
-  onImageLoad(index, event) {
-    const percentage = Math.round(this.loadedImages / this.amount * 100);
-
+  onImageLoad(index, orientation, event) {
     this.loadedImages += 1;
-    this.updatePercentageInLoader(percentage);
 
-    if (this.loadedImages === this.amount) {
-      this.onAllImagesLoaded(event);
-    } else if (index === 0) {
-      this.onFirstImageLoaded(event);
+    if (orientation === 'x' && !this.filenameY) {
+      const percentage = Math.round(this.loadedImages / this.amount * 100);
+
+      this.updatePercentageInLoader(percentage);
+  
+      if (this.loadedImages === this.amount) {
+        this.onAllImagesLoaded(event);
+      } else if (index === 0) {
+        this.onFirstImageLoaded(event);
+      }
+    } else if (orientation === 'y') {
+      const percentage = Math.round(this.loadedImages / (this.amount + this.amountY) * 100);
+
+      this.updatePercentageInLoader(percentage);
+
+      if (this.loadedImages === this.amount + this.amountY) {
+        this.onAllImagesLoaded(event);
+      } else if (index === 0) {
+        this.onFirstImageLoaded(event);
+      }
     }
   }
 
@@ -674,14 +765,23 @@ class CI360Viewer {
   play() {
     if (this.bottomCircle) this.hide360ViewCircleIcon();
     this.remove360ViewIcon();
-
     this.loopTimeoutId = window.setInterval(() => {
       this.loop(this.reversed);
 
-      const isPlayedOnce = (
-        (this.reversed && this.activeImage === 1) ||
-        (!this.reversed && (this.activeImage === this.amount))
-      );
+      let isPlayedOnce;
+      
+      if (this.spinY) {
+        isPlayedOnce = (this.reversed && this.activeYImage === 1) ||
+          (!this.reversed && (this.activeYImage === this.amountY))
+      } else if (this.spinXY) {
+        isPlayedOnce = (this.reversed && this.activeImage === 1 && this.activeYImage === 1) ||
+        (!this.reversed && (this.activeImage === this.amount) && (this.activeYImage === this.amountY));
+      } else {
+        isPlayedOnce = (this.reversed && this.activeImage === 1) ||
+          (!this.reversed && (this.activeImage === this.amount));
+      }
+
+
 
       if (this.playOnce && isPlayedOnce) {
         window.clearTimeout(this.loopTimeoutId);
@@ -716,7 +816,8 @@ class CI360Viewer {
     return src;
   }
 
-  preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams) {
+
+  preloadImages(src, amount, orientation, lazyload, lazySelector, container, responsive, ciParams) {
     if (this.imageList) {
       try {
         const images = JSON.parse(this.imageList);
@@ -735,12 +836,12 @@ class CI360Viewer {
       [...new Array(amount)].map((_item, index) => {
         const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
         const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        this.addImage(resultSrc, lazyload, lazySelector, index);
+        this.addImage(resultSrc, orientation, lazyload, lazySelector, index);
       });
     }
   }
 
-  addImage(resultSrc, lazyload, lazySelector, index) {
+  addImage(resultSrc, orientation, lazyload, lazySelector, index) {
     const image = new Image();
 
     if (lazyload && !this.fullScreenView) {
@@ -758,9 +859,14 @@ class CI360Viewer {
       image.src = resultSrc;
     }
 
-    image.onload = this.onImageLoad.bind(this, index);
-    image.onerror = this.onImageLoad.bind(this, index);
-    this.images.push(image);
+    image.onload = this.onImageLoad.bind(this, index, orientation);
+    image.onerror = this.onImageLoad.bind(this, index, orientation);
+
+    if (orientation === 'y') {
+      this.imagesY.push(image);
+    } else {
+      this.images.push(image);
+    }
   }
 
   destroy() {
@@ -885,8 +991,8 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, scrollZoom, zoomFactor, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
+      folder, filename, filenameY, imageList, indexZeroBase, amount, amountY, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
+      autoplay,spinY, spinXY, playOnce, scrollZoom, zoomFactor, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
@@ -896,14 +1002,18 @@ class CI360Viewer {
 
     this.folder = folder;
     this.filename = filename;
+    this.filenameY = filenameY;
     this.imageList = imageList;
     this.indexZeroBase = indexZeroBase;
     this.amount = amount;
+    this.amountY = amountY;
     this.imageOffset = imageOffset;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
     this.autoplay = autoplay;
+    this.spinY = spinY;
+    this.spinXY = spinXY
     this.playOnce = playOnce;
     this.scrollZoom = scrollZoom;
     this.zoomFactor = zoomFactor || (this.scrollZoom ? 1 : 0);
@@ -928,9 +1038,19 @@ class CI360Viewer {
 
     this.addCanvas();
 
+    
     let src = this.getSrc(responsive, container, folder, filename, ciParams);
 
-    this.preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams);
+    this.preloadImages(src, amount, 'x', lazyload, lazySelector, container, responsive, ciParams);
+
+    let srcY;
+
+    if (filenameY) {
+      srcY = this.getSrc(responsive, container, folder, filenameY, ciParams);
+      this.preloadImages(srcY, amountY, 'y', lazyload, lazySelector, container, responsive, ciParams);
+    }
+
+    
 
     this.attachEvents(draggable, swipeable, keys);
   }
