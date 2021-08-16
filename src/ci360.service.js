@@ -94,7 +94,7 @@ class CI360Viewer {
   mousemove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
-    if (Math.abs(this.prevPosition.y - event.pageY) >= 5 && this.filenameY) this.moveInY = true;
+    if (Math.abs(this.prevPosition.y - event.pageY) >= 50 && this.filenameY) this.moveInY = true;
 
     this.onMove(event.pageX, event.pageY);
   }
@@ -137,7 +137,7 @@ class CI360Viewer {
 
     event.preventDefault();
 
-    if (Math.abs(this.prevPosition.y - event.touches[0].clientY) >= 50 && this.filenameY) this.moveInY = true;
+    if (Math.abs(this.prevPosition.y - event.touches[0].clientY) >= 20 && this.filenameY) this.moveInY = true;
 
     this.onMove(event.touches[0].clientX, event.touches[0].clientY);
   }
