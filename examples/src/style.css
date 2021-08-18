@@ -225,10 +225,6 @@ body, html {
   margin-left: 10px;
 }
 
-.on-load {
-  display: block !important;
-}
-
 .github-logo-wrapper {
   position: absolute;
   top: 10px;
@@ -248,6 +244,7 @@ body, html {
   transition: 0.3s all;
   opacity: 0;
 }
+
 
 .wrapper.active {
   visibility: visible !important;

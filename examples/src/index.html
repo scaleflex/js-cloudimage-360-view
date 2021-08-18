@@ -8,10 +8,12 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <style>.on-load {
-    display: none
-  }
+  <style>
 
+  .on-load {
+      overflow: hidden;
+  }
+  
   .spinner-grow {
     color: #343a40 !important;
     display: inline-block;
@@ -86,7 +88,7 @@
   </style>
   <title>JS-cloudimage-360-view</title>
 </head>
-<body>
+<body class="on-load">
 <div id="spinner" class="spinner-grow text-dark" role="status"></div>
 
 <div id="main" class="wrapper" style="visibility: hidden;overflow: hidden;">

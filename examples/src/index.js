@@ -15,7 +15,7 @@ const wrapper = document.getElementById('main');
 
 wrapper.classList.add('active');
 spinner.style.display = 'none';
-
+document.body.classList.remove('on-load');
 
 const cloudimageModalOverlay = document.getElementById('cloudimage-modal-overlay');
 const showModalBtn = document.getElementById('show-modal-btn');
