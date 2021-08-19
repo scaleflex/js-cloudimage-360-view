@@ -290,13 +290,13 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ###### Type: **String** | Default: **magnify-icon** | _optional_
 
-Helper class to apply styles on magnify icon
+Helper selector to apply styles on magnify icon
 
 ### data-fullscreen-icon-selector (or fullscreen-icon-selector)
 
 ###### Type: **String** | Default: **fullscreen-icon** | _optional_
 
-Helper class to apply styles on fullscreen icon
+Helper selector to apply styles on fullscreen icon
 
 ## <a name="controls"></a> Controls
 
