@@ -286,6 +286,18 @@ Only 360 view images close to the client's viewport will be loaded, hence accele
 
 Helper class to apply lazy-loading depending on library you choose, see [Lazy loading](#lazy-loading)
 
+### data-magnify-icon-selector (or magnify-icon-selector)
+
+###### Type: **String** | Default: **magnify-icon** | _optional_
+
+Helper class to apply styles on magnify icon
+
+### data-fullscreen-icon-selector (or fullscreen-icon-selector)
+
+###### Type: **String** | Default: **fullscreen-icon** | _optional_
+
+Helper class to apply styles on fullscreen icon
+
 ## <a name="controls"></a> Controls
 
 You can add controls by adding elements with the following classes: **cloudimage-360-prev**, **cloudimage-360-next**
