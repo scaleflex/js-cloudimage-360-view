@@ -9,7 +9,7 @@
 	<img
 		height="175"
 		alt="The Lounge"
-		src="https://demo.cloudimg.io/height/350/n/https://scaleflex.airstore.io/filerobot/filerobot-cloudimage.png?sanitize=true">
+		src="https://demo.cloudimg.io/v7/n/https://scaleflex.airstore.io/filerobot/filerobot-cloudimage.png?sanitize=true">
 </p>
 
 <h1 align="center">
@@ -79,7 +79,7 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 ```html
 <div
    class="cloudimage-360"
-   data-folder="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car/"
+   data-folder="https://scaleflex.cloudimg.io/v7/https://scaleflex.airstore.io/demo/360-car/"
    data-filename="iris-{index}.jpeg"
    data-amount="36"
 ></div>
