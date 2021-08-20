@@ -11,7 +11,7 @@ const get360ViewProps = (image) => ({
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
   playOnce: isTrue(image, 'playOnce'),
-  scrollZoom: isTrue(image, 'scrollZoom'),
+  pointerZoom: isTrue(image, 'pointer-zoom' || 'data-pointer-zoom'),
   zoomFactor: parseInt(attr(image, 'zoom-factor') || attr(image, 'data-zoom-factor') || 1, 10),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
