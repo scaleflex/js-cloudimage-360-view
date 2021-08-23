@@ -28,7 +28,6 @@ class CI360Viewer {
     this.movementStartY = 0;
     this.isClicked = false;
     this.loadedImages = 0;
-    this.loadedYImages = 0;
     this.imagesLoaded = false;
     this.reversed = false;
     this.fullScreenView = !!fullScreen;
@@ -567,11 +566,22 @@ class CI360Viewer {
     }
   }
 
-  onImageLoad(index, orientation, event) {
-    this.loadedImages += 1;
+  onImageLoad(index, event) {
+    if (this.filenameY) {
+      const percentage = Math.round(this.loadedImages / ( this.amount + this.amountY) * 100);
+      this.loadedImages += 1;
 
-    if (orientation === 'x' && !this.filenameY) {
+      this.updatePercentageInLoader(percentage);
+
+      if (this.loadedImages === (this.amount + this.amountY)) {
+        this.onAllImagesLoaded(event);
+      } else if (index === 0) {
+        this.onFirstImageLoaded(event);
+      }
+    } else {
       const percentage = Math.round(this.loadedImages / this.amount * 100);
+
+      this.loadedImages += 1;
 
       this.updatePercentageInLoader(percentage);
   
@@ -579,17 +589,7 @@ class CI360Viewer {
         this.onAllImagesLoaded(event);
       } else if (index === 0) {
         this.onFirstImageLoaded(event);
-      }
-    } else if (orientation === 'y') {
-      const percentage = Math.round(this.loadedImages / (this.amount + this.amountY) * 100);
-
-      this.updatePercentageInLoader(percentage);
-
-      if (this.loadedImages === this.amount + this.amountY) {
-        this.onAllImagesLoaded(event);
-      } else if (index === 0) {
-        this.onFirstImageLoaded(event);
-      }
+      }  
     }
   }
 
@@ -859,13 +859,13 @@ class CI360Viewer {
       image.src = resultSrc;
     }
 
-    image.onload = this.onImageLoad.bind(this, index, orientation);
-    image.onerror = this.onImageLoad.bind(this, index, orientation);
+    image.onload = this.onImageLoad.bind(this, index);
+    image.onerror = this.onImageLoad.bind(this, index);
 
-    if (orientation === 'y') {
-      this.imagesY.push(image);
-    } else {
+    if (orientation === 'x') {
       this.images.push(image);
+    } else {
+      this.imagesY.push(image);
     }
   }
 
@@ -1043,10 +1043,8 @@ class CI360Viewer {
 
     this.preloadImages(src, amount, 'x', lazyload, lazySelector, container, responsive, ciParams);
 
-    let srcY;
-
     if (filenameY) {
-      srcY = this.getSrc(responsive, container, folder, filenameY, ciParams);
+      const srcY = this.getSrc(responsive, container, folder, filenameY, ciParams);
       this.preloadImages(srcY, amountY, 'y', lazyload, lazySelector, container, responsive, ciParams);
     }
 
