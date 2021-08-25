@@ -311,6 +311,7 @@ class CI360Viewer {
     this.imagesLoaded = true;
     this.container.style.cursor = 'grab';
     this.removeLoader();
+    this.container.dispatchEvent(new CustomEvent('loaded', { }))
 
     if (!this.fullScreenView) {
       this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;

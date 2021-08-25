@@ -1,6 +1,6 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "main": "dist/index.js",
   "description": "",
   "author": "scaleflex",
@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "start-demo": "webpack-dev-server --mode development --config config/webpack-demo.config.js",
-    "clean-build": "rm build/*.js",
+    "clean-build": "rm -rf build/",
     "build": "npm run clean-build && webpack --mode production --config config/webpack-build.config.js",
     "clean-dist": "rm -rf dist",
     "dist": "npm run clean-dist && babel src -d dist --copy-files",
