@@ -387,7 +387,7 @@ Multiple transformation operations can be applied to your image, separated by "`
 example:
 
 ```html
-	data-transformation="w=400&h=200&func=fit"
+data-transformation="w=400&h=200&func=fit"
 ```
 
 [Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/image-resizing)
@@ -401,7 +401,7 @@ Multiple filters can be applied, separated by "```,```" (comma).
 example:
 
 ```html
-	data-filters="bright:15,contrast:30"
+data-filters="bright:15,contrast:30"
 ```
 
 [Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/image-filters)
