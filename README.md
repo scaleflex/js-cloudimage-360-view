@@ -9,7 +9,7 @@
 	<img
 		height="175"
 		alt="The Lounge"
-		src="https://demo.cloudimg.io/v7/n/https://scaleflex.airstore.io/filerobot/filerobot-cloudimage.png?sanitize=true">
+		src="https://demo.cloudimg.io/v7/https://scaleflex.airstore.io/filerobot/filerobot-cloudimage.png?sanitize=true">
 </p>
 
 <h1 align="center">
@@ -79,7 +79,7 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 ```html
 <div
    class="cloudimage-360"
-   data-folder="https://scaleflex.cloudimg.io/v7/https://scaleflex.airstore.io/demo/360-car/"
+   data-folder="https://scaleflex.airstore.io/demo/360-car/"
    data-filename="iris-{index}.jpeg"
    data-amount="36"
 ></div>
@@ -378,14 +378,33 @@ CDN traffic per month for free.
 
 Enables cloudimage responsive plugin for 360 view.
 
+### data-transformation (or transformation)
+
+###### Type: **String** | Default: **none** | _optional_
+
+Applies Cloudimage resize operations to your image, e.g. width, height, crop, face crop, rotate, prevent enlargement...
+Multiple transformation operations can be applied to your image, separated by "```&```" (Ampersand).
+example:
+
+```html
+	data-transformation="w=400&h=200&func=fit"
+```
+
+[Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/image-resizing)
+
 ### data-filters (or filters)
 
-###### Type: **String** | Default: **q35** | _optional_
+###### Type: **String** | Default: **none** | _optional_
 
-Applies default Cloudimage filters to your image, e.g. fcontrast, fpixelate, fgaussian, backtransparent,
-rotation...  Multiple filters can be applied, separated by "```.```" (dot).
+Applies Cloudimage filters to your image, e.g. brightness, contrast, greyscale, blur, Sharpen...
+Multiple filters can be applied, separated by "```,```" (comma).
+example:
 
-[Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation/en/filters/)
+```html
+	data-filters="bright:15,contrast:30"
+```
+
+[Full documentation here.](https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/image-filters)
 
 ## <a name="lazy-loading"/> Lazy Loading
 
