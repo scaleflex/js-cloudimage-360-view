@@ -31,7 +31,7 @@ class CI360Viewer {
     this.fullScreenView = !!fullScreen;
     this.ratio = ratio;
     this.images = [];
-    this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
+    this.devicePixelRatio = window.devicePixelRatio || 1;
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
@@ -173,15 +173,16 @@ class CI360Viewer {
     event.preventDefault();
 
     this.startZoom = true;
+    const zoomFactor  = this.zoomFactor * 10;
 
-    if (event.deltaY < 0) this.intensity += this.zoomFactor * 10;
+    if (event.deltaY < 0) this.intensity += zoomFactor;
 
     if (event.deltaY > 0) {
-      if (this.intensity - (this.zoomFactor * 10) < 1) {
+      if (this.intensity - zoomFactor < 1) {
         this.intensity = 0;
         this.startZoom = false;
       } else {
-        this.intensity -= this.zoomFactor * 10;
+        this.intensity -= zoomFactor;
       }
     }
 
@@ -401,19 +402,11 @@ class CI360Viewer {
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
 
       if (this.startZoom) {
-        this.pointerCurrentPosition = this.getCursorPositionInCanvas();
-        const imageWidth = this.canvas.width / window.devicePixelRatio;
-        const imageHeight = this.canvas.height / window.devicePixelRatio;
-
-        const width = this.canvas.width + (this.intensity * (this.canvas.width / this.canvas.height));
-        const height = this.canvas.height + this.intensity;
-
-        const pointX = 0 - (this.pointerCurrentPosition.x / imageWidth) * (width - this.canvas.width);
-        const pointY = 0 - (this.pointerCurrentPosition.y / imageHeight) * (height - this.canvas.height);
-
         this.hide360ViewCircleIcon();
 
-        return ctx.drawImage(image, pointX, pointY, width, height);
+        this.updateImageScaleWithMouseWheel(ctx, image);
+      } else {
+        ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
 
       // if (this.startPinching) {
@@ -432,8 +425,22 @@ class CI360Viewer {
       //   return ctx.drawImage(image, pointX, pointY, width, height);
       // }
 
-        ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+        
       }
+  }
+
+  updateImageScaleWithMouseWheel(ctx, image) {
+    this.pointerCurrentPosition = this.getCursorPositionInCanvas();
+    const imageWidth = this.canvas.width / this.devicePixelRatio;
+    const imageHeight = this.canvas.height / this.devicePixelRatio;
+
+    const width = this.canvas.width + (this.intensity * (this.canvas.width / this.canvas.height));
+    const height = this.canvas.height + this.intensity;
+
+    const pointX = 0 - (this.pointerCurrentPosition.x / imageWidth) * (width - this.canvas.width);
+    const pointY = 0 - (this.pointerCurrentPosition.y / imageHeight) * (height - this.canvas.height);
+
+    ctx.drawImage(image, pointX, pointY, width, height);
   }
 
   updatePercentageInLoader(percentage) {
@@ -985,8 +992,8 @@ class CI360Viewer {
     this.boxShadow = boxShadow;
     this.autoplay = autoplay;
     this.playOnce = playOnce;
-    this.pointerZoom = pointerZoom;
-    this.zoomFactor = zoomFactor || (this.pointerZoom ? 1 : 0);
+    this.pointerZoom = !!(pointerZoom === 'on');
+    this.zoomFactor = zoomFactor;
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;
