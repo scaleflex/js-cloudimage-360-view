@@ -11,8 +11,11 @@ const get360ViewProps = (image) => ({
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
   playOnce: isTrue(image, 'playOnce'),
-  pointerZoom: attr(image, 'pointer-zoom') || attr(image, 'data-pointer-zoom') || 'on',
-  zoomFactor: parseInt(attr(image, 'pointer-zoom-factor') || attr(image, 'data-pointer-zoom-factor') || 2, 10),
+  disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
+  disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
+  pointerZoomFactor: parseInt(attr(image, 'pointer-zoom-factor') || attr(image, 'data-pointer-zoom-factor') || 2, 10),
+  pinchZoom: attr(image, 'pinch-zoom') || attr(image, 'data-pinch-zoom') || 'on',
+  pinchZoomFactor: parseInt(attr(image, 'pinch-zoom-factor') || attr(image, 'data-pinch-zoom-factor') || 2, 10),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
@@ -271,6 +274,10 @@ const fit = (contains) => {
   }
 };
 
+const isTwoFingers = (event) => {
+  return event.targetTouches.length === 2
+}
+
 const contain = fit(true);
 
 const addClass = (el, className) => {
@@ -310,5 +317,6 @@ export {
   contain,
   addClass,
   removeClass,
-  pad
+  pad,
+  isTwoFingers
 }
