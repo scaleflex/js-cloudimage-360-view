@@ -771,18 +771,9 @@ class CI360Viewer {
           imageOffsetWidth = container.offsetHeight / this.ratio;
         }
       }
-
       const ciSizeNext = getSizeAccordingToPixelRatio(getResponsiveWidthOfContainer(imageOffsetWidth));
 
-      if (ciTransformation) {
-        src = `https://${ciToken}.cloudimg.io/v7/${src}?${ciTransformation}`;
-      } else {
-        src = `https://${ciToken}.cloudimg.io/v7/${src}?width=${ciSizeNext}`;
-      }
-
-      if (ciFilters) {
-        src += `&f=${ciFilters}`;
-      }
+      src = `https://${ciToken}.cloudimg.io/v7/${src}?${ciTransformation ? ciTransformation : `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`
     }
 
     return src;
