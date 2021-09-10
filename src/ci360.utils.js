@@ -13,9 +13,12 @@ const get360ViewProps = (image) => ({
   playOnce: isTrue(image, 'playOnce'),
   disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
   disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
-  pointerZoomFactor: parseInt(attr(image, 'pointer-zoom-factor') || attr(image, 'data-pointer-zoom-factor') || 2, 10),
-  pinchZoom: attr(image, 'pinch-zoom') || attr(image, 'data-pinch-zoom') || 'on',
-  pinchZoomFactor: parseInt(attr(image, 'pinch-zoom-factor') || attr(image, 'data-pinch-zoom-factor') || 2, 10),
+  pointerZoomFactor: parseInt(attr(image, 'pointer-zoom-factor')
+    || attr(image, 'data-pointer-zoom-factor') 
+    || 2, 10),
+  pinchZoomFactor: parseInt(attr(image, 'pinch-zoom-factor') 
+    || attr(image, 'data-pinch-zoom-factor') 
+    || 2, 10),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
@@ -143,6 +146,19 @@ const setFullScreenIconStyles = (fullScreenIcon, fullscreenSelector) => {
   fullScreenIcon.style.cursor = 'pointer';
   fullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
   fullScreenIcon.className = fullscreenSelector;
+};
+
+const setResetZoomIconStyles = (resetZoomIcon) => {
+  resetZoomIcon.style.position = 'absolute';
+  resetZoomIcon.style.display = 'none';
+  resetZoomIcon.style.top = '5px';
+  resetZoomIcon.style.right = '5px';
+  resetZoomIcon.style.width = '25px';
+  resetZoomIcon.style.height = '25px';
+  resetZoomIcon.style.zIndex = '101';
+  resetZoomIcon.style.cursor = 'pointer';
+  resetZoomIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
+  resetZoomIcon.className = 'reset-zoom-icon';
 };
 
 const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
@@ -274,9 +290,8 @@ const fit = (contains) => {
   }
 };
 
-const isTwoFingers = (event) => {
-  return event.targetTouches.length === 2
-}
+const isTwoFingers = (event) => event.targetTouches.length === 2;
+
 
 const contain = fit(true);
 
@@ -311,6 +326,7 @@ export {
   setMagnifyIconStyles,
   setFullScreenModalStyles,
   setFullScreenIconStyles,
+  setResetZoomIconStyles,
   setCloseFullScreenViewStyles,
   getResponsiveWidthOfContainer,
   getSizeAccordingToPixelRatio,

@@ -13,6 +13,7 @@ import {
   setBoxShadowStyles,
   setCloseFullScreenViewStyles,
   setFullScreenIconStyles,
+  setResetZoomIconStyles,
   setFullScreenModalStyles,
   setLoaderStyles,
   setMagnifyIconStyles,
@@ -36,6 +37,7 @@ class CI360Viewer {
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
+    this.isMagnifyOpen = false;
     this.startPointerZoom = false;
     this.zoomIntensity = 0;
     this.mouseTracked = false;
@@ -50,20 +52,12 @@ class CI360Viewer {
 
     if (!this.imagesLoaded) return;
 
-    if (this.glass) {
-      this.closeMagnifier();
-    }
-
-    if (this.view360Icon) {
-      this.remove360ViewIcon();
-    }
+    this.hideInitalIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
       this.stop();
       this.autoplay = false;
     }
-
-    if (!this.disablePointerZoom) this.mouseTracked = true;
 
     this.movementStart = event.pageX;
     this.isClicked = true;
@@ -77,7 +71,7 @@ class CI360Viewer {
     this.isClicked = false;
     this.container.style.cursor = 'grab';
 
-    if (this.bottomCircle) {
+    if (this.bottomCircle && !this.zoomIntensity) {
       this.show360ViewCircleIcon();
     }
   }
@@ -96,21 +90,31 @@ class CI360Viewer {
     }
   }
 
+  mouseScroll(event) {
+    if (this.disablePointerZoom || this.isMagnifyOpen) return;
+
+    if (this.bottomCircle) this.hide360ViewCircleIcon();
+
+    this.hideInitalIcons();
+    this.mouseTracked = true;
+    this.trackCursorPosition(event);
+    this.mouseScrollZoom(event);
+  }
+
   touchstart(event) {
     if (!this.imagesLoaded) return;
 
-    if (!this.disablePinchZoom && isTwoFingers(event)) {
-      const [fingerOnePosition, fingerTwoPostion] = this.getFingersPosition(event);
-      this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPostion);
+    const isPinchZoom = (
+      !this.disablePinchZoom &&
+      isTwoFingers(event) &&
+      !this.isMagnifyOpen
+      );
+
+    if (isPinchZoom) {
+      this.initPinchZoom(event);
     };
 
-    if (this.glass) {
-      this.closeMagnifier();
-    }
-
-    if (this.view360Icon) {
-      this.remove360ViewIcon();
-    }
+    this.hideInitalIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
       this.stop();
@@ -150,6 +154,16 @@ class CI360Viewer {
     }
   }
 
+  hideInitalIcons() {
+    if (this.glass) {
+      this.closeMagnifier();
+    }
+
+    if (this.view360Icon) {
+      this.remove360ViewIcon();
+    }
+  }
+
   trackCursorPosition(event) {
     this.mousePositions = {
       x: event.clientX,
@@ -169,24 +183,42 @@ class CI360Viewer {
   }
 
   mouseScrollZoom (event) {
-    if (!this.mouseTracked) return;
-
     event.preventDefault();
+
+    if (this.autoplay || this.loopTimeoutId) {
+      this.stop();
+      this.autoplay = false;
+    }
 
     this.startPointerZoom = true;
     const zoomFactor  = this.pointerZoomFactor * 10;
 
-    if (event.deltaY < 0) {
-      this.zoomIntensity += zoomFactor;
-      this.update();
-    } else if (event.deltaY > 0 && this.zoomIntensity >= zoomFactor) {
-      this.zoomIntensity -= zoomFactor;
-      this.update();
+    this.zoomIntensity += event.deltaY * -zoomFactor;
+    this.zoomIntensity = Math.max(0, this.zoomIntensity);
+
+    if (this.zoomIntensity) {
+      if (this.resetZoomIcon) this.showResetZoomIcon();
+    } else {
+      this.mouseTracked = false;
+
+      if (this.resetZoomIcon) this.hideResetZoomIcon();
+
+      if (this.bottomCircle) this.show360ViewCircleIcon();
     }
+
+    this.update();
+  }
+
+  initPinchZoom (event) {
+    const [fingerOnePosition, fingerTwoPostion] = this.getFingersPosition(event);
+    this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPostion);
   }
 
   getDistanceBetweenFingers (fingerOne, fingerTwo) {
-    return Math.sqrt(Math.pow(fingerTwo.x - fingerOne.x, 2) + Math.pow(fingerTwo.y - fingerOne.y, 2));
+    const xPosition = fingerTwo.x - fingerOne.x;
+    const yPosition = fingerTwo.y - fingerOne.y;
+
+    return Math.sqrt(Math.pow(xPosition, 2) + Math.pow(yPosition, 2));
   }
 
   updateAveragePositionBetweenFingers (fingerOne, fingerTwo) {
@@ -234,6 +266,8 @@ class CI360Viewer {
     this.startPointerZoom = false;
     this.startPinchZoom = false;
     this.mouseTracked = false;
+
+    if (this.resetZoomIcon) this.hideResetZoomIcon();
 
     if (this.zoomIntensity) {
       this.zoomIntensity = 0;
@@ -392,7 +426,6 @@ class CI360Viewer {
   }
 
   update() {
-    console.log('updating....');
     const image = this.images[this.activeImage - 1];
     const ctx = this.canvas.getContext("2d");
 
@@ -415,7 +448,6 @@ class CI360Viewer {
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
 
       if (this.startPointerZoom || this.startPinchZoom) {
-        this.hide360ViewCircleIcon();
         this.updateImageScale(ctx, image, this.pointerCurrentPosition);
       } else {
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
@@ -563,6 +595,10 @@ class CI360Viewer {
       this.add360ViewCircleIcon();
     }
 
+    if (!this.isMobile && !this.disablePointerZoom) {
+      this.addResetZoomIcon();
+    }
+
     if (this.fullScreen && !this.fullScreenView) {
       this.addFullScreenIcon();
     } else if (this.fullScreenView) {
@@ -612,7 +648,21 @@ class CI360Viewer {
 
     fullScreenIcon.onclick = this.openFullScreenModal.bind(this);
 
+    this.fullScreenIcon = fullScreenIcon;
+
     this.innerBox.appendChild(fullScreenIcon);
+  }
+
+  hideFullScreenIcon() {
+    if (!this.fullScreenIcon) return;
+
+    this.fullScreenIcon.style.display = 'none';
+  }
+
+  showFullScreenIcon() {
+    if (!this.fullScreenIcon) return;
+
+    this.fullScreenIcon.style.display = 'block';
   }
 
   addMagnifier() {
@@ -622,7 +672,21 @@ class CI360Viewer {
 
     magnifyIcon.onclick = this.magnify.bind(this);
 
+    this.magnifierIcon = magnifyIcon;
+
     this.innerBox.appendChild(magnifyIcon);
+  }
+
+  hideMagnifierIcon() {
+    if (!this.magnifierIcon) return;
+
+    this.magnifierIcon.style.display = 'none';
+  }
+
+  showMagnifierIcon() {
+    if (!this.magnifierIcon) return;
+
+    this.magnifierIcon.style.display = 'block';
   }
 
   getOriginalSrc() {
@@ -635,6 +699,7 @@ class CI360Viewer {
   magnify() {
     const image = new Image();
     const src = this.getOriginalSrc();
+    this.isMagnifyOpen = true;
 
     image.src = src;
     image.onload = () => {
@@ -654,6 +719,7 @@ class CI360Viewer {
     this.container.style.overflow = 'visible';
     this.container.removeChild(this.glass);
     this.glass = null;
+    this.isMagnifyOpen = false;
   }
 
   openFullScreenModal() {
@@ -721,6 +787,34 @@ class CI360Viewer {
     this.view360CircleIcon = null;
   }
 
+  addResetZoomIcon() {
+    const resetZoomIcon = document.createElement('div');
+
+    setResetZoomIconStyles(resetZoomIcon);
+
+    this.resetZoomIcon = resetZoomIcon;
+
+    resetZoomIcon.onclick = this.resetZoom.bind(this);
+
+    this.innerBox.appendChild(resetZoomIcon);
+  }
+
+  hideResetZoomIcon() {
+    if (!this.resetZoomIcon) return;
+    if (this.magnifierIcon) this.showMagnifierIcon();
+    if (this.fullScreenIcon) this.showFullScreenIcon();
+
+    this.resetZoomIcon.style.display = 'none';
+  }
+
+  showResetZoomIcon() {
+    if (!this.resetZoomIcon) return;
+    if (this.magnifierIcon) this.hideMagnifierIcon();
+    if (this.fullScreenIcon) this.hideFullScreenIcon();
+
+    this.resetZoomIcon.style.display = 'block';
+  }
+
   addLoader() {
     const loader = document.createElement('div');
 
@@ -771,7 +865,7 @@ class CI360Viewer {
   }
 
   stop() {
-    if (this.bottomCircle) this.show360ViewCircleIcon();
+    if (this.bottomCircle && !this.zoomIntensity) this.show360ViewCircleIcon();
     window.clearTimeout(this.loopTimeoutId);
   }
 
@@ -797,7 +891,15 @@ class CI360Viewer {
     return src;
   }
 
-  preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams) {
+  preloadImages(
+    amount,
+    src,
+    lazyload,
+    lazySelector,
+    container,
+    responsive,
+    ciParams
+    ) {
     if (this.imageList) {
       try {
         const images = JSON.parse(this.imageList);
@@ -949,8 +1051,7 @@ class CI360Viewer {
     }
 
     if ( (pointerZoom) && (!this.disablePointerZoom) ) {
-      this.container.addEventListener('wheel', this.mouseScrollZoom.bind(this));
-      this.container.addEventListener('mouseleave', this.resetZoom.bind(this));
+      this.container.addEventListener('wheel', this.mouseScroll.bind(this));
     }
 
     if (keys) {
@@ -971,9 +1072,16 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor, disablePointerZoom = true, disablePinchZoom = true,speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
+      folder, filename, imageList, indexZeroBase,
+      amount, imageOffset, draggable = true, swipeable = true, keys,
+      bottomCircle, bottomCircleOffset, boxShadow, autoplay,
+      playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor,
+      disablePointerZoom = true, disablePinchZoom = true, speed,
+      autoplayReverse, disableDrag = true, fullScreen, magnifier,
+      ratio, responsive, ciToken, ciSize, ciOperation,
+      ciFilters, lazyload, lazySelector, spinReverse,
+      dragSpeed, stopAtEdges, controlReverse, hide360Logo,
+      logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
