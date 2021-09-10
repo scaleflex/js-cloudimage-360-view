@@ -39,8 +39,6 @@ const get360ViewProps = (image) => ({
   stopAtEdges: isTrue(image, 'stop-at-edges'),
   hide360Logo: isTrue(image, 'hide-360-logo'),
   logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg',
-  magnifyIconSelector: attr(image, 'magnify-icon-selector') || attr(image, 'data-magnify-icon-selector') || 'magnify-icon',
-  fullscreenIconSelector: attr(image, 'fullscreen-icon-selector') || attr(image, 'data-fullscreen-icon-selector') || 'fullscreen-icon',
 });
 
 const isTrue = (image, type) => {
@@ -112,16 +110,25 @@ const setBoxShadowStyles = (boxShadow, boxShadowValue) => {
   boxShadow.style.boxShadow = boxShadowValue;
 };
 
-const setMagnifyIconStyles = (magnifyIcon, fullScreen, magnifySelector) => {
-  magnifyIcon.style.position = 'absolute';
-  magnifyIcon.style.top = fullScreen ? '35px' : '5px';
-  magnifyIcon.style.right = '5px';
+const setIconsContainerStyles = (iconsContainer) => {
+  iconsContainer.style.position = 'absolute';
+  iconsContainer.style.top = '5px';
+  iconsContainer.style.right = '5px';
+  iconsContainer.style.width = '30px';
+  iconsContainer.style.height = '95%';
+  iconsContainer.style.display = 'flex';
+  iconsContainer.style.flexDirection = 'column';
+  iconsContainer.style.alignItems = 'center';
+  iconsContainer.style.zIndex = '101';
+}
+
+const setMagnifyIconStyles = (magnifyIcon) => {
   magnifyIcon.style.width = '25px';
   magnifyIcon.style.height = '25px';
-  magnifyIcon.style.zIndex = '101';
+  magnifyIcon.style.marginBottom = '5px';
   magnifyIcon.style.cursor = 'pointer';
   magnifyIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% / cover no-repeat`;
-  magnifyIcon.className = magnifySelector;
+  magnifyIcon.className = 'magnify-icon';
 };
 
 const setFullScreenModalStyles = (fullScreenModal) => {
@@ -136,38 +143,28 @@ const setFullScreenModalStyles = (fullScreenModal) => {
   fullScreenModal.style.background = '#fff';
 };
 
-const setFullScreenIconStyles = (fullScreenIcon, fullscreenSelector) => {
-  fullScreenIcon.style.position = 'absolute';
-  fullScreenIcon.style.top = '5px';
-  fullScreenIcon.style.right = '5px';
+const setFullScreenIconStyles = (fullScreenIcon) => {
   fullScreenIcon.style.width = '25px';
   fullScreenIcon.style.height = '25px';
-  fullScreenIcon.style.zIndex = '101';
+  fullScreenIcon.style.marginBottom = '5px';
   fullScreenIcon.style.cursor = 'pointer';
   fullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
-  fullScreenIcon.className = fullscreenSelector;
+  fullScreenIcon.className = 'fullscreen-icon';
 };
 
 const setResetZoomIconStyles = (resetZoomIcon) => {
-  resetZoomIcon.style.position = 'absolute';
   resetZoomIcon.style.display = 'none';
-  resetZoomIcon.style.top = '5px';
-  resetZoomIcon.style.right = '5px';
-  resetZoomIcon.style.width = '25px';
-  resetZoomIcon.style.height = '25px';
-  resetZoomIcon.style.zIndex = '101';
+  resetZoomIcon.style.width = '30px';
+  resetZoomIcon.style.height = '30px';
+  resetZoomIcon.style.marginTop = 'auto';
   resetZoomIcon.style.cursor = 'pointer';
   resetZoomIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
   resetZoomIcon.className = 'reset-zoom-icon';
 };
 
 const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
-  closeFullScreenIcon.style.position = 'absolute';
-  closeFullScreenIcon.style.top = '5px';
-  closeFullScreenIcon.style.right = '5px';
   closeFullScreenIcon.style.width = '25px';
   closeFullScreenIcon.style.height = '25px';
-  closeFullScreenIcon.style.zIndex = '101';
   closeFullScreenIcon.style.cursor = 'pointer';
   closeFullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat`;
 };
@@ -323,6 +320,7 @@ export {
   setBoxShadowStyles,
   setView360Icon,
   magnify,
+  setIconsContainerStyles,
   setMagnifyIconStyles,
   setFullScreenModalStyles,
   setFullScreenIconStyles,

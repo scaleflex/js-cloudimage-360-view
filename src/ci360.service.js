@@ -12,6 +12,7 @@ import {
   set360ViewIconStyles,
   setBoxShadowStyles,
   setCloseFullScreenViewStyles,
+  setIconsContainerStyles,
   setFullScreenIconStyles,
   setResetZoomIconStyles,
   setFullScreenModalStyles,
@@ -595,14 +596,14 @@ class CI360Viewer {
       this.add360ViewCircleIcon();
     }
 
-    if (!this.isMobile && !this.disablePointerZoom) {
-      this.addResetZoomIcon();
-    }
-
     if (this.fullScreen && !this.fullScreenView) {
       this.addFullScreenIcon();
     } else if (this.fullScreenView) {
       this.addCloseFullScreenView();
+    }
+
+    if (!this.isMobile && !this.disablePointerZoom) {
+      this.addResetZoomIcon();
     }
   }
 
@@ -627,7 +628,7 @@ class CI360Viewer {
     closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
     window.onkeyup = this.setFullScreenEvents.bind(this, event);
 
-    this.innerBox.appendChild(closeFullScreenIcon);
+    this.iconsContainer.appendChild(closeFullScreenIcon);
   }
 
   add360ViewIcon() {
@@ -644,49 +645,53 @@ class CI360Viewer {
   addFullScreenIcon() {
     const fullScreenIcon = document.createElement('div');
 
-    setFullScreenIconStyles(fullScreenIcon, this.fullscreenIconSelector);
+    setFullScreenIconStyles(fullScreenIcon);
 
     fullScreenIcon.onclick = this.openFullScreenModal.bind(this);
 
     this.fullScreenIcon = fullScreenIcon;
 
-    this.innerBox.appendChild(fullScreenIcon);
+    this.iconsContainer.appendChild(fullScreenIcon);
   }
 
   hideFullScreenIcon() {
     if (!this.fullScreenIcon) return;
 
-    this.fullScreenIcon.style.display = 'none';
+    this.fullScreenIcon.style.opacity = '0.4';
+    this.fullScreenIcon.style.pointerEvents = 'none';
   }
 
   showFullScreenIcon() {
     if (!this.fullScreenIcon) return;
 
-    this.fullScreenIcon.style.display = 'block';
+    this.fullScreenIcon.style.opacity = '1';
+    this.fullScreenIcon.style.pointerEvents = 'auto';
   }
 
   addMagnifier() {
     const magnifyIcon = document.createElement('div');
 
-    setMagnifyIconStyles(magnifyIcon, this.fullScreen, this.magnifyIconSelector);
+    setMagnifyIconStyles(magnifyIcon);
 
     magnifyIcon.onclick = this.magnify.bind(this);
 
     this.magnifierIcon = magnifyIcon;
 
-    this.innerBox.appendChild(magnifyIcon);
+    this.iconsContainer.appendChild(magnifyIcon);
   }
 
-  hideMagnifierIcon() {
+  disableMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
-    this.magnifierIcon.style.display = 'none';
+    this.magnifierIcon.style.opacity = '0.4';
+    this.magnifierIcon.style.pointerEvents = 'none';
   }
 
-  showMagnifierIcon() {
+  enableMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
-    this.magnifierIcon.style.display = 'block';
+    this.magnifierIcon.style.opacity = '1';
+    this.magnifierIcon.style.pointerEvents = 'auto';  
   }
 
   getOriginalSrc() {
@@ -794,14 +799,14 @@ class CI360Viewer {
 
     this.resetZoomIcon = resetZoomIcon;
 
-    resetZoomIcon.onclick = this.resetZoom.bind(this);
+    resetZoomIcon.onmouseenter = this.resetZoom.bind(this);
 
-    this.innerBox.appendChild(resetZoomIcon);
+    this.iconsContainer.appendChild(resetZoomIcon);
   }
 
   hideResetZoomIcon() {
     if (!this.resetZoomIcon) return;
-    if (this.magnifierIcon) this.showMagnifierIcon();
+    if (this.magnifierIcon) this.enableMagnifierIcon();
     if (this.fullScreenIcon) this.showFullScreenIcon();
 
     this.resetZoomIcon.style.display = 'none';
@@ -809,7 +814,7 @@ class CI360Viewer {
 
   showResetZoomIcon() {
     if (!this.resetZoomIcon) return;
-    if (this.magnifierIcon) this.hideMagnifierIcon();
+    if (this.magnifierIcon) this.disableMagnifierIcon();
     if (this.fullScreenIcon) this.hideFullScreenIcon();
 
     this.resetZoomIcon.style.display = 'block';
@@ -1024,6 +1029,13 @@ class CI360Viewer {
     this.container.appendChild(this.innerBox);
   }
 
+  addIconsContainer() {
+    this.iconsContainer = document.createElement('div');
+    this.iconsContainer.className = 'cloudimage-icons-container';
+    setIconsContainerStyles(this.iconsContainer);
+    this.innerBox.appendChild(this.iconsContainer);
+  }
+
   addCanvas() {
     this.canvas = document.createElement('canvas');
     this.canvas.style.width = '100%';
@@ -1081,11 +1093,12 @@ class CI360Viewer {
       ratio, responsive, ciToken, ciSize, ciOperation,
       ciFilters, lazyload, lazySelector, spinReverse,
       dragSpeed, stopAtEdges, controlReverse, hide360Logo,
-      logoSrc, magnifyIconSelector, fullscreenIconSelector
+      logoSrc
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
     this.addInnerBox();
+    this.addIconsContainer();
     this.addLoader();
 
     this.folder = folder;
@@ -1117,8 +1130,6 @@ class CI360Viewer {
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
-    this.magnifyIconSelector = magnifyIconSelector;
-    this.fullscreenIconSelector = fullscreenIconSelector;
 
     this.applyStylesToContainer();
 
