@@ -21,6 +21,7 @@ import {
   setView360Icon
 } from './ci360.utils';
 
+import {TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS} from './ci360.constants';
 
 class CI360Viewer {
   constructor(container, fullScreen, ratio) {
@@ -38,6 +39,7 @@ class CI360Viewer {
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
+    this.clickedToZoom = false;
     this.isMagnifyOpen = false;
     this.startPointerZoom = false;
     this.zoomIntensity = 0;
@@ -62,6 +64,7 @@ class CI360Viewer {
 
     this.movementStart = event.pageX;
     this.isClicked = true;
+    this.clickedToZoom = true;
     this.container.style.cursor = 'grabbing';
   }
 
@@ -94,12 +97,14 @@ class CI360Viewer {
   mouseScroll(event) {
     if (this.disablePointerZoom || this.isMagnifyOpen) return;
 
-    if (this.bottomCircle) this.hide360ViewCircleIcon();
+    const isClickedToZoom = (this.toStartPointerZoom === TO_START_POINTER_ZOOM.clickToStart
+      && this.clickedToZoom);
 
-    this.hideInitalIcons();
-    this.mouseTracked = true;
-    this.trackCursorPosition(event);
-    this.mouseScrollZoom(event);
+    if (isClickedToZoom) {
+      this.initMouseScrollZoom(event);
+    } else if (this.toStartPointerZoom === TO_START_POINTER_ZOOM.scrollToStart) {
+      this.initMouseScrollZoom(event);
+    }
   }
 
   touchstart(event) {
@@ -163,6 +168,15 @@ class CI360Viewer {
     if (this.view360Icon) {
       this.remove360ViewIcon();
     }
+  }
+
+  initMouseScrollZoom(event) {
+    if (this.bottomCircle) this.hide360ViewCircleIcon();
+
+    this.hideInitalIcons();
+    this.mouseTracked = true;
+    this.trackCursorPosition(event);
+    this.mouseScrollZoom(event);
   }
 
   trackCursorPosition(event) {
@@ -267,6 +281,7 @@ class CI360Viewer {
     this.startPointerZoom = false;
     this.startPinchZoom = false;
     this.mouseTracked = false;
+    this.clickedToZoom = false;
 
     if (this.resetZoomIcon) this.hideResetZoomIcon();
 
@@ -1082,18 +1097,32 @@ class CI360Viewer {
     this.container.className = `${this.container.className} initialized`;
   }
 
+  setMouseLeaveActions(actions) {
+    const mouseLeaveActions = actions.split(',');
+
+    mouseLeaveActions.forEach((action) => this.applyMouseLeaveAction(action));
+  }
+
+  applyMouseLeaveAction(action) {
+    switch(action) {
+      case MOUSE_LEAVE_ACTIONS.resetZoom:
+        this.container.addEventListener('mouseleave', this.resetZoom.bind(this));
+        break;
+    }
+  }
+
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase,
       amount, imageOffset, draggable = true, swipeable = true, keys,
       bottomCircle, bottomCircleOffset, boxShadow, autoplay,
       playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor,
-      disablePointerZoom = true, disablePinchZoom = true, speed,
-      autoplayReverse, disableDrag = true, fullScreen, magnifier,
-      ratio, responsive, ciToken, ciSize, ciOperation,
-      ciFilters, lazyload, lazySelector, spinReverse,
-      dragSpeed, stopAtEdges, controlReverse, hide360Logo,
-      logoSrc
+      toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true,
+      speed, autoplayReverse, disableDrag = true, fullScreen,
+      magnifier, ratio, responsive, ciToken, ciSize,
+      ciOperation, ciFilters, lazyload, lazySelector,
+      spinReverse, dragSpeed, stopAtEdges, controlReverse,
+      hide360Logo, logoSrc
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
@@ -1112,6 +1141,7 @@ class CI360Viewer {
     this.boxShadow = boxShadow;
     this.autoplay = autoplay;
     this.playOnce = playOnce;
+    this.toStartPointerZoom = toStartPointerZoom,
     this.disablePointerZoom = disablePointerZoom;
     this.disablePinchZoom = disablePinchZoom;
     this.pointerZoomFactor = pointerZoomFactor;
@@ -1140,6 +1170,8 @@ class CI360Viewer {
     this.preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams);
 
     this.attachEvents(draggable, swipeable, pointerZoom, keys);
+
+    if (onMouseLeave) this.setMouseLeaveActions(onMouseLeave);
   }
 }
 

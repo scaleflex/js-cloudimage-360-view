@@ -1,3 +1,5 @@
+import {TO_START_POINTER_ZOOM} from './ci360.constants';
+
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
@@ -13,6 +15,11 @@ const get360ViewProps = (image) => ({
   playOnce: isTrue(image, 'playOnce'),
   disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
   disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
+  onMouseLeave: attr(image, 'on-mouse-leave')
+  || attr(image, 'data-on-mouse-leave'),
+  toStartPointerZoom: attr(image, 'to-start-pointer-zoom')
+    || attr(image, 'data-to-start-pointer-zoom') 
+    || TO_START_POINTER_ZOOM.scrollToStart,
   pointerZoomFactor: parseInt(attr(image, 'pointer-zoom-factor')
     || attr(image, 'data-pointer-zoom-factor') 
     || 2, 10),
@@ -287,8 +294,9 @@ const fit = (contains) => {
   }
 };
 
-const isTwoFingers = (event) => event.targetTouches.length === 2;
-
+const isTwoFingers = (event) => (
+  event.targetTouches.length === 2
+);
 
 const contain = fit(true);
 
