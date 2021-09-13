@@ -1121,7 +1121,7 @@ class CI360Viewer {
       disablePointerZoom = true, disablePinchZoom = true, speed,
       autoplayReverse, disableDrag = true, fullScreen, magnifier,
       ratio, responsive, ciToken, ciSize,
-      ciOperation, ciFilters, lazyload, lazySelector,
+      ciFilters, lazyload, lazySelector, ciTransformation,
       spinReverse, dragSpeed, stopAtEdges, controlReverse,
       hide360Logo, logoSrc
     } = get360ViewProps(container);
