@@ -12,7 +12,7 @@ const get360ViewProps = (image) => ({
   keys: isTrue(image, 'keys'),
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
-  playOnce: isTrue(image, 'playOnce'),
+  playOnce: isTrue(image, 'play-once'),
   disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
   disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
   onMouseLeave: attr(image, 'on-mouse-leave')
@@ -171,7 +171,7 @@ const setResetZoomIconStyles = (resetZoomIcon) => {
   resetZoomIcon.style.height = '30px';
   resetZoomIcon.style.marginTop = 'auto';
   resetZoomIcon.style.cursor = 'pointer';
-  resetZoomIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
+  resetZoomIcon.style.background = `url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986') 50% 50% / cover no-repeat`;
   resetZoomIcon.className = 'reset-zoom-icon';
 };
 
