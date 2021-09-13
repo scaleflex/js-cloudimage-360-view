@@ -18,7 +18,8 @@ import {
   setFullScreenModalStyles,
   setLoaderStyles,
   setMagnifyIconStyles,
-  setView360Icon
+  setView360Icon,
+  getMaxZoomIntensity
 } from './ci360.utils';
 
 import {TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS} from './ci360.constants';
@@ -206,10 +207,10 @@ class CI360Viewer {
     }
 
     this.startPointerZoom = true;
-    const zoomFactor  = this.pointerZoomFactor * 10;
-
-    this.zoomIntensity += event.deltaY * -zoomFactor;
-    this.zoomIntensity = Math.max(0, this.zoomIntensity);
+    const zoomFactor  = -this.pointerZoomFactor * 10;
+    const maxIntensity = getMaxZoomIntensity(this.canvas.width, this.maxScale);
+    this.zoomIntensity += event.deltaY * zoomFactor;
+    this.zoomIntensity = Math.min(Math.max(0, this.zoomIntensity), maxIntensity);
 
     if (this.zoomIntensity) {
       if (this.resetZoomIcon) this.showResetZoomIcon();
@@ -217,7 +218,6 @@ class CI360Viewer {
       this.mouseTracked = false;
 
       if (this.resetZoomIcon) this.hideResetZoomIcon();
-
       if (this.bottomCircle) this.show360ViewCircleIcon();
     }
 
@@ -1117,9 +1117,10 @@ class CI360Viewer {
       amount, imageOffset, draggable = true, swipeable = true, keys,
       bottomCircle, bottomCircleOffset, boxShadow, autoplay,
       playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor,
-      toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true,
-      speed, autoplayReverse, disableDrag = true, fullScreen,
-      magnifier, ratio, responsive, ciToken, ciSize,
+      maxScale, toStartPointerZoom, onMouseLeave,
+      disablePointerZoom = true, disablePinchZoom = true, speed,
+      autoplayReverse, disableDrag = true, fullScreen, magnifier,
+      ratio, responsive, ciToken, ciSize,
       ciOperation, ciFilters, lazyload, lazySelector,
       spinReverse, dragSpeed, stopAtEdges, controlReverse,
       hide360Logo, logoSrc
@@ -1146,6 +1147,7 @@ class CI360Viewer {
     this.disablePinchZoom = disablePinchZoom;
     this.pointerZoomFactor = pointerZoomFactor;
     this.pinchZoomFactor = pinchZoomFactor;
+    this.maxScale = maxScale;
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;

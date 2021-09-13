@@ -16,16 +16,22 @@ const get360ViewProps = (image) => ({
   disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
   disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
   onMouseLeave: attr(image, 'on-mouse-leave')
-  || attr(image, 'data-on-mouse-leave'),
+    || attr(image, 'data-on-mouse-leave'),
   toStartPointerZoom: attr(image, 'to-start-pointer-zoom')
     || attr(image, 'data-to-start-pointer-zoom') 
     || TO_START_POINTER_ZOOM.scrollToStart,
-  pointerZoomFactor: parseInt(attr(image, 'pointer-zoom-factor')
+  pointerZoomFactor: parseInt(
+    attr(image, 'pointer-zoom-factor')
     || attr(image, 'data-pointer-zoom-factor') 
     || 2, 10),
-  pinchZoomFactor: parseInt(attr(image, 'pinch-zoom-factor') 
+  pinchZoomFactor: parseInt(
+    attr(image, 'pinch-zoom-factor') 
     || attr(image, 'data-pinch-zoom-factor') 
     || 2, 10),
+  maxScale: parseFloat(
+    attr(image, 'max-scale') 
+    || attr(image, 'data-max-scale') 
+    || 100, 10),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
@@ -298,6 +304,13 @@ const isTwoFingers = (event) => (
   event.targetTouches.length === 2
 );
 
+const getMaxZoomIntensity = (width, maxWidthScale) => {
+  const maxWidth = maxWidthScale * width;
+  const maxIntensity = maxWidth - width;
+
+  return maxIntensity;
+}
+
 const contain = fit(true);
 
 const addClass = (el, className) => {
@@ -340,5 +353,6 @@ export {
   addClass,
   removeClass,
   pad,
-  isTwoFingers
+  isTwoFingers,
+  getMaxZoomIntensity
 }
