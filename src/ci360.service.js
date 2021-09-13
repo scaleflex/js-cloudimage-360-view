@@ -1123,7 +1123,7 @@ class CI360Viewer {
       ratio, responsive, ciToken, ciSize,
       ciFilters, lazyload, lazySelector, ciTransformation,
       spinReverse, dragSpeed, stopAtEdges, controlReverse,
-      hide360Logo, logoSrc
+      hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
