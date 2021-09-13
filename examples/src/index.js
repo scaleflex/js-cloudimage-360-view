@@ -1,6 +1,8 @@
 import './mobile.init';
 import '../../src';
 import './style.css';
+import './controls-styles.css';
+import './spinner-styles.css';
 import './assets/fonts/helvetica-neue.css';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';

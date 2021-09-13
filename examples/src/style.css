@@ -1,7 +1,17 @@
-body, html {
+body, html{
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #f5f5f5;
+  background: #F5F7FA;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  padding: 0;
+}
+
+.github-button {
+  color: transparent;
 }
 
 .home {
@@ -78,6 +88,34 @@ body, html {
   animation-timing-function: ease-in-out;
 }
 
+.properties-header {
+  font-size: 18px;
+  font-weight: lighter;
+}
+
+.demo-container {
+  min-height: 600px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 5%);
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.demo-container ul {
+  font-size: 16px;
+  margin-top: 2rem;
+  text-align: left;
+  font-weight: lighter;
+  list-style-type: none;
+}
+
+.demo-container li {
+  background-color: #f5f7fa;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
 @media all and (max-width: 1380px) {
   .home .robot-icon {
     left: 45px;
@@ -119,19 +157,6 @@ body, html {
   font-size: 40px;
   max-width: 770px;
   margin: 0 auto 30px auto;
-}
-
-.ready-to-start p, .ready-to-start ul {
-  display: block;
-  max-width: 850px;
-  margin: 0 auto;
-  font-weight: lighter;
-  line-height: 1.5em;
-  font-size: 18px;
-}
-
-.ready-to-start ul li {
-  margin-bottom: 10px;
 }
 
 .uploaded-image-container {
@@ -296,7 +321,6 @@ body, html {
   left: -15px;
   top: -15px;
   text-align: center;
-  -webkit-backface-visibility: hidden;
   z-index: 100;
 }
 
@@ -383,7 +407,6 @@ footer .footer-menu ul li {
   height: 20px;
   padding: 0 5px;
   line-height: 18px;
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFAFBFC', endColorstr='#FFE4EBF0')";
   display: inline-block;
   vertical-align: bottom;
   cursor: pointer;
@@ -555,7 +578,7 @@ img {
 .view-360-capture {
   display: block;
   max-width: 850px;
-  margin: 0 auto;
+  margin: 2rem auto;
   font-weight: lighter;
   line-height: 1.5em;
   font-size: 18px;
