@@ -19,7 +19,8 @@ import {
   setLoaderStyles,
   setMagnifyIconStyles,
   setView360Icon,
-  getMaxZoomIntensity
+  getMaxZoomIntensity,
+  normalizeZoomFactor
 } from './ci360.utils';
 
 import {TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS} from './ci360.constants';
@@ -98,12 +99,11 @@ class CI360Viewer {
   mouseScroll(event) {
     if (this.disablePointerZoom || this.isMagnifyOpen) return;
 
-    const isClickedToZoom = (this.toStartPointerZoom === TO_START_POINTER_ZOOM.clickToStart
-      && this.clickedToZoom);
+    const isClickedToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.clickToStart
+      && this.clickedToZoom;
+    const isScrolledToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.scrollToStart
 
-    if (isClickedToZoom) {
-      this.initMouseScrollZoom(event);
-    } else if (this.toStartPointerZoom === TO_START_POINTER_ZOOM.scrollToStart) {
+    if (isClickedToZoom || isScrolledToZoom) {
       this.initMouseScrollZoom(event);
     }
   }
@@ -206,9 +206,9 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
-    this.startPointerZoom = true;
-    const zoomFactor  = -this.pointerZoomFactor * 10;
+    const zoomFactor = normalizeZoomFactor(event, this.pointerZoomFactor);
     const maxIntensity = getMaxZoomIntensity(this.canvas.width, this.maxScale);
+    this.startPointerZoom = true;
     this.zoomIntensity += event.deltaY * zoomFactor;
     this.zoomIntensity = Math.min(Math.max(0, this.zoomIntensity), maxIntensity);
 
@@ -464,15 +464,15 @@ class CI360Viewer {
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
 
       if (this.startPointerZoom || this.startPinchZoom) {
-        this.updateImageScale(ctx, image, this.pointerCurrentPosition);
+        this.updateImageScale(ctx, image);
       } else {
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
     }
   }
 
-  updateImageScale(ctx, image, position) {
-    this.pointerCurrentPosition = this.getCursorPositionInCanvas();
+  updateImageScale(ctx, image) {
+    const position = this.getCursorPositionInCanvas();
     const imageWidth = this.canvas.width / this.devicePixelRatio;
     const imageHeight = this.canvas.height / this.devicePixelRatio;
 

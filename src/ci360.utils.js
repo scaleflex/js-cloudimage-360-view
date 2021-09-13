@@ -304,12 +304,20 @@ const isTwoFingers = (event) => (
   event.targetTouches.length === 2
 );
 
-const getMaxZoomIntensity = (width, maxWidthScale) => {
-  const maxWidth = maxWidthScale * width;
+const getMaxZoomIntensity = (width, maxScale) => {
+  const maxWidth = maxScale * width;
   const maxIntensity = maxWidth - width;
 
   return maxIntensity;
 }
+
+const normalizeZoomFactor = (event, pointerZoomFactor) => {
+  const scrollEvent = Math.abs(event.deltaY);
+  const zoomFactor  = scrollEvent < 125 ? 
+    -pointerZoomFactor * 10 : -pointerZoomFactor ;
+
+  return zoomFactor;
+};
 
 const contain = fit(true);
 
@@ -354,5 +362,6 @@ export {
   removeClass,
   pad,
   isTwoFingers,
-  getMaxZoomIntensity
+  getMaxZoomIntensity,
+  normalizeZoomFactor
 }
