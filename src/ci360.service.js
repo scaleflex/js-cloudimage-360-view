@@ -1064,7 +1064,7 @@ class CI360Viewer {
     this.innerBox.appendChild(this.canvas);
   }
 
-  attachEvents(draggable, swipeable, pointerZoom, keys) {
+  attachEvents(draggable, swipeable, keys) {
     if ( (draggable) && (!this.disableDrag) ) {
       this.container.addEventListener('mousedown', this.mousedown.bind(this));
       this.container.addEventListener('mouseup', this.mouseup.bind(this));
@@ -1077,7 +1077,7 @@ class CI360Viewer {
       this.container.addEventListener('touchmove', this.touchmove.bind(this));
     }
 
-    if ( (pointerZoom) && (!this.disablePointerZoom) ) {
+    if (!this.disablePointerZoom) {
       this.container.addEventListener('wheel', this.mouseScroll.bind(this));
     }
 
@@ -1113,17 +1113,7 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, imageList, indexZeroBase,
-      amount, imageOffset, draggable = true, swipeable = true, keys,
-      bottomCircle, bottomCircleOffset, boxShadow, autoplay,
-      playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor,
-      maxScale, toStartPointerZoom, onMouseLeave,
-      disablePointerZoom = true, disablePinchZoom = true, speed,
-      autoplayReverse, disableDrag = true, fullScreen, magnifier,
-      ratio, responsive, ciToken, ciSize,
-      ciFilters, lazyload, lazySelector, ciTransformation,
-      spinReverse, dragSpeed, stopAtEdges, controlReverse,
-      hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
+      folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow, autoplay, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
 
@@ -1171,7 +1161,7 @@ class CI360Viewer {
 
     this.preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams);
 
-    this.attachEvents(draggable, swipeable, pointerZoom, keys);
+    this.attachEvents(draggable, swipeable, keys);
 
     if (onMouseLeave) this.setMouseLeaveActions(onMouseLeave);
   }
