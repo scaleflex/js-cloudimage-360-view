@@ -483,6 +483,8 @@ class CI360Viewer {
       const { offsetX, offsetY, width, height } =
         contain(this.canvas.width, this.canvas.height, event.target.width, event.target.height);
 
+        this.offset = { x: offsetX, y: offsetY };
+
         ctx.drawImage(event.target, offsetX, offsetY, width, height);
     } else {
       const ctx = this.canvas.getContext("2d");
@@ -534,7 +536,7 @@ class CI360Viewer {
       this.container.style.minHeight = 'auto';
     }
 
-    if (this.magnifier && !this.fullScreenView) {
+    if (this.magnifier && !this.fullScreenView || this.magnifyInFullscreen) {
       this.addMagnifier();
     }
 
@@ -602,7 +604,7 @@ class CI360Viewer {
     const magnifyIcon = document.createElement('div');
 
     setMagnifyIconStyles(magnifyIcon, this.fullScreen, this.magnifyIconSelector);
-        
+
     magnifyIcon.onclick = this.magnify.bind(this);
 
     this.innerBox.appendChild(magnifyIcon);
@@ -628,7 +630,14 @@ class CI360Viewer {
 
     this.glass = document.createElement('div');
     this.container.style.overflow = 'hidden';
-    magnify(this.container, src, this.glass, this.magnifier || 3);
+
+    magnify(
+      this.container,
+      this.offset,
+      src,
+      this.glass,
+      this.magnifier || 3
+    );
   }
 
   closeMagnifier() {
@@ -949,7 +958,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoom, zoomFactor, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
+      autoplay, playOnce, pointerZoom, zoomFactor, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, magnifyInFullscreen, ratio, responsive, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -975,6 +984,7 @@ class CI360Viewer {
     this.disableDrag = disableDrag;
     this.fullScreen = fullScreen;
     this.magnifier = !this.isMobile && magnifier ? magnifier : false;
+    this.magnifyInFullscreen = magnifyInFullscreen;
     this.lazyload = lazyload;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
