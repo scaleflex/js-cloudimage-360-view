@@ -37,7 +37,7 @@ class CI360Viewer {
     this.fullScreenView = !!fullScreen;
     this.ratio = ratio;
     this.images = [];
-    this.devicePixelRatio = window.devicePixelRatio || 1;
+    this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
@@ -1091,7 +1091,7 @@ class CI360Viewer {
       this.container.addEventListener('touchmove', this.touchMove.bind(this));
     }
 
-    if (!this.disablePointerZoom) {
+    if ( (!this.disablePointerZoom) && (!this.fullScreenView) ) {
       this.container.addEventListener('wheel', this.mouseScroll.bind(this));
     }
 
