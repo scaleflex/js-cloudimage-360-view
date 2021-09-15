@@ -894,7 +894,7 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  getSrc(responsive, container, folder, filename, { ciSize, ciToken, ciOperation, ciFilters }) {
+  getSrc(responsive, container, folder, filename, { ciToken, ciFilters, ciTransformation }) {
     let src = `${folder}${filename}`;
 
     if (responsive) {
@@ -907,10 +907,10 @@ class CI360Viewer {
           imageOffsetWidth = container.offsetHeight / this.ratio;
         }
       }
+  
+      const ciSizeNext = getSizeAccordingToPixelRatio(getResponsiveWidthOfContainer(imageOffsetWidth));
 
-      const ciSizeNext = getSizeAccordingToPixelRatio(ciSize || getResponsiveWidthOfContainer(imageOffsetWidth));
-
-      src = `https://${ciToken}.cloudimg.io/${ciOperation}/${ciSizeNext}/${ciFilters}/${src}`;
+      src = `https://${ciToken}.cloudimg.io/v7/${src}?${ciTransformation ? ciTransformation : `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`
     }
 
     return src;
@@ -1119,10 +1119,11 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciSize, ciOperation, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
+      autoplay, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciTransformation,
+      lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
 
-    const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
+    const ciParams = { ciToken, ciFilters, ciTransformation };
 
     this.addInnerBox();
     this.addIconsContainer();
@@ -1164,7 +1165,7 @@ class CI360Viewer {
 
     this.addCanvas();
 
-    let src = this.getSrc(responsive, container, folder, filename, ciParams);
+    const src = this.getSrc(responsive, container, folder, filename, ciParams);
 
     this.preloadImages(amount, src, lazyload, lazySelector, container, responsive, ciParams);
 
