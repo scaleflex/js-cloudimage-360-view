@@ -606,6 +606,10 @@ class CI360Viewer {
       this.container.style.minHeight = 'auto';
     }
 
+    if (this.fullScreenView) {
+      this.addCloseFullScreenView();
+    }
+
     if (this.magnifier && !this.fullScreenView || this.magnifyInFullscreen) {
       this.addMagnifier();
     }
@@ -620,8 +624,6 @@ class CI360Viewer {
 
     if (this.fullScreen && !this.fullScreenView) {
       this.addFullScreenIcon();
-    } else if (this.fullScreenView) {
-      this.addCloseFullScreenView();
     }
 
     if (!this.isMobile && !this.disablePointerZoom) {
