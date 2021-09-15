@@ -83,17 +83,9 @@ class CI360Viewer {
   }
 
   mouseMove(event) {
-    if (!this.imagesLoaded) return;
-
-    if (this.mouseTracked) {
-      this.setCursorPosition(event);
-    }
-
-    if (this.isClicked) {
-      this.onMove(event.pageX);
-    } else if (this.zoomIntensity) {
-      this.update();
-    }
+    if (!this.isClicked || !this.imagesLoaded) return;
+    
+    this.onMove(event.pageX);
   }
 
   mouseScroll(event) {
@@ -894,7 +886,7 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  getSrc(responsive, container, folder, filename, { ciSize, ciToken, ciOperation, ciFilters }) {
+  getSrc(responsive, container, folder, filename, { ciToken, ciFilters, ciTransformation }) {
     let src = `${folder}${filename}`;
 
     if (responsive) {
@@ -907,10 +899,9 @@ class CI360Viewer {
           imageOffsetWidth = container.offsetHeight / this.ratio;
         }
       }
+      const ciSizeNext = getSizeAccordingToPixelRatio(getResponsiveWidthOfContainer(imageOffsetWidth));
 
-      const ciSizeNext = getSizeAccordingToPixelRatio(ciSize || getResponsiveWidthOfContainer(imageOffsetWidth));
-
-      src = `https://${ciToken}.cloudimg.io/${ciOperation}/${ciSizeNext}/${ciFilters}/${src}`;
+      src = `https://${ciToken}.cloudimg.io/v7/${src}?${ciTransformation ? ciTransformation : `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`
     }
 
     return src;
@@ -1119,10 +1110,11 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciSize, ciOperation, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
+      autoplay, playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
 
-    const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
+    const ciParams = { ciToken, ciFilters, ciTransformation };
+
 
     this.addInnerBox();
     this.addIconsContainer();
