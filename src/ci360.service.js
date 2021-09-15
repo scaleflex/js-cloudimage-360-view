@@ -52,12 +52,12 @@ class CI360Viewer {
     this.prevDistanceBetweenFingers = 0;
   }
 
-  mousedown(event) {
+  mouseDown(event) {
     event.preventDefault();
 
     if (!this.imagesLoaded) return;
 
-    this.hideInitalIcons();
+    this.hideInitialIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
       this.stop();
@@ -70,7 +70,7 @@ class CI360Viewer {
     this.container.style.cursor = 'grabbing';
   }
 
-  mouseup() {
+  mouseUp() {
     if (!this.imagesLoaded) return;
 
     this.movementStart = 0;
@@ -82,11 +82,11 @@ class CI360Viewer {
     }
   }
 
-  mousemove(event) {
+  mouseMove(event) {
     if (!this.imagesLoaded) return;
 
     if (this.mouseTracked) {
-      this.trackCursorPosition(event);
+      this.setCursorPosition(event);
     }
 
     if (this.isClicked) {
@@ -108,7 +108,7 @@ class CI360Viewer {
     }
   }
 
-  touchstart(event) {
+  touchStart(event) {
     if (!this.imagesLoaded) return;
 
     const isPinchZoom = (
@@ -118,10 +118,10 @@ class CI360Viewer {
       );
 
     if (isPinchZoom) {
-      this.initPinchZoom(event);
+      this.initAndSetPinchZoom(event);
     };
 
-    this.hideInitalIcons();
+    this.hideInitialIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
       this.stop();
@@ -132,7 +132,7 @@ class CI360Viewer {
     this.isClicked = true;
   }
 
-  touchend() {
+  touchEnd() {
     if (!this.imagesLoaded) return;
 
     if (this.zoomIntensity) this.resetZoom();
@@ -143,7 +143,7 @@ class CI360Viewer {
     if (this.bottomCircle) this.show360ViewCircleIcon();
   }
 
-  touchmove(event) {
+  touchMove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
     if (!this.disablePinchZoom && isTwoFingers(event)) {
@@ -153,7 +153,7 @@ class CI360Viewer {
     }
   }
 
-  keydownGeneral() {
+  keyDownGeneral() {
     if (!this.imagesLoaded) return;
 
     if (this.glass) {
@@ -161,7 +161,7 @@ class CI360Viewer {
     }
   }
 
-  hideInitalIcons() {
+  hideInitialIcons() {
     if (this.glass) {
       this.closeMagnifier();
     }
@@ -174,13 +174,13 @@ class CI360Viewer {
   initMouseScrollZoom(event) {
     if (this.bottomCircle) this.hide360ViewCircleIcon();
 
-    this.hideInitalIcons();
+    this.hideInitialIcons();
     this.mouseTracked = true;
-    this.trackCursorPosition(event);
+    this.setCursorPosition(event);
     this.mouseScrollZoom(event);
   }
 
-  trackCursorPosition(event) {
+  setCursorPosition(event) {
     this.mousePositions = {
       x: event.clientX,
       y: event.clientY
@@ -224,7 +224,7 @@ class CI360Viewer {
     this.update();
   }
 
-  initPinchZoom (event) {
+  initAndSetPinchZoom (event) {
     const [fingerOnePosition, fingerTwoPostion] = this.getFingersPosition(event);
     this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPostion);
   }
@@ -241,8 +241,13 @@ class CI360Viewer {
     const offSetX = containerRect.left;
     const offSetY = containerRect.top;
 
-    this.pointerCurrentPosition.x = (( fingerOne.x + fingerTwo.x ) / 2) - offSetX;
-    this.pointerCurrentPosition.y = (( fingerOne.y + fingerTwo.y ) / 2) - offSetY;
+    this.pointerCurrentPosition.x = (
+      ( fingerOne.x + fingerTwo.x ) / 2
+    ) - offSetX;
+
+    this.pointerCurrentPosition.y = (
+      ( fingerOne.y + fingerTwo.y ) / 2
+    ) - offSetY;
   }
 
   getFingersPosition (event) {
@@ -262,11 +267,11 @@ class CI360Viewer {
     const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
     const currentDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
     this.startPinchZoom = true;
-    const isZoomin = currentDistanceBetweenFingers > this.prevDistanceBetweenFingers;
+    const isZoomIn = currentDistanceBetweenFingers > this.prevDistanceBetweenFingers;
 
     this.updateAveragePositionBetweenFingers(fingerOnePosition, fingerTwoPosition);
 
-    if (isZoomin) {
+    if (isZoomIn) {
       this.zoomIntensity += zoomFactor;
       this.update();
     } else if (this.zoomIntensity >= zoomFactor) {
@@ -291,7 +296,7 @@ class CI360Viewer {
     }
   }
 
-  keydown(event) {
+  keyDown(event) {
     if (!this.imagesLoaded) return;
 
     if (this.glass) {
@@ -330,7 +335,7 @@ class CI360Viewer {
     }
   }
 
-  keyup(event) {
+  keyUp(event) {
     if (!this.imagesLoaded) return;
 
     if ([37, 39].includes(event.keyCode)) {
@@ -479,8 +484,8 @@ class CI360Viewer {
     const width = this.canvas.width + (this.zoomIntensity * (this.canvas.width / this.canvas.height));
     const height = this.canvas.height + this.zoomIntensity;
 
-    const pointX = 0 - (position.x / imageWidth) * (width - this.canvas.width);
-    const pointY = 0 - (position.y / imageHeight) * (height - this.canvas.height);
+    const pointX = 0 - ( (position.x / imageWidth) * (width - this.canvas.width) );
+    const pointY = 0 - ( (position.y / imageHeight) * (height - this.canvas.height) );
 
     ctx.drawImage(image, pointX, pointY, width, height);
   }
@@ -1066,15 +1071,15 @@ class CI360Viewer {
 
   attachEvents(draggable, swipeable, keys) {
     if ( (draggable) && (!this.disableDrag) ) {
-      this.container.addEventListener('mousedown', this.mousedown.bind(this));
-      this.container.addEventListener('mouseup', this.mouseup.bind(this));
-      this.container.addEventListener('mousemove', this.mousemove.bind(this));
+      this.container.addEventListener('mousedown', this.mouseDown.bind(this));
+      this.container.addEventListener('mouseup', this.mouseUp.bind(this));
+      this.container.addEventListener('mousemove', this.mouseMove.bind(this));
     }
 
     if ( (swipeable) && (!this.disableDrag) ) {
-      this.container.addEventListener('touchstart', this.touchstart.bind(this), { passive: true });
-      this.container.addEventListener('touchend', this.touchend.bind(this), { passive: true });
-      this.container.addEventListener('touchmove', this.touchmove.bind(this));
+      this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
+      this.container.addEventListener('touchend', this.touchEnd.bind(this), { passive: true });
+      this.container.addEventListener('touchmove', this.touchMove.bind(this));
     }
 
     if (!this.disablePointerZoom) {
@@ -1082,10 +1087,10 @@ class CI360Viewer {
     }
 
     if (keys) {
-      document.addEventListener('keydown', this.keydown.bind(this));
-      document.addEventListener('keyup', this.keyup.bind(this));
+      document.addEventListener('keydown', this.keyDown.bind(this));
+      document.addEventListener('keyup', this.keyUp.bind(this));
     } else {
-      document.addEventListener('keydown', this.keydownGeneral.bind(this));
+      document.addEventListener('keydown', this.keyDownGeneral.bind(this));
     }
   }
 
@@ -1114,7 +1119,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
+      autoplay, playOnce, pointerZoom = true, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciSize, ciOperation, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
 
     const ciParams = { ciSize, ciToken, ciOperation, ciFilters };
