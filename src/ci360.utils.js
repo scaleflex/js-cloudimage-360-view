@@ -180,6 +180,7 @@ const setResetZoomIconStyles = (resetZoomIcon) => {
 const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
   closeFullScreenIcon.style.width = '25px';
   closeFullScreenIcon.style.height = '25px';
+  closeFullScreenIcon.style.marginBottom = '5px';
   closeFullScreenIcon.style.cursor = 'pointer';
   closeFullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat`;
 };
