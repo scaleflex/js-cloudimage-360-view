@@ -477,7 +477,10 @@ class CI360Viewer {
   }
 
   updateImageScale(ctx, image) {
-    const position = this.getCursorPositionInCanvas();
+    let position = this.pointerCurrentPosition;
+
+    if (this.startPointerZoom) position = this.getCursorPositionInCanvas();
+
     const imageWidth = this.canvas.width / this.devicePixelRatio;
     const imageHeight = this.canvas.height / this.devicePixelRatio;
 
