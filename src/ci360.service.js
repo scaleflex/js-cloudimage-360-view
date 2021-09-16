@@ -225,6 +225,8 @@ class CI360Viewer {
   }
 
   initAndSetPinchZoom (event) {
+    if (this.bottomCircle) this.hide360ViewCircleIcon();
+
     const [fingerOnePosition, fingerTwoPostion] = this.getFingersPosition(event);
     this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPostion);
   }
