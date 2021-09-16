@@ -216,13 +216,11 @@ class CI360Viewer {
     if (this.zoomIntensity) {
       if (this.resetZoomIcon) this.showResetZoomIcon();
     } else {
-      this.startPointerZoom = false;
-      this.mouseTracked = false;
-
       if (this.resetZoomIcon) this.hideResetZoomIcon();
 
       if (this.bottomCircle) this.show360ViewCircleIcon();
 
+      this.startPointerZoom = false;
       this.mouseTracked = false;
     }
 
@@ -955,8 +953,10 @@ class CI360Viewer {
         images.forEach((src, index) => {
           const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
           const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
+          const lastIndex = resultSrc.lastIndexOf('//');
+          const originalSrc = resultSrc.slice(lastIndex);
 
-          this.addImage(resultSrc, lazyload, lazySelector, index);
+          this.addImage(resultSrc, originalSrc, lazyload, lazySelector, index);
         });
       } catch (error) {
         console.error(`Wrong format in image-list attribute: ${error.message}`);
