@@ -1074,6 +1074,7 @@ class CI360Viewer {
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
       this.container.addEventListener('mouseup', this.mouseUp.bind(this));
       this.container.addEventListener('mousemove', this.mouseMove.bind(this));
+      this.container.addEventListener('mouseleave', this.mouseup.bind(this));
     }
 
     if ( (swipeable) && (!this.disableDrag) ) {
