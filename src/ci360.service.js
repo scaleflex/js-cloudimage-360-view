@@ -268,22 +268,25 @@ class CI360Viewer {
   fingersPinchZoom (event) {
     event.preventDefault();
 
-    const zoomFactor  = this.pinchZoomFactor * 10;
     const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
     const currentDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
-    this.startPinchZoom = true;
-    const isZoomIn = currentDistanceBetweenFingers > this.prevDistanceBetweenFingers;
+    const zoomFactor  = this.pinchZoomFactor * 30;
 
+    const zoomSensitivity = 1.5;
+    const isZoomIn = currentDistanceBetweenFingers > (this.prevDistanceBetweenFingers + zoomSensitivity);
+    const isZoomOut = (currentDistanceBetweenFingers + zoomSensitivity) < this.prevDistanceBetweenFingers;
+
+    this.startPinchZoom = true;
+    
     this.updateAveragePositionBetweenFingers(fingerOnePosition, fingerTwoPosition);
 
     if (isZoomIn) {
       this.zoomIntensity += zoomFactor;
-      this.update();
-    } else if (this.zoomIntensity >= zoomFactor) {
+    } else if (isZoomOut && this.zoomIntensity >= zoomFactor) {
       this.zoomIntensity -= zoomFactor;
-      this.update();
     }
-
+    
+    this.update();
     this.prevDistanceBetweenFingers = currentDistanceBetweenFingers;
   }
 
