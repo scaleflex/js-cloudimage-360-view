@@ -279,7 +279,51 @@ data-image-list='[
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Only 360 view images close to the client's viewport will be loaded, hence accelerating the page loading time. If set to true, an additional script must be included, see [Lazy loading](#lazy-loading)
+### data-disable-pointer-zoom (or disable-pointer-zoom)
 
+###### Type: **bool** | Default: **false** | _optional_
+
+Disable pointer zoom on desktop
+
+### data-disable-pinch-zoom (or disable-pinch-zoom)
+
+###### Type: **bool** | Default: **false** | _optional_
+
+Disable pinch zoom on mobile
+### data-to-start-pointer-zoom (or to-start-pointer-zoom)
+
+###### Type: **string** | Default: **scroll** | _optional_
+
+Events to start pointer zoom
+
+Available events (scroll, click)
+
+### data-on-mouse-leave (or on-mouse-leave)
+
+###### Type: **string** | Default: **none** | _optional_
+
+Functions called after mouse leave the container
+
+Available functions (resetZoom)
+
+Multiple functions can be applied, separated by "," (comma)
+
+### data-pointer-zoom-factor (or pointer-zoom-factor)
+
+###### Type: **Number** | Default: **2** | _optional_
+
+Pointer zoom scaling factor
+### data-pinch-zoom-factor (or pinch-zoom-factor)
+
+###### Type: **Number** | Default: **2** | _optional_
+
+Pinch zoom scaling factor
+
+### data-max-scale (or max-scale)
+
+###### Type: **Number** | Default: **none** | _optional_
+
+Maximum scale that images can be resize to it with pointer or pinch zoom
 ### data-lazyload-selector (or lazyload-selector)
 
 ###### Type: **String** | Default: **lazyload** | _optional_
