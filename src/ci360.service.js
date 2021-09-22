@@ -275,12 +275,13 @@ class CI360Viewer {
     const zoomSensitivity = 1.5;
     const isZoomIn = currentDistanceBetweenFingers > (this.prevDistanceBetweenFingers + zoomSensitivity);
     const isZoomOut = (currentDistanceBetweenFingers + zoomSensitivity) < this.prevDistanceBetweenFingers;
+    const maxIntensity = getMaxZoomIntensity(this.canvas.width, this.maxScale);
 
     this.startPinchZoom = true;
     
     this.updateAveragePositionBetweenFingers(fingerOnePosition, fingerTwoPosition);
 
-    if (isZoomIn) {
+    if (isZoomIn && this.zoomIntensity <= maxIntensity) {
       this.zoomIntensity += zoomFactor;
     } else if (isZoomOut && this.zoomIntensity >= zoomFactor) {
       this.zoomIntensity -= zoomFactor;
