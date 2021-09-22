@@ -35,7 +35,7 @@ const get360ViewProps = (image) => ({
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
-  fullScreen: isTrue(image, 'full-screen'),
+  fullscreen: isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
     parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen'),
@@ -146,25 +146,25 @@ const setMagnifyIconStyles = (magnifyIcon) => {
   magnifyIcon.className = 'magnify-icon';
 };
 
-const setFullScreenModalStyles = (fullScreenModal) => {
-  fullScreenModal.style.position = 'fixed';
-  fullScreenModal.style.top = '0';
-  fullScreenModal.style.bottom = '0';
-  fullScreenModal.style.left = '0';
-  fullScreenModal.style.right = '0';
-  fullScreenModal.style.width = '100%';
-  fullScreenModal.style.height = '100%';
-  fullScreenModal.style.zIndex = '999';
-  fullScreenModal.style.background = '#fff';
+const setFullscreenModalStyles = (fullscreenModal) => {
+  fullscreenModal.style.position = 'fixed';
+  fullscreenModal.style.top = '0';
+  fullscreenModal.style.bottom = '0';
+  fullscreenModal.style.left = '0';
+  fullscreenModal.style.right = '0';
+  fullscreenModal.style.width = '100%';
+  fullscreenModal.style.height = '100%';
+  fullscreenModal.style.zIndex = '999';
+  fullscreenModal.style.background = '#fff';
 };
 
-const setFullScreenIconStyles = (fullScreenIcon) => {
-  fullScreenIcon.style.width = '25px';
-  fullScreenIcon.style.height = '25px';
-  fullScreenIcon.style.marginBottom = '5px';
-  fullScreenIcon.style.cursor = 'pointer';
-  fullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
-  fullScreenIcon.className = 'fullscreen-icon';
+const setFullscreenIconStyles = (fullscreenIcon) => {
+  fullscreenIcon.style.width = '25px';
+  fullscreenIcon.style.height = '25px';
+  fullscreenIcon.style.marginBottom = '5px';
+  fullscreenIcon.style.cursor = 'pointer';
+  fullscreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
+  fullscreenIcon.className = 'fullscreen-icon';
 };
 
 const setResetZoomIconStyles = (resetZoomIcon) => {
@@ -177,12 +177,12 @@ const setResetZoomIconStyles = (resetZoomIcon) => {
   resetZoomIcon.className = 'reset-zoom-icon';
 };
 
-const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
-  closeFullScreenIcon.style.width = '25px';
-  closeFullScreenIcon.style.height = '25px';
-  closeFullScreenIcon.style.marginBottom = '5px';
-  closeFullScreenIcon.style.cursor = 'pointer';
-  closeFullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat`;
+const setCloseFullscreenViewStyles = (closeFullscreenIcon) => {
+  closeFullscreenIcon.style.width = '25px';
+  closeFullscreenIcon.style.height = '25px';
+  closeFullscreenIcon.style.marginBottom = '5px';
+  closeFullscreenIcon.style.cursor = 'pointer';
+  closeFullscreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat`;
 };
 
 const magnify = (container, offset = {}, src, glass, zoom) => {
@@ -366,10 +366,10 @@ export {
   magnify,
   setIconsContainerStyles,
   setMagnifyIconStyles,
-  setFullScreenModalStyles,
-  setFullScreenIconStyles,
+  setFullscreenModalStyles,
+  setFullscreenIconStyles,
   setResetZoomIconStyles,
-  setCloseFullScreenViewStyles,
+  setCloseFullscreenViewStyles,
   getResponsiveWidthOfContainer,
   getSizeAccordingToPixelRatio,
   contain,
