@@ -180,7 +180,7 @@ Magnifier to zoom image.
 
 ### data-magnifier-in-fullscreen (or magnifier-in-fullscreen)
 
-###### Type: **bool** | Default: **none** | _optional_
+###### Type: **bool** | Default: **false** | _optional_
 
 enable magnifier in fullscreen modal.
 
