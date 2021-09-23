@@ -11,11 +11,11 @@ import {
   set360ViewCircleIconStyles,
   set360ViewIconStyles,
   setBoxShadowStyles,
-  setCloseFullScreenViewStyles,
+  setCloseFullscreenViewStyles,
   setIconsContainerStyles,
-  setFullScreenIconStyles,
+  setFullscreenIconStyles,
   setResetZoomIconStyles,
-  setFullScreenModalStyles,
+  setFullscreenModalStyles,
   setLoaderStyles,
   setMagnifyIconStyles,
   setView360Icon,
@@ -26,7 +26,7 @@ import {
 import {TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS} from './ci360.constants';
 
 class CI360Viewer {
-  constructor(container, fullScreen, ratio) {
+  constructor(container, fullscreen, ratio) {
     this.container = container;
     this.activeImage = 1;
     this.movementStart = 0;
@@ -34,10 +34,10 @@ class CI360Viewer {
     this.loadedImages = 0;
     this.imagesLoaded = false;
     this.reversed = false;
-    this.fullScreenView = !!fullScreen;
+    this.fullscreenView = !!fullscreen;
     this.ratio = ratio;
     this.images = [];
-    this.devicePixelRatio = window.devicePixelRatio || 1;
+    this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
@@ -452,7 +452,7 @@ class CI360Viewer {
 
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
 
-    if (this.fullScreenView) {
+    if (this.fullscreenView) {
       this.canvas.width = window.innerWidth * this.devicePixelRatio;
       this.canvas.style.width = window.innerWidth + 'px';
       this.canvas.height = window.innerHeight * this.devicePixelRatio;
@@ -508,7 +508,7 @@ class CI360Viewer {
 
     this.removeLoader();
 
-    if (!this.fullScreenView) {
+    if (!this.fullscreenView) {
       this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amount * 25 * this.container.offsetWidth / 1500) || 1;
     } else {
       const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
@@ -542,7 +542,7 @@ class CI360Viewer {
       this.add360ViewIcon();
     }
 
-    if (this.fullScreenView) {
+    if (this.fullscreenView) {
       this.canvas.width = window.innerWidth * this.devicePixelRatio;
       this.canvas.style.width = window.innerWidth + 'px';
       this.canvas.height = window.innerHeight * this.devicePixelRatio;
@@ -552,6 +552,8 @@ class CI360Viewer {
 
       const { offsetX, offsetY, width, height } =
         contain(this.canvas.width, this.canvas.height, event.target.width, event.target.height);
+
+        this.offset = { x: offsetX, y: offsetY };
 
         ctx.drawImage(event.target, offsetX, offsetY, width, height);
     } else {
@@ -584,7 +586,7 @@ class CI360Viewer {
       ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
     }
 
-    if (this.lazyload && !this.fullScreenView) {
+    if (this.lazyload && !this.fullscreenView) {
       this.images
         .forEach((image, index) => {
           if (index === 0) {
@@ -604,22 +606,24 @@ class CI360Viewer {
       this.container.style.minHeight = 'auto';
     }
 
-    if (this.magnifier && !this.fullScreenView) {
+    if (this.fullscreenView) {
+      this.addCloseFullscreenView();
+    }
+
+    if ( (this.magnifier && !this.fullscreenView) || this.magnifyInFullscreen ) {
       this.addMagnifier();
     }
 
-    if (this.boxShadow && !this.fullScreenView) {
+    if (this.boxShadow && !this.fullscreenView) {
       this.addBoxShadow();
     }
 
-    if (this.bottomCircle && !this.fullScreenView) {
+    if (this.bottomCircle && !this.fullscreenView) {
       this.add360ViewCircleIcon();
     }
 
-    if (this.fullScreen && !this.fullScreenView) {
-      this.addFullScreenIcon();
-    } else if (this.fullScreenView) {
-      this.addCloseFullScreenView();
+    if (this.fullscreen && !this.fullscreenView) {
+      this.addFullscreenIcon();
     }
 
     if (!this.isMobile && !this.disablePointerZoom) {
@@ -640,15 +644,15 @@ class CI360Viewer {
     }
   }
 
-  addCloseFullScreenView(event) {
-    const closeFullScreenIcon = document.createElement('div');
+  addCloseFullscreenView(event) {
+    const closeFullscreenIcon = document.createElement('div');
 
-    setCloseFullScreenViewStyles(closeFullScreenIcon);
+    setCloseFullscreenViewStyles(closeFullscreenIcon);
 
-    closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
-    window.onkeyup = this.setFullScreenEvents.bind(this, event);
+    closeFullscreenIcon.onclick = this.setFullscreenEvents.bind(this, event);
+    window.onkeyup = this.setFullscreenEvents.bind(this, event);
 
-    this.iconsContainer.appendChild(closeFullScreenIcon);
+    this.iconsContainer.appendChild(closeFullscreenIcon);
   }
 
   add360ViewIcon() {
@@ -662,30 +666,30 @@ class CI360Viewer {
     this.innerBox.appendChild(view360Icon);
   }
 
-  addFullScreenIcon() {
-    const fullScreenIcon = document.createElement('div');
+  addFullscreenIcon() {
+    const fullscreenIcon = document.createElement('div');
 
-    setFullScreenIconStyles(fullScreenIcon);
+    setFullscreenIconStyles(fullscreenIcon);
 
-    fullScreenIcon.onclick = this.openFullScreenModal.bind(this);
+    fullscreenIcon.onclick = this.openFullscreenModal.bind(this);
 
-    this.fullScreenIcon = fullScreenIcon;
+    this.fullscreenIcon = fullscreenIcon;
 
-    this.iconsContainer.appendChild(fullScreenIcon);
+    this.iconsContainer.appendChild(fullscreenIcon);
   }
 
-  hideFullScreenIcon() {
-    if (!this.fullScreenIcon) return;
+  hideFullscreenIcon() {
+    if (!this.fullscreenIcon) return;
 
-    this.fullScreenIcon.style.opacity = '0.4';
-    this.fullScreenIcon.style.pointerEvents = 'none';
+    this.fullscreenIcon.style.opacity = '0.4';
+    this.fullscreenIcon.style.pointerEvents = 'none';
   }
 
-  showFullScreenIcon() {
-    if (!this.fullScreenIcon) return;
+  showFullscreenIcon() {
+    if (!this.fullscreenIcon) return;
 
-    this.fullScreenIcon.style.opacity = '1';
-    this.fullScreenIcon.style.pointerEvents = 'auto';
+    this.fullscreenIcon.style.opacity = '1';
+    this.fullscreenIcon.style.pointerEvents = 'auto';
   }
 
   addMagnifier() {
@@ -735,7 +739,14 @@ class CI360Viewer {
 
     this.glass = document.createElement('div');
     this.container.style.overflow = 'hidden';
-    magnify(this.container, src, this.glass, this.magnifier || 3);
+
+    magnify(
+      this.container,
+      this.offset,
+      src,
+      this.glass,
+      this.magnifier || 3
+    );
   }
 
   closeMagnifier() {
@@ -747,39 +758,39 @@ class CI360Viewer {
     this.isMagnifyOpen = false;
   }
 
-  openFullScreenModal() {
-    const fullScreenModal = document.createElement('div');
+  openFullscreenModal() {
+    const fullscreenModal = document.createElement('div');
 
-    setFullScreenModalStyles(fullScreenModal);
+    setFullscreenModalStyles(fullscreenModal);
 
-    const fullScreenContainer = this.container.cloneNode();
+    const fullscreenContainer = this.container.cloneNode();
     const image = this.images[0];
     const ratio = image.height / image.width;
 
-    fullScreenContainer.style.height = '100%';
-    fullScreenContainer.style.maxHeight = '100%';
+    fullscreenContainer.style.height = '100%';
+    fullscreenContainer.style.maxHeight = '100%';
 
-    fullScreenModal.appendChild(fullScreenContainer);
+    fullscreenModal.appendChild(fullscreenContainer);
 
     window.document.body.style.overflow = 'hidden';
-    window.document.body.appendChild(fullScreenModal);
+    window.document.body.appendChild(fullscreenModal);
 
-    new CI360Viewer(fullScreenContainer, true, ratio);
+    new CI360Viewer(fullscreenContainer, true, ratio);
   }
 
-  setFullScreenEvents(_, event) {
-    if (event.type === 'click') return this.closeFullScreenModal();
-    if (event.key === 'Escape') return this.closeFullScreenModalOnEsc();
+  setFullscreenEvents(_, event) {
+    if (event.type === 'click') return this.closeFullscreenModal();
+    if (event.key === 'Escape') return this.closeFullscreenModalOnEsc();
   }
 
-  closeFullScreenModalOnEsc() {
+  closeFullscreenModalOnEsc() {
 
     if (this.container.parentNode.parentNode === document.body) {
-      this.closeFullScreenModal()
+      this.closeFullscreenModal()
     };
   }
 
-  closeFullScreenModal() {
+  closeFullscreenModal() {
     document.body.removeChild(this.container.parentNode);
     window.document.body.style.overflow = 'visible';
   }
@@ -827,7 +838,7 @@ class CI360Viewer {
   hideResetZoomIcon() {
     if (!this.resetZoomIcon) return;
     if (this.magnifierIcon) this.enableMagnifierIcon();
-    if (this.fullScreenIcon) this.showFullScreenIcon();
+    if (this.fullscreenIcon) this.showFullscreenIcon();
 
     this.resetZoomIcon.style.display = 'none';
   }
@@ -835,7 +846,7 @@ class CI360Viewer {
   showResetZoomIcon() {
     if (!this.resetZoomIcon) return;
     if (this.magnifierIcon) this.disableMagnifierIcon();
-    if (this.fullScreenIcon) this.hideFullScreenIcon();
+    if (this.fullscreenIcon) this.hideFullscreenIcon();
 
     this.resetZoomIcon.style.display = 'block';
   }
@@ -900,7 +911,7 @@ class CI360Viewer {
     if (responsive) {
       let imageOffsetWidth = container.offsetWidth;
 
-      if (this.fullScreenView) {
+      if (this.fullscreenView) {
         const containerRatio = container.offsetHeight / container.offsetWidth;
 
         if (this.ratio > containerRatio) {
@@ -951,7 +962,7 @@ class CI360Viewer {
   addImage(resultSrc, lazyload, lazySelector, index) {
     const image = new Image();
 
-    if (lazyload && !this.fullScreenView) {
+    if (lazyload && !this.fullscreenView) {
       image.setAttribute('data-src', resultSrc);
       image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
 
@@ -1082,7 +1093,7 @@ class CI360Viewer {
       this.container.addEventListener('touchmove', this.touchMove.bind(this));
     }
 
-    if (!this.disablePointerZoom) {
+    if ( (!this.disablePointerZoom) && (!this.fullscreenView) ) {
       this.container.addEventListener('wheel', this.mouseScroll.bind(this));
     }
 
@@ -1119,7 +1130,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullScreen, magnifier, ratio, responsive, ciToken, ciFilters, ciTransformation,
+      autoplay, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, responsive, ciToken, ciFilters, ciTransformation,
       lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector
     } = get360ViewProps(container);
 
@@ -1149,8 +1160,9 @@ class CI360Viewer {
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;
-    this.fullScreen = fullScreen;
+    this.fullscreen = fullscreen;
     this.magnifier = !this.isMobile && magnifier ? magnifier : false;
+    this.magnifyInFullscreen = magnifyInFullscreen;
     this.lazyload = lazyload;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
