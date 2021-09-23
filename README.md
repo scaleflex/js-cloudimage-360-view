@@ -47,6 +47,7 @@ powered by [Cloudimage](https://www.cloudimage.io/)
 * [Step 1: Installation](#installation)
 * [Step 2: Initialize](#initialize)
 * [Methods](#methods)
+* [Customize Icons](#customize-icons)
 * [Configuration](#configuration)
 * [Controls](#controls)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
@@ -126,6 +127,28 @@ Get the {index} of the image that is being viewed.
 
 ```javascript
 window.CI360.getActiveIndexByID('id_of_product');
+```
+## <a name="customize-icons"></a> Customize icons
+
+You can customize the icons by adding the following classes:
+
+### Example CSS
+```css
+.cloudimage-360 .fullscreen-icon {
+	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg) 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .magnify-icon {
+	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .close-fullscreen-icon {
+	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .reset-zoom-icon {
+	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986) 50% 50% / cover no-repeat;
+}
 ```
 
 ## <a name="configuration"></a> Config
@@ -286,17 +309,6 @@ Only 360 view images close to the client's viewport will be loaded, hence accele
 
 Helper class to apply lazy-loading depending on library you choose, see [Lazy loading](#lazy-loading)
 
-### data-magnify-icon-selector (or magnify-icon-selector)
-
-###### Type: **String** | Default: **magnify-icon** | _optional_
-
-Helper selector to apply styles on magnify icon
-
-### data-fullscreen-icon-selector (or fullscreen-icon-selector)
-
-###### Type: **String** | Default: **fullscreen-icon** | _optional_
-
-Helper selector to apply styles on fullscreen icon
 
 ## <a name="controls"></a> Controls
 
