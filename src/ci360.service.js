@@ -639,7 +639,7 @@ class CI360Viewer {
       this.addFullScreenIcon();
     }
 
-    if (!this.isMobile && !this.disablePointerZoom) {
+    if (!this.isMobile && !this.fullScreenView && !this.disablePointerZoom) {
       this.addResetZoomIcon();
     }
   }
