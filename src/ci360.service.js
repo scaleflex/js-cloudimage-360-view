@@ -71,7 +71,7 @@ class CI360Viewer {
   }
 
   mouseUp() {
-    if (!this.imagesLoaded) return;
+    if (!this.imagesLoaded || !this.isClicked) return;
 
     this.movementStart = 0;
     this.isClicked = false;
@@ -1072,8 +1072,8 @@ class CI360Viewer {
   attachEvents(draggable, swipeable, keys) {
     if ( (draggable) && (!this.disableDrag) ) {
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
-      this.container.addEventListener('mouseup', this.mouseUp.bind(this));
       this.container.addEventListener('mousemove', this.mouseMove.bind(this));
+      document.addEventListener('mouseup', this.mouseUp.bind(this));
     }
 
     if ( (swipeable) && (!this.disableDrag) ) {
