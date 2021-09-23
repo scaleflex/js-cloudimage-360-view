@@ -137,15 +137,12 @@ You can customize the icons by adding the following classes:
 .cloudimage-360 .fullscreen-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg) 50% 50% / cover no-repeat;
 }
-
 .cloudimage-360 .magnify-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
 }
-
 .cloudimage-360 .close-fullscreen-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
 }
-
 .cloudimage-360 .reset-zoom-icon {
 	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986) 50% 50% / cover no-repeat;
 }
