@@ -177,7 +177,7 @@ const setResetZoomIconStyles = (resetZoomIcon) => {
   resetZoomIcon.className = 'reset-zoom-icon';
 };
 
-const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
+const setCloseFullscreenViewStyles = (closeFullScreenIcon) => {
   closeFullScreenIcon.style.width = '25px';
   closeFullScreenIcon.style.height = '25px';
   closeFullScreenIcon.style.cursor = 'pointer';
