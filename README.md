@@ -198,6 +198,12 @@ Open 360 spin view in full screen modal.
 
 Magnifier to zoom image.
 
+### data-magnifier-in-fullscreen (or magnifier-in-fullscreen)
+
+###### Type: **bool** | Default: **false** | _optional_
+
+enable magnifier in fullscreen modal.
+
 ### data-ratio (or ratio)
 
 ###### Type: **Number** (height / width) | Default: **none** | _optional_

@@ -35,9 +35,10 @@ const get360ViewProps = (image) => ({
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
-  fullScreen: isTrue(image, 'full-screen'),
+  fullscreen: isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
     parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
+  magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen'),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
   ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false,
   responsive: isTrue(image, 'responsive'),
@@ -145,25 +146,25 @@ const setMagnifyIconStyles = (magnifyIcon) => {
   magnifyIcon.className = 'magnify-icon';
 };
 
-const setFullScreenModalStyles = (fullScreenModal) => {
-  fullScreenModal.style.position = 'fixed';
-  fullScreenModal.style.top = '0';
-  fullScreenModal.style.bottom = '0';
-  fullScreenModal.style.left = '0';
-  fullScreenModal.style.right = '0';
-  fullScreenModal.style.width = '100%';
-  fullScreenModal.style.height = '100%';
-  fullScreenModal.style.zIndex = '999';
-  fullScreenModal.style.background = '#fff';
+const setFullscreenModalStyles = (fullscreenModal) => {
+  fullscreenModal.style.position = 'fixed';
+  fullscreenModal.style.top = '0';
+  fullscreenModal.style.bottom = '0';
+  fullscreenModal.style.left = '0';
+  fullscreenModal.style.right = '0';
+  fullscreenModal.style.width = '100%';
+  fullscreenModal.style.height = '100%';
+  fullscreenModal.style.zIndex = '999';
+  fullscreenModal.style.background = '#fff';
 };
 
-const setFullScreenIconStyles = (fullScreenIcon) => {
-  fullScreenIcon.style.width = '25px';
-  fullScreenIcon.style.height = '25px';
-  fullScreenIcon.style.marginBottom = '5px';
-  fullScreenIcon.style.cursor = 'pointer';
-  fullScreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
-  fullScreenIcon.className = 'fullscreen-icon';
+const setFullscreenIconStyles = (fullscreenIcon) => {
+  fullscreenIcon.style.width = '25px';
+  fullscreenIcon.style.height = '25px';
+  fullscreenIcon.style.marginBottom = '5px';
+  fullscreenIcon.style.cursor = 'pointer';
+  fullscreenIcon.style.background = `url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat`;
+  fullscreenIcon.className = 'fullscreen-icon';
 };
 
 const setResetZoomIconStyles = (resetZoomIcon) => {
@@ -184,15 +185,19 @@ const setCloseFullScreenViewStyles = (closeFullScreenIcon) => {
   closeFullScreenIcon.className = 'close-fullscreen-icon'
 };
 
-const magnify = (container, src, glass, zoom) => {
+const magnify = (container, offset = {}, src, glass, zoom) => {
   let w, h, bw;
+  const {x: offsetX = 0, y: offsetY = 0} = offset;
+  const backgroundSizeX = (container.offsetWidth - (offsetX * 2)) * zoom;
+  const backgroundSizeY = (container.offsetHeight - (offsetY * 2)) * zoom;
+
   glass.setAttribute("class", "img-magnifier-glass");
   container.prepend(glass);
-
+  
   glass.style.backgroundColor = '#fff';
   glass.style.backgroundImage = "url('" + src + "')";
   glass.style.backgroundRepeat = "no-repeat";
-  glass.style.backgroundSize = (container.offsetWidth * zoom) + "px " + (container.offsetHeight * zoom) + "px";
+  glass.style.backgroundSize = `${backgroundSizeX}px ${backgroundSizeY}px`
   glass.style.position = 'absolute';
   glass.style.border = '3px solid #000';
   glass.style.borderRadius = '50%';
@@ -244,7 +249,15 @@ const magnify = (container, src, glass, zoom) => {
     glass.style.left = (x - w) + "px";
     glass.style.top = (y - h) + "px";
 
-    glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+    const backgroundPosX = (
+      (x - offsetX) * zoom
+    ) - w + bw;
+
+    const backgroundPosY = (
+      (y - offsetY) * zoom
+    ) - h + bw;
+
+    glass.style.backgroundPosition = `-${backgroundPosX}px -${backgroundPosY}px`;
   }
 
   function getCursorPos(e) {
@@ -353,10 +366,10 @@ export {
   magnify,
   setIconsContainerStyles,
   setMagnifyIconStyles,
-  setFullScreenModalStyles,
-  setFullScreenIconStyles,
+  setFullscreenModalStyles,
+  setFullscreenIconStyles,
   setResetZoomIconStyles,
-  setCloseFullScreenViewStyles,
+  setCloseFullscreenViewStyles,
   getResponsiveWidthOfContainer,
   getSizeAccordingToPixelRatio,
   contain,
