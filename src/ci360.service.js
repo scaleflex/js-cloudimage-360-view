@@ -37,6 +37,7 @@ class CI360Viewer {
     this.fullscreenView = !!fullscreen;
     this.ratio = ratio;
     this.images = [];
+    this.originalImages = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
@@ -215,18 +216,22 @@ class CI360Viewer {
     if (this.zoomIntensity) {
       if (this.resetZoomIcon) this.showResetZoomIcon();
     } else {
-      this.mouseTracked = false;
-
       if (this.resetZoomIcon) this.hideResetZoomIcon();
+
       if (this.bottomCircle) this.show360ViewCircleIcon();
+
+      this.startPointerZoom = false;
+      this.mouseTracked = false;
     }
 
     this.update();
   }
 
   initAndSetPinchZoom (event) {
-    const [fingerOnePosition, fingerTwoPostion] = this.getFingersPosition(event);
-    this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPostion);
+    if (this.bottomCircle) this.hide360ViewCircleIcon();
+
+    const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
+    this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
   }
 
   getDistanceBetweenFingers (fingerOne, fingerTwo) {
@@ -254,31 +259,35 @@ class CI360Viewer {
     const p1 = event.targetTouches[0];
     const p2 = event.targetTouches[1];
 
-    const fingerOnePostion = { x: p1.clientX, y: p1.clientY };
-    const fingerTwoPostion = { x: p2.clientX, y: p2.clientY };
+    const fingerOnePosition = { x: p1.clientX, y: p1.clientY };
+    const fingerTwoPosition = { x: p2.clientX, y: p2.clientY };
 
-    return [fingerOnePostion, fingerTwoPostion];
+    return [fingerOnePosition, fingerTwoPosition];
   }
 
   fingersPinchZoom (event) {
     event.preventDefault();
 
-    const zoomFactor  = this.pinchZoomFactor * 10;
     const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
     const currentDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
-    this.startPinchZoom = true;
-    const isZoomIn = currentDistanceBetweenFingers > this.prevDistanceBetweenFingers;
+    const zoomFactor  = this.pinchZoomFactor * 30;
 
+    const zoomSensitivity = 1.5;
+    const isZoomIn = currentDistanceBetweenFingers > (this.prevDistanceBetweenFingers + zoomSensitivity);
+    const isZoomOut = (currentDistanceBetweenFingers + zoomSensitivity) < this.prevDistanceBetweenFingers;
+    const maxIntensity = getMaxZoomIntensity(this.canvas.width, this.maxScale);
+
+    this.startPinchZoom = true;
+    
     this.updateAveragePositionBetweenFingers(fingerOnePosition, fingerTwoPosition);
 
-    if (isZoomIn) {
+    if (isZoomIn && this.zoomIntensity <= maxIntensity) {
       this.zoomIntensity += zoomFactor;
-      this.update();
-    } else if (this.zoomIntensity >= zoomFactor) {
+    } else if (isZoomOut && this.zoomIntensity >= zoomFactor) {
       this.zoomIntensity -= zoomFactor;
-      this.update();
     }
-
+    
+    this.update();
     this.prevDistanceBetweenFingers = currentDistanceBetweenFingers;
   }
 
@@ -469,15 +478,19 @@ class CI360Viewer {
       this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
 
       if (this.startPointerZoom || this.startPinchZoom) {
-        this.updateImageScale(ctx, image);
+        this.updateImageScale(ctx);
       } else {
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
     }
   }
+  
+  updateImageScale(ctx) {
+    const image = this.originalImages[this.activeImage -1];
+    let position = this.pointerCurrentPosition;
 
-  updateImageScale(ctx, image) {
-    const position = this.getCursorPositionInCanvas();
+    if (this.startPointerZoom) position = this.getCursorPositionInCanvas();
+
     const imageWidth = this.canvas.width / this.devicePixelRatio;
     const imageHeight = this.canvas.height / this.devicePixelRatio;
 
@@ -626,7 +639,7 @@ class CI360Viewer {
       this.addFullscreenIcon();
     }
 
-    if (!this.isMobile && !this.disablePointerZoom) {
+    if (!this.isMobile && !this.fullScreenView && !this.disablePointerZoom) {
       this.addResetZoomIcon();
     }
   }
@@ -944,8 +957,10 @@ class CI360Viewer {
         images.forEach((src, index) => {
           const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
           const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
+          const lastIndex = resultSrc.lastIndexOf('//');
+          const originalSrc = resultSrc.slice(lastIndex);
 
-          this.addImage(resultSrc, lazyload, lazySelector, index);
+          this.addImage(resultSrc, originalSrc, lazyload, lazySelector, index);
         });
       } catch (error) {
         console.error(`Wrong format in image-list attribute: ${error.message}`);
@@ -954,13 +969,17 @@ class CI360Viewer {
       [...new Array(amount)].map((_item, index) => {
         const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
         const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        this.addImage(resultSrc, lazyload, lazySelector, index);
+        const lastIndex = resultSrc.lastIndexOf('//');
+        const originalSrc = resultSrc.slice(lastIndex);
+
+        this.addImage(resultSrc, originalSrc, lazyload, lazySelector, index);
       });
     }
   }
 
-  addImage(resultSrc, lazyload, lazySelector, index) {
+  addImage(resultSrc, originalSrc, lazyload, lazySelector, index) {
     const image = new Image();
+    const originalImage = new Image();
 
     if (lazyload && !this.fullscreenView) {
       image.setAttribute('data-src', resultSrc);
@@ -975,11 +994,14 @@ class CI360Viewer {
       }
     } else {
       image.src = resultSrc;
+      originalImage.src = originalSrc;
     }
 
     image.onload = this.onImageLoad.bind(this, index);
     image.onerror = this.onImageLoad.bind(this, index);
+
     this.images.push(image);
+    this.originalImages.push(originalImage);
   }
 
   destroy() {
