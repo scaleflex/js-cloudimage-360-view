@@ -8,22 +8,12 @@ import {
   pad,
   isTwoFingers,
   removeClass,
-  set360ViewCircleIconStyles,
-  set360ViewIconStyles,
-  setBoxShadowStyles,
-  setCloseFullScreenViewStyles,
-  setIconsContainerStyles,
-  setFullScreenIconStyles,
-  setResetZoomIconStyles,
-  setFullScreenModalStyles,
-  setLoaderStyles,
-  setMagnifyIconStyles,
   setView360Icon,
   getMaxZoomIntensity,
   normalizeZoomFactor
 } from './ci360.utils';
-
-import {TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS} from './ci360.constants';
+import './static/css/style.css';
+import { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS } from './ci360.constants';
 
 class CI360Viewer {
   constructor(container, fullScreen, ratio) {
@@ -643,9 +633,9 @@ class CI360Viewer {
   addCloseFullScreenView(event) {
     const closeFullScreenIcon = document.createElement('div');
 
-    setCloseFullScreenViewStyles(closeFullScreenIcon);
-
+    closeFullScreenIcon.className = 'close-fullscreen-icon'
     closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
+
     window.onkeyup = this.setFullScreenEvents.bind(this, event);
 
     this.iconsContainer.appendChild(closeFullScreenIcon);
@@ -654,8 +644,7 @@ class CI360Viewer {
   add360ViewIcon() {
     const view360Icon = document.createElement('div');
 
-    set360ViewIconStyles(view360Icon);
-
+    view360Icon.className = 'view-360-icon'
     view360Icon.innerText = '0%';
 
     this.view360Icon = view360Icon;
@@ -665,8 +654,7 @@ class CI360Viewer {
   addFullScreenIcon() {
     const fullScreenIcon = document.createElement('div');
 
-    setFullScreenIconStyles(fullScreenIcon);
-
+    fullScreenIcon.className = 'fullscreen-icon'
     fullScreenIcon.onclick = this.openFullScreenModal.bind(this);
 
     this.fullScreenIcon = fullScreenIcon;
@@ -691,8 +679,7 @@ class CI360Viewer {
   addMagnifier() {
     const magnifyIcon = document.createElement('div');
 
-    setMagnifyIconStyles(magnifyIcon);
-
+    magnifyIcon.className = 'magnifier-icon'
     magnifyIcon.onclick = this.magnify.bind(this);
 
     this.magnifierIcon = magnifyIcon;
@@ -750,7 +737,7 @@ class CI360Viewer {
   openFullScreenModal() {
     const fullScreenModal = document.createElement('div');
 
-    setFullScreenModalStyles(fullScreenModal);
+    fullScreenModal.className = 'fullscreen-modal'
 
     const fullScreenContainer = this.container.cloneNode();
     const image = this.images[0];
@@ -787,7 +774,10 @@ class CI360Viewer {
   add360ViewCircleIcon() {
     const view360CircleIcon = new Image();
 
-    set360ViewCircleIconStyles(view360CircleIcon, this.bottomCircleOffset);
+    view360CircleIcon.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg'
+
+    view360CircleIcon.style.bottom = `${this.bottomCircleOffset}%`
+    view360CircleIcon.className='view-360-circle';
 
     this.view360CircleIcon = view360CircleIcon;
     this.innerBox.appendChild(view360CircleIcon);
@@ -815,8 +805,7 @@ class CI360Viewer {
   addResetZoomIcon() {
     const resetZoomIcon = document.createElement('div');
 
-    setResetZoomIconStyles(resetZoomIcon);
-
+    resetZoomIcon.className = 'reset-zoom-icon'
     this.resetZoomIcon = resetZoomIcon;
 
     resetZoomIcon.onmouseenter = this.resetZoom.bind(this);
@@ -842,8 +831,7 @@ class CI360Viewer {
 
   addLoader() {
     const loader = document.createElement('div');
-
-    setLoaderStyles(loader);
+    loader.className = 'cloudimage-360-loader';
 
     this.loader = loader;
     this.innerBox.appendChild(loader);
@@ -852,7 +840,8 @@ class CI360Viewer {
   addBoxShadow() {
     const boxShadow = document.createElement('div');
 
-    setBoxShadowStyles(boxShadow, this.boxShadow);
+    boxShadow.className = 'cloudimage-360-box-shadow';
+    boxShadow.style.boxShadow = this.boxShadow;
 
     this.innerBox.appendChild(boxShadow);
   }
@@ -1052,7 +1041,7 @@ class CI360Viewer {
   addIconsContainer() {
     this.iconsContainer = document.createElement('div');
     this.iconsContainer.className = 'cloudimage-icons-container';
-    setIconsContainerStyles(this.iconsContainer);
+
     this.innerBox.appendChild(this.iconsContainer);
   }
 
