@@ -1,11 +1,15 @@
-import {TO_START_POINTER_ZOOM} from './ci360.constants';
+import { TO_START_POINTER_ZOOM } from './ci360.constants';
 
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
+  filenameY: attr(image, 'filename-y') ||
+  attr(image, 'data-filename-y') || 'image-y-{index}.jpg',
   imageList: attr(image, 'image-list') || attr(image, 'data-image-list') || null,
   indexZeroBase: parseInt(attr(image, 'index-zero-base') || attr(image, 'data-index-zero-base') || 0, 10),
   amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 36, 10),
+  amountY: parseInt(attr(image, 'amount-y') ||
+  attr(image, 'data-amount-y') || 0, 10),
   imageOffset: parseInt(attr(image, 'image-offset') || attr(image, 'data-image-offset')),
   speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),
