@@ -88,13 +88,11 @@ const magnify = (container, src, glass, zoom) => {
   glass.addEventListener("mousemove", moveMagnifier);
   container.addEventListener("mousemove", moveMagnifier);
 
-  glass.addEventListener("touchmove", moveMagnifier);
-  container.addEventListener("touchmove", moveMagnifier);
+  glass.addEventListener("touchmove", moveMagnifier, { passive: true });
+  container.addEventListener("touchmove", moveMagnifier, { passive: true });
 
   function moveMagnifier(e) {
     let pos, x, y;
-
-    e.preventDefault();
 
     pos = getCursorPos(e);
     x = pos.x;

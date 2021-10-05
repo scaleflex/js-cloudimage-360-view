@@ -256,8 +256,6 @@ class CI360Viewer {
   }
 
   fingersPinchZoom (event) {
-    event.preventDefault();
-
     const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
     const currentDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
     const zoomFactor  = this.pinchZoomFactor * 30;
@@ -629,7 +627,7 @@ class CI360Viewer {
       this.addFullscreenIcon();
     }
 
-    if (!this.isMobile && !this.fullScreenView && !this.disablePointerZoom) {
+    if (!this.isMobile && !this.fullscreenView && !this.disablePointerZoom) {
       this.addResetZoomIcon();
     }
   }
@@ -1041,7 +1039,7 @@ class CI360Viewer {
     if (prev) {
       prev.style.display = 'block';
       prev.addEventListener('mousedown', isReverse ? onRightStart : onLeftStart);
-      prev.addEventListener('touchstart', isReverse ? onRightStart : onLeftStart);
+      prev.addEventListener('touchstart', isReverse ? onRightStart : onLeftStart, { passive: true });
       prev.addEventListener('mouseup', isReverse ? onRightEnd : onLeftEnd);
       prev.addEventListener('touchend', isReverse ? onRightEnd : onLeftEnd);
 
@@ -1051,7 +1049,7 @@ class CI360Viewer {
     if (next) {
       next.style.display = 'block';
       next.addEventListener('mousedown', isReverse ? onLeftStart : onRightStart);
-      next.addEventListener('touchstart', isReverse ? onLeftStart : onRightStart);
+      next.addEventListener('touchstart', isReverse ? onLeftStart : onRightStart, { passive: true });
       next.addEventListener('mouseup', isReverse ? onLeftEnd : onRightEnd);
       next.addEventListener('touchend', isReverse ? onLeftEnd : onRightEnd);
 
@@ -1100,8 +1098,8 @@ class CI360Viewer {
 
     if ( (swipeable) && (!this.disableDrag) ) {
       this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
-      this.container.addEventListener('touchend', this.touchEnd.bind(this), { passive: true });
-      this.container.addEventListener('touchmove', this.touchMove.bind(this));
+      this.container.addEventListener('touchend', this.touchEnd.bind(this));
+      this.container.addEventListener('touchmove', this.touchMove.bind(this), { passive: true });
     }
 
     if ( (!this.disablePointerZoom) && (!this.fullscreenView) ) {
