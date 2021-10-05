@@ -637,7 +637,7 @@ class CI360Viewer {
   addCloseFullscreenView(event) {
     const closeFullscreenIcon = document.createElement('div');
 
-    closeFullScreenIcon.className = 'close-fullscreen-icon'
+    closeFullScreenIcon.className = 'cloudimage-360-close-fullscreen-icon'
     closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
 
     window.onkeyup = this.setFullScreenEvents.bind(this, event);
@@ -648,7 +648,7 @@ class CI360Viewer {
   add360ViewIcon() {
     const view360Icon = document.createElement('div');
 
-    view360Icon.className = 'view-360-icon'
+    view360Icon.className = 'cloudimage-360-view-360-icon'
     view360Icon.innerText = '0%';
 
     this.view360Icon = view360Icon;
@@ -658,7 +658,7 @@ class CI360Viewer {
   addFullscreenIcon() {
     const fullscreenIcon = document.createElement('div');
 
-    fullscreenIcon.className = 'fullscreen-icon'
+    fullscreenIcon.className = 'cloudimage-360-fullscreen-icon'
     fullscreenIcon.onclick = this.openFullscreenModal.bind(this);
 
     this.fullscreenIcon = fullscreenIcon;
@@ -683,7 +683,7 @@ class CI360Viewer {
   addMagnifier() {
     const magnifyIcon = document.createElement('div');
 
-    magnifyIcon.className = 'magnifier-icon'
+    magnifyIcon.className = 'cloudimage-360-magnifier-icon'
     magnifyIcon.onclick = this.magnify.bind(this);
 
     this.magnifierIcon = magnifyIcon;
@@ -748,7 +748,7 @@ class CI360Viewer {
   openFullscreenModal() {
     const fullscreenModal = document.createElement('div');
 
-    fullscreenModal.className = 'fullscreen-modal'
+    fullscreenModal.className = 'cloudimage-360-fullscreen-modal'
 
     const fullscreenContainer = this.container.cloneNode();
     const image = this.images[0];
@@ -788,7 +788,7 @@ class CI360Viewer {
     view360CircleIcon.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg'
 
     view360CircleIcon.style.bottom = `${this.bottomCircleOffset}%`
-    view360CircleIcon.className='view-360-circle';
+    view360CircleIcon.className= 'cloudimage-360-view-360-circle';
 
     this.view360CircleIcon = view360CircleIcon;
     this.innerBox.appendChild(view360CircleIcon);
@@ -816,7 +816,7 @@ class CI360Viewer {
   addResetZoomIcon() {
     const resetZoomIcon = document.createElement('div');
 
-    resetZoomIcon.className = 'reset-zoom-icon'
+    resetZoomIcon.className = 'cloudimage-360-reset-zoom-icon'
     this.resetZoomIcon = resetZoomIcon;
 
     resetZoomIcon.onmouseenter = this.resetZoom.bind(this);
@@ -976,7 +976,7 @@ class CI360Viewer {
 
     const oldElement = this.container;
     const newElement = oldElement.cloneNode(true);
-    const innerBox = newElement.querySelector('.cloudimage-inner-box');
+    const innerBox = newElement.querySelector('.cloudimage-360-inner-box');
 
     newElement.className = newElement.className.replace(' initialized', '');
     newElement.style.position = 'relative';
@@ -1045,13 +1045,13 @@ class CI360Viewer {
 
   addInnerBox() {
     this.innerBox = document.createElement('div');
-    this.innerBox.className = 'cloudimage-inner-box';
+    this.innerBox.className = 'cloudimage-360-inner-box';
     this.container.appendChild(this.innerBox);
   }
 
   addIconsContainer() {
     this.iconsContainer = document.createElement('div');
-    this.iconsContainer.className = 'cloudimage-icons-container';
+    this.iconsContainer.className = 'cloudimage-360-icons-container';
 
     this.innerBox.appendChild(this.iconsContainer);
   }

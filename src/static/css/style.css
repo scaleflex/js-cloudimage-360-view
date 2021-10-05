@@ -1,4 +1,4 @@
-.cloudimage-icons-container {
+.cloudimage-360-icons-container {
   position: absolute;
   display: flex;
   top: 5px;
@@ -10,7 +10,7 @@
   z-index: 101;
 }
 
-.magnifier-icon {
+.cloudimage-360-magnifier-icon {
   width: 25px;
   height: 25px;
   margin-bottom: 5px;
@@ -18,7 +18,7 @@
   background: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% / cover no-repeat;
 }
 
-.fullscreen-icon {
+.cloudimage-360-fullscreen-icon {
   width: 25px;
   height: 25px;
   margin-bottom: 5px;
@@ -26,7 +26,7 @@
   background: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat;
 }
 
-.reset-zoom-icon {
+.cloudimage-360-reset-zoom-icon {
   display: none;
   width: 30px;
   height: 30px;
@@ -35,14 +35,14 @@
   background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986') 50% 50% / cover no-repeat;
 }
 
-.close-fullscreen-icon {
+.cloudimage-360-close-fullscreen-icon {
   width: 25px;
   height: 25px;
   cursor: pointer;
   background: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat;
 }
 
-.setLoaderStyles {
+.cloudimage-360-loader {
   position: absolute;
   top: 0;
   left: 0;
@@ -62,7 +62,7 @@
   z-index: 99;
 }
 
-.view-360-icon {
+.cloudimage-360-view-360-icon {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -81,7 +81,7 @@
   z-index: 2;
 }
 
-.view-360-circle {
+.cloudimage-360-view-360-circle {
   position: absolute;
   left: 0;
   right: 0;
@@ -92,7 +92,7 @@
   z-index: 2;
 }
 
-.fullscreen-modal {
+.cloudimage-360-fullscreen-modal {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -104,7 +104,7 @@
   background-color: #FFF;
 }
 
-.img-magnifier-glass {
+.cloudimage-360-img-magnifier-glass {
   background-color: #FFF;
   background-repeat: no-repeat;
   position: absolute;
