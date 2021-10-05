@@ -1,0 +1,121 @@
+.cloudimage-360-icons-container {
+  position: absolute;
+  display: flex;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 95%;
+  flex-direction: column;
+  align-items: center;
+  z-index: 101;
+}
+
+.cloudimage-360-magnifier-icon {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  background: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360-fullscreen-icon {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  background: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360-reset-zoom-icon {
+  display: none;
+  width: 30px;
+  height: 30px;
+  margin-top: auto;
+  cursor: pointer;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986') 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360-close-fullscreen-icon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  background: url('https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 0%;
+  height: 8px;
+  background-color: rgb(165,175,184);
+  z-index: 100;
+}
+
+.cloudimage-360-box-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+}
+
+.cloudimage-360-view-360-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  box-shadow: rgb(255, 255, 255, 0.5) 0px 0px 4px;
+  transition: 0.5s all;
+  color: rgb(80,80,80);
+  text-align: center;
+  line-height: 100px;
+  z-index: 2;
+}
+
+.cloudimage-360-view-360-circle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 80%;
+  height: auto;
+  margin: auto;
+  transition: 0.5s all;
+  z-index: 2;
+}
+
+.cloudimage-360-fullscreen-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: #FFF;
+}
+
+.cloudimage-360-img-magnifier-glass {
+  background-color: #FFF;
+  background-repeat: no-repeat;
+  position: absolute;
+  border: 3px solid #000;
+  border-radius: 50%;
+  cursor: wait;
+  line-height: 200px;
+  text-align: center;
+  z-index: 1000;
+  width: 250px;
+  height: 250px;
+  top: -75px;
+  right: -85px;
+}
