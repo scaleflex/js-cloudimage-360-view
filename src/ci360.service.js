@@ -941,7 +941,9 @@ class CI360Viewer {
   getOriginalSrc() {
     let currentImage = this.images[this.activeImage - 1];
 
-    if (this.movingDirection) currentImage = this.imagesY[this.activeImageY - 1];
+    if (this.movingDirection === ORIENTATIONS.Y) {
+      currentImage = this.imagesY[this.activeImageY - 1];
+    };
 
     const lastIndex = currentImage.src.lastIndexOf('//');
 
@@ -951,7 +953,6 @@ class CI360Viewer {
   magnify() {
     const image = new Image();
     const src = this.getOriginalSrc();
-    console.log(src)
     this.isMagnifyOpen = true;
 
     image.src = src;
