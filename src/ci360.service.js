@@ -8,22 +8,17 @@ import {
   pad,
   isTwoFingers,
   removeClass,
-  set360ViewCircleIconStyles,
-  set360ViewIconStyles,
-  setBoxShadowStyles,
-  setCloseFullscreenViewStyles,
-  setIconsContainerStyles,
-  setFullscreenIconStyles,
-  setResetZoomIconStyles,
-  setFullscreenModalStyles,
-  setLoaderStyles,
-  setMagnifyIconStyles,
   setView360Icon,
   getMaxZoomIntensity,
   normalizeZoomFactor,
 } from './ci360.utils';
-
-import { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS, ORIENTATIONS, AUTOPLAY_BEHAVIOR } from './ci360.constants';
+import {
+  TO_START_POINTER_ZOOM,
+  MOUSE_LEAVE_ACTIONS,
+  ORIENTATIONS,
+  AUTOPLAY_BEHAVIOR
+} from './ci360.constants';
+import './static/css/style.css';
 
 class CI360Viewer {
   constructor(container, fullscreen, ratio) {
@@ -296,8 +291,6 @@ class CI360Viewer {
   }
 
   fingersPinchZoom (event) {
-    event.preventDefault();
-
     const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
     const currentDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
     const zoomFactor  = this.pinchZoomFactor * 30;
@@ -831,7 +824,7 @@ class CI360Viewer {
       this.addFullscreenIcon();
     }
 
-    if (!this.isMobile && !this.fullScreenView && !this.disablePointerZoom) {
+    if (!this.isMobile && !this.fullscreenView && !this.disablePointerZoom) {
       this.addResetZoomIcon();
     }
   }
@@ -866,10 +859,10 @@ class CI360Viewer {
   addCloseFullscreenView(event) {
     const closeFullscreenIcon = document.createElement('div');
 
-    setCloseFullscreenViewStyles(closeFullscreenIcon);
+    closeFullScreenIcon.className = 'cloudimage-360-close-fullscreen-icon'
+    closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
 
-    closeFullscreenIcon.onclick = this.setFullscreenEvents.bind(this, event);
-    window.onkeyup = this.setFullscreenEvents.bind(this, event);
+    window.onkeyup = this.setFullScreenEvents.bind(this, event);
 
     this.iconsContainer.appendChild(closeFullscreenIcon);
   }
@@ -877,8 +870,7 @@ class CI360Viewer {
   add360ViewIcon() {
     const view360Icon = document.createElement('div');
 
-    set360ViewIconStyles(view360Icon);
-
+    view360Icon.className = 'cloudimage-360-view-360-icon'
     view360Icon.innerText = '0%';
 
     this.view360Icon = view360Icon;
@@ -888,8 +880,7 @@ class CI360Viewer {
   addFullscreenIcon() {
     const fullscreenIcon = document.createElement('div');
 
-    setFullscreenIconStyles(fullscreenIcon);
-
+    fullscreenIcon.className = 'cloudimage-360-fullscreen-icon'
     fullscreenIcon.onclick = this.openFullscreenModal.bind(this);
 
     this.fullscreenIcon = fullscreenIcon;
@@ -914,8 +905,7 @@ class CI360Viewer {
   addMagnifier() {
     const magnifyIcon = document.createElement('div');
 
-    setMagnifyIconStyles(magnifyIcon);
-
+    magnifyIcon.className = 'cloudimage-360-magnifier-icon'
     magnifyIcon.onclick = this.magnify.bind(this);
 
     this.magnifierIcon = magnifyIcon;
@@ -985,7 +975,7 @@ class CI360Viewer {
   openFullscreenModal() {
     const fullscreenModal = document.createElement('div');
 
-    setFullscreenModalStyles(fullscreenModal);
+    fullscreenModal.className = 'cloudimage-360-fullscreen-modal'
 
     const fullscreenContainer = this.container.cloneNode();
     const image = this.images[0];
@@ -1022,7 +1012,10 @@ class CI360Viewer {
   add360ViewCircleIcon() {
     const view360CircleIcon = new Image();
 
-    set360ViewCircleIconStyles(view360CircleIcon, this.bottomCircleOffset);
+    view360CircleIcon.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg'
+
+    view360CircleIcon.style.bottom = `${this.bottomCircleOffset}%`
+    view360CircleIcon.className= 'cloudimage-360-view-360-circle';
 
     this.view360CircleIcon = view360CircleIcon;
     this.innerBox.appendChild(view360CircleIcon);
@@ -1050,8 +1043,7 @@ class CI360Viewer {
   addResetZoomIcon() {
     const resetZoomIcon = document.createElement('div');
 
-    setResetZoomIconStyles(resetZoomIcon);
-
+    resetZoomIcon.className = 'cloudimage-360-reset-zoom-icon'
     this.resetZoomIcon = resetZoomIcon;
 
     resetZoomIcon.onmouseenter = this.resetZoom.bind(this);
@@ -1077,8 +1069,7 @@ class CI360Viewer {
 
   addLoader() {
     const loader = document.createElement('div');
-
-    setLoaderStyles(loader);
+    loader.className = 'cloudimage-360-loader';
 
     this.loader = loader;
     this.innerBox.appendChild(loader);
@@ -1087,7 +1078,8 @@ class CI360Viewer {
   addBoxShadow() {
     const boxShadow = document.createElement('div');
 
-    setBoxShadowStyles(boxShadow, this.boxShadow);
+    boxShadow.className = 'cloudimage-360-box-shadow';
+    boxShadow.style.boxShadow = this.boxShadow;
 
     this.innerBox.appendChild(boxShadow);
   }
@@ -1262,7 +1254,7 @@ class CI360Viewer {
 
     const oldElement = this.container;
     const newElement = oldElement.cloneNode(true);
-    const innerBox = newElement.querySelector('.cloudimage-inner-box');
+    const innerBox = newElement.querySelector('.cloudimage-360-inner-box');
 
     newElement.className = newElement.className.replace(' initialized', '');
     newElement.style.position = 'relative';
@@ -1333,7 +1325,7 @@ class CI360Viewer {
     if (prev) {
       prev.style.display = 'block';
       prev.addEventListener('mousedown', isReverse ? onRightStart : onLeftStart);
-      prev.addEventListener('touchstart', isReverse ? onRightStart : onLeftStart);
+      prev.addEventListener('touchstart', isReverse ? onRightStart : onLeftStart, { passive: true });
       prev.addEventListener('mouseup', isReverse ? onRightEnd : onLeftEnd);
       prev.addEventListener('touchend', isReverse ? onRightEnd : onLeftEnd);
 
@@ -1343,7 +1335,7 @@ class CI360Viewer {
     if (next) {
       next.style.display = 'block';
       next.addEventListener('mousedown', isReverse ? onLeftStart : onRightStart);
-      next.addEventListener('touchstart', isReverse ? onLeftStart : onRightStart);
+      next.addEventListener('touchstart', isReverse ? onLeftStart : onRightStart, { passive: true });
       next.addEventListener('mouseup', isReverse ? onLeftEnd : onRightEnd);
       next.addEventListener('touchend', isReverse ? onLeftEnd : onRightEnd);
 
@@ -1379,14 +1371,14 @@ class CI360Viewer {
 
   addInnerBox() {
     this.innerBox = document.createElement('div');
-    this.innerBox.className = 'cloudimage-inner-box';
+    this.innerBox.className = 'cloudimage-360-inner-box';
     this.container.appendChild(this.innerBox);
   }
 
   addIconsContainer() {
     this.iconsContainer = document.createElement('div');
-    this.iconsContainer.className = 'cloudimage-icons-container';
-    setIconsContainerStyles(this.iconsContainer);
+    this.iconsContainer.className = 'cloudimage-360-icons-container';
+
     this.innerBox.appendChild(this.iconsContainer);
   }
 
@@ -1412,8 +1404,8 @@ class CI360Viewer {
 
     if ( (swipeable) && (!this.disableDrag) ) {
       this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
-      this.container.addEventListener('touchend', this.touchEnd.bind(this), { passive: true });
-      this.container.addEventListener('touchmove', this.touchMove.bind(this));
+      this.container.addEventListener('touchend', this.touchEnd.bind(this));
+      this.container.addEventListener('touchmove', this.touchMove.bind(this), { passive: true });
     }
 
     if ( (!this.disablePointerZoom) && (!this.fullscreenView) ) {
@@ -1452,9 +1444,10 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
+      folder, filename, filenameY, imageList, indexZeroBase, amount, amountY, imageOffset, draggable = true,
+      swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, responsive, ciToken, ciFilters, ciTransformation,
-      lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector, filenameY, amountY
+      lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
