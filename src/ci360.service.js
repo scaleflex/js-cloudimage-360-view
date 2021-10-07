@@ -32,7 +32,7 @@ class CI360Viewer {
     this.activeImageY = 1;
     this.movementStart = { x: 0, y: 0};
     this.isStartSpin = false;
-    this.mouseDirection = ORIENTATIONS.CENTER
+    this.movingDirection = ORIENTATIONS.CENTER
     this.isClicked = false;
     this.loadedImages = 0;
     this.loadedImagesY = 0;
@@ -54,6 +54,7 @@ class CI360Viewer {
     this.zoomIntensity = 0;
     this.mouseTracked = false;
     this.mousePositions = { x: 0, y: 0 };
+    this.fingerPositions = { x: 0, y: 0 };
     this.pointerCurrentPosition = { x: 0, y: 0 };
     this.startPinchZoom = false;
     this.prevDistanceBetweenFingers = 0;
@@ -102,27 +103,27 @@ class CI360Viewer {
       this.setCursorPosition(event);
     }
 
-    const nextPositions = { x: pageX, y: pageY };
-
     if (this.isClicked) {
-      this.updateMouseDirection(this.mousePositions, nextPositions);
+      const nextPositions = { x: pageX, y: pageY };
+
+      this.updateMovingDirection(this.mousePositions, nextPositions);
       this.onMoveHandler(event)
     } else if (this.zoomIntensity) {
-      this.update();
+      this.update(event);
     }
   }
 
-  updateMouseDirection(prevPosition, nextPositions) {
+  updateMovingDirection(prevPosition, nextPositions) {
     if (this.isStartSpin) return;
 
     const differenceInPositionX = Math.abs(prevPosition.x - nextPositions.x);
     const differenceInPositionY = Math.abs(prevPosition.y - nextPositions.y);
     const sensitivity = 10;
   
-    if (differenceInPositionX > sensitivity) this.mouseDirection = ORIENTATIONS.X;
+    if (differenceInPositionX > sensitivity) this.movingDirection = ORIENTATIONS.X;
   
-    if (differenceInPositionY > sensitivity) this.mouseDirection = ORIENTATIONS.Y;
-    }
+    if (differenceInPositionY > sensitivity) this.movingDirection = ORIENTATIONS.Y;
+  }
 
   mouseScroll(event) {
     if (this.disablePointerZoom || this.isMagnifyOpen) return;
@@ -156,7 +157,8 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
-    this.movementStart = event.touches[0].clientX;
+    this.fingerPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    this.movementStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.isClicked = true;
   }
 
@@ -165,7 +167,8 @@ class CI360Viewer {
 
     if (this.zoomIntensity) this.resetZoom();
 
-    this.movementStart = 0;
+    this.movementStart = { x: 0, y: 0 };
+    this.isStartSpin = false;
     this.isClicked = false;
 
     if (this.bottomCircle) this.show360ViewCircleIcon();
@@ -177,7 +180,10 @@ class CI360Viewer {
     if (!this.disablePinchZoom && isTwoFingers(event)) {
       this.fingersPinchZoom(event);
     } else {
-      this.onMove(event.touches[0].clientX);
+      const nextPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+
+      this.updateMovingDirection(this.fingerPositions, nextPositions);
+      this.onMoveHandler(event);
     }
   }
 
@@ -384,7 +390,8 @@ class CI360Viewer {
   }
 
   onMoveHandler(event) {
-    const { pageX, pageY } = event;
+    const pageX = event.pageX || event.touches[0].clientX;
+    const pageY = event.pageY || event.touches[0].clientY;
 
     const isMoveRight = pageX - this.movementStart.x >= this.speedFactor;
     const isMoveLeft = this.movementStart.x - pageX >= this.speedFactor;
@@ -393,19 +400,19 @@ class CI360Viewer {
     
     if (this.bottomCircle) this.hide360ViewCircleIcon();
 
-    if (isMoveRight && this.mouseDirection === ORIENTATIONS.X) {
+    if (isMoveRight && this.movingDirection === ORIENTATIONS.X) {
       this.moveRight(pageX)
   
       this.isStartSpin = true;
-    } else if (isMoveLeft && this.mouseDirection === ORIENTATIONS.X) {  
+    } else if (isMoveLeft && this.movingDirection === ORIENTATIONS.X) {  
       this.moveLeft(pageX)
 
       this.isStartSpin = true;
-    } else if (isMoveTop && this.mouseDirection === ORIENTATIONS.Y) {
+    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y) {
       this.moveTop(pageY)
 
       this.isStartSpin = true;
-    } else if (isMoveBottom && this.mouseDirection === ORIENTATIONS.Y) {
+    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y) {
       this.moveBottom(pageY)
 
       this.isStartSpin = true;
