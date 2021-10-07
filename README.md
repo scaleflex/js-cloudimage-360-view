@@ -379,7 +379,7 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ## <a name="controls"></a> Controls
 
-You can add controls by adding elements with the following classes: **cloudimage-360-prev**, **cloudimage-360-next**
+You can add controls by adding elements with the following classes: **cloudimage-360-prev**, **cloudimage-360-next**, **cloudimage-360-top**, **cloudimage-360-bottom**
 
 ### Example CSS
 ```css
@@ -433,6 +433,8 @@ You can add controls by adding elements with the following classes: **cloudimage
 >
 	<button class="cloudimage-360-prev"></button>
 	<button class="cloudimage-360-next"></button>
+	<button class="cloudimage-360-top"></button>
+	<button class="cloudimage-360-bottom"></button>
 </div>
 ```
 
