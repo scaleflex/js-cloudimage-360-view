@@ -1374,7 +1374,7 @@ class CI360Viewer {
     this.addCanvas();
 
     const src = this.getSrc(responsive, container, folder, filename, ciParams);
-    const srcY = this.getSrc(responsive, contain, folder, filenameY, ciParams);
+    const srcY = this.getSrc(responsive, container, folder, filenameY, ciParams);
 
     this.preloadImages(
       amount,
