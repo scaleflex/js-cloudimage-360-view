@@ -9,7 +9,8 @@ const MOUSE_LEAVE_ACTIONS = {
 
 const ORIENTATIONS = {
   X: 'x-axis',
-  Y: 'y-axis'
+  Y: 'y-axis',
+  CENTER: 'center'
 }
 
 export { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS, ORIENTATIONS }
