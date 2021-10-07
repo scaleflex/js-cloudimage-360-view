@@ -532,15 +532,15 @@ class CI360Viewer {
       if (isReachedTheEdge) {
         this.activeImage = this.amountY;
 
-        if (isReverse ? this.prevElem : this.nextElem) {
-          addClass(isReverse ? this.prevElem : this.nextElem, 'not-active');
+        if (isReverse ? this.bottomElem : this.topElem) {
+          addClass(isReverse ? this.bottomElem : this.topElem, 'not-active');
         }
       } else {
         this.activeImageY += itemsSkipped;
 
-        if (this.nextElem) removeClass(this.nextElem, 'not-active');
+        if (this.topElem) removeClass(this.topElem, 'not-active');
 
-        if (this.prevElem) removeClass(this.prevElem, 'not-active');
+        if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
       }
     } else {
       this.activeImageY = (this.activeImageY + itemsSkipped) % this.amountY || this.amountY;
@@ -556,14 +556,14 @@ class CI360Viewer {
       if (isReachedTheEdge) {
         this.activeImageY = 1;
 
-        if (isReverse ? this.nextElem : this.prevElem) {
-          addClass(isReverse ? this.nextElem : this.prevElem, 'not-active');
+        if (isReverse ? this.topElem : this.bottomElem) {
+          addClass(isReverse ? this.topElem : this.bottomElem, 'not-active');
         }
       } else {
         this.activeImageY -= itemsSkipped;
 
-        if (this.prevElem) removeClass(this.prevElem, 'not-active');
-        if (this.nextElem) removeClass(this.nextElem, 'not-active');
+        if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
+        if (this.topElem) removeClass(this.topElem, 'not-active');
       }
     } else {
       if (this.activeImageY - itemsSkipped < 1) {
@@ -579,12 +579,34 @@ class CI360Viewer {
   }
 
   next() {
+    this.movingDirection = ORIENTATIONS.X;
+    this.activeImageY = 1;
+    
     this.moveActiveIndexUp(1);
     this.update();
   }
 
   prev() {
+    this.movingDirection = ORIENTATIONS.X;
+    this.activeImageY = 1;
+
     this.moveActiveIndexDown(1);
+    this.update();
+  }
+
+  top() {
+    this.movingDirection = ORIENTATIONS.Y;
+    this.activeImage = 1;
+
+    this.moveActiveYIndexUp(1);
+    this.update();
+  }
+
+  bottom() {
+    this.movingDirection = ORIENTATIONS.Y;
+    this.activeImage = 1;
+
+    this.moveActiveYIndexDown(1);
     this.update();
   }
 
@@ -1223,15 +1245,15 @@ class CI360Viewer {
     const onTopStart = (event) => {
       event.stopPropagation();
       this.onSpin();
-      this.prev();
-      this.loopTimeoutId = window.setInterval(this.prev.bind(this), this.autoplaySpeed);
+      this.top();
+      this.loopTimeoutId = window.setInterval(this.top.bind(this), this.autoplaySpeed);
     };
 
     const onBottomStart = (event) => {
       event.stopPropagation();
       this.onSpin();
-      this.next();
-      this.loopTimeoutId = window.setInterval(this.next.bind(this), this.autoplaySpeed);
+      this.bottom();
+      this.loopTimeoutId = window.setInterval(this.bottom.bind(this), this.autoplaySpeed);
     }
 
     const onLeftEnd = () => {
@@ -1281,7 +1303,7 @@ class CI360Viewer {
       top.addEventListener('mouseup', isReverse ? onBottomEnd : onTopEnd);
       top.addEventListener('touchend', isReverse ? onBottomEnd : onTopEnd);
 
-      this.topElem = prev;
+      this.topElem = top;
     }
 
     if (bottom) {

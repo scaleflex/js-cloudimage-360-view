@@ -48,6 +48,7 @@
 .cloudimage-360 .cloudimage-360-next.not-active {
   opacity: 0.4;
   cursor: default;
+  pointer-events: none;
 }
 
 .cloudimage-360 .cloudimage-360-top,
