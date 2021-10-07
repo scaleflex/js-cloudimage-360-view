@@ -23,16 +23,14 @@ import {
   normalizeZoomFactor,
 } from './ci360.utils';
 
-import { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS, ORIENTATIONS} from './ci360.constants';
+import { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS, ORIENTATIONS, AUTOPLAY_BEHAVIOR } from './ci360.constants';
 
 class CI360Viewer {
   constructor(container, fullscreen, ratio) {
     this.container = container;
-    this.activeImage = 1;
-    this.activeImageY = 1;
     this.movementStart = { x: 0, y: 0};
     this.isStartSpin = false;
-    this.movingDirection = ORIENTATIONS.CENTER
+    this.movingDirection = ORIENTATIONS.CENTER;
     this.isClicked = false;
     this.loadedImages = 0;
     this.loadedImagesY = 0;
@@ -127,9 +125,9 @@ class CI360Viewer {
   mouseScroll(event) {
     if (this.disablePointerZoom || this.isMagnifyOpen) return;
 
-    const isClickedToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.clickToStart
+    const isClickedToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.CLICK_TO_START
       && this.clickedToZoom;
-    const isScrolledToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.scrollToStart
+    const isScrolledToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.SCROLL_TO_START
 
     if (isClickedToZoom || isScrolledToZoom) {
       this.initMouseScrollZoom(event);
@@ -491,6 +489,8 @@ class CI360Viewer {
       }
     } else {
       this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
+
+      if (this.activeImage === this.amount && this.amountY) this.spinY = true;
     }
   }
 
@@ -517,6 +517,7 @@ class CI360Viewer {
     } else {
       if (this.activeImage - itemsSkipped < 1) {
         this.activeImage = this.amount + (this.activeImage - itemsSkipped);
+        this.spinY = true;
       } else {
         this.activeImage -= itemsSkipped;
       }    
@@ -544,6 +545,8 @@ class CI360Viewer {
       }
     } else {
       this.activeImageY = (this.activeImageY + itemsSkipped) % this.amountY || this.amountY;
+
+      if (this.activeImageY === this.amountY) this.spinY = false;
     }
   }
 
@@ -568,6 +571,7 @@ class CI360Viewer {
     } else {
       if (this.activeImageY - itemsSkipped < 1) {
         this.activeImageY = this.amountY + (this.activeImageY - itemsSkipped);
+        this.spinY = false;
       } else {
         this.activeImageY -= itemsSkipped;
       }    
@@ -575,12 +579,36 @@ class CI360Viewer {
   }
 
   loop(reversed) {
-    reversed ? this.prev() : this.next();
+    switch (this.autoplayBehavior) {
+      case AUTOPLAY_BEHAVIOR.SPIN_Y:
+        reversed ? this.bottom() : this.top();
+        break;
+
+      case AUTOPLAY_BEHAVIOR.SPIN_XY:
+        if (this.spinY) {
+          reversed ? this.bottom() : this.top();
+        } else {
+          reversed ? this.prev() : this.next();
+        }
+        break;
+
+      case AUTOPLAY_BEHAVIOR.SPIN_YX:
+        if (this.spinY) {
+          reversed ? this.bottom() : this.top();
+        } else {
+          reversed ? this.prev() : this.next();
+        }
+        break;
+
+      case AUTOPLAY_BEHAVIOR.SPIN_X:
+      default:
+        reversed ? this.prev() : this.next();
+    }
   }
 
   next() {
     this.movingDirection = ORIENTATIONS.X;
-    this.activeImageY = 1;
+    this.activeImageY = this.reversed ? this.amountY : 1;
     
     this.moveActiveIndexUp(1);
     this.update();
@@ -588,7 +616,7 @@ class CI360Viewer {
 
   prev() {
     this.movingDirection = ORIENTATIONS.X;
-    this.activeImageY = 1;
+    this.activeImageY = this.reversed ? this.amountY : 1;
 
     this.moveActiveIndexDown(1);
     this.update();
@@ -596,7 +624,7 @@ class CI360Viewer {
 
   top() {
     this.movingDirection = ORIENTATIONS.Y;
-    this.activeImage = 1;
+    this.activeImage = this.reversed ? this.amount : 1;
 
     this.moveActiveYIndexUp(1);
     this.update();
@@ -604,7 +632,7 @@ class CI360Viewer {
 
   bottom() {
     this.movingDirection = ORIENTATIONS.Y;
-    this.activeImage = 1;
+    this.activeImage = this.reversed ? this.amount : 1;
 
     this.moveActiveYIndexDown(1);
     this.update();
@@ -1390,7 +1418,7 @@ class CI360Viewer {
 
   applyMouseLeaveAction(action) {
     switch(action) {
-      case MOUSE_LEAVE_ACTIONS.resetZoom:
+      case MOUSE_LEAVE_ACTIONS.RESET_ZOOM:
         this.container.addEventListener('mouseleave', this.resetZoom.bind(this));
         break;
     }
@@ -1399,7 +1427,7 @@ class CI360Viewer {
   init(container) {
     let {
       folder, filename, imageList, indexZeroBase, amount, imageOffset, draggable = true, swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, responsive, ciToken, ciFilters, ciTransformation,
+      autoplay, autoplayBehavior, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, responsive, ciToken, ciFilters, ciTransformation,
       lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, magnifyIconSelector, fullscreenIconSelector, filenameY, amountY
     } = get360ViewProps(container);
 
@@ -1415,11 +1443,15 @@ class CI360Viewer {
     this.indexZeroBase = indexZeroBase;
     this.amount = amount;
     this.amountY = amountY;
+    this.activeImage = autoplayReverse ? amount : 1;
+    this.activeImageY = autoplayReverse ? amountY : 1;
+    this.spinY = autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX ? true : false;
     this.imageOffset = imageOffset;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
     this.autoplay = autoplay;
+    this.autoplayBehavior = autoplayBehavior;
     this.playOnce = playOnce;
     this.toStartPointerZoom = toStartPointerZoom,
     this.disablePointerZoom = disablePointerZoom;

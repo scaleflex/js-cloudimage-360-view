@@ -1,4 +1,4 @@
-import { TO_START_POINTER_ZOOM } from './ci360.constants';
+import { AUTOPLAY_BEHAVIOR, TO_START_POINTER_ZOOM } from './ci360.constants';
 
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
@@ -16,6 +16,9 @@ const get360ViewProps = (image) => ({
   keys: isTrue(image, 'keys'),
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
+  autoplayBehavior: attr(image, 'autoplay-behavior')
+  || attr(image, 'data-autoplay-behavior') 
+  || AUTOPLAY_BEHAVIOR.SPIN_X,
   playOnce: isTrue(image, 'play-once'),
   disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
   disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
@@ -23,7 +26,7 @@ const get360ViewProps = (image) => ({
     || attr(image, 'data-on-mouse-leave'),
   toStartPointerZoom: attr(image, 'to-start-pointer-zoom')
     || attr(image, 'data-to-start-pointer-zoom') 
-    || TO_START_POINTER_ZOOM.scrollToStart,
+    || TO_START_POINTER_ZOOM.SCROLL_TO_START,
   pointerZoomFactor: parseInt(
     attr(image, 'pointer-zoom-factor')
     || attr(image, 'data-pointer-zoom-factor') 

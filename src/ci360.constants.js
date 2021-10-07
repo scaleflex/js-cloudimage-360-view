@@ -1,10 +1,10 @@
 const TO_START_POINTER_ZOOM = {
-  scrollToStart: 'scroll',
-  clickToStart: 'click'
+  SCROLL_TO_START: 'scroll',
+  CLICK_TO_START: 'click'
 }
 
 const MOUSE_LEAVE_ACTIONS = {
-  resetZoom: 'resetZoom',
+  RESET_ZOOM: 'resetZoom'
 }
 
 const ORIENTATIONS = {
@@ -13,4 +13,16 @@ const ORIENTATIONS = {
   CENTER: 'center'
 }
 
-export { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS, ORIENTATIONS }
+const AUTOPLAY_BEHAVIOR = {
+  SPIN_X: 'spin-x',
+  SPIN_Y: 'spin-y',
+  SPIN_XY: 'spin-xy',
+  SPIN_YX: 'spin-yx'
+}
+
+export { 
+  TO_START_POINTER_ZOOM,
+  MOUSE_LEAVE_ACTIONS,
+  ORIENTATIONS,
+  AUTOPLAY_BEHAVIOR
+}
