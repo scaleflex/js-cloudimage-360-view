@@ -1107,6 +1107,31 @@ class CI360Viewer {
     this.view360Icon = null;
   }
 
+  isCompletedCyle() {
+    switch(this.autoplayBehavior) {
+      case AUTOPLAY_BEHAVIOR.SPIN_XY:
+      case AUTOPLAY_BEHAVIOR.SPIN_Y: {
+        const isReachedTheEdge = this.reversed ? (this.activeImageY === 1) 
+        : (this.activeImageY === this.amountY);
+
+        if (isReachedTheEdge) return true;
+
+        return false;
+      }
+
+      case AUTOPLAY_BEHAVIOR.SPIN_X:
+      case AUTOPLAY_BEHAVIOR.SPIN_YX:
+      default: {
+        const isReachedTheEdge = this.reversed ? (this.activeImage === 1) 
+        : (this.activeImage === this.amount);
+  
+        if (isReachedTheEdge) return true;
+
+        return false;
+      }
+    }
+  }
+
   play() {
     if (this.bottomCircle) this.hide360ViewCircleIcon();
     this.remove360ViewIcon();
@@ -1114,10 +1139,7 @@ class CI360Viewer {
     this.loopTimeoutId = window.setInterval(() => {
       this.loop(this.reversed);
 
-      const isPlayedOnce = (
-        (this.reversed && this.activeImage === 1) ||
-        (!this.reversed && (this.activeImage === this.amount))
-      );
+      const isPlayedOnce = this.isCompletedCyle();
 
       if (this.playOnce && isPlayedOnce) {
         window.clearTimeout(this.loopTimeoutId);
