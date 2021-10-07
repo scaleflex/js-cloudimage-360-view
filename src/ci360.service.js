@@ -427,6 +427,7 @@ class CI360Viewer {
     : this.moveActiveIndexUp(itemsSkippedRight);
 
     this.movementStart.x = currentPositionX;
+    this.activeImageY = 1;
     this.update();
   }
 
@@ -437,7 +438,8 @@ class CI360Viewer {
 
     this.spinReverse ? this.moveActiveIndexUp(itemsSkippedLeft) 
     : this.moveActiveIndexDown(itemsSkippedLeft);
-
+    
+    this.activeImageY = 1;
     this.movementStart.x = currentPositionX;
     this.update();
   }
@@ -450,6 +452,7 @@ class CI360Viewer {
     this.spinReverse ? this.moveActiveYIndexUp(itemsSkippedTop)
     : this.moveActiveYIndexDown(itemsSkippedTop);
 
+    this.activeImage = 1;
     this.movementStart.y = currentPositionY;
     this.update();
   }
@@ -462,6 +465,7 @@ class CI360Viewer {
     this.spinReverse ? this.moveActiveYIndexDown(itemsSkippedBottom)
     : this.moveActiveYIndexUp(itemsSkippedBottom);
 
+    this.activeImage = 1;
     this.movementStart.y = currentPositionY;
     this.update();
   }
@@ -623,7 +627,7 @@ class CI360Viewer {
     let image = this.originalImages[this.activeImage -1];
 
     if (this.movingDirection === ORIENTATIONS.Y) {
-      image = this.imagesY[this.activeImageY - 1];
+      image = this.originalImagesY[this.activeImageY - 1];
     }
 
     let position = this.pointerCurrentPosition;
