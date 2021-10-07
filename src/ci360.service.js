@@ -1202,6 +1202,8 @@ class CI360Viewer {
     const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
     const prev = this.container.querySelector('.cloudimage-360-prev');
     const next = this.container.querySelector('.cloudimage-360-next');
+    const top = this.container.querySelector('.cloudimage-360-top');
+    const bottom = this.container.querySelector('.cloudimage-360-bottom');
 
     if (!prev && !next) return;
 
@@ -1217,15 +1219,41 @@ class CI360Viewer {
       this.next();
       this.loopTimeoutId = window.setInterval(this.next.bind(this), this.autoplaySpeed);
     };
+
+    const onTopStart = (event) => {
+      event.stopPropagation();
+      this.onSpin();
+      this.prev();
+      this.loopTimeoutId = window.setInterval(this.prev.bind(this), this.autoplaySpeed);
+    };
+
+    const onBottomStart = (event) => {
+      event.stopPropagation();
+      this.onSpin();
+      this.next();
+      this.loopTimeoutId = window.setInterval(this.next.bind(this), this.autoplaySpeed);
+    }
+
     const onLeftEnd = () => {
       this.onFinishSpin();
       window.clearTimeout(this.loopTimeoutId);
     };
+
     const onRightEnd = () => {
       this.onFinishSpin();
       window.clearTimeout(this.loopTimeoutId);
     };
 
+    const onTopEnd = () => {
+      this.onFinishSpin();
+      window.clearTimeout(this.loopTimeoutId);
+    };
+
+    const onBottomEnd = () => {
+      this.onFinishSpin();
+      window.clearTimeout(this.loopTimeoutId);
+    };
+    
     if (prev) {
       prev.style.display = 'block';
       prev.addEventListener('mousedown', isReverse ? onRightStart : onLeftStart);
@@ -1244,6 +1272,26 @@ class CI360Viewer {
       next.addEventListener('touchend', isReverse ? onLeftEnd : onRightEnd);
 
       this.nextElem = next;
+    }
+
+    if (top) {
+      top.style.display = 'block';
+      top.addEventListener('mousedown', isReverse ? onBottomStart : onTopStart);
+      top.addEventListener('touchstart', isReverse ? onBottomStart : onTopStart);
+      top.addEventListener('mouseup', isReverse ? onBottomEnd : onTopEnd);
+      top.addEventListener('touchend', isReverse ? onBottomEnd : onTopEnd);
+
+      this.topElem = prev;
+    }
+
+    if (bottom) {
+      bottom.style.display = 'block';
+      bottom.addEventListener('mousedown', isReverse ? onTopStart : onBottomStart);
+      bottom.addEventListener('touchstart', isReverse ? onTopStart : onBottomStart);
+      bottom.addEventListener('mouseup', isReverse ? onTopEnd : onBottomEnd);
+      bottom.addEventListener('touchend', isReverse ? onTopEnd : onBottomEnd);
+
+      this.bottomElem = bottom;
     }
 
     if (isReverse ? next : prev) {
