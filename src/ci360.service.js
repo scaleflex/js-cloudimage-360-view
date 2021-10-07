@@ -53,8 +53,7 @@ class CI360Viewer {
     this.startPointerZoom = false;
     this.zoomIntensity = 0;
     this.mouseTracked = false;
-    this.mousePositions = { x: 0, y: 0 };
-    this.fingerPositions = { x: 0, y: 0 };
+    this.intialPositions = { x: 0, y: 0 };
     this.pointerCurrentPosition = { x: 0, y: 0 };
     this.startPinchZoom = false;
     this.prevDistanceBetweenFingers = 0;
@@ -74,7 +73,7 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
-    this.mousePositions = { x: pageX, y: pageY };
+    this.intialPositions = { x: pageX, y: pageY };
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
     this.clickedToZoom = true;
@@ -106,10 +105,10 @@ class CI360Viewer {
     if (this.isClicked) {
       const nextPositions = { x: pageX, y: pageY };
 
-      this.updateMovingDirection(this.mousePositions, nextPositions);
+      this.updateMovingDirection(this.intialPositions, nextPositions);
       this.onMoveHandler(event)
     } else if (this.zoomIntensity) {
-      this.update(event);
+      this.update();
     }
   }
 
@@ -122,7 +121,7 @@ class CI360Viewer {
   
     if (differenceInPositionX > sensitivity) this.movingDirection = ORIENTATIONS.X;
   
-    if (differenceInPositionY > sensitivity) this.movingDirection = ORIENTATIONS.Y;
+    if (differenceInPositionY > sensitivity && this.amountY) this.movingDirection = ORIENTATIONS.Y;
   }
 
   mouseScroll(event) {
@@ -157,7 +156,7 @@ class CI360Viewer {
       this.autoplay = false;
     }
 
-    this.fingerPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    this.intialPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.movementStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.isClicked = true;
   }
@@ -182,7 +181,7 @@ class CI360Viewer {
     } else {
       const nextPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 
-      this.updateMovingDirection(this.fingerPositions, nextPositions);
+      this.updateMovingDirection(this.intialPositions, nextPositions);
       this.onMoveHandler(event);
     }
   }
@@ -408,11 +407,11 @@ class CI360Viewer {
       this.moveLeft(currentPositionX)
 
       this.isStartSpin = true;
-    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y && this.amountY) {
+    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y) {
       this.moveTop(currentPositionY)
 
       this.isStartSpin = true;
-    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y && this.amountY) {
+    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y) {
       this.moveBottom(currentPositionY)
 
       this.isStartSpin = true;
@@ -428,7 +427,7 @@ class CI360Viewer {
     : this.moveActiveIndexUp(itemsSkippedRight);
 
     this.movementStart.x = currentPositionX;
-    this.update(ORIENTATIONS.X);
+    this.update();
   }
 
   moveLeft(currentPositionX) { 
@@ -440,7 +439,7 @@ class CI360Viewer {
     : this.moveActiveIndexDown(itemsSkippedLeft);
 
     this.movementStart.x = currentPositionX;
-    this.update(ORIENTATIONS.X);
+    this.update();
   }
 
   moveTop(currentPositionY) {
@@ -452,7 +451,7 @@ class CI360Viewer {
     : this.moveActiveYIndexDown(itemsSkippedTop);
 
     this.movementStart.y = currentPositionY;
-    this.update(ORIENTATIONS.Y);
+    this.update();
   }
 
   moveBottom(currentPositionY) {
@@ -464,7 +463,7 @@ class CI360Viewer {
     : this.moveActiveYIndexUp(itemsSkippedBottom);
 
     this.movementStart.y = currentPositionY;
-    this.update(ORIENTATIONS.Y);
+    this.update();
   }
 
   moveActiveIndexUp(itemsSkipped) {
@@ -585,10 +584,10 @@ class CI360Viewer {
     this.update();
   }
 
-  update(orientation) {
+  update() {
     let image = this.images[this.activeImage - 1];
 
-    if (orientation === ORIENTATIONS.Y) {
+    if (this.movingDirection === ORIENTATIONS.Y) {
       image = this.imagesY[this.activeImageY - 1];
     }
 
@@ -621,7 +620,12 @@ class CI360Viewer {
   }
   
   updateImageScale(ctx) {
-    const image = this.originalImages[this.activeImage -1];
+    let image = this.originalImages[this.activeImage -1];
+
+    if (this.movingDirection === ORIENTATIONS.Y) {
+      image = this.imagesY[this.activeImageY - 1];
+    }
+
     let position = this.pointerCurrentPosition;
 
     if (this.startPointerZoom) position = this.getCursorPositionInCanvas();
