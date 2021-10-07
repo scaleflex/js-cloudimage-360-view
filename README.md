@@ -168,11 +168,23 @@ Your images folder on server.
 
 The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and [data-amount](#data-amount).
 
+### data-filename-y (or filename-y)
+
+###### Type: **String** | Default: **image-y-{index}.jpg** | _optional_
+
+The filename pattern for Y-axis images.  Must include {index}, which the library will replace with a number between 1 and [data-amount-y](#data-amount-y).
+
 ### <a name="data-amount"></a> data-amount (or amount)
 
 ###### Type: **Number** | Default: **36** | _optional_
 
 Amount of images to load for 360 view.
+
+### <a name="data-amount-y"></a> data-amount-y (or amount-y)
+
+###### Type: **Number** | Default: **0** | _optional_
+
+Amount of images to load in Y-axis for 360 view.
 
 ### data-keys (or keys)
 
@@ -185,6 +197,14 @@ Support for 360 spin by pressing arrow keys on keyboard.
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Autoplay 360 spin view on load.
+
+### data-autoplay-behavior (or autoplay-behavior)
+
+###### Type: **String** | Default: **spin-x** | _optional_
+
+Changing autoplay behavior
+
+Available behaviors (spin-x, spin-y, spin-xy, spin-yx)
 
 ### data-full-screen (or full-screen)
 

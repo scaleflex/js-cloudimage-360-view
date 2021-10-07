@@ -1186,7 +1186,7 @@ class CI360Viewer {
           const lastIndex = resultSrc.lastIndexOf('//');
           const originalSrc = resultSrc.slice(lastIndex);
 
-          this.addImage(resultSrc, originalSrc, lazyload, lazySelector, index);
+          this.addImage(resultSrc, originalSrc, orientation, lazyload, lazySelector, index);
         });
       } catch (error) {
         console.error(`Wrong format in image-list attribute: ${error.message}`);
