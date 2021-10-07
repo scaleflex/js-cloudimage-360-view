@@ -28,7 +28,7 @@ import { TO_START_POINTER_ZOOM, MOUSE_LEAVE_ACTIONS, ORIENTATIONS, AUTOPLAY_BEHA
 class CI360Viewer {
   constructor(container, fullscreen, ratio) {
     this.container = container;
-    this.movementStart = { x: 0, y: 0};
+    this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
     this.movingDirection = ORIENTATIONS.CENTER;
     this.isClicked = false;
@@ -81,7 +81,7 @@ class CI360Viewer {
   mouseUp() {
     if (!this.imagesLoaded || !this.isClicked) return;
 
-    this.movementStart = { x: 0, y: 0};
+    this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
     this.isClicked = false;
     this.container.style.cursor = 'grab';
@@ -119,7 +119,7 @@ class CI360Viewer {
   
     if (differenceInPositionX > sensitivity) this.movingDirection = ORIENTATIONS.X;
   
-    if (differenceInPositionY > sensitivity && this.amountY) this.movingDirection = ORIENTATIONS.Y;
+    if (differenceInPositionY > sensitivity && this.allowSpinY) this.movingDirection = ORIENTATIONS.Y;
   }
 
   mouseScroll(event) {
@@ -490,7 +490,7 @@ class CI360Viewer {
     } else {
       this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
 
-      if (this.activeImage === this.amount && this.amountY) this.spinY = true;
+      if (this.activeImage === this.amount && this.allowSpinY) this.spinY = true;
     }
   }
 
@@ -512,7 +512,6 @@ class CI360Viewer {
         if (this.prevElem) removeClass(this.prevElem, 'not-active');
 
         if (this.nextElem) removeClass(this.nextElem, 'not-active');
-  
       }
     } else {
       if (this.activeImage - itemsSkipped < 1) {
@@ -1470,9 +1469,10 @@ class CI360Viewer {
     this.indexZeroBase = indexZeroBase;
     this.amount = amount;
     this.amountY = amountY;
+    this.allowSpinY = (!!amountY && !!filenameY);
     this.activeImage = autoplayReverse ? amount : 1;
     this.activeImageY = autoplayReverse ? amountY : 1;
-    this.spinY = autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX ? true : false;
+    this.spinY = (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX) ? true : false;
     this.imageOffset = imageOffset;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
