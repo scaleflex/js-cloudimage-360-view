@@ -390,80 +390,80 @@ class CI360Viewer {
   }
 
   onMoveHandler(event) {
-    const pageX = event.pageX || event.touches[0].clientX;
-    const pageY = event.pageY || event.touches[0].clientY;
+    const currentPositionX = this.isMobile ? event.touches[0].clientX : event.pageX;
+    const currentPositionY = this.isMobile ? event.touches[0].clientY : event.pageY;
 
-    const isMoveRight = pageX - this.movementStart.x >= this.speedFactor;
-    const isMoveLeft = this.movementStart.x - pageX >= this.speedFactor;
-    const isMoveTop = this.movementStart.y - pageY >= this.speedFactor;
-    const isMoveBottom = pageY - this.movementStart.y >= this.speedFactor;
+    const isMoveRight = currentPositionX - this.movementStart.x >= this.speedFactor;
+    const isMoveLeft = this.movementStart.x - currentPositionX >= this.speedFactor;
+    const isMoveTop = this.movementStart.y - currentPositionY >= this.speedFactor;
+    const isMoveBottom = currentPositionY - this.movementStart.y >= this.speedFactor;
     
     if (this.bottomCircle) this.hide360ViewCircleIcon();
 
     if (isMoveRight && this.movingDirection === ORIENTATIONS.X) {
-      this.moveRight(pageX)
+      this.moveRight(currentPositionX)
   
       this.isStartSpin = true;
     } else if (isMoveLeft && this.movingDirection === ORIENTATIONS.X) {  
-      this.moveLeft(pageX)
+      this.moveLeft(currentPositionX)
 
       this.isStartSpin = true;
-    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y) {
-      this.moveTop(pageY)
+    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y && this.amountY) {
+      this.moveTop(currentPositionY)
 
       this.isStartSpin = true;
-    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y) {
-      this.moveBottom(pageY)
+    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y && this.amountY) {
+      this.moveBottom(currentPositionY)
 
       this.isStartSpin = true;
     }
   }
 
-  moveRight(pageX) {
+  moveRight(currentPositionX) {
     const itemsSkippedRight = Math.floor(
-      (pageX - this.movementStart.x) / this.speedFactor
+      (currentPositionX - this.movementStart.x) / this.speedFactor
     ) || 1;
 
     this.spinReverse ? this.moveActiveIndexDown(itemsSkippedRight) 
     : this.moveActiveIndexUp(itemsSkippedRight);
 
-    this.movementStart.x = pageX;
+    this.movementStart.x = currentPositionX;
     this.update(ORIENTATIONS.X);
   }
 
-  moveLeft(pageX) { 
+  moveLeft(currentPositionX) { 
     const itemsSkippedLeft = Math.floor(
-      (this.movementStart.x - pageX) / this.speedFactor
+      (this.movementStart.x - currentPositionX) / this.speedFactor
     ) || 1;
 
     this.spinReverse ? this.moveActiveIndexUp(itemsSkippedLeft) 
     : this.moveActiveIndexDown(itemsSkippedLeft);
 
-    this.movementStart.x = pageX;
+    this.movementStart.x = currentPositionX;
     this.update(ORIENTATIONS.X);
   }
 
-  moveTop(pageY) {
+  moveTop(currentPositionY) {
     const itemsSkippedTop = Math.floor(
-      (this.movementStart.y - pageY) / this.speedFactor
+      (this.movementStart.y - currentPositionY) / this.speedFactor
     ) || 1;
 
     this.spinReverse ? this.moveActiveYIndexUp(itemsSkippedTop)
     : this.moveActiveYIndexDown(itemsSkippedTop);
 
-    this.movementStart.y = pageY;
+    this.movementStart.y = currentPositionY;
     this.update(ORIENTATIONS.Y);
   }
 
-  moveBottom(pageY) {
+  moveBottom(currentPositionY) {
     const itemsSkippedBottom = Math.floor(
-      (pageY - this.movementStart.y) / this.speedFactor
+      (currentPositionY - this.movementStart.y) / this.speedFactor
     ) || 1;
 
     this.spinReverse ? this.moveActiveYIndexDown(itemsSkippedBottom)
     : this.moveActiveYIndexUp(itemsSkippedBottom);
 
-    this.movementStart.y = pageY;
+    this.movementStart.y = currentPositionY;
     this.update(ORIENTATIONS.Y);
   }
 
