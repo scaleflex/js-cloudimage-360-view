@@ -35,7 +35,7 @@ const get360ViewProps = (image) => ({
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
-  fullscreen: isTrue(image, 'full-screen'),
+  fullscreen: isTrue(image, 'fullscreen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
     parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen'),
@@ -69,17 +69,17 @@ const setView360Icon = (view360Icon, logoSrc) => {
   view360Icon.style.background = `rgba(255,255,255,0.8) url('${logoSrc}') 50% 50% / contain no-repeat`;
 }
 
-const magnify = (container, src, glass, zoom) => {
+const magnify = (container, offset = {}, src, glass, zoom) => {
   let w, h, bw;
   const {x: offsetX = 0, y: offsetY = 0} = offset;
   const backgroundSizeX = (container.offsetWidth - (offsetX * 2)) * zoom;
   const backgroundSizeY = (container.offsetHeight - (offsetY * 2)) * zoom;
 
-  glass.setAttribute("class", "img-magnifier-glass");
+  glass.setAttribute("class", "cloudimage-360-img-magnifier-glass");
   container.prepend(glass);
 
   glass.style.backgroundImage = "url('" + src + "')";
-  glass.style.backgroundSize = (container.offsetWidth * zoom) + "px " + (container.offsetHeight * zoom) + "px";
+  glass.style.backgroundSize = `${backgroundSizeX}px ${backgroundSizeY}px`
 
   bw = 3;
   w = glass.offsetWidth / 2;

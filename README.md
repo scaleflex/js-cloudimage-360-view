@@ -186,7 +186,7 @@ Support for 360 spin by pressing arrow keys on keyboard.
 
 Autoplay 360 spin view on load.
 
-### data-full-screen (or full-screen)
+### data-fullscreen (or fullscreen)
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
