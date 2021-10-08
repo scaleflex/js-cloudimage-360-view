@@ -1,6 +1,6 @@
 import { TO_START_POINTER_ZOOM } from './ci360.constants';
 
-//TODO [deprecated]: remove full-screen in the upcoming versions
+//TODO [deprecated]: remove full-screen, logo-src in the upcoming versions
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
