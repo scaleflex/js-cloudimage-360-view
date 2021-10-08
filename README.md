@@ -130,7 +130,7 @@ window.CI360.getActiveIndexByID('id_of_product');
 ```
 ## <a name="customize-elements"></a> Customize elements
 
-You can elements adding the following classes:
+You can customize elements by adding the following classes:
 
 ### Example CSS
 ```css
