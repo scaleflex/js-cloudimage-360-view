@@ -1,17 +1,17 @@
-.cloudimage-360 .cloudimage-360-prev,
-.cloudimage-360 .cloudimage-360-next {
+.cloudimage-360 .cloudimage-360-left,
+.cloudimage-360 .cloudimage-360-right {
   padding: 8px;
   background: rgb(244, 244, 244);
   border: none;
   border-radius: 4px;
 }
 
-.cloudimage-360 .cloudimage-360-prev:focus,
-.cloudimage-360 .cloudimage-360-next:focus {
+.cloudimage-360 .cloudimage-360-left:focus,
+.cloudimage-360 .cloudimage-360-right:focus {
   outline: none;
 }
 
-.cloudimage-360 .cloudimage-360-prev {
+.cloudimage-360 .cloudimage-360-left {
   display: none;
   position: absolute;
   z-index: 100;
@@ -19,7 +19,7 @@
   left: 20px;
 }
 
-.cloudimage-360 .cloudimage-360-next {
+.cloudimage-360 .cloudimage-360-right {
   display: none;
   position: absolute;
   z-index: 100;
@@ -27,8 +27,8 @@
   right: 20px;
 }
 
-.cloudimage-360 .cloudimage-360-prev:before,
-.cloudimage-360 .cloudimage-360-next:before {
+.cloudimage-360 .cloudimage-360-left:before,
+.cloudimage-360 .cloudimage-360-right:before {
   content: '';
   display: block;
   width: 30px;
@@ -36,16 +36,16 @@
   background: 50% 50% / cover no-repeat;
 }
 
-.cloudimage-360 .cloudimage-360-prev:before {
+.cloudimage-360 .cloudimage-360-left:before {
   background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
 }
 
-.cloudimage-360 .cloudimage-360-next:before {
+.cloudimage-360 .cloudimage-360-right:before {
   background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
 }
 
-.cloudimage-360 .cloudimage-360-prev.not-active,
-.cloudimage-360 .cloudimage-360-next.not-active {
+.cloudimage-360 .cloudimage-360-left.not-active,
+.cloudimage-360 .cloudimage-360-right.not-active {
   opacity: 0.4;
   cursor: default;
   pointer-events: none;
