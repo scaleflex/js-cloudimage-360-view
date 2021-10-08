@@ -130,17 +130,17 @@ window.CI360.getActiveIndexByID('id_of_product');
 ```
 ## <a name="customize-elements"></a> Customize elements
 
-You can elements adding the following classes:
+You can customize elements by adding the following classes:
 
 ### Example CSS
 ```css
 .cloudimage-360-icons-container {
 	top: 5px;
-  right: 5px;
+  	right: 5px;
 }
 .cloudimage-360-fullscreen-modal {
 	top: 0;
-  bottom: 0;
+  	bottom: 0;
 }
 .cloudimage-360-magnifier-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
@@ -149,7 +149,7 @@ You can elements adding the following classes:
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
 }
 .cloudimage-360-view-360-circle {
-  margin: auto;
+  	margin: auto;
 }
 .cloudimage-360-reset-zoom-icon {
 	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986) 50% 50% / cover no-repeat;
@@ -162,11 +162,11 @@ You can elements adding the following classes:
 }
 .cloudimage-360-box-shadow {
 	top: 0;
-  left: 0;
+  	left: 0;
 }
 .cloudimage-360-img-magnifier-glass {
 	border: 3px solid #000;
-  border-radius: 50%;
+  	border-radius: 50%;
 }
 ```
 
@@ -283,6 +283,7 @@ Hide 360 view icon.
 ~~###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_~~
 
 ~~URL of asset to use as the 360 view icon.~~
+
 kindly read [Customize elements](#customize-elements)
 ### data-control-reverse (or control-reverse)
 
