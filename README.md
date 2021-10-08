@@ -81,8 +81,8 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 <div
    class="cloudimage-360"
    data-folder="https://scaleflex.airstore.io/demo/360-car/"
-   data-filename="iris-{index}.jpeg"
-   data-amount="36"
+   data-filename-x="iris-{index}.jpeg"
+   data-amount-x="36"
 ></div>
 ```
 
@@ -162,13 +162,15 @@ The selector for js-cloudimage-360-view lib.
 
 Your images folder on server.
 
-### data-filename (or filename)
+### data-filename-x (or filename-x)
+### ~~data-filename (or filename)~~ [deprecated]
 
 ###### Type: **String** | Default: **image-{index}.jpg** | _optional_
 
-The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and [data-amount](#data-amount).
+The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and [data-amount-x](#data-amount-x).
 
-### <a name="data-amount"></a> data-amount (or amount)
+### <a name="data-amount-x"></a> data-amount-x (or amount-x)
+###  ~~data-amount (or amount-x)~~ [deprecated]
 
 ###### Type: **Number** | Default: **36** | _optional_
 
@@ -187,6 +189,8 @@ Support for 360 spin by pressing arrow keys on keyboard.
 Autoplay 360 spin view on load.
 
 ### data-fullscreen (or fullscreen)
+### ~~data-full-screen (or full-screen)~~ [deprecated]
+
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
@@ -232,7 +236,7 @@ Speed Factor of changing frames on drag event.
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
-Spin direction, by default it uses counterclockwise (image indexes from 1 to data-amount).
+Spin direction, by default it uses counterclockwise (image indexes from 1 to data-amount-x).
 
 ### data-box-shadow (or box-shadow)
 
@@ -252,17 +256,17 @@ Display 360 view line at the bottom of container.
 
 Hide 360 view icon.
 
-### data-logo-src (or logo-src)
+### ~~data-logo-src (or logo-src)~~ [deprecated]
 
 ###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_
 
-URL of asset to use as the 360 view icon.
+~~URL of asset to use as the 360 view icon.~~
 
 ### data-control-reverse (or control-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
-Spin direction using controls, by default it uses counterclockwise (image indexes from 1 to data-amount).
+Spin direction using controls, by default it uses counterclockwise (image indexes from 1 to data-amount-x).
 
 ### data-stop-at-edges (or stop-at-edges)
 
@@ -359,47 +363,47 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ## <a name="controls"></a> Controls
 
-You can add controls by adding elements with the following classes: **cloudimage-360-prev**, **cloudimage-360-next**
+You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right** ~~**cloudimage-360-prev**, **cloudimage-360-next**~~ [deprecated]
 
 ### Example CSS
 ```css
-.cloudimage-360 .cloudimage-360-prev, .cloudimage-360 .cloudimage-360-next {
+.cloudimage-360 .cloudimage-360-left, .cloudimage-360 .cloudimage-360-right {
 	padding: 8px;
 	background: rgba(255, 255, 255, 0.5);
 	border: none;
 	border-radius: 4px;
 }
-.cloudimage-360 .cloudimage-360-prev:focus, .cloudimage-360 .cloudimage-360-next:focus {
+.cloudimage-360 .cloudimage-360-left:focus, .cloudimage-360 .cloudimage-360-right:focus {
 	outline: none;
 }
-.cloudimage-360 .cloudimage-360-prev {
+.cloudimage-360 .cloudimage-360-left {
 	display: none;
 	position: absolute;
 	z-index: 100;
 	top: calc(50% - 15px);
 	left: 20px;
 }
-.cloudimage-360 .cloudimage-360-next {
+.cloudimage-360 .cloudimage-360-right {
 	display: none;
 	position: absolute;
 	z-index: 100;
 	top: calc(50% - 15px);
 	right: 20px;
 }
-.cloudimage-360 .cloudimage-360-prev:before, .cloudimage-360 .cloudimage-360-next:before {
+.cloudimage-360 .cloudimage-360-left:before, .cloudimage-360 .cloudimage-360-right:before {
 	content: '';
 	display: block;
 	width: 30px;
 	height: 30px;
 	background: 50% 50% / cover no-repeat;
 }
-.cloudimage-360 .cloudimage-360-prev:before {
+.cloudimage-360 .cloudimage-360-left:before {
 	background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
 }
-.cloudimage-360 .cloudimage-360-next:before {
+.cloudimage-360 .cloudimage-360-right:before {
 	background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
 }
-.cloudimage-360 .cloudimage-360-prev.not-active, .cloudimage-360 .cloudimage-360-next.not-active {
+.cloudimage-360 .cloudimage-360-left.not-active, .cloudimage-360 .cloudimage-360-right.not-active {
 	opacity: 0.4;
 	cursor: default;
 }
@@ -409,10 +413,10 @@ You can add controls by adding elements with the following classes: **cloudimage
 <div
 	class="cloudimage-360"
 	data-folder="https://scaleflex.airstore.io/demo/indoor/"
-	data-filename="{index}.jpeg"
+	data-filename-x="{index}.jpeg"
 >
-	<button class="cloudimage-360-prev"></button>
-	<button class="cloudimage-360-next"></button>
+	<button class="cloudimage-360-left"></button>
+	<button class="cloudimage-360-right"></button>
 </div>
 ```
 

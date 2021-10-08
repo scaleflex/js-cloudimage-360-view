@@ -1,5 +1,6 @@
 import { TO_START_POINTER_ZOOM } from './ci360.constants';
 
+//TODO [deprecated]: remove full-screen in the upcoming versions
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
   filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
@@ -35,7 +36,7 @@ const get360ViewProps = (image) => ({
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
-  fullscreen: isTrue(image, 'fullscreen'),
+  fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
     parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen'),
