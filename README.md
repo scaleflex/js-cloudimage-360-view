@@ -283,6 +283,7 @@ Hide 360 view icon.
 ~~###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_~~
 
 ~~URL of asset to use as the 360 view icon.~~
+
 kindly read [Customize elements](#customize-elements)
 ### data-control-reverse (or control-reverse)
 
