@@ -532,7 +532,8 @@ class CI360Viewer {
 
     if (this.view360Icon) {
       this.view360Icon.innerText = '';
-      setView360Icon(this.view360Icon, this.logoSrc);
+      //TODO [deprecated]: remove setView360Icon in the upcoming versions
+      if (this.logoSrc) setView360Icon(this.view360Icon, this.logoSrc);
     }
 
     this.initControls();

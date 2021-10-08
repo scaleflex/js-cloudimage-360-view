@@ -54,7 +54,7 @@ const get360ViewProps = (image) => ({
   controlReverse: isTrue(image, 'control-reverse'),
   stopAtEdges: isTrue(image, 'stop-at-edges'),
   hide360Logo: isTrue(image, 'hide-360-logo'),
-  logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg',
+  logoSrc: attr(image, 'logo-src')
 });
 
 const isTrue = (image, type) => {

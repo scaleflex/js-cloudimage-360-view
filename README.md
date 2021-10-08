@@ -47,7 +47,7 @@ powered by [Cloudimage](https://www.cloudimage.io/)
 * [Step 1: Installation](#installation)
 * [Step 2: Initialize](#initialize)
 * [Methods](#methods)
-* [Customize Icons](#customize-icons)
+* [Customize elements](#customize-elements)
 * [Configuration](#configuration)
 * [Controls](#controls)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
@@ -128,23 +128,45 @@ Get the {index} of the image that is being viewed.
 ```javascript
 window.CI360.getActiveIndexByID('id_of_product');
 ```
-## <a name="customize-icons"></a> Customize icons
+## <a name="customize-elements"></a> Customize elements
 
-You can customize the icons by adding the following classes:
+You can elements adding the following classes:
 
 ### Example CSS
 ```css
-.cloudimage-360 .fullscreen-icon {
-	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg) 50% 50% / cover no-repeat;
+.cloudimage-360-icons-container {
+	top: 5px;
+  right: 5px;
 }
-.cloudimage-360 .magnify-icon {
+.cloudimage-360-fullscreen-modal {
+	top: 0;
+  bottom: 0;
+}
+.cloudimage-360-magnifier-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
 }
-.cloudimage-360 .close-fullscreen-icon {
+.cloudimage-360-close-fullscreen-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
 }
-.cloudimage-360 .reset-zoom-icon {
+.cloudimage-360-view-360-circle {
+  margin: auto;
+}
+.cloudimage-360-reset-zoom-icon {
 	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986) 50% 50% / cover no-repeat;
+}
+.cloudimage-360-loader {
+	margin: auto;
+}
+.cloudimage-360-view-360-icon {
+	background: url(hhttps://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg) 50% 50% / cover no-repeat;
+}
+.cloudimage-360-box-shadow {
+	top: 0;
+  left: 0;
+}
+.cloudimage-360-img-magnifier-glass {
+	border: 3px solid #000;
+  border-radius: 50%;
 }
 ```
 
@@ -258,10 +280,10 @@ Hide 360 view icon.
 
 ### ~~data-logo-src (or logo-src)~~ [deprecated]
 
-###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_
+~~###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_~~
 
 ~~URL of asset to use as the 360 view icon.~~
-
+kindly read [Customize elements](#customize-elements)
 ### data-control-reverse (or control-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
