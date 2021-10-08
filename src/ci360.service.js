@@ -858,11 +858,10 @@ class CI360Viewer {
 
   addCloseFullscreenView(event) {
     const closeFullscreenIcon = document.createElement('div');
-
-    closeFullScreenIcon.className = 'cloudimage-360-close-fullscreen-icon'
-    closeFullScreenIcon.onclick = this.setFullScreenEvents.bind(this, event);
-
-    window.onkeyup = this.setFullScreenEvents.bind(this, event);
+    closeFullscreenIcon.className = 'cloudimage-360-close-fullscreen-icon'
+    closeFullscreenIcon.onclick = this.setFullscreenEvents.bind(this, event);
+    
+    window.onkeyup = this.setFullscreenEvents.bind(this, event);
 
     this.iconsContainer.appendChild(closeFullscreenIcon);
   }
