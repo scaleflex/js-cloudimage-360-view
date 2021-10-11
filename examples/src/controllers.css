@@ -1,0 +1,106 @@
+.cloudimage-360 .cloudimage-360-left,
+.cloudimage-360 .cloudimage-360-right {
+  padding: 8px;
+  background: rgb(244, 244, 244);
+  border: none;
+  border-radius: 4px;
+}
+
+.cloudimage-360 .cloudimage-360-left:focus,
+.cloudimage-360 .cloudimage-360-right:focus {
+  outline: none;
+}
+
+.cloudimage-360 .cloudimage-360-left {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: calc(50% - 15px);
+  left: 20px;
+}
+
+.cloudimage-360 .cloudimage-360-right {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: calc(50% - 15px);
+  right: 20px;
+}
+
+.cloudimage-360 .cloudimage-360-left:before,
+.cloudimage-360 .cloudimage-360-right:before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .cloudimage-360-left:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
+}
+
+.cloudimage-360 .cloudimage-360-right:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
+}
+
+.cloudimage-360 .cloudimage-360-left.not-active,
+.cloudimage-360 .cloudimage-360-right.not-active {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.cloudimage-360 .cloudimage-360-top,
+.cloudimage-360 .cloudimage-360-bottom {
+  padding: 8px;
+  background: rgb(244, 244, 244);
+  border: none;
+  border-radius: 4px;
+}
+
+.cloudimage-360 .cloudimage-360-top:focus,
+.cloudimage-360 .cloudimage-360-bottom:focus {
+  outline: none;
+}
+
+.cloudimage-360 .cloudimage-360-top {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  left: calc(50% - 15px);
+  top: 20px;
+  transform: rotate(90deg);
+}
+
+.cloudimage-360 .cloudimage-360-bottom {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  left: calc(50% - 15px);
+  bottom: 20px;
+  transform: rotate(90deg);
+}
+
+.cloudimage-360 .cloudimage-360-top:before,
+.cloudimage-360 .cloudimage-360-bottom:before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .cloudimage-360-top:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
+}
+
+.cloudimage-360 .cloudimage-360-bottom:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
+}
+
+.cloudimage-360 .cloudimage-360-top.not-active,
+.cloudimage-360 .cloudimage-360-bottom.not-active {
+  opacity: 0.4;
+  cursor: default;
+}

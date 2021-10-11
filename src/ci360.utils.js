@@ -1,17 +1,28 @@
-import { TO_START_POINTER_ZOOM } from './ci360.constants';
-
+import { AUTOPLAY_BEHAVIOR, TO_START_POINTER_ZOOM } from './ci360.constants';
+//TODO [deprecated]: remove filename, amount in the upcoming versions
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
-  filename: attr(image, 'filename') || attr(image, 'data-filename') || 'image-{index}.jpg',
+  filenameX: attr(image, 'filename') || attr(image, 'data-filename') 
+  || attr(image, 'filename-x') || attr(image, 'data-filename-x') 
+  || 'image-{index}.jpg',
+  filenameY: attr(image, 'filename-y') ||
+  attr(image, 'data-filename-y') || 'image-y-{index}.jpg',
   imageList: attr(image, 'image-list') || attr(image, 'data-image-list') || null,
   indexZeroBase: parseInt(attr(image, 'index-zero-base') || attr(image, 'data-index-zero-base') || 0, 10),
-  amount: parseInt(attr(image, 'amount') || attr(image, 'data-amount') || 36, 10),
+  amountX: parseInt(attr(image, 'amount') || attr(image, 'data-amount') 
+  || attr(image, 'amount-x')  || attr(image, 'data-amount-x') 
+  || 36, 10),
+  amountY: parseInt(attr(image, 'amount-y') ||
+  attr(image, 'data-amount-y') || 0, 10),
   imageOffset: parseInt(attr(image, 'image-offset') || attr(image, 'data-image-offset')),
   speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),
   keys: isTrue(image, 'keys'),
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
+  autoplayBehavior: attr(image, 'autoplay-behavior')
+  || attr(image, 'data-autoplay-behavior') 
+  || AUTOPLAY_BEHAVIOR.SPIN_X,
   playOnce: isTrue(image, 'play-once'),
   disablePointerZoom: isTrue(image, 'disable-pointer-zoom'),
   disablePinchZoom: isTrue(image, 'disable-pinch-zoom'),
@@ -19,7 +30,7 @@ const get360ViewProps = (image) => ({
     || attr(image, 'data-on-mouse-leave'),
   toStartPointerZoom: attr(image, 'to-start-pointer-zoom')
     || attr(image, 'data-to-start-pointer-zoom') 
-    || TO_START_POINTER_ZOOM.scrollToStart,
+    || TO_START_POINTER_ZOOM.SCROLL_TO_START,
   pointerZoomFactor: parseInt(
     attr(image, 'pointer-zoom-factor')
     || attr(image, 'data-pointer-zoom-factor') 
