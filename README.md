@@ -191,12 +191,24 @@ Your images folder on server.
 
 The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and [data-amount-x](#data-amount-x).
 
+### data-filename-y (or filename-y)
+
+###### Type: **String** | Default: **image-y-{index}.jpg** | _optional_
+
+The filename pattern for Y-axis images.  Must include {index}, which the library will replace with a number between 1 and [data-amount-y](#data-amount-y).
+
+
 ### <a name="data-amount-x"></a> data-amount-x (or amount-x)
 ###  ~~data-amount (or amount-x)~~ [deprecated]
-
 ###### Type: **Number** | Default: **36** | _optional_
 
 Amount of images to load for 360 view.
+
+### <a name="data-amount-y"></a> data-amount-y (or amount-y)
+
+###### Type: **Number** | Default: **0** | _optional_
+
+Amount of images to load in Y-axis for 360 view.
 
 ### data-keys (or keys)
 
@@ -210,10 +222,16 @@ Support for 360 spin by pressing arrow keys on keyboard.
 
 Autoplay 360 spin view on load.
 
+### data-autoplay-behavior (or autoplay-behavior)
+
+###### Type: **String** | Default: **spin-x** | _optional_
+
+Changing autoplay behavior
+
+Available behaviors (spin-x, spin-y, spin-xy, spin-yx)
+
 ### data-fullscreen (or fullscreen)
 ### ~~data-full-screen (or full-screen)~~ [deprecated]
-
-
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Open 360 spin view in full screen modal.
@@ -386,7 +404,7 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ## <a name="controls"></a> Controls
 
-You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right** ~~**cloudimage-360-prev**, **cloudimage-360-next**~~ [deprecated]
+You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right**, **cloudimage-360-top**, **cloudimage-360-bottom , ~~**cloudimage-360-prev**, **cloudimage-360-next**~~ [deprecated]
 
 ### Example CSS
 ```css
@@ -440,6 +458,8 @@ You can add controls by adding elements with the following classes: **cloudimage
 >
 	<button class="cloudimage-360-left"></button>
 	<button class="cloudimage-360-right"></button>
+	<button class="cloudimage-360-top"></button>
+	<button class="cloudimage-360-bottom"></button>
 </div>
 ```
 
