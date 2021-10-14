@@ -30,8 +30,6 @@ class CI360Viewer {
     this.isClicked = false;
     this.loadedImagesX = 0;
     this.loadedImagesY = 0;
-    this.loadedResizedImagesX = 0;
-    this.loadedResizedImagesY = 0;
     this.imagesLoaded = false;
     this.reversed = false;
     this.fullscreenView = !!fullscreen;
