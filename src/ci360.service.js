@@ -37,7 +37,7 @@ class CI360Viewer {
     this.imagesX = [];
     this.imagesY = [];
     this.resizedImagesX = [];
-    this.resizedImageY = [];
+    this.resizedImagesY = [];
     this.originalImagesX = [];
     this.originalImagesY = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
@@ -647,18 +647,18 @@ class CI360Viewer {
 
   replaceImages(orientation) {
     if (orientation === ORIENTATIONS.Y) {
-      this.imagesY = this.resizedImageY;
+      this.imagesY = this.resizedImagesY;
     }  else {
-      this.imagesX = this.resizedImageX;
+      this.imagesX = this.resizedImagesX;
     }
   }
 
   requestNewImages(src, amount, orientation) {
     if (orientation === ORIENTATIONS.Y) {
-      this.resizedImageY = [];
+      this.resizedImagesY = [];
       this.loadedImagesY = 0;
     } else {
-      this.resizedImageX = [];
+      this.resizedImagesX = [];
       this.loadedImagesX = 0;
     }
 
@@ -704,9 +704,9 @@ class CI360Viewer {
     image.onerror = this.onLoadResizedImages.bind(this, orientation);
 
     if (orientation === ORIENTATIONS.Y) {
-      this.resizedImageY.push(image)
+      this.resizedImagesY.push(image)
     } else {
-      this.resizedImageX.push(image);
+      this.resizedImagesX.push(image);
     }
   }
 
