@@ -235,6 +235,17 @@ const pad = (n, width = 0) => {
   return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
 };
 
+const debounce = (func, timeout) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, timeout)
+  }
+}
+
 export {
   get360ViewProps,
   setView360Icon,
@@ -247,5 +258,6 @@ export {
   pad,
   isTwoFingers,
   getMaxZoomIntensity,
-  normalizeZoomFactor
+  normalizeZoomFactor,
+  debounce
 }

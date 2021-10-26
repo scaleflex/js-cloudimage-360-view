@@ -11,6 +11,7 @@ import {
   setView360Icon,
   getMaxZoomIntensity,
   normalizeZoomFactor,
+  debounce,
 } from './ci360.utils';
 import {
   TO_START_POINTER_ZOOM,
@@ -35,6 +36,8 @@ class CI360Viewer {
     this.ratio = ratio;
     this.imagesX = [];
     this.imagesY = [];
+    this.resizedImagesX = [];
+    this.resizedImagesY = [];
     this.originalImagesX = [];
     this.originalImagesY = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
@@ -628,6 +631,107 @@ class CI360Viewer {
 
     this.moveActiveYIndexDown(1);
     this.update();
+  }
+
+  onLoadResizedImages( orientation, event) {
+    this.incrementLoadedImages(orientation);
+
+    const totalAmount = this.amountX + this.amountY;
+    const totalLoadedImages = this.loadedImagesX + this.loadedImagesY;
+
+    if (totalLoadedImages === totalAmount) {
+      this.replaceImages(orientation);
+      this.update();
+    }
+  }
+
+  replaceImages(orientation) {
+    if (orientation === ORIENTATIONS.Y) {
+      this.imagesY = this.resizedImagesY;
+    }  else {
+      this.imagesX = this.resizedImagesX;
+    }
+  }
+
+  requestNewImages(src, amount, orientation) {
+    if (orientation === ORIENTATIONS.Y) {
+      this.resizedImagesY = [];
+      this.loadedImagesY = 0;
+    } else {
+      this.resizedImagesX = [];
+      this.loadedImagesX = 0;
+    }
+
+    [...new Array(amount)].map((_item, index) => {
+      const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
+      const resultSrc = src.replace('{index}', nextZeroFilledIndex);
+
+      this.addUpdatedSizeImage(
+        resultSrc,
+        orientation,
+        this.lazyload,
+        this.lazySelector,
+        index
+      );
+    });
+  }
+
+  addUpdatedSizeImage(
+    resultSrc,
+    orientation,
+    lazyload,
+    lazySelector,
+    index
+    ) {
+    const image = new Image();
+
+    if (lazyload && !this.fullscreenView) {
+      image.setAttribute('data-src', resultSrc);
+      image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
+
+      if (index === 0) {
+        this.lazyloadInitImage = image;
+        image.style.position = 'absolute';
+        image.style.top = '0';
+        image.style.left = '0';
+        this.innerBox.appendChild(image);
+      }
+    } else {
+      image.src = resultSrc;
+    }
+
+    image.onload = this.onLoadResizedImages.bind(this, orientation);
+    image.onerror = this.onLoadResizedImages.bind(this, orientation);
+
+    if (orientation === ORIENTATIONS.Y) {
+      this.resizedImagesY.push(image)
+    } else {
+      this.resizedImagesX.push(image);
+    }
+  }
+
+  requestResizedImages() {
+    const srcX = this.getSrc(
+      this.responsive,
+      this.container,
+      this.folder,
+      this.filenameX,
+      this.ciParams
+      );
+
+    this.requestNewImages(srcX, this.amountX, ORIENTATIONS.X)    
+
+    if (this.allowSpinY) {
+      const srcY = this.getSrc(
+        this.responsive,
+        this.container,
+        this.folder,
+        this.filenameY,
+        this.ciParams
+      );
+
+      this.requestNewImages(srcY, this.amountY, ORIENTATIONS.Y)    
+    }
   }
 
   update() {
@@ -1238,7 +1342,7 @@ class CI360Viewer {
 
     image.onload = this.onImageLoad.bind(this, index, orientation);
     image.onerror = this.onImageLoad.bind(this, index, orientation);
-    
+
     if (orientation === ORIENTATIONS.Y) {
       this.imagesY.push(image)
       this.originalImagesY.push(originalImage)
@@ -1399,6 +1503,10 @@ class CI360Viewer {
   }
 
   attachEvents(draggable, swipeable, keys) {
+    window.addEventListener('resize', debounce(() => {
+      this.requestResizedImages();
+    }, 300))
+
     if ( (draggable) && (!this.disableDrag) ) {
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
       this.container.addEventListener('mousemove', this.mouseMove.bind(this));
@@ -1461,6 +1569,7 @@ class CI360Viewer {
 
     this.folder = folder;
     this.filenameX = filenameX;
+    this.filenameY = filenameY;
     this.imageList = imageList;
     this.indexZeroBase = indexZeroBase;
     this.amountX = amountX;
@@ -1489,6 +1598,7 @@ class CI360Viewer {
     this.magnifier = !this.isMobile && magnifier ? magnifier : false;
     this.magnifyInFullscreen = magnifyInFullscreen;
     this.lazyload = lazyload;
+    this.lazySelector = lazySelector;
     this.ratio = ratio;
     this.spinReverse = spinReverse;
     this.controlReverse = controlReverse;
@@ -1497,6 +1607,8 @@ class CI360Viewer {
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
+    this.responsive = responsive;
+    this.ciParams = ciParams;
 
     this.applyStylesToContainer();
 
