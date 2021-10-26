@@ -46,10 +46,10 @@ const get360ViewProps = (image) => ({
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
-  fullscreen: isTrue(image, 'fullscreen'),
+  fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
     parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
-  magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen'),
+  magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen') || isTrue(image, 'magnifier-in-fullscreen'),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
   ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false,
   responsive: isTrue(image, 'responsive'),
