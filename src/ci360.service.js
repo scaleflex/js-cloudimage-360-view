@@ -17,7 +17,8 @@ import {
   MOUSE_LEAVE_ACTIONS,
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
-  ORGINAL_SIZE_REGEX
+  ORGINAL_SIZE_REGEX,
+  AND_SYMBOL_REGEX
 } from './ci360.constants';
 import './static/css/style.css';
 
@@ -1193,7 +1194,9 @@ class CI360Viewer {
       [...new Array(amount)].map((_item, index) => {
         const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
         const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        const originalSrc = resultSrc.replace(ORGINAL_SIZE_REGEX, '');
+        const originalSrc = resultSrc
+          .replace(ORGINAL_SIZE_REGEX, '')
+          .replace(AND_SYMBOL_REGEX, '?')
 
         this.addImage(
           resultSrc,
