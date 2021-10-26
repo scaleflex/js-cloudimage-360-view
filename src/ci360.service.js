@@ -16,7 +16,8 @@ import {
   TO_START_POINTER_ZOOM,
   MOUSE_LEAVE_ACTIONS,
   ORIENTATIONS,
-  AUTOPLAY_BEHAVIOR
+  AUTOPLAY_BEHAVIOR,
+  ORGINAL_SIZE_REGEX
 } from './ci360.constants';
 import './static/css/style.css';
 
@@ -927,15 +928,13 @@ class CI360Viewer {
   }
 
   getOriginalSrc() {
-    let currentImage = this.imagesX[this.activeImageX - 1];
+    let currentImage = this.originalImagesX[this.activeImageX - 1];
 
     if (this.movingDirection === ORIENTATIONS.Y) {
-      currentImage = this.imagesY[this.activeImageY - 1];
+      currentImage = this.originalImagesY[this.activeImageY - 1];
     };
 
-    const lastIndex = currentImage.src.lastIndexOf('//');
-
-    return lastIndex > 10 ? currentImage.src.slice(lastIndex) : currentImage.src;
+    return currentImage.src;
   }
 
   magnify() {
@@ -1194,8 +1193,7 @@ class CI360Viewer {
       [...new Array(amount)].map((_item, index) => {
         const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
         const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        const lastIndex = resultSrc.lastIndexOf('//');
-        const originalSrc = resultSrc.slice(lastIndex);
+        const originalSrc = resultSrc.replace(ORGINAL_SIZE_REGEX, '');
 
         this.addImage(
           resultSrc,
