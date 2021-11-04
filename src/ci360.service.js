@@ -107,6 +107,8 @@ class CI360Viewer {
       this.onMoveHandler(event)
     } else if (this.zoomIntensity) {
       this.update();
+
+      this.container.style.cursor = 'nesw-resize';
     }
   }
 
@@ -1159,6 +1161,7 @@ class CI360Viewer {
     if (this.magnifierIcon) this.enableMagnifierIcon();
     if (this.fullscreenIcon) this.showFullscreenIcon();
 
+    this.container.style.cursor = 'grab';
     this.resetZoomIcon.style.display = 'none';
   }
 
@@ -1167,6 +1170,7 @@ class CI360Viewer {
     if (this.magnifierIcon) this.disableMagnifierIcon();
     if (this.fullscreenIcon) this.hideFullscreenIcon();
 
+    this.container.style.cursor = 'nesw-resize';
     this.resetZoomIcon.style.display = 'block';
   }
 

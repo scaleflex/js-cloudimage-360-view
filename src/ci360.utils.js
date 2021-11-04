@@ -30,7 +30,7 @@ const get360ViewProps = (image) => ({
     || attr(image, 'data-on-mouse-leave'),
   toStartPointerZoom: attr(image, 'to-start-pointer-zoom')
     || attr(image, 'data-to-start-pointer-zoom') 
-    || TO_START_POINTER_ZOOM.SCROLL_TO_START,
+    || TO_START_POINTER_ZOOM.CLICK_TO_START,
   pointerZoomFactor: parseInt(
     attr(image, 'pointer-zoom-factor')
     || attr(image, 'data-pointer-zoom-factor') 

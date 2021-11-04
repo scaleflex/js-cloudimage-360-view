@@ -338,7 +338,7 @@ Disable pointer zoom on desktop
 Disable pinch zoom on mobile
 ### data-to-start-pointer-zoom (or to-start-pointer-zoom)
 
-###### Type: **string** | Default: **scroll** | _optional_
+###### Type: **string** | Default: **click** | _optional_
 
 Events to start pointer zoom
 
