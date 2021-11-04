@@ -28,17 +28,18 @@ Types of changes:
 
 ## 2.7.0 - 2020-11-04
 ### Added
-- play once then stops auto-play
-- spin in y-direction
+- play once then stop auto-play
+- spin in the y-direction
 - zoom with mouse wheel
 - zoom with fingers on mobile
-- possibilty to change icons styles
+- possibility to change icons styles
 
 ### Fixed
 - hide scrollbar in fullscreen mode
 - auto-play not working on mobile
 - error on init the plugin inside a modal
-- removed chrome waringing about non-passive events
+- removed chrome warning about non-passive events
+- images are not resized when window size changes
 
 ### Changed
 - migrate CDN URL to V7 
