@@ -198,6 +198,12 @@ Support for 360 spin by pressing arrow keys on keyboard.
 
 Autoplay 360 spin view on load.
 
+### data-play-once (or autoplay)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+stops the autoplay after one complete cycle.
+
 ### data-autoplay-behavior (or autoplay-behavior)
 
 ###### Type: **String** | Default: **spin-x** | _optional_
