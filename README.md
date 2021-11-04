@@ -198,6 +198,12 @@ Support for 360 spin by pressing arrow keys on keyboard.
 
 Autoplay 360 spin view on load.
 
+### data-play-once (or autoplay)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+stops the autoplay after one complete cycle.
+
 ### data-autoplay-behavior (or autoplay-behavior)
 
 ###### Type: **String** | Default: **spin-x** | _optional_
@@ -235,6 +241,12 @@ Prevents page from jumping.
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Autoplay 360 spin view on load.
+
+### data-disable-drag (or disable-drag)
+
+###### Type: **bool** | Default: **false** | _optional_
+
+disable mouse drag.
 
 ### data-speed (or speed)
 
