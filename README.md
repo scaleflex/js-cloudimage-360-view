@@ -242,6 +242,12 @@ Prevents page from jumping.
 
 Autoplay 360 spin view on load.
 
+### data-disable-drag (or disable-drag)
+
+###### Type: **bool** | Default: **false** | _optional_
+
+disable mouse drag.
+
 ### data-speed (or speed)
 
 ###### Type: **Number** | Default: **150** | _optional_
