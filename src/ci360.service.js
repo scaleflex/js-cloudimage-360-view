@@ -996,14 +996,14 @@ class CI360Viewer {
   hideFullscreenIcon() {
     if (!this.fullscreenIcon) return;
 
-    this.fullscreenIcon.style.opacity = '0.4';
+    this.fullscreenIcon.style.display = 'none';
     this.fullscreenIcon.style.pointerEvents = 'none';
   }
 
   showFullscreenIcon() {
     if (!this.fullscreenIcon) return;
 
-    this.fullscreenIcon.style.opacity = '1';
+    this.fullscreenIcon.style.display = 'block';
     this.fullscreenIcon.style.pointerEvents = 'auto';
   }
 
@@ -1021,14 +1021,14 @@ class CI360Viewer {
   disableMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
-    this.magnifierIcon.style.opacity = '0.4';
+    this.magnifierIcon.style.display = 'none';
     this.magnifierIcon.style.pointerEvents = 'none';
   }
 
   enableMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
-    this.magnifierIcon.style.opacity = '1';
+    this.magnifierIcon.style.display = 'block';
     this.magnifierIcon.style.pointerEvents = 'auto';  
   }
 
