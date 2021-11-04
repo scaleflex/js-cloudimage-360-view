@@ -8,10 +8,12 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <style>.on-load {
-    display: none
-  }
+  <style>
 
+  .on-load {
+      overflow: hidden;
+  }
+  
   .spinner-grow {
     color: #343a40 !important;
     display: inline-block;
@@ -86,7 +88,7 @@
   </style>
   <title>JS-cloudimage-360-view</title>
 </head>
-<body>
+<body class="on-load">
 <div id="spinner" class="spinner-grow text-dark" role="status"></div>
 
 <div id="main" class="wrapper" style="visibility: hidden;overflow: hidden;">
@@ -138,24 +140,16 @@
 
     <a href="https://www.filerobot.com/" class="robot-icon">
       <img style="width:100%;" id="robot-icon"
-           src="https://demo.cloudimg.io/width/800/q35.foil1/https://cdn.scaleflex.it/filerobot/assets/robot-icon-left.png"
+           src="https://demo.cloudimg.io/v7/https://cdn.scaleflex.it/filerobot/assets/robot-icon-left.png"
            alt="">
     </a>
   </section>
 
-  <!--<div style="max-width: 1000px;">-->
-  <!--<div-->
-  <!--class="cloudimage-360"-->
-  <!--data-folder="https://cdn.scaleflex.it/demo/360/"-->
-  <!--data-filename="chair_{index}.jpg"-->
-  <!--data-amount="72"-->
-  <!--&gt;</div>-->
-  <!--</div>-->
   <section class="main-360-spin">
     <div
        id="mercedes-360-view"
        class="cloudimage-360"
-       data-folder="https://scaleflex.cloudimg.io/crop/1920x700/n/https://cdn.scaleflex.it/demo/360-car/"
+       data-folder="https://cdn.scaleflex.it/demo/360-car/"
        data-filename="iris-{index}.jpeg"
        data-amount="36"
        data-bottom-circle
@@ -183,7 +177,7 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-72/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="72"
              data-speed="50"
              data-ratio="1"
@@ -197,13 +191,17 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
+             data-magnifier="3"
              data-ratio="1"
+             data-full-screen
              data-responsive="scaleflex"
+             data-magnify-icon-selector="magnify-glass-icon"
+             data-fullscreen-icon-selector="fullscreen-modified-icon"
           ></div>
         </div>
-        <p class="view-360-capture">36 images</p>
+        <p class="view-360-capture">36 images, customize icons</p>
       </div>
     </div>
 
@@ -213,7 +211,7 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-ratio="1"
              data-full-screen
@@ -227,7 +225,7 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-magnifier="3"
              data-ratio="1"
@@ -239,27 +237,29 @@
     </div>
 
     <div class="row" style="margin-top: 40px;">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div style="max-width: 1000px;">
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-bottom-circle
              data-bottom-circle-offset="2"
              data-ratio="1"
              data-responsive="scaleflex"
+             data-pointer-zoom
+             data-zoom-factor="2"
           ></div>
         </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle</p>
+        <p class="view-360-capture">36 images, bottom 360 view circle, wheel zoom, pinch zoom </p>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div style="max-width: 1000px;">
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-bottom-circle
              data-bottom-circle-offset="2"
@@ -270,15 +270,31 @@
         </div>
         <p class="view-360-capture">36 images, bottom 360 view circle, box-shadow</p>
       </div>
-    </div>
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div style="max-width: 1000px;">
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+             data-ratio="1"
+             data-image-offset="7"
+             data-responsive="scaleflex"
+          ></div>
+        </div>
+        <p class="view-360-capture">36 images, bottom 360 view circle, offset images by 7</p>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 40px;">
+      <div class="col-md-4">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-bottom-circle
              data-bottom-circle-offset="2"
@@ -291,12 +307,12 @@
         </div>
         <p class="view-360-capture">36 images, bottom 360 view circle, controls</p>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div style="max-width: 1000px;">
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-bottom-circle
              data-bottom-circle-offset="2"
@@ -310,6 +326,25 @@
         </div>
         <p class="view-360-capture">36 images, bottom 360 view circle, controls, stop at edges</p>
       </div>
+      <div class="col-md-4">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+             data-ratio="1"
+             data-responsive="scaleflex"
+             disable-drag
+          >
+            <button class="cloudimage-360-prev"></button>
+            <button class="cloudimage-360-next"></button>
+          </div>
+        </div>
+        <p class="view-360-capture">36 images, bottom 360 view circle, controls, disable drag</p>
+      </div>
     </div>
 
     <div class="row no-mobile" style="margin-top: 40px;">
@@ -318,7 +353,7 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-72/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="72"
              data-bottom-circle
              data-bottom-circle-offset="2"
@@ -335,7 +370,7 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-bottom-circle
              data-bottom-circle-offset="2"
@@ -352,7 +387,7 @@
           <div
              class="cloudimage-360"
              data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg?v1"
+             data-filename="chair_{index}.jpg"
              data-amount="36"
              data-bottom-circle
              data-bottom-circle-offset="2"
@@ -366,8 +401,82 @@
         <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, autoplay reverse</p>
       </div>
     </div>
+    <div class="row no-mobile" style="margin-top: 40px;">
+      <div class="col-md-4">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://cdn.scaleflex.it/demo/chair-360-72/"
+             data-filename="chair_{index}.jpg"
+             data-amount="72"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+             data-autoplay
+             data-playOnce
+             data-speed="150"
+             data-ratio="1"
+             data-responsive="scaleflex"
+          ></div>
+        </div>
+        <p class="view-360-capture">72 images, bottom 360 view circle, autoplay, autoplay once</p>
+      </div>
+      <div class="col-md-4">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+             data-image-offset="8"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+             data-autoplay
+             data-speed="150"
+             data-ratio="1"
+             data-responsive="scaleflex"
+          ></div>
+        </div>
+        <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, offset 10 images</p>
+      </div>
+      <div class="col-md-4">
+        <div style="max-width: 1000px;">
+          <div
+             class="cloudimage-360"
+             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
+             data-filename="chair_{index}.jpg"
+             data-amount="36"
+             data-bottom-circle
+             data-bottom-circle-offset="2"
+             data-autoplay
+             data-playOnce
+             data-autoplay-reverse
+             data-speed="150"
+             data-ratio="1"
+             data-responsive="scaleflex"
+          ></div>
+        </div>
+        <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, autoplay reverse, autoplay once</p>
+      </div>
+    </div>
   </section>
-
+  <section class="container ready-to-start">
+    <h2 class="text-center">View cloudimage-360 inside a modal</h2>
+    <button id="show-modal-btn">Show Modal</button>
+    <div id="cloudimage-modal-overlay"></div>
+    <div id="cloudimage-modal">
+      <div style="width: 600px; height: 600px;">
+        <div
+          class="cloudimage-360"
+          data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
+          data-filename="chair_{index}.jpg"
+          data-amount="36"
+          data-ratio="1"
+          data-full-screen
+          data-responsive="scaleflex"
+        ></div>
+      </div>
+    </div>
+  </section>
   <section class="container ready-to-start">
     <h2 class="text-center">Ready to get started?</h2>
   </section>
@@ -378,7 +487,7 @@
         <p>Include the following script into your project after all content in body tag</p>
         <figure class="highlight">
         <pre><code class="javascript">
-&lt;script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.6.0/js-cloudimage-360-view.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.0/js-cloudimage-360-view.min.js"&gt;&lt;/script&gt;
 </code></pre>
         </figure>
       </div>
@@ -390,7 +499,7 @@
         <figure class="highlight">
         <pre><code class="javascript">&lt;div
    class="cloudimage-360"
-   data-folder="https://scaleflex.cloudimg.io/crop/1920x700/n/https://cdn.scaleflex.it/demo/360-car/"
+   data-folder="https://cdn.scaleflex.it/demo/360-car/"
    data-filename="iris-{index}.jpeg"
    data-amount="36"
 &gt;&lt;/div&gt;</code></pre>
@@ -468,5 +577,5 @@
   </footer>
 
 </div>
-<script type="text/javascript" src="bundle9de295fe4622bfc3eab0.js"></script></body>
+<script type="text/javascript" src="bundle5726e874b28d8bcb86f9.js"></script></body>
 </html>
