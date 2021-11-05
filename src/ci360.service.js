@@ -1273,6 +1273,11 @@ class CI360Viewer {
 
       if (this.playOnce && isPlayedOnce) {
         window.clearTimeout(this.loopTimeoutId);
+
+        this.add360ViewIcon();
+
+        this.view360Icon.innerText = '';
+        setView360Icon(this.view360Icon, this.logoSrc);
       }
     }, this.autoplaySpeed);
   }

@@ -25,6 +25,11 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.1 - 2020-11-04
+### Fixed
+- set click as default value to start zoom
+### Added
+- click to reset mouse zoom
 
 ## 2.7.0 - 2020-11-04
 ### Added
