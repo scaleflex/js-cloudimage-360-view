@@ -48,6 +48,7 @@ class CI360Viewer {
     this.init(container);
     this.clickedToZoom = false;
     this.isMagnifyOpen = false;
+    this.isDragged = false;
     this.startPointerZoom = false;
     this.zoomIntensity = 0;
     this.mouseTracked = false;
@@ -74,22 +75,20 @@ class CI360Viewer {
     this.intialPositions = { x: pageX, y: pageY };
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
-    this.clickedToZoom = !this.clickedToZoom;
-    
-    window.grabbingCursor = setInterval(() => {
-      this.container.style.cursor = 'grabbing';
-    });
+    this.isDragged = false;
   }
 
   mouseUp() {
     if (!this.imagesLoaded || !this.isClicked) return;
-    
-    clearInterval(window.grabbingCursor);
-
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
     this.isClicked = false;
-    this.container.style.cursor = 'grab';
+
+    if (!this.clickedToZoom) {
+      this.container.style.cursor = 'grab';
+    } else {
+      this.container.style.cursor = 'nesw-resize';
+    }
 
     if (this.bottomCircle && !this.zoomIntensity) {
       this.show360ViewCircleIcon();
@@ -107,9 +106,13 @@ class CI360Viewer {
 
     if (this.isClicked) {
       const nextPositions = { x: pageX, y: pageY };
+      
+      this.container.style.cursor = 'grabbing';
 
       this.updateMovingDirection(this.intialPositions, nextPositions);
-      this.onMoveHandler(event)
+      this.onMoveHandler(event);
+
+      this.isDragged = true;
     } else if (this.zoomIntensity) {
       this.update();
     }
@@ -128,12 +131,11 @@ class CI360Viewer {
   }
 
   mouseClick(event) {
-    if (this.clickedToZoom) {
-      this.container.style.cursor = 'nesw-resize';
-    }
-    
-    if (this.zoomIntensity) {
+    if (!this.isDragged && this.clickedToZoom) {
       this.resetZoom();
+    } else if (!this.isDragged) {
+      this.clickedToZoom = true;
+      this.container.style.cursor = 'nesw-resize';
     }
   }
 
@@ -152,14 +154,9 @@ class CI360Viewer {
   }
 
   closeZoomHandler() {
-    if (this.clickedToZoom) {
-      this.container.style.cursor = 'grab';
-      this.clickedToZoom = false;
-    }
-
-    if (this.zoomIntensity) {
-      this.resetZoom();
-    }
+    this.container.style.cursor = 'grab';
+    this.clickedToZoom = false;
+    this.resetZoom();
   }
 
   touchStart(event) {
@@ -220,7 +217,9 @@ class CI360Viewer {
     }
     
     if (event.keyCode === 27) { //ESC
-      this.closeZoomHandler()
+      if (this.clickedToZoom) {
+        this.closeZoomHandler()
+      }
     }
   }
 
@@ -356,8 +355,6 @@ class CI360Viewer {
     this.startPinchZoom = false;
     this.mouseTracked = false;
     this.clickedToZoom = false;
-    this.activeImageX = 1;
-    this.activeImageY = 1;
 
     this.container.style.cursor = 'grab';
 
