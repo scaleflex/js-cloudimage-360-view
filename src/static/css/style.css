@@ -49,7 +49,7 @@
   right: 0;
   width: 0%;
   height: 8px;
-  background-color: rgb(165,175,184);
+  background-color: rgb(165, 175, 184);
   z-index: 100;
 }
 
@@ -71,11 +71,11 @@
   width: 100px;
   height: 100px;
   margin: auto;
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
-  box-shadow: rgb(255, 255, 255, 0.5) 0px 0px 4px;
+  box-shadow: rgba(255, 255, 255, 0.5) 0px 0px 4px;
   transition: 0.5s all;
-  color: rgb(80,80,80);
+  color: rgb(80, 80, 80);
   text-align: center;
   line-height: 100px;
   z-index: 2;
