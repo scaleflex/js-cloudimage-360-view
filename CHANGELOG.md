@@ -25,11 +25,15 @@ Types of changes:
 - ...
 
 -------------
-## 2.7.1 - 2020-11-04
-### Fixed
-- set click as default value to start zoom
+## 2.7.1 - 2020-11-05
 ### Added
 - click to reset mouse zoom
+- show 360 logo after play once
+### Fixed
+- set click as default value to start zoom
+- Sass error
+### Changed
+- pointer zoom behavior
 
 ## 2.7.0 - 2020-11-04
 ### Added
