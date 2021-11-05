@@ -74,12 +74,17 @@ class CI360Viewer {
     this.intialPositions = { x: pageX, y: pageY };
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
-    this.clickedToZoom = true;
-    this.container.style.cursor = 'grabbing';
+    this.clickedToZoom = !this.clickedToZoom;
+    
+    window.grabbingCursor = setInterval(() => {
+      this.container.style.cursor = 'grabbing';
+    });
   }
 
   mouseUp() {
     if (!this.imagesLoaded || !this.isClicked) return;
+    
+    clearInterval(window.grabbingCursor);
 
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
@@ -107,8 +112,6 @@ class CI360Viewer {
       this.onMoveHandler(event)
     } else if (this.zoomIntensity) {
       this.update();
-
-      this.container.style.cursor = 'nesw-resize';
     }
   }
 
@@ -124,15 +127,38 @@ class CI360Viewer {
     if (differenceInPositionY > sensitivity && this.allowSpinY) this.movingDirection = ORIENTATIONS.Y;
   }
 
+  mouseClick(event) {
+    if (this.clickedToZoom) {
+      this.container.style.cursor = 'nesw-resize';
+    }
+    
+    if (this.zoomIntensity) {
+      this.resetZoom();
+    }
+  }
+
   mouseScroll(event) {
     if (this.disablePointerZoom || this.isMagnifyOpen) return;
 
     const isClickedToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.CLICK_TO_START
       && this.clickedToZoom;
-    const isScrolledToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.SCROLL_TO_START
+    const isScrolledToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.SCROLL_TO_START;
 
     if (isClickedToZoom || isScrolledToZoom) {
+      this.container.style.cursor = 'nesw-resize';
+
       this.initMouseScrollZoom(event);
+    }
+  }
+
+  closeZoomHandler() {
+    if (this.clickedToZoom) {
+      this.container.style.cursor = 'grab';
+      this.clickedToZoom = false;
+    }
+
+    if (this.zoomIntensity) {
+      this.resetZoom();
     }
   }
 
@@ -186,11 +212,15 @@ class CI360Viewer {
     }
   }
 
-  keyDownGeneral() {
+  keyDownGeneral(event) {
     if (!this.imagesLoaded) return;
 
     if (this.glass) {
       this.closeMagnifier();
+    }
+    
+    if (event.keyCode === 27) { //ESC
+      this.closeZoomHandler()
     }
   }
 
@@ -326,6 +356,10 @@ class CI360Viewer {
     this.startPinchZoom = false;
     this.mouseTracked = false;
     this.clickedToZoom = false;
+    this.activeImageX = 1;
+    this.activeImageY = 1;
+
+    this.container.style.cursor = 'grab';
 
     if (this.resetZoomIcon) this.hideResetZoomIcon();
 
@@ -1161,7 +1195,6 @@ class CI360Viewer {
     if (this.magnifierIcon) this.enableMagnifierIcon();
     if (this.fullscreenIcon) this.showFullscreenIcon();
 
-    this.container.style.cursor = 'grab';
     this.resetZoomIcon.style.display = 'none';
   }
 
@@ -1170,7 +1203,6 @@ class CI360Viewer {
     if (this.magnifierIcon) this.disableMagnifierIcon();
     if (this.fullscreenIcon) this.hideFullscreenIcon();
 
-    this.container.style.cursor = 'nesw-resize';
     this.resetZoomIcon.style.display = 'block';
   }
 
@@ -1525,6 +1557,7 @@ class CI360Viewer {
     }
 
     if ( (!this.disablePointerZoom) && (!this.fullscreenView) ) {
+      this.container.addEventListener('click', this.mouseClick.bind(this))
       this.container.addEventListener('wheel', this.mouseScroll.bind(this));
     }
 
