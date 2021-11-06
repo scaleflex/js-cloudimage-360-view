@@ -25,7 +25,7 @@ Types of changes:
 - ...
 
 -------------
-## 2.7.1 - 2020-11-05
+## 2.7.1 - 2020-11-06
 ### Added
 - click to reset mouse zoom
 - show 360 logo after play once
