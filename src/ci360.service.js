@@ -19,7 +19,8 @@ import {
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
   ORGINAL_SIZE_REGEX,
-  AND_SYMBOL_REGEX
+  AND_SYMBOL_REGEX,
+  falsyValues
 } from './ci360.constants';
 import './static/css/style.css';
 
@@ -1284,11 +1285,14 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  getSrc(responsive, container, folder, filename, { ciToken, ciFilters, ciTransformation }) {
+  getSrc(responsive, container, folder, apiVersion, filename, { ciToken, ciFilters, ciTransformation }) {
     let src = `${folder}${filename}`;
 
     if (responsive) {
       let imageOffsetWidth = container.offsetWidth;
+
+      const vesrion = falsyValues.includes(apiVersion) ? null : apiVersion; 
+      const finalApiVersion = vesrion ? vesrion + '/' : '';
 
       if (this.fullscreenView) {
         const containerRatio = container.offsetHeight / container.offsetWidth;
@@ -1300,7 +1304,7 @@ class CI360Viewer {
   
       const ciSizeNext = getSizeAccordingToPixelRatio(getResponsiveWidthOfContainer(imageOffsetWidth));
 
-      src = `https://${ciToken}.cloudimg.io/v7/${src}?${ciTransformation ? ciTransformation : `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`
+      src = `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}?${ciTransformation ? ciTransformation : `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`
     }
 
     return src;
@@ -1595,7 +1599,7 @@ class CI360Viewer {
 
   init(container) {
     let {
-      folder, filenameX, filenameY, imageList, indexZeroBase, amountX, amountY, imageOffset, draggable = true,
+      folder, apiVersion,filenameX, filenameY, imageList, indexZeroBase, amountX, amountY, imageOffset, draggable = true,
       swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, responsive, ciToken, ciFilters, ciTransformation,
       lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
@@ -1608,6 +1612,7 @@ class CI360Viewer {
     this.addLoader();
 
     this.folder = folder;
+    this.apiVersion = apiVersion;
     this.filenameX = filenameX;
     this.filenameY = filenameY;
     this.imageList = imageList;
@@ -1654,8 +1659,8 @@ class CI360Viewer {
 
     this.addCanvas();
 
-    const srcX = this.getSrc(responsive, container, folder, filenameX, ciParams);
-    const srcY = this.getSrc(responsive, container, folder, filenameY, ciParams);
+    const srcX = this.getSrc(responsive, container, folder,apiVersion, filenameX, ciParams);
+    const srcY = this.getSrc(responsive, container, folder,apiVersion, filenameY, ciParams);
 
     this.preloadImages(
       amountX,

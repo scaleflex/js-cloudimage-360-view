@@ -2,6 +2,8 @@ import { AUTOPLAY_BEHAVIOR, TO_START_POINTER_ZOOM } from './ci360.constants';
 //TODO [deprecated]: remove filename, amount in the upcoming versions
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',
+  apiVersion: attr(image, 'api-version') || attr(image, 'data-api-version') 
+  || attr(image, 'apiVersion') || attr(image, 'data-apiVersion') || "v7",
   filenameX: attr(image, 'filename') || attr(image, 'data-filename') 
   || attr(image, 'filename-x') || attr(image, 'data-filename-x') 
   || 'image-{index}.jpg',

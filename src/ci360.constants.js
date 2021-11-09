@@ -23,11 +23,23 @@ const AUTOPLAY_BEHAVIOR = {
 const ORGINAL_SIZE_REGEX = /width=\d+|w=\d+|h=\d+|&width=\d+|&w=\d+|&h=\d+|func=\w+|\?$/g
 const AND_SYMBOL_REGEX = /\?&/g
 
+const falsyValues = [
+  false,
+  0,
+  null,
+  undefined,
+  'false', 
+  "0",
+  'null', 
+  'undefined'
+];
+
 export { 
   TO_START_POINTER_ZOOM,
   MOUSE_LEAVE_ACTIONS,
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
   ORGINAL_SIZE_REGEX,
-  AND_SYMBOL_REGEX
+  AND_SYMBOL_REGEX,
+  falsyValues
 }
