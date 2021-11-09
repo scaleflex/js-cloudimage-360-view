@@ -165,7 +165,9 @@ Your images folder on server.
 
 ###### Type: **String** |Default: **'v7'** | _optional_
 
-- allow to use a specific version of API
+Allow to use a specific version of API.
+
+- set a specific version of API
 ```javascript
 data-api-version="v7"
 ```
