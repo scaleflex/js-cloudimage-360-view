@@ -161,7 +161,20 @@ The selector for js-cloudimage-360-view lib.
 ###### Type: **String(url)** | _required_
 
 Your images folder on server.
+### data-api-version (or api-version)
 
+###### Type: **String** |Default: **'v7'** | _optional_
+
+Allow to use a specific version of API.
+
+- set a specific version of API
+```javascript
+data-api-version="v7"
+```
+- disable API version 
+```javascript
+data-api-version="null"
+```
 ### data-filename (or filename)
 
 ###### Type: **String** | Default: **image-{index}.jpg** | _optional_
