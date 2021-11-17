@@ -9,7 +9,7 @@
 	<img
 		height="175"
 		alt="The Lounge"
-		src="https://demo.cloudimg.io/v7/https://scaleflex.airstore.io/filerobot/filerobot-cloudimage.png?sanitize=true">
+		src="https://assets.scaleflex.com/Marketing/Logos/Cloudimage+Logos/Logotype+with+Scaleflex/LOGO+WITH+SCALEFLEX-01.png?vh=f6080d&force_format=jpg">
 </p>
 
 <h1 align="center">
