@@ -1308,7 +1308,7 @@ class CI360Viewer {
     const { ciToken, ciFilters, ciTransformation } = ciParams;
     let src = `${folder}${filename}`;
 
-    if (responsive) {
+    if (!!responsive.length) {
       let imageOffsetWidth = container.offsetWidth;
 
       const vesrion = falsyValues.includes(apiVersion) ? null : apiVersion; 
