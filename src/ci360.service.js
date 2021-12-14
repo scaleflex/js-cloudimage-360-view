@@ -685,11 +685,15 @@ class CI360Viewer {
     }
   }
 
-  onLoadResizedImages(orientation) {
+  onLoadResizedImages(orientation, event) {
     this.incrementLoadedImages(orientation);
 
     const totalAmount = this.amountX + this.amountY;
     const totalLoadedImages = this.loadedImagesX + this.loadedImagesY;
+
+    if (this.loadedImagesX === 1 && orientation !== ORIENTATIONS.Y) {
+      this.updateCanvasSize(event.target)
+    }
 
     if (totalLoadedImages === totalAmount) {
       this.replaceImages(orientation);
@@ -767,6 +771,7 @@ class CI360Viewer {
       this.responsive,
       this.container,
       this.folder,
+      this.apiVersion,
       this.filenameX,
       this.ciParams
       );
@@ -778,6 +783,7 @@ class CI360Viewer {
         this.responsive,
         this.container,
         this.folder,
+        this.apiVersion,
         this.filenameY,
         this.ciParams
       );
@@ -1291,7 +1297,15 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  getSrc(responsive, container, folder, apiVersion, filename, { ciToken, ciFilters, ciTransformation }) {
+  getSrc(
+    responsive,
+    container,
+    folder,
+    apiVersion,
+    filename,
+    ciParams = {}
+  ) {
+    const { ciToken, ciFilters, ciTransformation } = ciParams;
     let src = `${folder}${filename}`;
 
     if (responsive) {
@@ -1324,7 +1338,9 @@ class CI360Viewer {
     lazySelector,
     container,
     responsive,
-    ciParams
+    ciParams,
+    apiVersion,
+    filename
     ) {
     if (this.imageList) {
       try {
@@ -1333,7 +1349,7 @@ class CI360Viewer {
         this.amountX = images.length;
         images.forEach((src, index) => {
           const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
-          const resultSrc = this.getSrc(responsive, container, folder, src, ciParams);
+          const resultSrc = this.getSrc(responsive, container, folder, apiVersion, filename, ciParams);
           const lastIndex = resultSrc.lastIndexOf('//');
           const originalSrc = resultSrc.slice(lastIndex);
 
@@ -1554,7 +1570,7 @@ class CI360Viewer {
   attachEvents(draggable, swipeable, keys) {
     window.addEventListener('resize', debounce(() => {
       this.requestResizedImages();
-    }, 300))
+    }, 50))
 
     if ( (draggable) && (!this.disableDrag) ) {
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
@@ -1660,13 +1676,14 @@ class CI360Viewer {
     this.logoSrc = logoSrc;
     this.responsive = responsive;
     this.ciParams = ciParams;
+    this.apiVersion = apiVersion;
 
     this.applyStylesToContainer();
 
     this.addCanvas();
 
-    const srcX = this.getSrc(responsive, container, folder,apiVersion, filenameX, ciParams);
-    const srcY = this.getSrc(responsive, container, folder,apiVersion, filenameY, ciParams);
+    const srcX = this.getSrc(responsive, container, folder, apiVersion, filenameX, ciParams);
+    const srcY = this.getSrc(responsive, container, folder, apiVersion, filenameY, ciParams);
 
     this.preloadImages(
       amountX,
@@ -1676,7 +1693,9 @@ class CI360Viewer {
       lazySelector,
       container,
       responsive,
-      ciParams
+      ciParams,
+      apiVersion,
+      filenameX
     );
 
     if(amountY) {
@@ -1688,7 +1707,9 @@ class CI360Viewer {
         lazySelector,
         container,
         responsive,
-        ciParams
+        ciParams,
+        apiVersion,
+        filenameY
       );
     }
 
