@@ -669,7 +669,23 @@ class CI360Viewer {
     this.update();
   }
 
-  onLoadResizedImages( orientation, event) {
+  updateCanvasSize(image) {
+    const imageAspectRatio = image.width / image.height;
+    const wrapperEl = this.container.parentNode;
+
+    this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+    this.canvas.style.width = this.container.offsetWidth + 'px';
+
+    if (wrapperEl.offsetHeight < image.height) {
+      this.canvas.height = wrapperEl.offsetHeight / this.devicePixelRatio;
+      this.canvas.style.height = wrapperEl.offsetHeight + 'px';
+    } else {
+      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / imageAspectRatio;
+      this.canvas.style.height = this.container.offsetWidth / imageAspectRatio + 'px';
+    }
+  }
+
+  onLoadResizedImages(orientation) {
     this.incrementLoadedImages(orientation);
 
     const totalAmount = this.amountX + this.amountY;
@@ -792,11 +808,6 @@ class CI360Viewer {
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-      this.canvas.style.width = this.container.offsetWidth + 'px';
-      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / image.width * image.height;
-      this.canvas.style.height = this.container.offsetWidth / image.width * image.height + 'px';
-
       if (this.startPointerZoom || this.startPinchZoom) {
         this.updateImageScale(ctx);
       } else {
@@ -910,15 +921,10 @@ class CI360Viewer {
 
         this.canvas.height = parseInt(modalRef.style.height) * this.devicePixelRatio / event.target.width * event.target.height;
         this.canvas.style.height = parseInt(modalRef.style.width) / event.target.width * event.target.height + 'px';
-
       }
 
       if (this.container.offsetWidth > 0) {
-        this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-        this.canvas.style.width = this.container.offsetWidth + 'px';
-
-        this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / event.target.width * event.target.height;
-        this.canvas.style.height = this.container.offsetWidth / event.target.width * event.target.height + 'px';
+        this.updateCanvasSize(event.target);
       }
 
       ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
