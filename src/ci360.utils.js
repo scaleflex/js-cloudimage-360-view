@@ -54,8 +54,7 @@ const get360ViewProps = (image) => ({
   magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen') || isTrue(image, 'magnifier-in-fullscreen'),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
   ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false,
-  responsive: isTrue(image, 'responsive'),
-  ciToken: attr(image, 'responsive') || attr(image, 'data-responsive') || 'demo',
+  ciToken: attr(image, 'responsive') || attr(image, 'data-responsive'),
   ciFilters: attr(image, 'filters') 
     || attr(image, 'data-filters'),
   ciTransformation: attr(image, 'transformation') 
