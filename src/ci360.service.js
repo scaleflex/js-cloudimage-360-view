@@ -669,19 +669,57 @@ class CI360Viewer {
     this.update();
   }
 
-  updateCanvasSize(image) {
+  getContainerResponsiveWidth() {
+    const parentEl = this.container.parentNode || {};
+    
+    if (this.containerWidth) {
+      if (parentEl.offsetWidth < this.containerWidth) {
+        return parentEl.offsetWidth;
+      }
+  
+      return this.containerWidth;
+    }
+
+    return parentEl.offsetWidth;
+  }
+
+  getContainerResponsiveHeight(width) {
+    if (this.containerHeight) {
+      if (width < this.containerHeight) {
+        return width;
+      }
+  
+      return this.containerHeight;
+    }
+
+    return this.container.offsetWidth;
+  }
+
+  updateContainerSize(image) {
     const imageAspectRatio = image.width / image.height;
-    const wrapperEl = this.container.parentNode;
+    const isProvidedHeightLessThanWidth = this.containerHeight < this.containerWidth;
+    const containerWidth = this.getContainerResponsiveWidth();
+    const containerHeight = this.getContainerResponsiveHeight(containerWidth);
 
-    this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-    this.canvas.style.width = this.container.offsetWidth + 'px';
+    if (this.containerWidth && this.containerHeight) {
+      this.container.style.width = containerWidth + 'px';
+      this.container.style.height = containerHeight / imageAspectRatio + 'px';
 
-    if (wrapperEl.offsetHeight < image.height) {
-      this.canvas.height = wrapperEl.offsetHeight / this.devicePixelRatio;
-      this.canvas.style.height = wrapperEl.offsetHeight + 'px';
+      return;
+    }
+
+    if (!this.containerWidth && !this.containerHeight) {
+      this.container.style.height = containerHeight / imageAspectRatio + 'px';
+
+      return;
+    }
+
+    if ((isProvidedHeightLessThanWidth || !this.containerWidth) && this.containerHeight) {
+      this.container.style.maxWidth = containerHeight * imageAspectRatio + 'px';
+      this.container.style.height = containerHeight + 'px';
     } else {
-      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / imageAspectRatio;
-      this.canvas.style.height = this.container.offsetWidth / imageAspectRatio + 'px';
+      this.container.style.maxWidth = containerWidth + 'px';
+      this.container.style.height = containerWidth / imageAspectRatio + 'px';
     }
   }
 
@@ -692,7 +730,7 @@ class CI360Viewer {
     const totalLoadedImages = this.loadedImagesX + this.loadedImagesY;
 
     if (this.loadedImagesX === 1 && orientation !== ORIENTATIONS.Y) {
-      this.updateCanvasSize(event.target)
+    this.updateContainerSize(event.target);
     }
 
     if (totalLoadedImages === totalAmount) {
@@ -812,6 +850,12 @@ class CI360Viewer {
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
+      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+      this.canvas.style.width = this.container.offsetWidth + 'px';
+  
+      this.canvas.height = this.container.offsetHeight * this.devicePixelRatio;
+      this.canvas.style.height = this.container.offsetHeight + 'px';
+
       if (this.startPointerZoom || this.startPinchZoom) {
         this.updateImageScale(ctx);
       } else {
@@ -891,6 +935,8 @@ class CI360Viewer {
   }
 
   onFirstImageLoaded(event) {
+    this.updateContainerSize(event.target);
+
     if (!this.hide360Logo) {
       this.add360ViewIcon();
     }
@@ -918,7 +964,7 @@ class CI360Viewer {
       }
 
       if (this.container.offsetWidth === 0) {
-        const modalRef = this.container.parentElement;
+        const modalRef = this.container.parentNode || {};
 
         this.canvas.width = parseInt(modalRef.style.width) * this.devicePixelRatio;
         this.canvas.style.width = modalRef.style.width;
@@ -928,7 +974,11 @@ class CI360Viewer {
       }
 
       if (this.container.offsetWidth > 0) {
-        this.updateCanvasSize(event.target);
+        this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+        this.canvas.style.width = this.container.offsetWidth + 'px';
+    
+        this.canvas.height = this.container.offsetHeight * this.devicePixelRatio;
+        this.canvas.style.height = this.container.offsetHeight + 'px';
       }
 
       ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
@@ -948,10 +998,6 @@ class CI360Viewer {
             image.src = image.getAttribute('data-src');
           }
         });
-    }
-
-    if (this.ratio) {
-      this.container.style.minHeight = 'auto';
     }
 
     if (this.fullscreenView) {
@@ -1555,18 +1601,13 @@ class CI360Viewer {
     this.canvas.style.width = '100%';
     this.canvas.style.fontSize = '0';
 
-    if (this.ratio) {
-      this.container.style.minHeight = this.container.offsetWidth * this.ratio + 'px';
-      this.canvas.height = parseInt(this.container.style.minHeight);
-    }
-
     this.innerBox.appendChild(this.canvas);
   }
 
   attachEvents(draggable, swipeable, keys) {
     window.addEventListener('resize', debounce(() => {
       this.requestResizedImages();
-    }, 50))
+    }, 80))
 
     if ( (draggable) && (!this.disableDrag) ) {
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
@@ -1620,7 +1661,7 @@ class CI360Viewer {
       folder, apiVersion,filenameX, filenameY, imageList, indexZeroBase, amountX, amountY, imageOffset, draggable = true,
       swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, ciToken, ciFilters, ciTransformation,
-      lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
+      lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1672,6 +1713,8 @@ class CI360Viewer {
     this.logoSrc = logoSrc;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
+    this.containerWidth = containerWidth;
+    this.containerHeight = containerHeight;
 
     this.applyStylesToContainer();
 
