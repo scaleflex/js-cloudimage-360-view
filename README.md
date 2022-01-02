@@ -7,11 +7,11 @@
 
 <p align="center">
 	<img
-		height="175"
+		height="125"
 		alt="The Lounge"
 		src="https://github.com/scaleflex/js-cloudimage-360-view-utils/blob/media/cloudimage-logo-light.png#gh-dark-mode-only">
    	<img
-		height="175"
+		height="125"
 		alt="The Lounge"
 		src="https://github.com/scaleflex/js-cloudimage-360-view-utils/blob/media/cloudimage-logo-dark.png#gh-light-mode-only">
 </p>
