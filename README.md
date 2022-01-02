@@ -9,7 +9,11 @@
 	<img
 		height="175"
 		alt="The Lounge"
-		src="https://assets.scaleflex.com/Marketing/Logos/Cloudimage+Logos/Logotype+with+Scaleflex/LOGO+WITH+SCALEFLEX-01.png?vh=f6080d&force_format=jpg">
+		src="https://github.com/scaleflex/js-cloudimage-360-view-utils/blob/media/cloudimage-logo-light.png#gh-dark-mode-only">
+   	<img
+		height="175"
+		alt="The Lounge"
+		src="https://github.com/scaleflex/js-cloudimage-360-view-utils/blob/media/cloudimage-logo-dark.png#gh-light-mode-only">
 </p>
 
 <h1 align="center">
