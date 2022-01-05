@@ -1,31 +1,47 @@
 import {
-  addClass,
-  contain,
   get360ViewProps,
-  getResponsiveWidthOfContainer,
-  getSizeAccordingToPixelRatio,
-  magnify,
-  pad,
-  isTwoFingers,
-  removeClass,
   setView360Icon,
-  getMaxZoomIntensity,
-  normalizeZoomFactor,
-  debounce,
 } from './ci360.utils';
 import {
-  TO_START_POINTER_ZOOM,
-  MOUSE_LEAVE_ACTIONS,
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
-  ORGINAL_SIZE_REGEX,
-  AND_SYMBOL_REGEX,
-  falsyValues
 } from './ci360.constants';
 import './static/css/style.css';
+import {
+  generateImagesPath,
+  preloadImages,
+  preloadOriginalImages,
+  create360ViewIcon,
+  createCloseFullscreenIcon,
+  createFullscreenIcon,
+  createMagnifierIcon,
+  createLoader,
+  createInnerBox,
+  createIconsContainer,
+  createCanvas,
+  create360ViewCircleIcon,
+  createFullscreenModal,
+  contain,
+  getCurrentOriginalImage,
+  magnify,
+  createBoxShadow,
+  getSpeedFactor,
+  isCompletedOneCycle,
+  getContainerResponsiveWidth,
+  getContainerResponsiveHeight,
+  getMovingDirection,
+  applyStylesToContainer,
+  initControls,
+  addClass,
+  removeClass,
+  getItemSkipped,
+  loop,
+  generateZoomInSteps,
+  generateZoomOutSteps,
+  } from 'js-cloudimage-360-view-utils';
 
-class CI360Viewer {
-  constructor(container, fullscreen, ratio) {
+  class CI360Viewer {
+  constructor(container, fullscreen) {
     this.container = container;
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
@@ -36,18 +52,16 @@ class CI360Viewer {
     this.imagesLoaded = false;
     this.reversed = false;
     this.fullscreenView = !!fullscreen;
-    this.ratio = ratio;
     this.imagesX = [];
     this.imagesY = [];
-    this.resizedImagesX = [];
-    this.resizedImagesY = [];
     this.originalImagesX = [];
     this.originalImagesY = [];
+    this.resizedImagesX = [];
+    this.resizedImagesY = [];
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
     this.init(container);
-    this.clickedToZoom = false;
     this.isMagnifyOpen = false;
     this.isDragged = false;
     this.startPointerZoom = false;
@@ -55,22 +69,22 @@ class CI360Viewer {
     this.mouseTracked = false;
     this.intialPositions = { x: 0, y: 0 };
     this.pointerCurrentPosition = { x: 0, y: 0 };
-    this.startPinchZoom = false;
-    this.prevDistanceBetweenFingers = 0;
+    this.isStartedLoadOriginalImages = false;
   }
 
   mouseDown(event) {
+    if (!this.imagesLoaded) return;
+
     event.preventDefault();
 
     const { pageX, pageY } = event;
-
-    if (!this.imagesLoaded) return;
 
     this.hideInitialIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
       this.stop();
       this.autoplay = false;
+      this.isZoomReady = true;
     }
 
     this.intialPositions = { x: pageX, y: pageY };
@@ -81,19 +95,43 @@ class CI360Viewer {
 
   mouseUp() {
     if (!this.imagesLoaded || !this.isClicked) return;
+
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
     this.isClicked = false;
 
-    if (!this.clickedToZoom) {
-      this.container.style.cursor = 'grab';
-    } else {
-      this.container.style.cursor = 'nesw-resize';
-    }
-
-    if (this.bottomCircle && !this.zoomIntensity) {
+    if (this.bottomCircle && !this.mouseTracked) {
       this.show360ViewCircleIcon();
     }
+
+    if (this.pointerZoom && !this.fullscreenView) {
+      setTimeout(() => {
+        this.isZoomReady = true;
+      }, 50);
+
+      if (this.mouseTracked) {
+        this.container.style.cursor = 'zoom-out';
+      } else {
+        this.container.style.cursor = 'zoom-in';
+      }
+    } else {
+      this.container.style.cursor = 'grab';
+    }
+  }
+
+  mouseClick(event) {
+    if (!this.pointerZoom  || this.fullscreenView) return;
+
+    this.setCursorPosition(event);
+    this.hideInitialIcons();
+
+    if (!this.isStartedLoadOriginalImages && !this.isDragged && this.isZoomReady) {
+      this.prepareOriginalImages(event);
+    }
+
+    if (this.isAllOriginalImagesLoaded && !this.isDragged && this.isZoomReady) {
+      this.togglePointerZoom(event);
+    };
   }
 
   mouseMove(event) {
@@ -103,75 +141,134 @@ class CI360Viewer {
 
     if (this.mouseTracked) {
       this.setCursorPosition(event);
+
+      if (!this.isClicked) {
+        this.update();
+      }
     }
 
     if (this.isClicked) {
       const nextPositions = { x: pageX, y: pageY };
-      
+
       this.container.style.cursor = 'grabbing';
-
-      this.updateMovingDirection(this.intialPositions, nextPositions);
-      this.onMoveHandler(event);
-
       this.isDragged = true;
-    } else if (this.zoomIntensity) {
-      this.update();
+      this.movingDirection = getMovingDirection(
+        this.isStartSpin,
+        this.allowSpinY,
+        this.intialPositions,
+        nextPositions,
+        this.movingDirection
+      );
+
+      this.onMoveHandler(event);
     }
   }
 
-  updateMovingDirection(prevPosition, nextPositions) {
-    if (this.isStartSpin) return;
+  mouseLeave() {
+    if (!this.imagesLoaded) return;
 
-    const differenceInPositionX = Math.abs(prevPosition.x - nextPositions.x);
-    const differenceInPositionY = Math.abs(prevPosition.y - nextPositions.y);
-    const sensitivity = 10;
-  
-    if (differenceInPositionX > sensitivity) this.movingDirection = ORIENTATIONS.X;
-  
-    if (differenceInPositionY > sensitivity && this.allowSpinY) this.movingDirection = ORIENTATIONS.Y;
-  }
-
-  mouseClick(event) {
-    if (!this.isDragged && this.clickedToZoom) {
-      this.resetZoom();
-    } else if (!this.isDragged) {
-      this.clickedToZoom = true;
-      this.container.style.cursor = 'nesw-resize';
+    if (this.pointerZoom && this.mouseTracked) {
+      this.togglePointerZoom();
     }
   }
 
-  mouseScroll(event) {
-    if (this.disablePointerZoom || this.isMagnifyOpen) return;
+  togglePointerZoom() {
+    if (this.autoplay || this.loopTimeoutId) {
+      this.stop();
+      this.autoplay = false;
+    }
 
-    const isClickedToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.CLICK_TO_START
-      && this.clickedToZoom;
-    const isScrolledToZoom = this.toStartPointerZoom === TO_START_POINTER_ZOOM.SCROLL_TO_START;
+    if (this.mouseTracked) {
+      const zoomSteps = generateZoomOutSteps(this.pointerZoom);
+      this.container.style.cursor = 'zoom-in';
 
-    if (isClickedToZoom || isScrolledToZoom) {
-      this.container.style.cursor = 'nesw-resize';
+      zoomSteps.forEach((step, index) => {
+        setTimeout(() => {
+          this.zoomIntensity = step;
+          this.update();
 
-      this.initMouseScrollZoom(event);
+          const isReachedIntialScale = index === (zoomSteps.length - 1);
+
+          if (isReachedIntialScale) {
+            this.mouseTracked = false;
+            this.update();
+          };
+        }, (this.pointerZoom - step) * 200);
+      })
+    } else {
+      if (this.bottomCircle) this.hide360ViewCircleIcon();
+
+      const zoomSteps = generateZoomInSteps(this.pointerZoom);
+
+      zoomSteps.forEach((step) => {
+        setTimeout(() => {
+          this.zoomIntensity = step;
+          this.update();
+        }, step * 200);
+      })
+
+      this.mouseTracked = true;
+      this.container.style.cursor = 'zoom-out';
     }
   }
 
-  closeZoomHandler() {
-    this.container.style.cursor = 'grab';
-    this.clickedToZoom = false;
-    this.resetZoom();
+  onOriginalImageLoad(orientation, event, image, index) {
+    if (orientation === ORIENTATIONS.Y) {
+      this.originalImagesY[index] = image;
+    } else {
+      this.originalImagesX[index] = image;
+    }
+
+    const loadedOriginalXImages = this.originalImagesX
+      .filter(image => !!image);
+    const loadedOriginalYImages = this.originalImagesY
+      .filter(image => !!image);
+
+    const totalAmount = this.amountX + this.amountY;
+    const totalLoadedImages = loadedOriginalXImages.length + loadedOriginalYImages.length;
+    const isAllImagesLoaded = (
+      loadedOriginalXImages.length + loadedOriginalYImages.length === this.amountX + this.amountY
+    );
+
+    const percentage = Math.round(totalLoadedImages / totalAmount * 100);
+
+    this.updatePercentageInLoader(percentage);
+
+    if (isAllImagesLoaded) {
+      this.removeLoader();
+      this.togglePointerZoom(event);
+
+      this.mouseTracked = true;
+      this.isAllOriginalImagesLoaded = true;
+    }
+  }
+
+  prepareOriginalImages(event) {
+    const srcX = generateImagesPath(this.srcXConfig);
+
+    this.isStartedLoadOriginalImages = true;
+    this.loader = createLoader(this.innerBox);
+    this.container.style.cursor = 'wait';
+
+    preloadOriginalImages(
+      this.srcXConfig,
+      srcX,
+      this.onOriginalImageLoad.bind(this, ORIENTATIONS.X, event)
+    );
+
+    if (this.allowSpinY) {
+      const srcY = generateImagesPath(this.srcYConfig);
+
+      preloadOriginalImages(
+        this.srcXConfig,
+        srcY,
+        this.onOriginalImageLoad.bind(this, ORIENTATIONS.Y, event)
+      );
+    }
   }
 
   touchStart(event) {
     if (!this.imagesLoaded) return;
-
-    const isPinchZoom = (
-      !this.disablePinchZoom &&
-      isTwoFingers(event) &&
-      !this.isMagnifyOpen
-      );
-
-    if (isPinchZoom) {
-      this.initAndSetPinchZoom(event);
-    };
 
     this.hideInitialIcons();
 
@@ -188,26 +285,26 @@ class CI360Viewer {
   touchEnd() {
     if (!this.imagesLoaded) return;
 
-    if (this.zoomIntensity) this.resetZoom();
+    if (this.bottomCircle) this.show360ViewCircleIcon();
 
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
     this.isClicked = false;
-
-    if (this.bottomCircle) this.show360ViewCircleIcon();
   }
 
   touchMove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
-    if (!this.disablePinchZoom && isTwoFingers(event)) {
-      this.fingersPinchZoom(event);
-    } else {
-      const nextPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    const nextPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 
-      this.updateMovingDirection(this.intialPositions, nextPositions);
-      this.onMoveHandler(event);
-    }
+    this.movingDirection = getMovingDirection(
+      this.isStartSpin,
+      this.allowSpinY,
+      this.intialPositions,
+      nextPositions
+    );
+
+    this.onMoveHandler(event);
   }
 
   keyDownGeneral(event) {
@@ -216,10 +313,10 @@ class CI360Viewer {
     if (this.glass) {
       this.closeMagnifier();
     }
-    
+
     if (event.keyCode === 27) { //ESC
-      if (this.clickedToZoom) {
-        this.closeZoomHandler()
+      if (this.mouseTracked) {
+        this.togglePointerZoom();
       }
     }
   }
@@ -234,23 +331,14 @@ class CI360Viewer {
     }
   }
 
-  initMouseScrollZoom(event) {
-    if (this.bottomCircle) this.hide360ViewCircleIcon();
-
-    this.hideInitialIcons();
-    this.mouseTracked = true;
-    this.setCursorPosition(event);
-    this.mouseScrollZoom(event);
-  }
-
   setCursorPosition(event) {
     this.mousePositions = {
       x: event.clientX,
       y: event.clientY
-    }
+    };
   }
 
-  getCursorPositionInCanvas () {
+  getCursorPositionInCanvas() {
     const canvasRect =  this.canvas.getBoundingClientRect();
 
     this.pointerCurrentPosition = {
@@ -261,112 +349,6 @@ class CI360Viewer {
     return this.pointerCurrentPosition;
   }
 
-  mouseScrollZoom (event) {
-    event.preventDefault();
-
-    if (this.autoplay || this.loopTimeoutId) {
-      this.stop();
-      this.autoplay = false;
-    }
-
-    const zoomFactor = normalizeZoomFactor(event, this.pointerZoomFactor);
-    const maxIntensity = getMaxZoomIntensity(this.canvas.width, this.maxScale);
-    this.startPointerZoom = true;
-    this.zoomIntensity += event.deltaY * zoomFactor;
-    this.zoomIntensity = Math.min(Math.max(0, this.zoomIntensity), maxIntensity);
-
-    if (this.zoomIntensity) {
-      if (this.resetZoomIcon) this.showResetZoomIcon();
-    } else {
-      if (this.resetZoomIcon) this.hideResetZoomIcon();
-
-      if (this.bottomCircle) this.show360ViewCircleIcon();
-
-      this.startPointerZoom = false;
-      this.mouseTracked = false;
-    }
-
-    this.update();
-  }
-
-  initAndSetPinchZoom (event) {
-    if (this.bottomCircle) this.hide360ViewCircleIcon();
-
-    const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
-    this.prevDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
-  }
-
-  getDistanceBetweenFingers (fingerOne, fingerTwo) {
-    const xPosition = fingerTwo.x - fingerOne.x;
-    const yPosition = fingerTwo.y - fingerOne.y;
-
-    return Math.sqrt(Math.pow(xPosition, 2) + Math.pow(yPosition, 2));
-  }
-
-  updateAveragePositionBetweenFingers (fingerOne, fingerTwo) {
-    const containerRect = this.canvas.getBoundingClientRect();
-    const offSetX = containerRect.left;
-    const offSetY = containerRect.top;
-
-    this.pointerCurrentPosition.x = (
-      ( fingerOne.x + fingerTwo.x ) / 2
-    ) - offSetX;
-
-    this.pointerCurrentPosition.y = (
-      ( fingerOne.y + fingerTwo.y ) / 2
-    ) - offSetY;
-  }
-
-  getFingersPosition (event) {
-    const p1 = event.targetTouches[0];
-    const p2 = event.targetTouches[1];
-
-    const fingerOnePosition = { x: p1.clientX, y: p1.clientY };
-    const fingerTwoPosition = { x: p2.clientX, y: p2.clientY };
-
-    return [fingerOnePosition, fingerTwoPosition];
-  }
-
-  fingersPinchZoom (event) {
-    const [fingerOnePosition, fingerTwoPosition] = this.getFingersPosition(event);
-    const currentDistanceBetweenFingers = this.getDistanceBetweenFingers(fingerOnePosition, fingerTwoPosition);
-    const zoomFactor  = this.pinchZoomFactor * 30;
-
-    const zoomSensitivity = 1.5;
-    const isZoomIn = currentDistanceBetweenFingers > (this.prevDistanceBetweenFingers + zoomSensitivity);
-    const isZoomOut = (currentDistanceBetweenFingers + zoomSensitivity) < this.prevDistanceBetweenFingers;
-    const maxIntensity = getMaxZoomIntensity(this.canvas.width, this.maxScale);
-
-    this.startPinchZoom = true;
-    
-    this.updateAveragePositionBetweenFingers(fingerOnePosition, fingerTwoPosition);
-
-    if (isZoomIn && this.zoomIntensity <= maxIntensity) {
-      this.zoomIntensity += zoomFactor;
-    } else if (isZoomOut && this.zoomIntensity >= zoomFactor) {
-      this.zoomIntensity -= zoomFactor;
-    }
-    
-    this.update();
-    this.prevDistanceBetweenFingers = currentDistanceBetweenFingers;
-  }
-
-  resetZoom () {
-    this.startPointerZoom = false;
-    this.startPinchZoom = false;
-    this.mouseTracked = false;
-    this.clickedToZoom = false;
-
-    this.container.style.cursor = 'grab';
-
-    if (this.resetZoomIcon) this.hideResetZoomIcon();
-
-    if (this.zoomIntensity) {
-      this.zoomIntensity = 0;
-      this.update();
-    }
-  }
-
   keyDown(event) {
     if (!this.imagesLoaded) return;
 
@@ -374,20 +356,32 @@ class CI360Viewer {
       this.closeMagnifier();
     }
 
-    if ([37, 39].includes(event.keyCode)) {
-      if (37 === event.keyCode) {
-        if (this.reversed)
-          this.left();
-        else
-          this.right();
-      } else if (39 === event.keyCode) {
-        if (this.reversed)
-          this.right();
-        else
-          this.left();
-      }
+    if (event.keyCode === 37) { // left
+      this.keysReverse ? this.left() : this.right();
 
       this.onSpin();
+    }
+
+    if (event.keyCode === 39) { // right
+      this.keysReverse ? this.right() : this.left();
+
+      this.onSpin();
+    }
+
+    if (this.allowSpinY) {
+      event.preventDefault();
+
+      if (event.keyCode === 38) { // up
+        this.keysReverse ? this.top() : this.bottom();
+
+        this.onSpin();
+      }
+
+      if (event.keyCode === 40) { // down
+        this.keysReverse ? this.bottom() : this.top();
+
+        this.onSpin();
+      }
     }
   }
 
@@ -418,99 +412,17 @@ class CI360Viewer {
     if (this.bottomCircle) this.show360ViewCircleIcon();
   }
 
-  onMoveHandler(event) {
-    const currentPositionX = this.isMobile ? event.touches[0].clientX : event.pageX;
-    const currentPositionY = this.isMobile ? event.touches[0].clientY : event.pageY;
-
-    const isMoveRight = currentPositionX - this.movementStart.x >= this.speedFactor;
-    const isMoveLeft = this.movementStart.x - currentPositionX >= this.speedFactor;
-    const isMoveTop = this.movementStart.y - currentPositionY >= this.speedFactor;
-    const isMoveBottom = currentPositionY - this.movementStart.y >= this.speedFactor;
-    
-    if (this.bottomCircle) this.hide360ViewCircleIcon();
-
-    if (isMoveRight && this.movingDirection === ORIENTATIONS.X) {
-      this.moveRight(currentPositionX)
-  
-      this.isStartSpin = true;
-    } else if (isMoveLeft && this.movingDirection === ORIENTATIONS.X) {  
-      this.moveLeft(currentPositionX)
-
-      this.isStartSpin = true;
-    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y) {
-      this.moveTop(currentPositionY)
-
-      this.isStartSpin = true;
-    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y) {
-      this.moveBottom(currentPositionY)
-
-      this.isStartSpin = true;
-    }
-  }
-
-  moveRight(currentPositionX) {
-    const itemsSkippedRight = Math.floor(
-      (currentPositionX - this.movementStart.x) / this.speedFactor
-    ) || 1;
-
-    this.spinReverse ? this.moveActiveIndexDown(itemsSkippedRight) 
-    : this.moveActiveIndexUp(itemsSkippedRight);
-
-    this.movementStart.x = currentPositionX;
-    this.activeImageY = 1;
-    this.update();
-  }
-
-  moveLeft(currentPositionX) { 
-    const itemsSkippedLeft = Math.floor(
-      (this.movementStart.x - currentPositionX) / this.speedFactor
-    ) || 1;
-
-    this.spinReverse ? this.moveActiveIndexUp(itemsSkippedLeft) 
-    : this.moveActiveIndexDown(itemsSkippedLeft);
-    
-    this.activeImageY = 1;
-    this.movementStart.x = currentPositionX;
-    this.update();
-  }
-
-  moveTop(currentPositionY) {
-    const itemsSkippedTop = Math.floor(
-      (this.movementStart.y - currentPositionY) / this.speedFactor
-    ) || 1;
-
-    this.spinReverse ? this.moveActiveYIndexUp(itemsSkippedTop)
-    : this.moveActiveYIndexDown(itemsSkippedTop);
-
-    this.activeImageX = 1;
-    this.movementStart.y = currentPositionY;
-    this.update();
-  }
-
-  moveBottom(currentPositionY) {
-    const itemsSkippedBottom = Math.floor(
-      (currentPositionY - this.movementStart.y) / this.speedFactor
-    ) || 1;
-
-    this.spinReverse ? this.moveActiveYIndexDown(itemsSkippedBottom)
-    : this.moveActiveYIndexUp(itemsSkippedBottom);
-
-    this.activeImageX = 1;
-    this.movementStart.y = currentPositionY;
-    this.update();
-  }
-
   moveActiveIndexUp(itemsSkipped) {
     const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
     if (this.stopAtEdges) {
       const isReachedTheEdge = this.activeImageX + itemsSkipped >= this.amountX;
-  
+
       if (isReachedTheEdge) {
         this.activeImageX = this.amountX;
 
-        if (isReverse ? this.prevElem : this.rightElem) {
-          addClass(isReverse ? this.leftElem : this.leftElem, 'not-active');
+        if (isReverse ? this.leftElem : this.rightElem) {
+          addClass(isReverse ? this.leftElem : this.rightElem, 'not-active');
         }
       } else {
         this.activeImageX += itemsSkipped;
@@ -551,7 +463,7 @@ class CI360Viewer {
         this.spinY = true;
       } else {
         this.activeImageX -= itemsSkipped;
-      }    
+      }
     }
   }
 
@@ -605,44 +517,82 @@ class CI360Viewer {
         this.spinY = false;
       } else {
         this.activeImageY -= itemsSkipped;
-      }    
+      }
     }
   }
 
-  loop(reversed) {
-    switch (this.autoplayBehavior) {
-      case AUTOPLAY_BEHAVIOR.SPIN_Y:
-        reversed ? this.bottom() : this.top();
-        break;
+  moveRight(currentPositionX) {
+    const itemsSkippedRight = getItemSkipped(currentPositionX, this.movementStart.x, this.speedFactor);
 
-      case AUTOPLAY_BEHAVIOR.SPIN_XY:
-        if (this.spinY) {
-          reversed ? this.bottom() : this.top();
-        } else {
-          reversed ? this.left() : this.right();
-        }
-        break;
+    this.spinReverse ? this.moveActiveIndexDown(itemsSkippedRight)
+    : this.moveActiveIndexUp(itemsSkippedRight);
 
-      case AUTOPLAY_BEHAVIOR.SPIN_YX:
-        if (this.spinY) {
-          reversed ? this.bottom() : this.top();
-        } else {
-          reversed ? this.left() : this.right();
-        }
-        break;
-
-      case AUTOPLAY_BEHAVIOR.SPIN_X:
-      default:
-        reversed ? this.left() : this.right();
-    }
-  }
-
-  right() {
-    this.movingDirection = ORIENTATIONS.X;
-    this.activeImageY = this.reversed ? this.amountY : 1;
-    
-    this.moveActiveIndexUp(1);
+    this.movementStart.x = currentPositionX;
+    this.activeImageY = 1;
     this.update();
+  }
+
+  moveLeft(currentPositionX) {
+    const itemsSkippedLeft = getItemSkipped(this.movementStart.x, currentPositionX, this.speedFactor);
+
+    this.spinReverse ? this.moveActiveIndexUp(itemsSkippedLeft)
+    : this.moveActiveIndexDown(itemsSkippedLeft);
+
+    this.activeImageY = 1;
+    this.movementStart.x = currentPositionX;
+    this.update();
+  }
+
+  moveTop(currentPositionY) {
+    const itemsSkippedTop =  getItemSkipped(this.movementStart.y, currentPositionY, this.speedFactor);
+
+    this.spinReverse ? this.moveActiveYIndexUp(itemsSkippedTop)
+    : this.moveActiveYIndexDown(itemsSkippedTop);
+
+    this.activeImageX = 1;
+    this.movementStart.y = currentPositionY;
+    this.update();
+  }
+
+  moveBottom(currentPositionY) {
+    const itemsSkippedBottom = getItemSkipped(currentPositionY, this.movementStart.y, this.speedFactor);
+
+    this.spinReverse ? this.moveActiveYIndexDown(itemsSkippedBottom)
+    : this.moveActiveYIndexUp(itemsSkippedBottom);
+
+    this.activeImageX = 1;
+    this.movementStart.y = currentPositionY;
+    this.update();
+  }
+
+  onMoveHandler(event) {
+    const currentPositionX = this.isMobile ? event.touches[0].clientX : event.pageX;
+    const currentPositionY = this.isMobile ? event.touches[0].clientY : event.pageY;
+
+    const isMoveRight = currentPositionX - this.movementStart.x >= this.speedFactor;
+    const isMoveLeft = this.movementStart.x - currentPositionX >= this.speedFactor;
+    const isMoveTop = this.movementStart.y - currentPositionY >= this.speedFactor;
+    const isMoveBottom = currentPositionY - this.movementStart.y >= this.speedFactor;
+
+    if (this.bottomCircle) this.hide360ViewCircleIcon();
+
+    if (isMoveRight && this.movingDirection === ORIENTATIONS.X) {
+      this.moveRight(currentPositionX);
+
+      this.isStartSpin = true;
+    } else if (isMoveLeft && this.movingDirection === ORIENTATIONS.X) {
+      this.moveLeft(currentPositionX);
+
+      this.isStartSpin = true;
+    } else if (isMoveTop && this.movingDirection === ORIENTATIONS.Y) {
+      this.moveTop(currentPositionY);
+
+      this.isStartSpin = true;
+    } else if (isMoveBottom && this.movingDirection === ORIENTATIONS.Y) {
+      this.moveBottom(currentPositionY);
+
+      this.isStartSpin = true;
+    }
   }
 
   left() {
@@ -650,6 +600,14 @@ class CI360Viewer {
     this.activeImageY = this.reversed ? this.amountY : 1;
 
     this.moveActiveIndexDown(1);
+    this.update();
+  }
+
+  right() {
+    this.movingDirection = ORIENTATIONS.X;
+    this.activeImageY = this.reversed ? this.amountY : 1;
+
+    this.moveActiveIndexUp(1);
     this.update();
   }
 
@@ -669,124 +627,107 @@ class CI360Viewer {
     this.update();
   }
 
-  updateCanvasSize(image) {
+  loop(reversed) {
+    const loopTriggers = {
+      left: this.left.bind(this),
+      right: this.right.bind(this),
+      top: this.top.bind(this),
+      bottom: this.bottom.bind(this)
+    }
+
+    loop(this.autoplayBehavior, this.spinY, reversed, loopTriggers);
+  }
+
+  updateContainerSize(image) {
+    const parentEl = this.container.parentNode || {};
     const imageAspectRatio = image.width / image.height;
-    const wrapperEl = this.container.parentNode;
+    const isProvidedHeightLessThanWidth = this.containerHeight < this.containerWidth;
+    const containerWidth = getContainerResponsiveWidth(parentEl, this.containerWidth);
+    const containerHeight = getContainerResponsiveHeight(this.container, containerWidth, this.containerHeight);
 
-    this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-    this.canvas.style.width = this.container.offsetWidth + 'px';
+    if (this.fullscreenView) {
+      this.container.width = window.innerWidth * this.devicePixelRatio;
+      this.container.style.width = window.innerWidth + 'px';
+      this.container.height = window.innerHeight * this.devicePixelRatio;
+      this.container.style.height = window.innerHeight + 'px';
 
-    if (wrapperEl.offsetHeight < image.height) {
-      this.canvas.height = wrapperEl.offsetHeight / this.devicePixelRatio;
-      this.canvas.style.height = wrapperEl.offsetHeight + 'px';
+      return;
+    }
+
+    if (this.containerWidth && this.containerHeight) {
+      this.container.style.width = containerWidth + 'px';
+      this.container.style.height = containerHeight / imageAspectRatio + 'px';
+
+      return;
+    }
+
+    if (!this.containerWidth && !this.containerHeight) {
+      this.container.style.height = containerHeight / imageAspectRatio + 'px';
+
+      return;
+    }
+
+    if ((isProvidedHeightLessThanWidth || !this.containerWidth) && this.containerHeight) {
+      this.container.style.maxWidth = containerHeight * imageAspectRatio + 'px';
+      this.container.style.height = containerHeight + 'px';
     } else {
-      this.canvas.height = this.container.offsetWidth * this.devicePixelRatio / imageAspectRatio;
-      this.canvas.style.height = this.container.offsetWidth / imageAspectRatio + 'px';
+      this.container.style.maxWidth = containerWidth + 'px';
+      this.container.style.height = containerWidth / imageAspectRatio + 'px';
     }
   }
 
-  onLoadResizedImages(orientation, event) {
-    this.incrementLoadedImages(orientation);
-
-    const totalAmount = this.amountX + this.amountY;
-    const totalLoadedImages = this.loadedImagesX + this.loadedImagesY;
-
-    if (this.loadedImagesX === 1 && orientation !== ORIENTATIONS.Y) {
-      this.updateCanvasSize(event.target)
-    }
-
-    if (totalLoadedImages === totalAmount) {
-      this.replaceImages(orientation);
-      this.update();
-    }
-  }
-
-  replaceImages(orientation) {
+  onResizedImageLoad(orientation, image, index) {
     if (orientation === ORIENTATIONS.Y) {
-      this.imagesY = this.resizedImagesY;
-    }  else {
-      this.imagesX = this.resizedImagesX;
-    }
-  }
-
-  requestNewImages(src, amount, orientation) {
-    if (orientation === ORIENTATIONS.Y) {
-      this.resizedImagesY = [];
-      this.loadedImagesY = 0;
+      this.resizedImagesY[index] = image;
     } else {
-      this.resizedImagesX = [];
-      this.loadedImagesX = 0;
+      this.resizedImagesX[index] = image;
     }
 
-    [...new Array(amount)].map((_item, index) => {
-      const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
-      const resultSrc = src.replace('{index}', nextZeroFilledIndex);
+    const loadedResizedXImages = this.resizedImagesX
+      .filter(image => !!image);
+    const loadedResizedYImages = this.resizedImagesY
+      .filter(image => !!image);
 
-      this.addUpdatedSizeImage(
-        resultSrc,
-        orientation,
-        this.lazyload,
-        this.lazySelector,
-        index
-      );
-    });
-  }
+    const isAllImagesLoaded = (
+      loadedResizedXImages.length + loadedResizedYImages.length === this.amountX + this.amountY
+    );
 
-  addUpdatedSizeImage(
-    resultSrc,
-    orientation,
-    lazyload,
-    lazySelector,
-    index
-    ) {
-    const image = new Image();
+    if (isAllImagesLoaded) {
+    this.imagesX = this.resizedImagesX;
+    this.imagesY = this.resizedImagesY;
 
-    if (lazyload && !this.fullscreenView) {
-      image.setAttribute('data-src', resultSrc);
-      image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
-
-      if (index === 0) {
-        this.lazyloadInitImage = image;
-        image.style.position = 'absolute';
-        image.style.top = '0';
-        image.style.left = '0';
-        this.innerBox.appendChild(image);
-      }
-    } else {
-      image.src = resultSrc;
-    }
-
-    image.onload = this.onLoadResizedImages.bind(this, orientation);
-    image.onerror = this.onLoadResizedImages.bind(this, orientation);
-
-    if (orientation === ORIENTATIONS.Y) {
-      this.resizedImagesY.push(image)
-    } else {
-      this.resizedImagesX.push(image);
+    this.update();
     }
   }
 
   requestResizedImages() {
-    const srcX = this.getSrc(
-      this.container,
-      this.folder,
-      this.apiVersion,
-      this.filenameX,
-      this.ciParams
-      );
+    const responsive = this.ciParams.ciToken;
+    const firstImage = this.imagesX[0];
 
-    this.requestNewImages(srcX, this.amountX, ORIENTATIONS.X)    
+    this.updateContainerSize(firstImage);
+    this.update();
+
+    this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
+    const srcX = generateImagesPath(this.srcXConfig);
+
+    if (!responsive || this.container.offsetWidth < firstImage.width *  1.5) return;
+
+    preloadImages(
+      this.srcXConfig,
+      srcX,
+      this.onResizedImageLoad.bind(this, ORIENTATIONS.X),
+      true
+    )
 
     if (this.allowSpinY) {
-      const srcY = this.getSrc(
-        this.container,
-        this.folder,
-        this.apiVersion,
-        this.filenameY,
-        this.ciParams
-      );
+      const srcY = generateImagesPath(this.srcYConfig);
 
-      this.requestNewImages(srcY, this.amountY, ORIENTATIONS.Y)    
+      preloadImages(
+        this.srcYConfig,
+        srcY,
+        this.onResizedImageLoad.bind(this, ORIENTATIONS.Y),
+        true
+      )
     }
   }
 
@@ -798,44 +739,41 @@ class CI360Viewer {
     }
 
     const ctx = this.canvas.getContext("2d");
-
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
 
-    if (this.fullscreenView) {
-      this.canvas.width = window.innerWidth * this.devicePixelRatio;
-      this.canvas.style.width = window.innerWidth + 'px';
-      this.canvas.height = window.innerHeight * this.devicePixelRatio;
-      this.canvas.style.height = window.innerHeight + 'px';
+    this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+    this.canvas.style.width = this.container.offsetWidth + 'px';
 
-      const { offsetX, offsetY, width, height } =
+    this.canvas.height = this.container.offsetHeight * this.devicePixelRatio;
+    this.canvas.style.height = this.container.offsetHeight + 'px';
+
+    if (this.fullscreenView) {
+      const { width, height, offsetX, offsetY } =
         contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
-      ctx.drawImage(image, offsetX, offsetY, width, height);
+        ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      if (this.startPointerZoom || this.startPinchZoom) {
+      if (this.mouseTracked) {
         this.updateImageScale(ctx);
       } else {
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
     }
   }
-  
+
   updateImageScale(ctx) {
-    let image = this.originalImagesX[this.activeImageX -1];
+    let image = this.originalImagesX[this.activeImageX - 1];
 
     if (this.movingDirection === ORIENTATIONS.Y) {
       image = this.originalImagesY[this.activeImageY - 1];
     }
 
-    let position = this.pointerCurrentPosition;
+    const position = this.getCursorPositionInCanvas();
+    const imageWidth = this.canvas.width;
+    const imageHeight = this.canvas.height;
 
-    if (this.startPointerZoom) position = this.getCursorPositionInCanvas();
-
-    const imageWidth = this.canvas.width / this.devicePixelRatio;
-    const imageHeight = this.canvas.height / this.devicePixelRatio;
-
-    const width = this.canvas.width + (this.zoomIntensity * (this.canvas.width / this.canvas.height));
-    const height = this.canvas.height + this.zoomIntensity;
+    const width = (this.canvas.width * this.zoomIntensity);
+    const height = (this.canvas.height * this.zoomIntensity);
 
     const pointX = 0 - ( (position.x / imageWidth) * (width - this.canvas.width) );
     const pointY = 0 - ( (position.y / imageHeight) * (height - this.canvas.height) );
@@ -853,33 +791,72 @@ class CI360Viewer {
     }
   }
 
-  onAllImagesLoaded() {
-    this.imagesLoaded = true;
+  onFirstImageLoaded(image) {
+    if (!this.hide360Logo && !this.lazyload) this.add360ViewIcon();
 
-    this.container.style.cursor = 'grab';
-    if (this.disableDrag) this.container.style.cursor = 'default';
+    const ctx = this.canvas.getContext("2d");
 
-    this.removeLoader();
+    if (this.fullscreenView) {
+      this.canvas.width = window.innerWidth * this.devicePixelRatio;
+      this.canvas.style.width = window.innerWidth + 'px';
+      this.canvas.height = window.innerHeight * this.devicePixelRatio;
+      this.canvas.style.height = window.innerHeight + 'px';
 
-    if (!this.fullscreenView) {
-      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amountX * 25 * this.container.offsetWidth / 1500) || 1;
+      const { offsetX, offsetY, width, height } =
+        contain(this.canvas.width, this.canvas.height, image.width, image.height);
+
+      this.offset = { x: offsetX, y: offsetY };
+
+      ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      const containerRatio = this.container.offsetHeight / this.container.offsetWidth;
-      let imageOffsetWidth = this.container.offsetWidth;
+      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+      this.canvas.style.width = this.container.offsetWidth + 'px';
 
-      if (this.ratio > containerRatio) {
-        imageOffsetWidth = this.container.offsetHeight / this.ratio;
-      }
+      this.canvas.height = this.container.offsetHeight * this.devicePixelRatio;
+      this.canvas.style.height = this.container.offsetHeight + 'px';
 
-      this.speedFactor = Math.floor(this.dragSpeed / 150 * 36 / this.amountX * 25 * imageOffsetWidth / 1500) || 1;
+      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
 
-    if (this.imageOffset) {
-      this.activeImageX = this.imageOffset;
-    };
+    if (this.fullscreenView) {
+      this.addCloseFullscreenView();
+    }
+
+    if (this.magnifier) {
+      this.addMagnifier();
+    }
+
+    if (this.boxShadow && !this.fullscreenView) {
+      createBoxShadow(this.boxShadow, this.innerBox);
+    }
+
+    if (this.bottomCircle && !this.fullscreenView) {
+      this.add360ViewCircleIcon();
+    }
+
+    if (this.fullscreen && !this.fullscreenView) {
+      this.addFullscreenIcon();
+    }
+  }
+
+  onAllImagesLoaded() {
+    this.removeLoader();
+    this.imagesLoaded = true;
+
+    if (this.autoplay && this.pointerZoom) {
+      this.container.style.cursor = 'zoom-in';
+    } else {
+      this.container.style.cursor = 'grab';
+    }
+
+    this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
 
     if (this.autoplay) {
       this.play();
+    }
+
+    if (this.disableDrag) {
+      this.container.style.cursor = 'default';
     }
 
     if (this.view360Icon) {
@@ -890,209 +867,22 @@ class CI360Viewer {
     this.initControls();
   }
 
-  onFirstImageLoaded(event) {
-    if (!this.hide360Logo) {
-      this.add360ViewIcon();
-    }
+  magnify(event) {
+    event.stopPropagation();
 
-    if (this.fullscreenView) {
-      this.canvas.width = window.innerWidth * this.devicePixelRatio;
-      this.canvas.style.width = window.innerWidth + 'px';
-      this.canvas.height = window.innerHeight * this.devicePixelRatio;
-      this.canvas.style.height = window.innerHeight + 'px';
+    if (this.mouseTracked) this.togglePointerZoom();
 
-      const ctx = this.canvas.getContext("2d");
+    const currentOriginalImage = getCurrentOriginalImage(
+      this.movingDirection,
+      this.imagesX,
+      this.imagesY,
+      this.activeImageX,
+      this.activeImageY
+    );
 
-      const { offsetX, offsetY, width, height } =
-        contain(this.canvas.width, this.canvas.height, event.target.width, event.target.height);
-
-        this.offset = { x: offsetX, y: offsetY };
-
-        ctx.drawImage(event.target, offsetX, offsetY, width, height);
-    } else {
-      const ctx = this.canvas.getContext("2d");
-      let imagePreview = event.target;
-
-      if (this.imageOffset) {
-        imagePreview = this.imagesX[this.imageOffset];
-      }
-
-      if (this.container.offsetWidth === 0) {
-        const modalRef = this.container.parentElement;
-
-        this.canvas.width = parseInt(modalRef.style.width) * this.devicePixelRatio;
-        this.canvas.style.width = modalRef.style.width;
-
-        this.canvas.height = parseInt(modalRef.style.height) * this.devicePixelRatio / event.target.width * event.target.height;
-        this.canvas.style.height = parseInt(modalRef.style.width) / event.target.width * event.target.height + 'px';
-      }
-
-      if (this.container.offsetWidth > 0) {
-        this.updateCanvasSize(event.target);
-      }
-
-      ctx.drawImage(imagePreview, 0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    if (this.lazyload && !this.fullscreenView) {
-      this.imagesX
-        .forEach((image, index) => {
-          if (index === 0) {
-            this.innerBox.removeChild(this.lazyloadInitImage);
-            return;
-          }
-
-          const dataSrc = image.getAttribute('data-src');
-
-          if (dataSrc) {
-            image.src = image.getAttribute('data-src');
-          }
-        });
-    }
-
-    if (this.ratio) {
-      this.container.style.minHeight = 'auto';
-    }
-
-    if (this.fullscreenView) {
-      this.addCloseFullscreenView();
-    }
-
-    if ( (this.magnifier && !this.fullscreenView) || this.magnifyInFullscreen ) {
-      this.addMagnifier();
-    }
-
-    if (this.boxShadow && !this.fullscreenView) {
-      this.addBoxShadow();
-    }
-
-    if (this.bottomCircle && !this.fullscreenView) {
-      this.add360ViewCircleIcon();
-    }
-
-    if (this.fullscreen && !this.fullscreenView) {
-      this.addFullscreenIcon();
-    }
-
-    if (!this.isMobile && !this.fullscreenView && !this.disablePointerZoom) {
-      this.addResetZoomIcon();
-    }
-  }
-
-  incrementLoadedImages(orientation) {
-    if (orientation === ORIENTATIONS.Y) {
-      this.loadedImagesY += 1;
-    } else {
-      this.loadedImagesX += 1;
-    }
-  }
-
-  onImageLoad(index, orientation, event ) {
-    this.incrementLoadedImages(orientation);
-
-    const totalAmount = this.amountX + this.amountY;
-    const totalLoadedImages = this.loadedImagesX + this.loadedImagesY;
-
-    const percentage = Math.round(totalLoadedImages / totalAmount * 100);
-
-    this.updatePercentageInLoader(percentage);
-
-    if (index === 0 && orientation !== ORIENTATIONS.Y) {
-      this.onFirstImageLoaded(event);
-    }
-
-    if (totalLoadedImages === totalAmount) {
-      this.onAllImagesLoaded(event);
-    }
-  }
-
-  addCloseFullscreenView(event) {
-    const closeFullscreenIcon = document.createElement('div');
-    closeFullscreenIcon.className = 'cloudimage-360-close-fullscreen-icon'
-    closeFullscreenIcon.onclick = this.setFullscreenEvents.bind(this, event);
-    
-    window.onkeyup = this.setFullscreenEvents.bind(this, event);
-
-    this.iconsContainer.appendChild(closeFullscreenIcon);
-  }
-
-  add360ViewIcon() {
-    const view360Icon = document.createElement('div');
-
-    view360Icon.className = 'cloudimage-360-view-360-icon'
-    view360Icon.innerText = '0%';
-
-    this.view360Icon = view360Icon;
-    this.innerBox.appendChild(view360Icon);
-  }
-
-  addFullscreenIcon() {
-    const fullscreenIcon = document.createElement('div');
-
-    fullscreenIcon.className = 'cloudimage-360-fullscreen-icon'
-    fullscreenIcon.onclick = this.openFullscreenModal.bind(this);
-
-    this.fullscreenIcon = fullscreenIcon;
-
-    this.iconsContainer.appendChild(fullscreenIcon);
-  }
-
-  hideFullscreenIcon() {
-    if (!this.fullscreenIcon) return;
-
-    this.fullscreenIcon.style.display = 'none';
-    this.fullscreenIcon.style.pointerEvents = 'none';
-  }
-
-  showFullscreenIcon() {
-    if (!this.fullscreenIcon) return;
-
-    this.fullscreenIcon.style.display = 'block';
-    this.fullscreenIcon.style.pointerEvents = 'auto';
-  }
-
-  addMagnifier() {
-    const magnifyIcon = document.createElement('div');
-
-    magnifyIcon.className = 'cloudimage-360-magnifier-icon'
-    magnifyIcon.onclick = this.magnify.bind(this);
-
-    this.magnifierIcon = magnifyIcon;
-
-    this.iconsContainer.appendChild(magnifyIcon);
-  }
-
-  disableMagnifierIcon() {
-    if (!this.magnifierIcon) return;
-
-    this.magnifierIcon.style.display = 'none';
-    this.magnifierIcon.style.pointerEvents = 'none';
-  }
-
-  enableMagnifierIcon() {
-    if (!this.magnifierIcon) return;
-
-    this.magnifierIcon.style.display = 'block';
-    this.magnifierIcon.style.pointerEvents = 'auto';  
-  }
-
-  getOriginalSrc() {
-    let currentImage = this.originalImagesX[this.activeImageX - 1];
-
-    if (this.movingDirection === ORIENTATIONS.Y) {
-      currentImage = this.originalImagesY[this.activeImageY - 1];
-    };
-
-    return currentImage.src;
-  }
-
-  magnify() {
-    const image = new Image();
-    const src = this.getOriginalSrc();
     this.isMagnifyOpen = true;
 
-    image.src = src;
-    image.onload = () => {
+    currentOriginalImage.onload = () => {
       if (this.glass) {
         this.glass.style.cursor = 'none';
       }
@@ -1104,7 +894,7 @@ class CI360Viewer {
     magnify(
       this.container,
       this.offset,
-      src,
+      currentOriginalImage,
       this.glass,
       this.magnifier || 3
     );
@@ -1119,165 +909,43 @@ class CI360Viewer {
     this.isMagnifyOpen = false;
   }
 
-  openFullscreenModal() {
-    const fullscreenModal = document.createElement('div');
+  openFullscreenModal(event) {
+    event.stopPropagation();
 
-    fullscreenModal.className = 'cloudimage-360-fullscreen-modal'
+    if (this.mouseTracked) this.togglePointerZoom();
 
-    const fullscreenContainer = this.container.cloneNode();
-    const image = this.imagesX[0];
-    const ratio = image.height / image.width;
+    const fullscreenContainer = createFullscreenModal(this.container);
 
-    fullscreenContainer.style.height = '100%';
-    fullscreenContainer.style.maxHeight = '100%';
-
-    fullscreenModal.appendChild(fullscreenContainer);
-
-    window.document.body.style.overflow = 'hidden';
-    window.document.body.appendChild(fullscreenModal);
-
-    new CI360Viewer(fullscreenContainer, true, ratio);
+    new CI360Viewer(fullscreenContainer, true);
   }
 
   setFullscreenEvents(_, event) {
-    if (event.type === 'click') return this.closeFullscreenModal();
-    if (event.key === 'Escape') return this.closeFullscreenModalOnEsc();
-  }
-
-  closeFullscreenModalOnEsc() {
-
-    if (this.container.parentNode.parentNode === document.body) {
-      this.closeFullscreenModal()
-    };
-  }
-
-  closeFullscreenModal() {
-    document.body.removeChild(this.container.parentNode);
-    window.document.body.style.overflow = 'visible';
-  }
-
-  add360ViewCircleIcon() {
-    const view360CircleIcon = new Image();
-
-    view360CircleIcon.src = 'https://scaleflex.ultrafast.io/https://scaleflex.api.airstore.io/v1/get/_/2236d56f-914a-5a8b-a3ae-f7bde1c50000/360.svg'
-
-    view360CircleIcon.style.bottom = `${this.bottomCircleOffset}%`
-    view360CircleIcon.className= 'cloudimage-360-view-360-circle';
-
-    this.view360CircleIcon = view360CircleIcon;
-    this.innerBox.appendChild(view360CircleIcon);
-  }
-
-  hide360ViewCircleIcon() {
-    if (!this.view360CircleIcon) return;
-
-    this.view360CircleIcon.style.opacity = '0';
-  }
-
-  show360ViewCircleIcon() {
-    if (!this.view360CircleIcon) return;
-
-    this.view360CircleIcon.style.opacity = '1';
-  }
-
-  remove360ViewCircleIcon() {
-    if (!this.view360CircleIcon) return;
-
-    this.innerBox.removeChild(this.view360CircleIcon);
-    this.view360CircleIcon = null;
-  }
-
-  addResetZoomIcon() {
-    const resetZoomIcon = document.createElement('div');
-
-    resetZoomIcon.className = 'cloudimage-360-reset-zoom-icon'
-    this.resetZoomIcon = resetZoomIcon;
-
-    resetZoomIcon.onmouseenter = this.resetZoom.bind(this);
-
-    this.iconsContainer.appendChild(resetZoomIcon);
-  }
-
-  hideResetZoomIcon() {
-    if (!this.resetZoomIcon) return;
-    if (this.magnifierIcon) this.enableMagnifierIcon();
-    if (this.fullscreenIcon) this.showFullscreenIcon();
-
-    this.resetZoomIcon.style.display = 'none';
-  }
-
-  showResetZoomIcon() {
-    if (!this.resetZoomIcon) return;
-    if (this.magnifierIcon) this.disableMagnifierIcon();
-    if (this.fullscreenIcon) this.hideFullscreenIcon();
-
-    this.resetZoomIcon.style.display = 'block';
-  }
-
-  addLoader() {
-    const loader = document.createElement('div');
-    loader.className = 'cloudimage-360-loader';
-
-    this.loader = loader;
-    this.innerBox.appendChild(loader);
-  }
-
-  addBoxShadow() {
-    const boxShadow = document.createElement('div');
-
-    boxShadow.className = 'cloudimage-360-box-shadow';
-    boxShadow.style.boxShadow = this.boxShadow;
-
-    this.innerBox.appendChild(boxShadow);
-  }
-
-  removeLoader() {
-    if (!this.loader) return;
-
-    this.innerBox.removeChild(this.loader);
-    this.loader = null;
-  }
-
-  remove360ViewIcon() {
-    if (!this.view360Icon) return;
-
-    this.innerBox.removeChild(this.view360Icon);
-    this.view360Icon = null;
-  }
-
-  isCompletedCyle() {
-    switch(this.autoplayBehavior) {
-      case AUTOPLAY_BEHAVIOR.SPIN_XY:
-      case AUTOPLAY_BEHAVIOR.SPIN_Y: {
-        const isReachedTheEdge = this.reversed ? (this.activeImageY === 1) 
-        : (this.activeImageY === this.amountY);
-
-        if (isReachedTheEdge) return true;
-
-        return false;
-      }
-
-      case AUTOPLAY_BEHAVIOR.SPIN_X:
-      case AUTOPLAY_BEHAVIOR.SPIN_YX:
-      default: {
-        const isReachedTheEdge = this.reversed ? (this.activeImageX === 1) 
-        : (this.activeImageX === this.amountX);
-  
-        if (isReachedTheEdge) return true;
-
-        return false;
-      }
+    if (event.type === 'click') return this.closeFullscreenModal(event);
+    if (event.key === 'Escape' && this.container.parentNode.parentNode === document.body) {
+      this.closeFullscreenModalOnEsc(event);
     }
+  }
+
+  closeFullscreenModalOnEsc(event) {
+    this.closeFullscreenModal(event);
   }
 
   play() {
     if (this.bottomCircle) this.hide360ViewCircleIcon();
+
     this.remove360ViewIcon();
 
     this.loopTimeoutId = window.setInterval(() => {
       this.loop(this.reversed);
 
-      const isPlayedOnce = this.isCompletedCyle();
+      const isPlayedOnce = isCompletedOneCycle(
+        this.autoplayBehavior,
+        this.activeImageX,
+        this.activeImageY,
+        this.amountX,
+        this.amountY,
+        this.reversed
+      );
 
       if (this.playOnce && isPlayedOnce) {
         window.clearTimeout(this.loopTimeoutId);
@@ -1291,126 +959,9 @@ class CI360Viewer {
   }
 
   stop() {
-    if (this.bottomCircle && !this.zoomIntensity) this.show360ViewCircleIcon();
+    if (this.bottomCircle) this.show360ViewCircleIcon();
+
     window.clearTimeout(this.loopTimeoutId);
-  }
-
-  getSrc(
-    container,
-    folder,
-    apiVersion,
-    filename,
-    ciParams = {}
-  ) {
-    const { ciToken, ciFilters, ciTransformation } = ciParams;
-    let src = `${folder}${filename}`;
-
-    if (ciToken) {
-      let imageOffsetWidth = container.offsetWidth;
-
-      const vesrion = falsyValues.includes(apiVersion) ? null : apiVersion; 
-      const finalApiVersion = vesrion ? vesrion + '/' : '';
-
-      if (this.fullscreenView) {
-        const containerRatio = container.offsetHeight / container.offsetWidth;
-
-        if (this.ratio > containerRatio) {
-          imageOffsetWidth = container.offsetHeight / this.ratio;
-        }
-      }
-  
-      const ciSizeNext = getSizeAccordingToPixelRatio(getResponsiveWidthOfContainer(imageOffsetWidth));
-
-      src = `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}?${ciTransformation ? ciTransformation : `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`
-    }
-
-    return src;
-  }
-
-  preloadImages(
-    amount,
-    src,
-    orientation = ORIENTATIONS.X,
-    lazyload,
-    lazySelector,
-    container,
-    ciParams,
-    apiVersion,
-    filename
-    ) {
-    if (this.imageList) {
-      try {
-        const images = JSON.parse(this.imageList);
-
-        this.amountX = images.length;
-        images.forEach((src, index) => {
-          const folder = /(http(s?)):\/\//gi.test(src) ? '' : this.folder;
-          const resultSrc = this.getSrc(container, folder, apiVersion, filename, ciParams);
-          const lastIndex = resultSrc.lastIndexOf('//');
-          const originalSrc = resultSrc.slice(lastIndex);
-
-          this.addImage(resultSrc, originalSrc, orientation, lazyload, lazySelector, index);
-        });
-      } catch (error) {
-        console.error(`Wrong format in image-list attribute: ${error.message}`);
-      }
-    } else {
-      [...new Array(amount)].map((_item, index) => {
-        const nextZeroFilledIndex = pad(index + 1, this.indexZeroBase);
-        const resultSrc = src.replace('{index}', nextZeroFilledIndex);
-        const originalSrc = resultSrc
-          .replace(ORGINAL_SIZE_REGEX, '')
-          .replace(AND_SYMBOL_REGEX, '?')
-
-        this.addImage(
-          resultSrc,
-          originalSrc,
-          orientation,
-          lazyload,
-          lazySelector,
-          index
-        );
-      });
-    }
-  }
-
-  addImage(
-    resultSrc,
-    originalSrc,
-    orientation,
-    lazyload,
-    lazySelector,
-    index
-    ) {
-    const image = new Image();
-    const originalImage = new Image();
-
-    if (lazyload && !this.fullscreenView) {
-      image.setAttribute('data-src', resultSrc);
-      image.className = image.className.length ? image.className + ` ${lazySelector}` : lazySelector;
-
-      if (index === 0) {
-        this.lazyloadInitImage = image;
-        image.style.position = 'absolute';
-        image.style.top = '0';
-        image.style.left = '0';
-        this.innerBox.appendChild(image);
-      }
-    } else {
-      image.src = resultSrc;
-      originalImage.src = originalSrc;
-    }
-
-    image.onload = this.onImageLoad.bind(this, index, orientation);
-    image.onerror = this.onImageLoad.bind(this, index, orientation);
-
-    if (orientation === ORIENTATIONS.Y) {
-      this.imagesY.push(image)
-      this.originalImagesY.push(originalImage)
-    } else {
-      this.imagesX.push(image);
-      this.originalImagesX.push(originalImage);
-    }
   }
 
   destroy() {
@@ -1430,147 +981,180 @@ class CI360Viewer {
     oldElement.parentNode.replaceChild(newElement, oldElement);
   }
 
+  addCloseFullscreenView(event) {
+    const closeFullscreenIcon = createCloseFullscreenIcon();
+
+    closeFullscreenIcon.onclick = this.setFullscreenEvents.bind(this, event);
+    window.onkeyup = this.setFullscreenEvents.bind(this, event);
+
+    this.iconsContainer.appendChild(closeFullscreenIcon);
+  }
+
+  add360ViewIcon() {
+    this.view360Icon = create360ViewIcon();
+    this.innerBox.appendChild(this.view360Icon);
+  }
+
+  addFullscreenIcon() {
+    this.fullscreenIcon = createFullscreenIcon();
+    this.fullscreenIcon.onclick = this.openFullscreenModal.bind(this);
+
+    this.iconsContainer.appendChild(this.fullscreenIcon);
+  }
+
+  showFullscreenIcon() {
+    if (!this.fullscreenIcon) return;
+
+    this.fullscreenIcon.style.display = 'block';
+    this.fullscreenIcon.style.pointerEvents = 'auto';
+  }
+
+  hideFullscreenIcon() {
+    if (!this.fullscreenIcon) return;
+
+    this.fullscreenIcon.style.display = 'none';
+    this.fullscreenIcon.style.pointerEvents = 'none';
+  }
+
+  addMagnifier() {
+    this.magnifierIcon = createMagnifierIcon();
+    this.magnifierIcon.onclick = this.magnify.bind(this);
+
+    this.iconsContainer.appendChild(this.magnifierIcon);
+  }
+
+  enableMagnifierIcon() {
+    if (!this.magnifierIcon) return;
+
+    this.magnifierIcon.style.display = 'block';
+    this.magnifierIcon.style.pointerEvents = 'auto';
+  }
+
+  disableMagnifierIcon() {
+    if (!this.magnifierIcon) return;
+
+    this.magnifierIcon.style.display = 'none';
+    this.magnifierIcon.style.pointerEvents = 'none';
+  }
+
+  closeFullscreenModal(event) {
+    event.stopPropagation();
+    document.body.removeChild(this.container.parentNode);
+    window.document.body.style.overflow = 'visible';
+  }
+
+  add360ViewCircleIcon() {
+    this.view360CircleIcon = create360ViewCircleIcon(this.bottomCircleOffset);
+    this.innerBox.appendChild(this.view360CircleIcon);
+  }
+
+  show360ViewCircleIcon() {
+    if (!this.view360CircleIcon) return;
+
+    this.view360CircleIcon.style.opacity = '1';
+  }
+
+  hide360ViewCircleIcon() {
+    if (!this.view360CircleIcon) return;
+
+    this.view360CircleIcon.style.opacity = '0';
+  }
+
+  remove360ViewCircleIcon() {
+    if (!this.view360CircleIcon) return;
+
+    this.innerBox.removeChild(this.view360CircleIcon);
+    this.view360CircleIcon = null;
+  }
+
+  removeLoader() {
+    if (!this.loader) return;
+
+    this.innerBox.removeChild(this.loader);
+    this.loader = null;
+  }
+
+  remove360ViewIcon() {
+    if (!this.view360Icon) return;
+
+    this.innerBox.removeChild(this.view360Icon);
+    this.view360Icon = null;
+  }
+
   initControls() {
-    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
-    // TODO [deprecated]: remove .cloud-360-left, .cloud-360-right in the upcoming versions
-    const left = this.container.querySelector('.cloudimage-360-left') 
-    || this.container.querySelector('.cloudimage-360-prev');
-    const right = this.container.querySelector('.cloudimage-360-right') 
-    || this.container.querySelector('.cloudimage-360-next');
-
-    const top = this.container.querySelector('.cloudimage-360-top');
-    const bottom = this.container.querySelector('.cloudimage-360-bottom');
-
-    if ( (!left && !right) && (!top && !bottom) ) return;
-
     const onLeftStart = (event) => {
       event.stopPropagation();
+
       this.onSpin();
       this.left();
+
       this.loopTimeoutId = window.setInterval(this.left.bind(this), this.autoplaySpeed);
     };
+
     const onRightStart = (event) => {
       event.stopPropagation();
+
       this.onSpin();
       this.right();
+
       this.loopTimeoutId = window.setInterval(this.right.bind(this), this.autoplaySpeed);
     };
 
     const onTopStart = (event) => {
       event.stopPropagation();
+
       this.onSpin();
       this.top();
+
       this.loopTimeoutId = window.setInterval(this.top.bind(this), this.autoplaySpeed);
     };
 
     const onBottomStart = (event) => {
       event.stopPropagation();
+
       this.onSpin();
       this.bottom();
+
       this.loopTimeoutId = window.setInterval(this.bottom.bind(this), this.autoplaySpeed);
     }
 
-    const onLeftEnd = () => {
+    const onEventEnd = () => {
       this.onFinishSpin();
       window.clearTimeout(this.loopTimeoutId);
     };
 
-    const onRightEnd = () => {
-      this.onFinishSpin();
-      window.clearTimeout(this.loopTimeoutId);
+    const controlsConfig = {
+      container: this.container,
+      controlReverse: this.controlReverse,
+      spinReverse: this.spinReverse,
+      stopAtEdges: this.stopAtEdges
+    }
+
+    const controlsTriggers = {
+      onLeftStart,
+      onRightStart,
+      onTopStart,
+      onBottomStart,
+      onEventEnd,
     };
 
-    const onTopEnd = () => {
-      this.onFinishSpin();
-      window.clearTimeout(this.loopTimeoutId);
-    };
+    const controlsElements = initControls(controlsConfig, controlsTriggers);
 
-    const onBottomEnd = () => {
-      this.onFinishSpin();
-      window.clearTimeout(this.loopTimeoutId);
-    };
-    
-    if (left) {
-      left.style.display = 'block';
-      left.addEventListener('mousedown', isReverse ? onRightStart : onLeftStart);
-      left.addEventListener('touchstart', isReverse ? onRightStart : onLeftStart, { passive: true });
-      left.addEventListener('mouseup', isReverse ? onRightEnd : onLeftEnd);
-      left.addEventListener('touchend', isReverse ? onRightEnd : onLeftEnd);
-
-      this.leftElem = left;
-    }
-
-    if (right) {
-      right.style.display = 'block';
-      right.addEventListener('mousedown', isReverse ? onLeftStart : onRightStart);
-      right.addEventListener('touchstart', isReverse ? onLeftStart : onRightStart, { passive: true });
-      right.addEventListener('mouseup', isReverse ? onLeftEnd : onRightEnd);
-      right.addEventListener('touchend', isReverse ? onLeftEnd : onRightEnd);
-
-      this.rightElem = right;
-    }
-
-    if (top) {
-      top.style.display = 'block';
-      top.addEventListener('mousedown', isReverse ? onBottomStart : onTopStart);
-      top.addEventListener('touchstart', isReverse ? onBottomStart : onTopStart);
-      top.addEventListener('mouseup', isReverse ? onBottomEnd : onTopEnd);
-      top.addEventListener('touchend', isReverse ? onBottomEnd : onTopEnd);
-
-      this.topElem = top;
-    }
-
-    if (bottom) {
-      bottom.style.display = 'block';
-      bottom.addEventListener('mousedown', isReverse ? onTopStart : onBottomStart);
-      bottom.addEventListener('touchstart', isReverse ? onTopStart : onBottomStart);
-      bottom.addEventListener('mouseup', isReverse ? onTopEnd : onBottomEnd);
-      bottom.addEventListener('touchend', isReverse ? onTopEnd : onBottomEnd);
-
-      this.bottomElem = bottom;
-    }
-
-    if (isReverse ? right : left) {
-      if (this.stopAtEdges) {
-        addClass(isReverse ? right : left, 'not-active');
-      }
-    }
-  }
-
-  addInnerBox() {
-    this.innerBox = document.createElement('div');
-    this.innerBox.className = 'cloudimage-360-inner-box';
-    this.container.appendChild(this.innerBox);
-  }
-
-  addIconsContainer() {
-    this.iconsContainer = document.createElement('div');
-    this.iconsContainer.className = 'cloudimage-360-icons-container';
-
-    this.innerBox.appendChild(this.iconsContainer);
-  }
-
-  addCanvas() {
-    this.canvas = document.createElement('canvas');
-    this.canvas.style.width = '100%';
-    this.canvas.style.fontSize = '0';
-
-    if (this.ratio) {
-      this.container.style.minHeight = this.container.offsetWidth * this.ratio + 'px';
-      this.canvas.height = parseInt(this.container.style.minHeight);
-    }
-
-    this.innerBox.appendChild(this.canvas);
+    this.topElem = controlsElements.top || {};
+    this.bottomElem = controlsElements.bottom || {};
+    this.leftElem = controlsElements.left || {};
+    this.rightElem = controlsElements.right || {};
   }
 
   attachEvents(draggable, swipeable, keys) {
-    window.addEventListener('resize', debounce(() => {
-      this.requestResizedImages();
-    }, 50))
+    window.addEventListener('resize', this.requestResizedImages.bind(this));
 
     if ( (draggable) && (!this.disableDrag) ) {
+      this.container.addEventListener('click', this.mouseClick.bind(this));
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
       this.container.addEventListener('mousemove', this.mouseMove.bind(this));
+      this.container.addEventListener('mouseleave', this.mouseLeave.bind(this));
+
       document.addEventListener('mouseup', this.mouseUp.bind(this));
     }
 
@@ -1580,66 +1164,34 @@ class CI360Viewer {
       this.container.addEventListener('touchmove', this.touchMove.bind(this), { passive: true });
     }
 
-    if ( (!this.disablePointerZoom) && (!this.fullscreenView) ) {
-      this.container.addEventListener('click', this.mouseClick.bind(this))
-      this.container.addEventListener('wheel', this.mouseScroll.bind(this));
-    }
-
     if (keys) {
       document.addEventListener('keydown', this.keyDown.bind(this));
       document.addEventListener('keyup', this.keyUp.bind(this));
-    } else {
-      document.addEventListener('keydown', this.keyDownGeneral.bind(this));
     }
-  }
 
-  applyStylesToContainer() {
-    this.container.style.position = 'relative';
-    this.container.style.width = '100%';
-    this.container.style.cursor = 'wait';
-    this.container.setAttribute('draggable', 'false');
-    this.container.className = `${this.container.className} initialized`;
-  }
-
-  setMouseLeaveActions(actions) {
-    const mouseLeaveActions = actions.split(',');
-
-    mouseLeaveActions.forEach((action) => this.applyMouseLeaveAction(action));
-  }
-
-  applyMouseLeaveAction(action) {
-    switch(action) {
-      case MOUSE_LEAVE_ACTIONS.RESET_ZOOM:
-        this.container.addEventListener('mouseleave', this.resetZoom.bind(this));
-        break;
-    }
+    document.addEventListener('keydown', this.keyDownGeneral.bind(this));
   }
 
   init(container) {
     let {
-      folder, apiVersion,filenameX, filenameY, imageList, indexZeroBase, amountX, amountY, imageOffset, draggable = true,
-      swipeable = true, keys, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, pointerZoomFactor, pinchZoomFactor, maxScale, toStartPointerZoom, onMouseLeave, disablePointerZoom = true, disablePinchZoom = true, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, magnifyInFullscreen, ratio, ciToken, ciFilters, ciTransformation,
-      lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc
+      folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, imageOffset, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight, pointerZoom
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
-
-    this.addInnerBox();
-    this.addIconsContainer();
-    this.addLoader();
 
     this.folder = folder;
     this.apiVersion = apiVersion;
     this.filenameX = filenameX;
     this.filenameY = filenameY;
-    this.imageList = imageList;
+    this.imageListX = imageListX;
+    this.imageListY = imageListY;
     this.indexZeroBase = indexZeroBase;
-    this.amountX = amountX;
-    this.amountY = amountY;
-    this.allowSpinY = (!!amountY && !!filenameY);
-    this.activeImageX = autoplayReverse ? amountX : 1;
-    this.activeImageY = autoplayReverse ? amountY : 1;
+    this.amountX = imageListX ? JSON.parse(imageListX).length : amountX;
+    this.amountY = imageListY ? JSON.parse(imageListY).length : amountY;
+    this.allowSpinY = (!!this.amountY);
+    this.activeImageX = autoplayReverse ? this.amountX : 1;
+    this.activeImageY = autoplayReverse ? this.amountY : 1;
     this.spinY = (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX) ? true : false;
     this.imageOffset = imageOffset;
     this.bottomCircle = bottomCircle;
@@ -1648,21 +1200,14 @@ class CI360Viewer {
     this.autoplay = autoplay;
     this.autoplayBehavior = autoplayBehavior;
     this.playOnce = playOnce;
-    this.toStartPointerZoom = toStartPointerZoom,
-    this.disablePointerZoom = disablePointerZoom;
-    this.disablePinchZoom = disablePinchZoom;
-    this.pointerZoomFactor = pointerZoomFactor;
-    this.pinchZoomFactor = pinchZoomFactor;
-    this.maxScale = maxScale;
     this.speed = speed;
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;
     this.fullscreen = fullscreen;
     this.magnifier = !this.isMobile && magnifier ? magnifier : false;
-    this.magnifyInFullscreen = magnifyInFullscreen;
-    this.lazyload = lazyload;
+    this.lazyloadX = lazyload;
+    this.lazyloadY = lazyload;
     this.lazySelector = lazySelector;
-    this.ratio = ratio;
     this.spinReverse = spinReverse;
     this.controlReverse = controlReverse;
     this.dragSpeed = dragSpeed;
@@ -1672,43 +1217,112 @@ class CI360Viewer {
     this.logoSrc = logoSrc;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
+    this.containerWidth = containerWidth;
+    this.containerHeight = containerHeight;
+    this.pointerZoom = pointerZoom;
+    this.keysReverse = keysReverse;
 
-    this.applyStylesToContainer();
+    this.innerBox = createInnerBox(this.container);
+    this.iconsContainer = createIconsContainer(this.innerBox);
+    this.canvas = createCanvas(this.innerBox);
+    this.loader = createLoader(this.innerBox);
 
-    this.addCanvas();
+    applyStylesToContainer(this.container);
 
-    const srcX = this.getSrc(container, folder, apiVersion, filenameX, ciParams);
-    const srcY = this.getSrc(container, folder, apiVersion, filenameY, ciParams);
-
-    this.preloadImages(
-      amountX,
-      srcX,
-      ORIENTATIONS.X,
+    this.srcXConfig = {
+      folder,
+      filename: filenameX,
+      imageList: imageListX,
+      container,
+      innerBox: this.innerBox,
+      apiVersion,
+      ciParams,
       lazyload,
       lazySelector,
-      container,
-      ciParams,
-      apiVersion,
-      filenameX
-    );
+      amount: this.amountX,
+      indexZeroBase,
+      fullscreen: this.fullscreenView
+    }
 
-    if(amountY) {
-      this.preloadImages(
-        amountY,
-        srcY,
-        ORIENTATIONS.Y,
-        lazyload,
-        lazySelector,
-        container,
-        ciParams,
-        apiVersion,
-        filenameY
+    this.srcYConfig = {
+      ...this.srcXConfig,
+      filename: filenameY,
+      orientation: ORIENTATIONS.Y,
+      imageList: imageListY,
+      amount: this.amountY
+    }
+
+    const srcX = generateImagesPath(this.srcXConfig);
+    const srcY = generateImagesPath(this.srcYConfig);
+
+    const initLazyload = (image, orientation) => {
+      const lazyloadXConfig = {...this.srcXConfig, lazyload: false};
+      const lazyloadYConfig = {...this.srcYConfig, lazyload: false};
+
+      if (orientation === ORIENTATIONS.Y) {
+        this.lazyloadY = false;
+
+        preloadImages(lazyloadXConfig, srcX, (
+          onImageLoad.bind(this, ORIENTATIONS.X)
+        ));
+      } else {
+        this.lazyloadX = false;
+        this.lazyloadInitImageX = image;
+
+        preloadImages(lazyloadYConfig, srcY, (
+          onImageLoad.bind(this, ORIENTATIONS.Y)
+        ));
+      }
+    }
+
+    const onImageLoad = (orientation, image, index) => {
+      if (orientation !== ORIENTATIONS.Y) {
+        this.imagesX[index] = image;
+      } else {
+        this.imagesY[index] = image;
+      }
+
+      const loadedXImages = this.imagesX.filter(image => !!image);
+      const loadedYImages = this.imagesY.filter(image => !!image);
+
+      const totalAmount = this.amountX + this.amountY;
+      const totalLoadedImages = this.imagesX.length + this.imagesY.length;
+      const isFirstImageLoaded = index === 0 && orientation !== ORIENTATIONS.Y;
+
+      const isAllImagesLoaded = (
+        loadedXImages.length + loadedYImages.length === this.amountX + this.amountY
       );
+
+      const percentage = Math.round(totalLoadedImages / totalAmount * 100);
+
+      this.updatePercentageInLoader(percentage);
+
+      if (this.lazyloadX || this.lazyloadY) return initLazyload(image, orientation);
+
+      if (isFirstImageLoaded) {
+        this.updateContainerSize(image);
+        this.onFirstImageLoaded(image);
+      }
+
+      if (isAllImagesLoaded) {
+        this.onAllImagesLoaded();
+        if (lazyload) {
+          this.innerBox.removeChild(this.lazyloadInitImageX);
+        }
+      }
+    }
+
+    preloadImages(this.srcXConfig, srcX, (
+      onImageLoad.bind(this, ORIENTATIONS.X)
+    ));
+
+    if (this.allowSpinY) {
+      preloadImages(this.srcYConfig, srcY, (
+        onImageLoad.bind(this, ORIENTATIONS.Y)
+      ));
     }
 
     this.attachEvents(draggable, swipeable, keys);
-
-    if (onMouseLeave) this.setMouseLeaveActions(onMouseLeave);
   }
 }
 
