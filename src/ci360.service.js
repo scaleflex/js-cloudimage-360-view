@@ -650,6 +650,7 @@ import {
       this.container.style.width = window.innerWidth + 'px';
       this.container.height = window.innerHeight * this.devicePixelRatio;
       this.container.style.height = window.innerHeight + 'px';
+      this.container.style.maxWidth = 'unset';
 
       return;
     }
@@ -1219,7 +1220,7 @@ import {
     this.apiVersion = apiVersion;
     this.containerWidth = containerWidth;
     this.containerHeight = containerHeight;
-    this.pointerZoom = pointerZoom;
+    this.pointerZoom = pointerZoom > 1 ? pointerZoom : 0;
     this.keysReverse = keysReverse;
 
     this.innerBox = createInnerBox(this.container);
