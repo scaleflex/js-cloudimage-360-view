@@ -1,0 +1,118 @@
+.cloudimage-360-hotspot-link-icon {
+  width: 42px;
+  height: 42px;
+  background: rgba(12, 109, 199, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  box-sizing: border-box;
+  transition: opacity 800ms ease-in-out;
+}
+
+.cloudimage-360-hotspot-link-icon::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-image: url('https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/assets/img/link-hotspot.svg');
+  background-color: #0C6DC7;
+  background-repeat: no-repeat;
+  background-size: 8px;
+  background-position: center;
+  left: calc((42px - 18px - 2px) / 2);
+  top: calc((42px - 18px - 2px) / 2);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+  cursor: pointer;
+	animation: pulse 2s infinite;
+}
+
+.cloudimage-360-hotspot-custom-icon {
+  width: 42px;
+  height: 42px;
+  background: #76AD0133;
+  border: 1px solid #FFFFFF33;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transition: opacity 800ms ease-in-out;
+}
+
+.cloudimage-360-hotspot-custom-icon::before {
+  content: '+';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  padding-left: calc(50% - (30px /2));
+  color: #FFF;
+  box-sizing: border-box;
+  background-color: #76AD01;
+  background-repeat: no-repeat;
+  background-size: 8px;
+  background-position: center;
+  left: calc((42px - 18px - 2px) / 2);
+  top: calc((42px - 18px - 2px) / 2);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+}
+
+.cloudimage-360-hotspot-popup {
+  display: none;
+  background-color: #FFFFFF;
+  padding: 6px;
+  border-radius: 2px;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  z-index: 999;
+}
+
+.cloudimage-360-hotspot-popup[data-show] {
+  display: block;
+}
+
+.cloudimage-360-popup-arrow,
+.cloudimage-360-popup-arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.cloudimage-360-popup-arrow {
+  visibility: hidden;
+}
+
+.cloudimage-360-popup-arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.cloudimage-360-hotspot-popup[data-popper-placement^='top'] > .cloudimage-360-popup-arrow {
+  bottom: -4px;
+}
+
+.cloudimage-360-hotspot-popup[data-popper-placement^='bottom'] > .cloudimage-360-popup-arrow {
+  top: -4px;
+}
+
+.cloudimage-360-hotspot-popup[data-popper-placement^='left'] > .cloudimage-360-popup-arrow {
+  right: -4px;
+}
+
+.cloudimage-360-hotspot-popup[data-popper-placement^='right'] > .cloudimage-360-popup-arrow {
+  left: -4px;
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0.7);
+	}
+
+	70% {
+		box-shadow: 0 0 0 10px rgba(99, 99, 99, 0);
+	}
+
+	100% {
+		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0);
+	}
+}

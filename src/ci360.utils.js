@@ -80,5 +80,6 @@ const debounce = (func, timeout) => {
 export {
   get360ViewProps,
   setView360Icon,
+  attr,
   debounce
 }

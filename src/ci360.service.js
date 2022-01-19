@@ -7,6 +7,7 @@ import {
   AUTOPLAY_BEHAVIOR,
 } from './ci360.constants';
 import './static/css/style.css';
+import './static/css/hotspot.css';
 import {
   generateImagesPath,
   preloadImages,
@@ -38,10 +39,15 @@ import {
   loop,
   generateZoomInSteps,
   generateZoomOutSteps,
+  updateHotspots,
+  createHotspots,
+  generateHotspotsConfigs,
+  isMouseOnHotspot,
+  hideHotspotsIcons
   } from 'js-cloudimage-360-view-utils';
 
   class CI360Viewer {
-  constructor(container, fullscreen) {
+  constructor(container, fullscreen, hotspotConfig) {
     this.container = container;
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
@@ -61,7 +67,7 @@ import {
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
-    this.init(container);
+    this.hotspotConfig = hotspotConfig ? generateHotspotsConfigs(hotspotConfig) : null;
     this.isMagnifyOpen = false;
     this.isDragged = false;
     this.startPointerZoom = false;
@@ -70,6 +76,7 @@ import {
     this.intialPositions = { x: 0, y: 0 };
     this.pointerCurrentPosition = { x: 0, y: 0 };
     this.isStartedLoadOriginalImages = false;
+    this.init(container);
   }
 
   mouseDown(event) {
@@ -77,6 +84,7 @@ import {
 
     event.preventDefault();
 
+    const isMouseOnHotspotElement = isMouseOnHotspot();
     const { pageX, pageY } = event;
 
     this.hideInitialIcons();
@@ -91,6 +99,10 @@ import {
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
     this.isDragged = false;
+
+    if (isMouseOnHotspotElement) {
+      this.isClicked = false;
+    }
   }
 
   mouseUp() {
@@ -200,6 +212,10 @@ import {
 
       const zoomSteps = generateZoomInSteps(this.pointerZoom);
 
+      if (this.hotspotConfig) {
+        hideHotspotsIcons();
+      }
+
       zoomSteps.forEach((step) => {
         setTimeout(() => {
           this.zoomIntensity = step;
@@ -270,6 +286,8 @@ import {
   touchStart(event) {
     if (!this.imagesLoaded) return;
 
+    const isMouseOnHotspotElement = isMouseOnHotspot();
+
     this.hideInitialIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
@@ -280,6 +298,10 @@ import {
     this.intialPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.movementStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.isClicked = true;
+
+    if (isMouseOnHotspotElement) {
+      this.isClicked = false;
+    }
   }
 
   touchEnd() {
@@ -757,6 +779,16 @@ import {
       if (this.mouseTracked) {
         this.updateImageScale(ctx);
       } else {
+        if (this.hotspotConfig && !this.autoplay) {
+          updateHotspots(
+            this.container,
+            this.hotspotConfig,
+            this.activeImageX,
+            this.activeImageY,
+            this.movingDirection
+          );
+        }
+
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
     }
@@ -808,6 +840,8 @@ import {
 
       this.offset = { x: offsetX, y: offsetY };
 
+      this.addCloseFullscreenView();
+
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
       this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
@@ -817,10 +851,6 @@ import {
       this.canvas.style.height = this.container.offsetHeight + 'px';
 
       ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    if (this.fullscreenView) {
-      this.addCloseFullscreenView();
     }
 
     if (this.magnifier) {
@@ -837,6 +867,16 @@ import {
 
     if (this.fullscreen && !this.fullscreenView) {
       this.addFullscreenIcon();
+    }
+
+    if (this.hotspotConfig && !this.autoplay) {
+      updateHotspots(
+        this.container,
+        this.hotspotConfig,
+        this.activeImageX,
+        this.activeImageY,
+        this.movingDirection
+      );
     }
   }
 
@@ -917,7 +957,7 @@ import {
 
     const fullscreenContainer = createFullscreenModal(this.container);
 
-    new CI360Viewer(fullscreenContainer, true);
+    new CI360Viewer(fullscreenContainer, true, this.hotspotConfig);
   }
 
   setFullscreenEvents(_, event) {
@@ -1228,6 +1268,10 @@ import {
     this.canvas = createCanvas(this.innerBox);
     this.loader = createLoader(this.innerBox);
 
+    if (this.hotspotConfig && !this.fullscreenView) {
+      createHotspots(container, this.hotspotConfig);
+    }
+
     applyStylesToContainer(this.container);
 
     this.srcXConfig = {
@@ -1242,7 +1286,7 @@ import {
       lazySelector,
       amount: this.amountX,
       indexZeroBase,
-      fullscreen: this.fullscreenView
+      fullscreen: this.fullscreenView,
     }
 
     this.srcYConfig = {
