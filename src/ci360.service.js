@@ -1220,7 +1220,7 @@ import {
     this.apiVersion = apiVersion;
     this.containerWidth = containerWidth;
     this.containerHeight = containerHeight;
-    this.pointerZoom = pointerZoom > 1 ? pointerZoom : 0;
+    this.pointerZoom =Math.min(Math.max(pointerZoom, 1), 3);
     this.keysReverse = keysReverse;
 
     this.innerBox = createInnerBox(this.container);
