@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "core-js": "^3.0.0",
-    "js-cloudimage-360-view-utils": "^1.0.0"
+    "js-cloudimage-360-view-utils": "^1.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.7",

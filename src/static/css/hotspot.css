@@ -5,7 +5,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   box-sizing: border-box;
-  transition: opacity 800ms ease-in-out;
+  transition: opacity 600ms ease-in-out;
 }
 
 .cloudimage-360-hotspot-link-icon::before {
@@ -18,8 +18,9 @@
   background-repeat: no-repeat;
   background-size: 8px;
   background-position: center;
-  left: calc((42px - 18px - 2px) / 2);
-  top: calc((42px - 18px - 2px) / 2);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
   cursor: pointer;
@@ -37,23 +38,34 @@
 }
 
 .cloudimage-360-hotspot-custom-icon::before {
-  content: '+';
+  content: '';
   position: absolute;
   width: 18px;
   height: 18px;
-  padding-left: calc(50% - (30px /2));
-  color: #FFF;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   box-sizing: border-box;
   background-color: #76AD01;
   background-repeat: no-repeat;
   background-size: 8px;
   background-position: center;
-  left: calc((42px - 18px - 2px) / 2);
-  top: calc((42px - 18px - 2px) / 2);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
   cursor: pointer;
   animation: pulse 2s infinite;
+}
+
+.cloudimage-360-hotspot-custom-icon::after {
+  content: '+';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 50%;
+  top: 50%;
+  color: #FFF;
+  font-weight: 400;
+  transform: translate(-50%, -150%);
 }
 
 .cloudimage-360-hotspot-popup {

@@ -8,7 +8,7 @@ import { attr } from './ci360.utils';
 function init() {
   const viewers = [];
   const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
-  const hotspotsConfigs = window.CI360.hotspotsConfigs || {};
+  const hotspotsConfigs = window.CI360.hotspots|| {};
 
   [].slice.call(view360Array).forEach(container => {
     const hotspotInstanceName = attr(container, 'hotspot-instance') ||

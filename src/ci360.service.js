@@ -723,6 +723,21 @@ import {
     }
   }
 
+  showImageInfo(ctx) {
+    ctx.font = this.fullscreenView ? '28px serif' : '14px serif';
+    ctx.fillStyle = (this.info === 'white' ? '#FFF' : '#000');
+
+    const imageDimension = `image-dimension: ${this.container.offsetWidth}x${this.container.offsetHeight}px`;
+
+    const currentXImage = 'current-image-x-index: ' + this.activeImageX;
+    const currentYImage = 'current-image-y-index: ' + this.activeImageY;
+
+    const imageIndex = [currentXImage, currentYImage].join(' | ');
+
+    ctx.fillText(imageDimension, 20, this.container.offsetHeight - 35);
+    ctx.fillText(imageIndex, 20, this.container.offsetHeight - 10);
+  }
+
   requestResizedImages() {
     const responsive = this.ciParams.ciToken;
     const firstImage = this.imagesX[0];
@@ -788,9 +803,12 @@ import {
             this.movingDirection
           );
         }
-
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
+    }
+
+    if (this.info) {
+      this.showImageInfo(ctx);
     }
   }
 
@@ -851,6 +869,10 @@ import {
       this.canvas.style.height = this.container.offsetHeight + 'px';
 
       ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    if (this.info) {
+      this.showImageInfo(ctx)
     }
 
     if (this.magnifier) {
@@ -1216,7 +1238,7 @@ import {
   init(container) {
     let {
       folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, imageOffset, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight, pointerZoom
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight, pointerZoom, imageInfo = 'black'
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1262,6 +1284,7 @@ import {
     this.containerHeight = containerHeight;
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 3) : 0;
     this.keysReverse = keysReverse;
+    this.info = imageInfo;
 
     this.innerBox = createInnerBox(this.container);
     this.iconsContainer = createIconsContainer(this.innerBox);

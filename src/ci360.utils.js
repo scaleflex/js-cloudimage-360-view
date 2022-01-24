@@ -51,6 +51,8 @@ const get360ViewProps = (image) => ({
   logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg',
   containerWidth: parseInt(attr(image, 'width') || attr(image, 'data-width'), 10) || 0,
   containerHeight: parseInt(attr(image, 'height') || attr(image, 'data-height'), 10) || 0,
+  imageInfo:  attr(image, 'info')
+  || attr(image, 'data-info'),
 });
 
 const isTrue = (image, type) => {
