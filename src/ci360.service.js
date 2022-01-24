@@ -1699,7 +1699,7 @@ class CI360Viewer {
     this.reversed = autoplayReverse;
     this.disableDrag = disableDrag;
     this.fullscreen = fullscreen;
-    this.magnifier = !this.isMobile && magnifier ? magnifier : false;
+    this.magnifier = !this.isMobile && magnifier > 1 ? Math.min(magnifier, 5) : 0;
     this.magnifyInFullscreen = magnifyInFullscreen;
     this.lazyload = lazyload;
     this.lazySelector = lazySelector;
