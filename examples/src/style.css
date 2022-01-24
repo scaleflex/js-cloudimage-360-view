@@ -595,3 +595,52 @@ img {
   justify-content: center;
   z-index: 999;
 }
+
+.mustang-slideshow-container {
+  display: flex;
+  column-gap: 4px;
+}
+
+.mustange-slide {
+  width: 109px;
+}
+
+.dots-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 2px;
+  margin: 4px 0;
+}
+
+.dot {
+  cursor: pointer;
+  height: 3px;
+  width: 3px;
+  background-color: #bbb;
+  border-radius: 50%;
+}
+
+.musting-slide-heading {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.musting-slide-desc {
+  font-size: 10px;
+  font-weight: 400;
+  max-width: 222px;
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+.read-more-btn {
+  border: 0;
+  background-color: #ECFAE6;
+  color: #76AD01;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  padding: 2px 8px;
+}
