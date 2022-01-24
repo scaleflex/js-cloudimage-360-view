@@ -31,26 +31,26 @@ const get360ViewProps = (image) => ({
   onMouseLeave: attr(image, 'on-mouse-leave')
     || attr(image, 'data-on-mouse-leave'),
   toStartPointerZoom: attr(image, 'to-start-pointer-zoom')
-    || attr(image, 'data-to-start-pointer-zoom') 
+    || attr(image, 'data-to-start-pointer-zoom')
     || TO_START_POINTER_ZOOM.CLICK_TO_START,
   pointerZoomFactor: parseInt(
     attr(image, 'pointer-zoom-factor')
-    || attr(image, 'data-pointer-zoom-factor') 
+    || attr(image, 'data-pointer-zoom-factor')
     || 2, 10),
   pinchZoomFactor: parseInt(
-    attr(image, 'pinch-zoom-factor') 
-    || attr(image, 'data-pinch-zoom-factor') 
+    attr(image, 'pinch-zoom-factor')
+    || attr(image, 'data-pinch-zoom-factor')
     || 2, 10),
   maxScale: parseFloat(
-    attr(image, 'max-scale') 
-    || attr(image, 'data-max-scale') 
+    attr(image, 'max-scale')
+    || attr(image, 'data-max-scale')
     || 100, 10),
   autoplayReverse: isTrue(image, 'autoplay-reverse'),
   bottomCircle: isTrue(image, 'bottom-circle'),
   disableDrag: isTrue(image, 'disable-drag'),
   fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
-    parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
+    parseFloat(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   magnifyInFullscreen: isTrue(image, 'magnify-in-fullscreen') || isTrue(image, 'magnifier-in-fullscreen'),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
   ratio: parseFloat(attr(image, 'ratio') || attr(image, 'data-ratio') || 0) || false,
