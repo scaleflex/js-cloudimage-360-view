@@ -66,6 +66,7 @@
   color: #FFF;
   font-weight: 400;
   transform: translate(-50%, -150%);
+  cursor: pointer;
 }
 
 .cloudimage-360-hotspot-popup {
