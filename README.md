@@ -283,7 +283,7 @@ Magnifier to zoom image.
 
 Set a responsive width for the container.
 The height will be setted with respect to the aspect ratio
-### data-height (or width)
+### data-height (or height)
 
 ###### Type: **Number** | Default: **none** | _optional_
 
