@@ -6,6 +6,7 @@
   border-radius: 50%;
   box-sizing: border-box;
   transition: opacity 600ms ease-in-out;
+  cursor: auto;
 }
 
 .cloudimage-360-hotspot-link-icon::before {
@@ -24,6 +25,7 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
 	animation: pulse 2s infinite;
+  cursor: auto;
 }
 
 .cloudimage-360-hotspot-custom-icon {
@@ -34,6 +36,7 @@
   border-radius: 50%;
   box-sizing: border-box;
   transition: opacity 800ms ease-in-out;
+  cursor: auto;
 }
 
 .cloudimage-360-hotspot-custom-icon::before {
@@ -52,6 +55,7 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
   animation: pulse 2s infinite;
+  cursor: auto;
 }
 
 .cloudimage-360-hotspot-custom-icon::after {
@@ -64,6 +68,7 @@
   color: #FFF;
   font-weight: 400;
   transform: translate(-50%, -150%);
+  cursor: auto;
 }
 
 .cloudimage-360-hotspot-popup {
@@ -85,6 +90,7 @@
   width: 8px;
   height: 8px;
   background: inherit;
+  cursor: 'auto';
 }
 
 .cloudimage-360-popup-arrow {
@@ -125,4 +131,66 @@
 	100% {
 		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0);
 	}
+}
+
+.cloudimage-360-modal-wrapper {
+  width: 222px;
+}
+
+.cloudimage-360-images-carousel-wrapper {
+  margin: 0 auto;
+}
+
+.cloudimage-360-images-carousel .cloudimage-360-carousel-image {
+  display: none;
+  min-height: 187px;
+}
+
+.cloudimage-360-images-carousel .cloudimage-360-carousel-image.active-image {
+  display: block;
+  animation-name: fade-active-image;
+  animation-duration: 1.5s;
+}
+
+.cloudimage-360-carousel-dots {
+  display: flex;
+  column-gap: 3px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 5px auto;
+  row-gap: 3px;
+  padding: 0 6px;
+  width: 50%;
+}
+
+.cloudimage-360-carousel-dot {
+  width: 5px;
+  height: 5px;
+  background-color: #C9D0DE;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.6s ease;
+}
+
+.cloudimage-360-carousel-dot.active-dot {
+  background-color: #76AD01;
+}
+
+.cloudimage-360-modal-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  margin: 4px 0;
+}
+
+.cloudimage-360-modal-description {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+  margin: 0;
+}
+
+@keyframes fade-active-image {
+  from { opacity: 0.7 }
+  to { opacity: 1 }
 }

@@ -4,49 +4,60 @@ import 'core-js/features/array/includes';
 import CI360Viewer from './ci360.service';
 import { attr } from './ci360.utils';
 
-window.CI360 = {hotspots: {
-  ['mercedes-car']: [
-    {
-      orientation: 'x',
-      variant: 'custom',
-      iconClass: 'test',
-      popupProps: { anchorID: 'mustang', arrow: true },
-      initialDimensions: [1381, 777],
-      hotspots: [
-        { imageIndex: 1, xCoord: 877, yCoord: 319 },
-        { imageIndex: 2, xCoord: 857 },
-        { imageIndex: 3, xCoord: 825 },
-        { imageIndex: 4, xCoord: 784 },
-        { imageIndex: 5, xCoord: 739, yCoord: 325 },
-        { imageIndex: 6, xCoord: 692, },
-        { imageIndex: 7, xCoord: 640 },
-        { imageIndex: 8, xCoord: 592 },
-        { imageIndex: 9, xCoord: 557 },
-        { imageIndex: 10, xCoord: 517 },
-      ],
-    },
-    {
-      orientation: 'x',
-      variant: 'link',
-      title: 'Standard 2019 Mercedes',
-      url: 'https://www.mbusa.com/content/dam/mb-nafta/us/brochures/pdf/MY19-A-Class_Web_PDF_022619.pdf',
-      popupProps: { arrow: true },
-      newTab: true,
-      initialDimensions: [1381, 777],
-      hotspots: [
-        { imageIndex: 35, xCoord: 818, yCoord: 535 },
-        { imageIndex: 36, xCoord: 761, yCoord: 542 },
-        { imageIndex: 1, xCoord: 691, yCoord: 545 },
-        { imageIndex: 2, xCoord: 624, yCoord: 546 },
-        { imageIndex: 3, xCoord: 547, yCoord: 549 },
-        { imageIndex: 4, xCoord: 486, yCoord: 549 },
-        { imageIndex: 5, xCoord: 425, yCoord: 545 },
-        { imageIndex: 6, xCoord: 381, yCoord: 533 },
-        { imageIndex: 7, xCoord: 350, yCoord: 524 },
-        { imageIndex: 8, xCoord: 332, yCoord: 513 },
-      ],
-    },
-  ]
+window.CI360 = {
+  hotspots: {
+    ['mercedes-car']: [
+      {
+        variant: {
+          images: [
+            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+            'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
+            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+            'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
+            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+            'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
+            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+          ],
+          title: 'Mustang with 20 IN MAX wheels',
+          description: 'Drivers of the 2019 Mercedes Bullitt enjoy standard Ebony leather seats with Dark Highland Green accent stitching.',
+          readMoreUrl: 'https://www.google.com'
+        },
+        popupProps: { anchorId: 'mustang', arrow: true },
+        initialDimensions: [ 1381, 777 ],
+        hotspots: [
+          { imageIndex: 1, xCoord: 877, yCoord: 319 },
+          { imageIndex: 2, xCoord: 857 },
+          { imageIndex: 3, xCoord: 825 },
+          { imageIndex: 4, xCoord: 784 },
+          { imageIndex: 5, xCoord: 739, yCoord: 325 },
+          { imageIndex: 6, xCoord: 692 },
+          { imageIndex: 7, xCoord: 640 },
+          { imageIndex: 8, xCoord: 592 },
+          { imageIndex: 9, xCoord: 557 },
+          { imageIndex: 10, xCoord: 517 },
+        ],
+      },
+      {
+        variant: {
+          url: 'https://www.mbusa.com/content/dam/mb-nafta/us/brochures/pdf/MY19-A-Class_Web_PDF_022619.pdf', title: 'Standard 2019 Mercedes',
+          newTab: true
+        },
+        popupProps: { arrow: true },
+        initialDimensions: [1381, 777],
+        hotspots: [
+          { imageIndex: 35, xCoord: 818, yCoord: 535 },
+          { imageIndex: 36, xCoord: 761, yCoord: 542 },
+          { imageIndex: 1, xCoord: 691, yCoord: 545 },
+          { imageIndex: 2, xCoord: 624, yCoord: 546 },
+          { imageIndex: 3, xCoord: 547, yCoord: 549 },
+          { imageIndex: 4, xCoord: 486, yCoord: 549 },
+          { imageIndex: 5, xCoord: 425, yCoord: 545 },
+          { imageIndex: 6, xCoord: 381, yCoord: 533 },
+          { imageIndex: 7, xCoord: 350, yCoord: 524 },
+          { imageIndex: 8, xCoord: 332, yCoord: 513 },
+        ],
+      },
+    ]
 }}
 
 function init() {
