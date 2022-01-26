@@ -6,7 +6,6 @@
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Engage%20your%20customers%20with%20a%20stunning%20360%20viewvof%20your%20products&url=https://scaleflex.github.io/js-cloudimage-360-view/&via=cloudimage&hashtags=images,cloudimage)
 
 <p align="center">
-<<<<<<< HEAD
 	<a href="https://www.cloudimage.io/#gh-light-mode-only">
 		<img
 			alt="The Lounge"
@@ -17,16 +16,6 @@
 			alt="The Lounge"
 			src="https://scaleflex.cloudimg.io/v7/cloudimage.io/cloudimage-logo-light.png?vh=b798ab&w=350">
 	</a>
-=======
-	<img
-		height="125"
-		alt="The Lounge"
-		src="https://github.com/scaleflex/js-cloudimage-360-view-utils/blob/media/cloudimage-logo-light.png#gh-dark-mode-only">
-   	<img
-		height="125"
-		alt="The Lounge"
-		src="https://github.com/scaleflex/js-cloudimage-360-view-utils/blob/media/cloudimage-logo-dark.png#gh-light-mode-only">
->>>>>>> 58b1339b0d3b4d55b40e37d6a327c345ca15e1cd
 </p>
 
 <h1 align="center">
