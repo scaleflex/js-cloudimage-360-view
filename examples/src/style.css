@@ -595,3 +595,7 @@ img {
   justify-content: center;
   z-index: 999;
 }
+
+.cloudimage-360-view-360-icon {
+  background: url('https://cdn.scaleflex.it/filerobot/assets/arrow_1.png') 50% 50% / contain no-repeat;
+}

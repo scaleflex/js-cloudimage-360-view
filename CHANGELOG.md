@@ -25,7 +25,15 @@ Types of changes:
 - ...
 
 -------------
-## 2.7.1 - 2020-11-06
+## 2.7.2 - 2022-01-26
+### Added
+- possibility to fit container relative to its width or height and maintain the aspect ratio
+- possibility to reverse the directions of the keys on the keyboard
+### Fixed
+- pointer zoom behavior
+- error while loading images from lists
+- get the active image index
+## 2.7.1 - 2021-11-06
 ### Added
 - click to reset mouse zoom
 - show 360 logo after play once
@@ -35,7 +43,7 @@ Types of changes:
 ### Changed
 - pointer zoom behavior
 
-## 2.7.0 - 2020-11-04
+## 2.7.0 - 2021-11-04
 ### Added
 - play once then stop auto-play
 - spin in the y-direction
@@ -51,7 +59,7 @@ Types of changes:
 - images are not resized when window size changes
 
 ### Changed
-- migrate CDN URL to V7 
+- migrate CDN URL to V7
 
 ## 2.6.0 - 2020-09-03
 
