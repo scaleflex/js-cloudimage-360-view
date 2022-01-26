@@ -25,6 +25,9 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.4 - 2022-01-26
+### Fixed
+- typo in documentation file
 ## 2.7.3 - 2022-01-26
 ### Fixed
 - typo in documentation file
