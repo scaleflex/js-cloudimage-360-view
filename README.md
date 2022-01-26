@@ -282,13 +282,13 @@ Magnifier to zoom image.
 ###### Type: **Number** | Default: **none** | _optional_
 
 Set a responsive width for the container.
-The height will be setted with respect to the aspect ratio
+It will maintain the aspect ratio in respect to width
 ### data-height (or height)
 
 ###### Type: **Number** | Default: **none** | _optional_
 
 Set a responsive height for the container.
-The width will be setted with respect to the aspect ratio
+It will maintain the aspect ratio in respect to height
 
 ### data-autoplay-reverse (or autoplay-reverse)
 
