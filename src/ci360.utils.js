@@ -1,4 +1,4 @@
-import { AUTOPLAY_BEHAVIOR } from './ci360.constants';
+import { AUTOPLAY_BEHAVIOR } from './constants';
 //TODO [deprecated]: remove filename, amount in the upcoming versions
 const get360ViewProps = (image) => ({
   folder: attr(image, 'folder') || attr(image, 'data-folder') || '/',

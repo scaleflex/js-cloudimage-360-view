@@ -5,7 +5,7 @@ import {
 import {
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
-} from './ci360.constants';
+} from './constants/';
 import './static/css/style.css';
 import {
   generateImagesPath,
@@ -38,7 +38,7 @@ import {
   loop,
   generateZoomInSteps,
   generateZoomOutSteps,
-  } from 'js-cloudimage-360-view-utils';
+  } from './utils';
 
   class CI360Viewer {
   constructor(container, fullscreen) {
