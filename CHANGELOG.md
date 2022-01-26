@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.3 - 2022-01-26
+### Fixed
+- typo in documentation file
+
 ## 2.7.2 - 2022-01-26
 ### Added
 - possibility to fit container relative to its width or height and maintain the aspect ratio
@@ -33,6 +37,7 @@ Types of changes:
 - pointer zoom behavior
 - error while loading images from lists
 - get the active image index
+
 ## 2.7.1 - 2021-11-06
 ### Added
 - click to reset mouse zoom
