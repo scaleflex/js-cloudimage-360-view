@@ -21,12 +21,16 @@ function destroy() {
   window.CI360._viewers = [];
 }
 
-function getActiveIndexByID(id) {
+function getActiveIndexByID(id, oriantation) {
   if (isNoViewers()) return;
 
   let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
 
-  return currentViewer && (currentViewer.activeImage - 1);
+  if (oriantation === 'y') {
+    return currentViewer && (currentViewer.activeImageY - 1);
+  }
+
+  return currentViewer && (currentViewer.activeImageX - 1);
 }
 
 function isNoViewers() {

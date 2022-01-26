@@ -132,7 +132,7 @@ window.CI360.destroy();
 Get the {index} of the image that is being viewed.
 
 ```javascript
-window.CI360.getActiveIndexByID('id_of_product');
+window.CI360.getActiveIndexByID('id_of_product', oriantation = 'x');
 ```
 ## <a name="customize-elements"></a> Customize elements
 
