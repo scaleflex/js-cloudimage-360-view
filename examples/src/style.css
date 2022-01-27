@@ -644,3 +644,7 @@ img {
   line-height: 16px;
   padding: 2px 8px;
 }
+
+.cloudimage-360-view-360-icon {
+  background: url('https://cdn.scaleflex.it/filerobot/assets/arrow_1.png') 50% 50% / contain no-repeat;
+}

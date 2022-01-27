@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v2.7.1-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v2.7.4-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -6,10 +6,16 @@
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Engage%20your%20customers%20with%20a%20stunning%20360%20viewvof%20your%20products&url=https://scaleflex.github.io/js-cloudimage-360-view/&via=cloudimage&hashtags=images,cloudimage)
 
 <p align="center">
-	<img
-		height="175"
-		alt="The Lounge"
-		src="https://assets.scaleflex.com/Marketing/Logos/Cloudimage+Logos/Logotype+with+Scaleflex/LOGO+WITH+SCALEFLEX-01.png?vh=f6080d&force_format=jpg">
+	<a href="https://www.cloudimage.io/#gh-light-mode-only">
+		<img
+			alt="The Lounge"
+			src="https://scaleflex.cloudimg.io/v7/cloudimage.io/LOGO+WITH+SCALEFLEX-01.png?vh=f6080d&w=350">
+	</a>
+		<a href="https://www.cloudimage.io/#gh-dark-mode-only">
+		<img
+			alt="The Lounge"
+			src="https://scaleflex.cloudimg.io/v7/cloudimage.io/cloudimage-logo-light.png?vh=b798ab&w=350">
+	</a>
 </p>
 
 <h1 align="center">
@@ -47,7 +53,7 @@ powered by [Cloudimage](https://www.cloudimage.io/)
 * [Step 1: Installation](#installation)
 * [Step 2: Initialize](#initialize)
 * [Methods](#methods)
-* [Customize Icons](#customize-icons)
+* [Customize elements](#customize-elements)
 * [Configuration](#configuration)
 * [Controls](#controls)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
@@ -69,7 +75,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.1/js-cloudimage-360-view.min.js"></script>
+<script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.4/js-cloudimage-360-view.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
@@ -81,8 +87,8 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 <div
    class="cloudimage-360"
    data-folder="https://scaleflex.airstore.io/demo/360-car/"
-   data-filename="iris-{index}.jpeg"
-   data-amount="36"
+   data-filename-x="iris-{index}.jpeg"
+   data-amount-x="36"
 ></div>
 ```
 
@@ -126,25 +132,44 @@ window.CI360.destroy();
 Get the {index} of the image that is being viewed.
 
 ```javascript
-window.CI360.getActiveIndexByID('id_of_product');
+window.CI360.getActiveIndexByID('id_of_product', oriantation = 'x');
 ```
-## <a name="customize-icons"></a> Customize icons
+## <a name="customize-elements"></a> Customize elements
 
-You can customize the icons by adding the following classes:
+You can customize elements by adding the following classes:
 
 ### Example CSS
 ```css
-.cloudimage-360 .fullscreen-icon {
-	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/full_screen.svg) 50% 50% / cover no-repeat;
+.cloudimage-360-icons-container {
+	top: 5px;
+  	right: 5px;
 }
-.cloudimage-360 .magnify-icon {
+.cloudimage-360-fullscreen-modal {
+	top: 0;
+  	bottom: 0;
+}
+.cloudimage-360-magnifier-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
 }
-.cloudimage-360 .close-fullscreen-icon {
+.cloudimage-360-close-fullscreen-icon {
 	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
 }
-.cloudimage-360 .reset-zoom-icon {
-	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986) 50% 50% / cover no-repeat;
+.cloudimage-360-view-360-circle {
+  	margin: auto;
+}
+.cloudimage-360-loader {
+	margin: auto;
+}
+.cloudimage-360-view-360-icon {
+	background: url(hhttps://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg) 50% 50% / cover no-repeat;
+}
+.cloudimage-360-box-shadow {
+	top: 0;
+  	left: 0;
+}
+.cloudimage-360-img-magnifier-glass {
+	border: 3px solid #000;
+  	border-radius: 50%;
 }
 ```
 
@@ -171,24 +196,27 @@ Allow to use a specific version of API.
 ```javascript
 data-api-version="v7"
 ```
-- disable API version 
+- disable API version
 ```javascript
 data-api-version="null"
 ```
 ### data-filename (or filename)
+### data-filename-x (or filename-x)
+### ~~data-filename (or filename)~~ [deprecated]
 
 ###### Type: **String** | Default: **image-{index}.jpg** | _optional_
 
-The filename pattern for your 360 image.  Must include {index}, which the library will replace with a number between 1 and [data-amount](#data-amount).
+The filename pattern for your 360 image. Must include {index}, which the library will replace with a number between 1 and [data-amount-x](#data-amount-x).
 
 ### data-filename-y (or filename-y)
 
 ###### Type: **String** | Default: **image-y-{index}.jpg** | _optional_
 
-The filename pattern for Y-axis images.  Must include {index}, which the library will replace with a number between 1 and [data-amount-y](#data-amount-y).
+The filename pattern for y-oriantation images. Must include {index}, which the library will replace with a number between 1 and [data-amount-y](#data-amount-y).
 
-### <a name="data-amount"></a> data-amount (or amount)
 
+### <a name="data-amount-x"></a> data-amount-x (or amount-x)
+###  ~~data-amount (or amount-x)~~ [deprecated]
 ###### Type: **Number** | Default: **36** | _optional_
 
 Amount of images to load for 360 view.
@@ -204,6 +232,12 @@ Amount of images to load in Y-axis for 360 view.
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Support for 360 spin by pressing arrow keys on keyboard.
+
+### data-keys-reverse (or keys-reverse)
+
+###### Type: **Bool** | Default: **false** | _optional_
+
+invert arrow keys on keyboard.
 
 ### data-autoplay (or autoplay)
 
@@ -225,8 +259,8 @@ Changing autoplay behavior
 
 Available behaviors (spin-x, spin-y, spin-xy, spin-yx)
 
-### data-full-screen (or full-screen)
-
+### data-fullscreen (or fullscreen)
+### ~~data-full-screen (or full-screen)~~ [deprecated]
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Open 360 spin view in full screen modal.
@@ -237,17 +271,24 @@ Open 360 spin view in full screen modal.
 
 Magnifier to zoom image.
 
-### data-magnifier-in-fullscreen (or magnifier-in-fullscreen)
+### ~~data-ratio (or ratio)~~ [deprecated]
 
-###### Type: **bool** | Default: **false** | _optional_
 
-enable magnifier in fullscreen modal.
+###### ~~Type: **Number** (height / width) | Default: **none** | _optional_~~
 
-### data-ratio (or ratio)
+~~Prevents page from jumping.~~
+### data-width (or width)
 
-###### Type: **Number** (height / width) | Default: **none** | _optional_
+###### Type: **Number** | Default: **none** | _optional_
 
-Prevents page from jumping.
+Set a responsive width for the container.
+It will maintain the aspect ratio in respect to width
+### data-height (or height)
+
+###### Type: **Number** | Default: **none** | _optional_
+
+Set a responsive height for the container.
+It will maintain the aspect ratio in respect to height
 
 ### data-autoplay-reverse (or autoplay-reverse)
 
@@ -277,7 +318,7 @@ Speed Factor of changing frames on drag event.
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
-Spin direction, by default it uses counterclockwise (image indexes from 1 to data-amount).
+Spin direction, by default it uses counterclockwise (image indexes from 1 to data-amount-x).
 
 ### data-box-shadow (or box-shadow)
 
@@ -297,17 +338,18 @@ Display 360 view line at the bottom of container.
 
 Hide 360 view icon.
 
-### data-logo-src (or logo-src)
+### ~~data-logo-src (or logo-src)~~ [deprecated]
 
-###### Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_
+###### ~~Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_~~
 
-URL of asset to use as the 360 view icon.
+~~URL of asset to use as the 360 view icon.~~
 
+kindly read [Customize elements](#customize-elements)
 ### data-control-reverse (or control-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
-Spin direction using controls, by default it uses counterclockwise (image indexes from 1 to data-amount).
+Spin direction using controls, by default it uses counterclockwise (image indexes from 1 to data-amount-x).
 
 ### data-stop-at-edges (or stop-at-edges)
 
@@ -327,74 +369,59 @@ Bottom offset for 360 view line.
 
 Left zero padding on filename. For example: index-zero-base="4" => image index will be "0004"
 
-### data-image-list (or image-list)
+### data-image-list-x (or data-image-list-x)
+### ~~data-image-list (or image-list)~~ [deprecated]
 
 ###### Type: **Array** | _optional_
 
-Option to add list of images instead of `folder` & `filename`.
+Option to add list of images in x-oriantation instead of `folder` , `filename-x` & `amount-x`.
 
 example:
 
 ```javascript
 data-folder="https://scaleflex.airstore.io/demo/360-car/"
-data-image-list='[
+data-image-list-x='[
    "iris-1.jpeg",
    "iris-4.jpeg",
    "https://scaleflex.airstore.io/demo/360-car/iris-12.jpeg",
    "https://scaleflex.airstore.io/demo/360-car/iris-15.jpeg"
    ]’
 ```
+### data-image-list-y (or data-image-list-y)
+
+###### Type: **Array** | _optional_
+
+Option to add list of images in y-oriantation instead of `folder` , `filename-y` & `amount-y`.
+
+example:
+
+```javascript
+data-folder="https://scaleflex.airstore.io/demo/360-car/"
+data-image-list-y='[
+   "iris-2-y.jpeg",
+   "iris-6-y.jpeg",
+   "https://scaleflex.airstore.io/demo/360-car/iris-8-y.jpeg",
+   "https://scaleflex.airstore.io/demo/360-car/iris-30-y.jpeg"
+   ]’
+```
+### data-pointer-zoom (or pointer-zoom)
+
+###### Type: **Number** | Default: **none** | _optional_
+
+Pointer zoom scale
+
+example:
+
+```javascript
+data-pointer-zoom="3"
+```
+when mouse clicked the image scale will be multiplied by 3.
 
 ### data-lazyload (or lazyload)
 
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Only 360 view images close to the client's viewport will be loaded, hence accelerating the page loading time. If set to true, an additional script must be included, see [Lazy loading](#lazy-loading)
-### data-disable-pointer-zoom (or disable-pointer-zoom)
-
-###### Type: **bool** | Default: **false** | _optional_
-
-Disable pointer zoom on desktop
-
-### data-disable-pinch-zoom (or disable-pinch-zoom)
-
-###### Type: **bool** | Default: **false** | _optional_
-
-Disable pinch zoom on mobile
-### data-to-start-pointer-zoom (or to-start-pointer-zoom)
-
-###### Type: **string** | Default: **click** | _optional_
-
-Events to start pointer zoom
-
-Available events (scroll, click)
-
-### data-on-mouse-leave (or on-mouse-leave)
-
-###### Type: **string** | Default: **none** | _optional_
-
-Functions called after mouse leave the container
-
-Available functions (resetZoom)
-
-Multiple functions can be applied, separated by "," (comma)
-
-### data-pointer-zoom-factor (or pointer-zoom-factor)
-
-###### Type: **Number** | Default: **2** | _optional_
-
-Pointer zoom scaling factor
-### data-pinch-zoom-factor (or pinch-zoom-factor)
-
-###### Type: **Number** | Default: **2** | _optional_
-
-Pinch zoom scaling factor
-
-### data-max-scale (or max-scale)
-
-###### Type: **Number** | Default: **none** | _optional_
-
-Maximum scale that images can be resize to it with pointer or pinch zoom
 ### data-lazyload-selector (or lazyload-selector)
 
 ###### Type: **String** | Default: **lazyload** | _optional_
@@ -404,47 +431,47 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ## <a name="controls"></a> Controls
 
-You can add controls by adding elements with the following classes: **cloudimage-360-prev**, **cloudimage-360-next**, **cloudimage-360-top**, **cloudimage-360-bottom**
+You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right**, **cloudimage-360-top**, **cloudimage-360-bottom , ~~**cloudimage-360-prev**, **cloudimage-360-next**~~ [deprecated]
 
 ### Example CSS
 ```css
-.cloudimage-360 .cloudimage-360-prev, .cloudimage-360 .cloudimage-360-next {
+.cloudimage-360 .cloudimage-360-left, .cloudimage-360 .cloudimage-360-right {
 	padding: 8px;
 	background: rgba(255, 255, 255, 0.5);
 	border: none;
 	border-radius: 4px;
 }
-.cloudimage-360 .cloudimage-360-prev:focus, .cloudimage-360 .cloudimage-360-next:focus {
+.cloudimage-360 .cloudimage-360-left:focus, .cloudimage-360 .cloudimage-360-right:focus {
 	outline: none;
 }
-.cloudimage-360 .cloudimage-360-prev {
+.cloudimage-360 .cloudimage-360-left {
 	display: none;
 	position: absolute;
 	z-index: 100;
 	top: calc(50% - 15px);
 	left: 20px;
 }
-.cloudimage-360 .cloudimage-360-next {
+.cloudimage-360 .cloudimage-360-right {
 	display: none;
 	position: absolute;
 	z-index: 100;
 	top: calc(50% - 15px);
 	right: 20px;
 }
-.cloudimage-360 .cloudimage-360-prev:before, .cloudimage-360 .cloudimage-360-next:before {
+.cloudimage-360 .cloudimage-360-left:before, .cloudimage-360 .cloudimage-360-right:before {
 	content: '';
 	display: block;
 	width: 30px;
 	height: 30px;
 	background: 50% 50% / cover no-repeat;
 }
-.cloudimage-360 .cloudimage-360-prev:before {
+.cloudimage-360 .cloudimage-360-left:before {
 	background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
 }
-.cloudimage-360 .cloudimage-360-next:before {
+.cloudimage-360 .cloudimage-360-right:before {
 	background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
 }
-.cloudimage-360 .cloudimage-360-prev.not-active, .cloudimage-360 .cloudimage-360-next.not-active {
+.cloudimage-360 .cloudimage-360-left.not-active, .cloudimage-360 .cloudimage-360-right.not-active {
 	opacity: 0.4;
 	cursor: default;
 }
@@ -454,10 +481,10 @@ You can add controls by adding elements with the following classes: **cloudimage
 <div
 	class="cloudimage-360"
 	data-folder="https://scaleflex.airstore.io/demo/indoor/"
-	data-filename="{index}.jpeg"
+	data-filename-x="{index}.jpeg"
 >
-	<button class="cloudimage-360-prev"></button>
-	<button class="cloudimage-360-next"></button>
+	<button class="cloudimage-360-left"></button>
+	<button class="cloudimage-360-right"></button>
 	<button class="cloudimage-360-top"></button>
 	<button class="cloudimage-360-bottom"></button>
 </div>
