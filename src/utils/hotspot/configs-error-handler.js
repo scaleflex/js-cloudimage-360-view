@@ -1,10 +1,7 @@
 export const configsErrorHandler = (hotspotProps) => {
-  const {
-    variant = {}, popupProps = {},
-  } = hotspotProps;
+  const { variant = {} } = hotspotProps;
 
-  const { anchorId } = popupProps;
-  const { url, title } = variant;
+  const { url, title, anchorId } = variant;
 
   if (url && !title) {
     console.error('Cloudimage-360: Hotspot config with variant link must have title for the link');

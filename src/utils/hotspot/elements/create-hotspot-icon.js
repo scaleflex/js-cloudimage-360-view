@@ -1,11 +1,8 @@
 import { hideHotspotIcon } from '../hide-hotspot-icon';
 
 export const createHotspotIcon = (container, hotspotConfig) => {
-  const {
-    indicatorClass, popupProps, variant,
-  } = hotspotConfig;
-  const { anchorId } = popupProps;
-  const { url } = variant;
+  const { indicatorClass, variant } = hotspotConfig;
+  const { url, anchorId } = variant;
 
   const hotspotIcon = document.createElement('div');
 

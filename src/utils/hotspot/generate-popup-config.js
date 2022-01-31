@@ -1,13 +1,9 @@
 export const generatePopupConfig = (popupProps) => {
-  const uniqueID = Math.floor(Math.random() * 10000);
-  const defaultAnchorId = `cloudimage-${uniqueID}`;
-
   const {
     popupClass = '',
     arrow = false,
     offset = [0, 10],
     placement = 'auto',
-    anchorId = defaultAnchorId,
     open = false,
   } = popupProps;
 
@@ -17,7 +13,6 @@ export const generatePopupConfig = (popupProps) => {
     arrow,
     offset,
     placement,
-    anchorId,
     open,
   };
 

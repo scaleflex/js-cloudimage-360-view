@@ -5,8 +5,8 @@ import { createModalElements } from './create-model-elements';
 
 export const createPopup = (container, hotspotConfig, popupProps) => {
   const { variant } = hotspotConfig;
-  const { popupClass, arrow, anchorId } = popupProps;
-  const { url, images, title } = variant;
+  const { popupClass, arrow } = popupProps;
+  const { url, images, title, anchorId } = variant;
 
   const popup = document.createElement('div');
 

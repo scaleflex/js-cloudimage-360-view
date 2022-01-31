@@ -15,9 +15,11 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
     configsErrorHandler(hotspotProps);
 
     const popupConfig = generatePopupConfig(popupProps);
+    const uniqueID = Math.floor(Math.random() * 10000);
+    const anchorId = variant?.anchorId || `cloudimage-${uniqueID}`;
 
     const hotspotConfig = {
-      variant,
+      variant : { ...variant, anchorId },
       popupProps: popupConfig,
       hotspots,
       indicatorClass,
