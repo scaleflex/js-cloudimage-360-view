@@ -35,7 +35,7 @@ const get360ViewProps = (image) => ({
   disableDrag: isTrue(image, 'disable-drag'),
   fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen'),
   magnifier: ((attr(image, 'magnifier') !== null) || (attr(image, 'data-magnifier') !== null)) &&
-    parseInt(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
+    parseFloat(attr(image, 'magnifier') || attr(image, 'data-magnifier'), 10),
   bottomCircleOffset: parseInt(attr(image, 'bottom-circle-offset') || attr(image, 'data-bottom-circle-offset') || 5, 10),
   ciToken: attr(image, 'responsive') || attr(image, 'data-responsive'),
   ciFilters: attr(image, 'filters')
