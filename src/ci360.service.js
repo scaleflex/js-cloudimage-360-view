@@ -5,7 +5,7 @@ import {
 import {
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
-} from './ci360.constants';
+} from './constants/';
 import './static/css/style.css';
 import './static/css/hotspot.css';
 import {
@@ -44,7 +44,7 @@ import {
   generateHotspotsConfigs,
   isMouseOnHotspot,
   hideHotspotsIcons
-  } from 'js-cloudimage-360-view-utils';
+  } from './utils';
 
   class CI360Viewer {
   constructor(container, fullscreen, hotspotConfig) {
@@ -924,7 +924,8 @@ import {
 
     if (this.view360Icon) {
       this.view360Icon.innerText = '';
-      setView360Icon(this.view360Icon, this.logoSrc);
+      //TODO [deprecated]: remove setView360Icon in the upcoming versions
+      if (this.logoSrc) setView360Icon(this.view360Icon, this.logoSrc);
     }
 
     this.initControls();

@@ -1,6 +1,6 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "2.7.2-beta.0",
+  "version": "2.7.4",
   "main": "dist/index.js",
   "description": "",
   "author": "scaleflex",
@@ -33,8 +33,8 @@
     "publish-demo": "npm run build-demo && npm run deploy-demo"
   },
   "dependencies": {
-    "core-js": "^3.0.0",
-    "js-cloudimage-360-view-utils": "^1.0.1"
+    "@popperjs/core": "^2.11.2",
+    "core-js": "^3.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.7",
