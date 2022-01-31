@@ -11,18 +11,18 @@ window.CI360 = {
         variant: {
           images: [
             'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
-            'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
-            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
-            'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
-            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
-            'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
-            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+              'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
+              'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+              'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
+              'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+              'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
+              'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
           ],
           title: 'Mustang with 20 IN MAX wheels',
           description: 'Drivers of the 2019 Mercedes Bullitt enjoy standard Ebony leather seats with Dark Highland Green accent stitching.',
-          readMoreUrl: 'https://www.google.com'
+          moreDetailsUrl: 'https://www.google.com',
         },
-        popupProps: { anchorId: 'mustang', arrow: true },
+        popupProps: { arrow: true, popupSelector: 'test' },
         initialDimensions: [ 1381, 777 ],
         hotspots: [
           { imageIndex: 1, xCoord: 877, yCoord: 319 },
@@ -38,12 +38,9 @@ window.CI360 = {
         ],
       },
       {
-        variant: {
-          url: 'https://www.mbusa.com/content/dam/mb-nafta/us/brochures/pdf/MY19-A-Class_Web_PDF_022619.pdf', title: 'Standard 2019 Mercedes',
-          newTab: true
-        },
+        variant: { title: 'mustang' },
         popupProps: { arrow: true },
-        initialDimensions: [1381, 777],
+        initialDimensions: [ 1381, 777 ],
         hotspots: [
           { imageIndex: 35, xCoord: 818, yCoord: 535 },
           { imageIndex: 36, xCoord: 761, yCoord: 542 },
