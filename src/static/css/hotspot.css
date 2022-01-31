@@ -56,7 +56,6 @@
   border-radius: 50%;
   animation: pulse 2s infinite;
   cursor: auto;
-  transition: transform 300ms ease-in-out;
 }
 
 .cloudimage-360-hotspot-custom-icon::after {
