@@ -134,7 +134,7 @@
 }
 
 .cloudimage-360-modal-wrapper {
-  width: 222px;
+  max-width: 222px;
 }
 
 .cloudimage-360-images-carousel-wrapper {
