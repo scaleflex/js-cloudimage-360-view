@@ -5,12 +5,12 @@ import { createModalElements } from './create-model-elements';
 
 export const createPopup = (container, hotspotConfig, popupProps) => {
   const { variant } = hotspotConfig;
-  const { popupClass, arrow } = popupProps;
+  const { popupSelector, arrow } = popupProps;
   const { url, images, title, anchorId, description, moreDetailsUrl } = variant;
 
   const popup = document.createElement('div');
 
-  popup.className = `cloudimage-360-hotspot-popup ${popupClass}`;
+  popup.className = `cloudimage-360-hotspot-popup ${popupSelector}`;
   popup.setAttribute('data-hotspot-popup-id', anchorId);
   popup.setAttribute('data-cloudimage-360-hotspot', '');
 

@@ -1,6 +1,6 @@
 export const generatePopupConfig = (popupProps) => {
   const {
-    popupClass = '',
+    popupSelector = '',
     arrow = false,
     offset = [0, 10],
     placement = 'auto',
@@ -9,7 +9,7 @@ export const generatePopupConfig = (popupProps) => {
 
 
   const popupConfig = {
-    popupClass,
+    popupSelector,
     arrow,
     offset,
     placement,

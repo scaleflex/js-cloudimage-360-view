@@ -6,7 +6,7 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
     const {
       variant = {},
       hotspots = [],
-      indicatorClass = '',
+      indicatorSelector = '',
       popupProps = {},
       orientation = 'x',
       initialDimensions = [500, 500],
@@ -22,7 +22,7 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
       variant : { ...variant, anchorId },
       popupProps: popupConfig,
       hotspots,
-      indicatorClass,
+      indicatorSelector,
       initialDimensions,
       orientation: orientation.toLowerCase(),
     };

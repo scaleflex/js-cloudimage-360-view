@@ -20,7 +20,10 @@ export const createModalElements = (variant, container, popup) => {
     const [imagesCarousel, carouselDots] = createImagesCarousel(images, popup, container);
 
     imagesCarouselWrapper.appendChild(imagesCarousel);
-    imagesCarouselWrapper.appendChild(carouselDots);
+
+    if (images.length > 1) {
+      imagesCarouselWrapper.appendChild(carouselDots);
+    }
 
     modalWrapper.appendChild(imagesCarouselWrapper);
     imagesCarouselWrapper.className = 'cloudimage-360-images-carousel-wrapper';

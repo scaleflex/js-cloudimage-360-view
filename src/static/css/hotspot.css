@@ -119,20 +119,6 @@
   left: -4px;
 }
 
-@keyframes pulse {
-	0% {
-		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0.7);
-	}
-
-	70% {
-		box-shadow: 0 0 0 10px rgba(99, 99, 99, 0);
-	}
-
-	100% {
-		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0);
-	}
-}
-
 .cloudimage-360-modal-wrapper {
   max-width: 222px;
 }
@@ -204,6 +190,20 @@
   text-decoration: none;
   color: #76AD01;
   background-color: #e1f5d8;
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0.7);
+	}
+
+	70% {
+		box-shadow: 0 0 0 10px rgba(99, 99, 99, 0);
+	}
+
+	100% {
+		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0);
+	}
 }
 
 @keyframes fade-active-image {

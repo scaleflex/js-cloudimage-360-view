@@ -1,7 +1,7 @@
 import { hideHotspotIcon } from '../hide-hotspot-icon';
 
 export const createHotspotIcon = (container, hotspotConfig) => {
-  const { indicatorClass, variant } = hotspotConfig;
+  const { indicatorSelector, variant } = hotspotConfig;
   const { url, anchorId } = variant;
 
   const hotspotIcon = document.createElement('div');
@@ -16,7 +16,7 @@ export const createHotspotIcon = (container, hotspotConfig) => {
 
   hotspotIcon.style.position = 'absolute';
 
-  hotspotIcon.className = `cloudimage-360-hotspot-${url ? 'link' : 'custom'}-icon ${indicatorClass}`;
+  hotspotIcon.className = `cloudimage-360-hotspot-${url ? 'link' : 'custom'}-icon ${indicatorSelector}`;
 
   hotspotIcon.setAttribute('data-hotspot-icon-id', anchorId);
   hotspotIcon.setAttribute('data-cloudimage-360-hotspot', '');
