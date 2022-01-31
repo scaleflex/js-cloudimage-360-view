@@ -16,7 +16,7 @@ export const createPopup = (container, hotspotConfig, popupProps) => {
 
   popup.style.minHeight = 16;
   popup.style.minWidth = 16;
-  popup.style.cursor = 'initial';
+  popup.style.cursor = 'auto';
   popup.onclick = (e) => e.stopPropagation();
 
   if (images || description || moreDetailsUrl || (title && !url)) {

@@ -82,8 +82,6 @@ import {
   mouseDown(event) {
     if (!this.imagesLoaded) return;
 
-    event.preventDefault();
-
     const isMouseOnHotspotElement = isMouseOnHotspot();
     const { pageX, pageY } = event;
 
