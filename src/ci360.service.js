@@ -170,6 +170,10 @@ import {
     if (this.pointerZoom && this.mouseTracked) {
       this.togglePointerZoom();
     }
+
+    if (this.isMagnifyOpen) {
+      this.closeMagnifier();
+    }
   }
 
   togglePointerZoom() {
