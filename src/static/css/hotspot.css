@@ -56,6 +56,7 @@
   border-radius: 50%;
   animation: pulse 2s infinite;
   cursor: auto;
+  transition: transform 300ms ease-in-out;
 }
 
 .cloudimage-360-hotspot-custom-icon::after {
@@ -72,16 +73,19 @@
 }
 
 .cloudimage-360-hotspot-popup {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
   background-color: #FFFFFF;
   padding: 6px;
   border-radius: 2px;
   box-shadow: 0px 4px 4px 0px #00000040;
   z-index: 999;
+  transition: all 150ms ease-in-out;
 }
 
 .cloudimage-360-hotspot-popup[data-show] {
-  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .cloudimage-360-popup-arrow,
@@ -91,6 +95,7 @@
   height: 8px;
   background: inherit;
   cursor: 'auto';
+  transition: all 150ms ease-in-out;
 }
 
 .cloudimage-360-popup-arrow {
@@ -156,10 +161,18 @@
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.6s ease;
+  border: 0;
+  padding: 0;
 }
 
 .cloudimage-360-carousel-dot.active-dot {
   background-color: #76AD01;
+}
+
+.cloudimage-360-carousel-dot:focus,
+.cloudimage-360-carousel-dot:focus-visible {
+  border: 0;
+  outline: 0;
 }
 
 .cloudimage-360-modal-title {
