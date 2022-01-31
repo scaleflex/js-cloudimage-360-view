@@ -6,7 +6,7 @@ import { createModalElements } from './create-model-elements';
 export const createPopup = (container, hotspotConfig, popupProps) => {
   const { variant } = hotspotConfig;
   const { popupClass, arrow } = popupProps;
-  const { url, images, title, anchorId } = variant;
+  const { url, images, title, anchorId, description, moreDetailsUrl } = variant;
 
   const popup = document.createElement('div');
 
@@ -19,7 +19,7 @@ export const createPopup = (container, hotspotConfig, popupProps) => {
   popup.style.cursor = 'initial';
   popup.onclick = (e) => e.stopPropagation();
 
-  if (images || (title && !url)) {
+  if (images || description || moreDetailsUrl || (title && !url)) {
     createModalElements(variant, container, popup);
   } else if (url) {
     const hotspotPopupLink = createHotspotPopupLink(variant);

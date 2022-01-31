@@ -190,6 +190,22 @@
   margin: 0;
 }
 
+.cloudimage-360-modal-more-details {
+  color: #76AD01;
+  background-color: #ECFAE6;
+  font-size: 10px;
+  font-weight: 400;
+  padding: 2px 8px;
+  transition: background-color 200ms ease-in-out;
+  border-radius: 2px;
+}
+
+.cloudimage-360-modal-more-details:hover {
+  text-decoration: none;
+  color: #76AD01;
+  background-color: #e1f5d8;
+}
+
 @keyframes fade-active-image {
   from { opacity: 0.7 }
   to { opacity: 1 }
