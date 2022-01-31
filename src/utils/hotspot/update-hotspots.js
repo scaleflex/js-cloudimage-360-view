@@ -19,9 +19,13 @@ export const updateHotspots = (container, hotspotsProps, activeImageX = 0, activ
     const { open } = popupProps;
     const { anchorId } = variant;
 
-    const popup = getHotspotPopupNode(anchorId, open);
-    const hotspotIcon = getHotspotIcon(anchorId);
     const hotspotsPositions = prepareHotspotsPositions(hotspots);
+
+    const currentPosition = hotspotsPositions
+      .find((hotspotPosition) => hotspotPosition.imageIndex === currentImage);
+
+    const popup = getHotspotPopupNode(anchorId, open, currentPosition);
+    const hotspotIcon = getHotspotIcon(anchorId);
 
     const popperInstance = createPopperInstance(popup, popupProps, container);
 
@@ -29,9 +33,6 @@ export const updateHotspots = (container, hotspotsProps, activeImageX = 0, activ
     popperInstance.update();
 
     attachPopupEvents(hotspotIcon, popup, popperInstance, open);
-
-    const currentPosition = hotspotsPositions
-      .find((hotspotPosition) => hotspotPosition.imageIndex === currentImage);
 
     if (currentPosition && hotspotOriantaion === orientation) {
       const { xCoord = 0, yCoord = 0 } = currentPosition;
