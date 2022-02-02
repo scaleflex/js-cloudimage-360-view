@@ -11,12 +11,8 @@ window.CI360 = {
         variant: {
           images: [
             'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
-              'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
-              'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
-              'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
-              'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
-              'https://assets.jolipage.co/assets/logo-cloudimage-whtie.svg?vh=e5fd46',
-              'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/mustang-interior.png?vh=e4ba53',
+            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/image.png?vh=ab84b0',
+            'https://scaleflex.cloudimg.io/v7/demo/360-demo-assets/image-2.png?vh=20405b',
           ],
           title: 'Mustang with 20 IN MAX wheels',
           description: 'Drivers of the 2019 Mercedes Bullitt enjoy standard Ebony leather seats with Dark Highland Green accent stitching.',
@@ -38,7 +34,7 @@ window.CI360 = {
         ],
       },
       {
-        variant: { title: 'mustang' },
+        variant: { title: 'AMG wheels' },
         popupProps: { arrow: true },
         initialDimensions: [ 1381, 777 ],
         hotspots: [
@@ -52,6 +48,24 @@ window.CI360 = {
           { imageIndex: 6, xCoord: 381, yCoord: 533 },
           { imageIndex: 7, xCoord: 350, yCoord: 524 },
           { imageIndex: 8, xCoord: 332, yCoord: 513 },
+        ],
+      },
+      {
+        variant: {
+          title: 'buy AMG rear spoiler',
+          url: 'https://www.performmaster.com/amg-aerodynamic/rear-spoiler-mercedes-amg/',
+          newTab: true
+        },
+        popupProps: { arrow: true },
+        initialDimensions: [ 1381, 777 ],
+        hotspots: [
+          { imageIndex: 9, xCoord: 1003, yCoord: 342 },
+          { imageIndex: 10, xCoord: 941, yCoord: 342 },
+          { imageIndex: 11, xCoord: 870, yCoord: 342 },
+          { imageIndex: 12, xCoord: 793, yCoord: 342 },
+          { imageIndex: 13, xCoord: 717, yCoord: 342 },
+          { imageIndex: 14, xCoord: 641, yCoord: 342 },
+          { imageIndex: 15, xCoord: 572, yCoord: 341 },
         ],
       },
     ]
