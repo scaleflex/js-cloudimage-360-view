@@ -731,8 +731,8 @@ import {
 
     const imageDimension = `image-dimension: ${this.container.offsetWidth}x${this.container.offsetHeight}px`;
 
-    const currentXImage = 'current-image-x-index: ' + this.activeImageX;
-    const currentYImage = 'current-image-y-index: ' + this.activeImageY;
+    const currentXImage = 'active-index-x: ' + this.activeImageX;
+    const currentYImage = 'active-index-y: ' + this.activeImageY;
 
     const imageIndex = [currentXImage, currentYImage].join(' | ');
 

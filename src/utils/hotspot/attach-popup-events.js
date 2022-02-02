@@ -2,7 +2,7 @@
 export const attachPopupEvents = (reference, popper, popperInstance, open) => {
   if (open) return;
 
-  const showEvents = ['mouseenter', 'focus'];
+  const showEvents = ['mouseenter', 'touchstart', 'focus'];
   const hideEvents = ['mouseleave', 'blur'];
   let isVisible;
 
