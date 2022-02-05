@@ -1,7 +1,7 @@
 import { ORIENTATIONS } from '../../constants/orientations';
 
 export const getMovingDirection = (isStartSpin, allowSpinY, prevPosition, nextPositions, currentMovingDirection) => {
-  let movingDirection;
+  let movingDirection = ORIENTATIONS.CENTER;
 
   if (isStartSpin) return currentMovingDirection;
 

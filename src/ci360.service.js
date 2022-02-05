@@ -299,13 +299,18 @@ import {
   touchMove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
     const nextPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 
     this.movingDirection = getMovingDirection(
       this.isStartSpin,
       this.allowSpinY,
       this.intialPositions,
-      nextPositions
+      nextPositions,
+      this.movingDirection
     );
 
     this.onMoveHandler(event);
@@ -1167,7 +1172,7 @@ import {
     if ( (swipeable) && (!this.disableDrag) ) {
       this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
       this.container.addEventListener('touchend', this.touchEnd.bind(this));
-      this.container.addEventListener('touchmove', this.touchMove.bind(this), { passive: true });
+      this.container.addEventListener('touchmove', this.touchMove.bind(this));
     }
 
     if (keys) {
