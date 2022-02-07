@@ -17,7 +17,6 @@ const get360ViewProps = (image) => ({
   || 36, 10),
   amountY: parseInt(attr(image, 'amount-y') ||
   attr(image, 'data-amount-y') || 0, 10),
-  imageOffset: parseInt(attr(image, 'image-offset') || attr(image, 'data-image-offset')),
   speed: parseInt(attr(image, 'speed') || attr(image, 'data-speed') || 80, 10),
   dragSpeed: parseInt(attr(image, 'drag-speed') || attr(image, 'data-drag-speed') || 150, 10),
   keys: isTrue(image, 'keys'),
