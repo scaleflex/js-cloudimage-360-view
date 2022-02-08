@@ -112,6 +112,36 @@ window.CI360.init();
 > <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2/js-cloudimage-360-view.min.js"></script>
 > <script>window.CI360.init(); // initialize the plugin when you need</script>
 > ```
+### update
+
+###### Type: **Function**
+```javascript
+window.CI360.update(idOfInstance, forceUpdate);
+```
+Update cloudimage 360 viewer instance.<br/>
+For any update in source attributes after plugin initialization (e.g. `data-folder`, `data-filename-x`, `data-amount-y`),
+the plugin will re-init.
+### Properties
+#### `idOfInstance`: string
+The id of the instance
+
+```html
+<div
+   id="cloudimage-360-car"
+   class="cloudimage-360"
+   data-folder="https://scaleflex.airstore.io/demo/360-car/"
+   data-filename-x="iris-{index}.jpeg"
+   data-amount-x="36"
+></div>
+```
+```javascript
+window.CI360.update('cloudimage-360-car');
+```
+#### `forceUpdate`: bool
+Force the plugin to re-init.
+```javascript
+window.CI360.update(null, true);
+```
 
 ### destroy
 
@@ -132,8 +162,15 @@ window.CI360.destroy();
 Get the {index} of the image that is being viewed.
 
 ```javascript
-window.CI360.getActiveIndexByID('id_of_product', oriantation = 'x');
+window.CI360.getActiveIndexByID(idOfInstance: string, oriantation: string);
 ```
+### Properties
+#### `idOfInstance`: string
+The id of the instance
+
+#### `oriantation`: string
+The oriantation of the active index
+
 ## <a name="customize-elements"></a> Customize elements
 
 You can customize elements by adding the following classes:
