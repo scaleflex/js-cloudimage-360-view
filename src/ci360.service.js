@@ -38,6 +38,7 @@ import {
   loop,
   generateZoomInSteps,
   generateZoomOutSteps,
+  isSrcPropsChanged,
   } from './utils';
 
   class CI360Viewer {
@@ -299,13 +300,18 @@ import {
   touchMove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
     const nextPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 
     this.movingDirection = getMovingDirection(
       this.isStartSpin,
       this.allowSpinY,
       this.intialPositions,
-      nextPositions
+      nextPositions,
+      this.movingDirection
     );
 
     this.onMoveHandler(event);
@@ -970,6 +976,25 @@ import {
     window.clearTimeout(this.loopTimeoutId);
   }
 
+  updatePlugin(forceUpdate) {
+    const container = this.container;
+
+    const imageProps = get360ViewProps(container);
+    const srcPropsChanged = isSrcPropsChanged(this, imageProps);
+
+    const reloadPlugin = srcPropsChanged || forceUpdate;
+
+    container.style.position = 'relative';
+    container.style.width = '100%';
+    container.style.cursor = 'default';
+    container.setAttribute('draggable', 'false');
+
+    if (reloadPlugin) container.innerHTML = '';
+
+    this.stop();
+    this.init(container, !reloadPlugin, reloadPlugin);
+  }
+
   destroy() {
     stop();
 
@@ -1167,7 +1192,7 @@ import {
     if ( (swipeable) && (!this.disableDrag) ) {
       this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
       this.container.addEventListener('touchend', this.touchEnd.bind(this));
-      this.container.addEventListener('touchmove', this.touchMove.bind(this), { passive: true });
+      this.container.addEventListener('touchmove', this.touchMove.bind(this));
     }
 
     if (keys) {
@@ -1178,9 +1203,9 @@ import {
     document.addEventListener('keydown', this.keyDownGeneral.bind(this));
   }
 
-  init(container) {
+  init(container, update = false, reload = false) {
     let {
-      folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, imageOffset, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
+      folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight, pointerZoom
     } = get360ViewProps(container);
 
@@ -1199,7 +1224,6 @@ import {
     this.activeImageX = autoplayReverse ? this.amountX : 1;
     this.activeImageY = autoplayReverse ? this.amountY : 1;
     this.spinY = (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX) ? true : false;
-    this.imageOffset = imageOffset;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
@@ -1227,6 +1251,18 @@ import {
     this.containerHeight = containerHeight;
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 3) : 0;
     this.keysReverse = keysReverse;
+
+    if (reload) {
+      new CI360Viewer(this.container);
+
+      return;
+    }
+
+    if (update) {
+      this.onAllImagesLoaded();
+
+      return;
+    }
 
     this.innerBox = createInnerBox(this.container);
     this.iconsContainer = createIconsContainer(this.innerBox);
