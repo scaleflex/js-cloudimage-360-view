@@ -25,7 +25,7 @@ Types of changes:
 - ...
 
 -------------
-## 2.7.5 - 2022-01-08
+## 2.7.5 - 2022-02-08
 ### Added
 - update method to re-render or re-init the plugin
 ### Fixed
