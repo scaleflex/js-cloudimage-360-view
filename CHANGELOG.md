@@ -25,6 +25,14 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.5 - 2022-01-08
+### Added
+- update method to re-render or re-init the plugin
+### Fixed
+- drag speed on mobile
+- error when drag speed is too high
+- error in dependencies
+
 ## 2.7.4 - 2022-01-26
 ### Fixed
 - typo in documentation file

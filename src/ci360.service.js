@@ -1240,7 +1240,7 @@ import {
     this.lazySelector = lazySelector;
     this.spinReverse = spinReverse;
     this.controlReverse = controlReverse;
-    this.dragSpeed = dragSpeed;
+    this.dragSpeed = Math.max(magnifier, 50);
     this.autoplaySpeed = this.speed * 36 / this.amountX;
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
