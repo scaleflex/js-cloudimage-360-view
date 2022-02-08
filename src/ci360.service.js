@@ -976,13 +976,13 @@ import {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  render(forceUpdate) {
+  updatePlugin(forceUpdate) {
     const container = this.container;
 
     const imageProps = get360ViewProps(container);
-    const propsChanged = isSrcPropsChanged(this, imageProps);
+    const srcPropsChanged = isSrcPropsChanged(this, imageProps);
 
-    const reloadPlugin = propsChanged || forceUpdate;
+    const reloadPlugin = srcPropsChanged || forceUpdate;
 
     container.style.position = 'relative';
     container.style.width = '100%';
@@ -1203,7 +1203,7 @@ import {
     document.addEventListener('keydown', this.keyDownGeneral.bind(this));
   }
 
-  init(container, render = false, reload = false) {
+  init(container, update = false, reload = false) {
     let {
       folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight, pointerZoom
@@ -1258,7 +1258,7 @@ import {
       return;
     }
 
-    if (render) {
+    if (update) {
       this.onAllImagesLoaded();
 
       return;

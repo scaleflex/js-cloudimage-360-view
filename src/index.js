@@ -33,18 +33,18 @@ function getActiveIndexByID(id, oriantation) {
   return currentViewer && (currentViewer.activeImageX - 1);
 }
 
-function render(id = null, forceUpdate = false) {
+function update(id = null, forceUpdate = false) {
   if (id) {
     try{
       const view = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
 
-      return view.render(forceUpdate);
+      return view.updatePlugin(forceUpdate);
     } catch {
       console.error(`Cloudimage-360: there is no view with such id '${id}'`)
     }
   }
 
-  return window.CI360._viewers.forEach(viewer => { viewer.render(forceUpdate); });
+  return window.CI360._viewers.forEach(viewer => { viewer.updatePlugin(forceUpdate); });
 }
 
 function isNoViewers() {
@@ -55,7 +55,7 @@ window.CI360 = window.CI360 || {};
 window.CI360.init = init;
 window.CI360.destroy = destroy;
 window.CI360.getActiveIndexByID = getActiveIndexByID;
-window.CI360.render = render;
+window.CI360.update = update;
 
 if (!window.CI360.notInitOnLoad) {
   init();
