@@ -7,7 +7,7 @@ import {
   AUTOPLAY_BEHAVIOR,
 } from './constants/';
 import './static/css/style.css';
-import './static/css/hotspot.css';
+import './static/css/hotspots.css';
 import {
   generateImagesPath,
   preloadImages,
