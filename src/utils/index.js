@@ -22,3 +22,4 @@ export { createHotspots } from './hotspot/elements/create-hotspots';
 export { generateHotspotsConfigs } from './hotspot/generate-hotspots-configs';
 export { isMouseOnHotspot } from './hotspot/is-mouse-on-hotspot';
 export { hideHotspotsIcons } from './hotspot/hide-hotspots-icons';
+export { isSrcPropsChanged } from './image-src/is-src-props-changed';
