@@ -1,6 +1,6 @@
 /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
 
-export const fillPreviousCoordWithPrevious = (hotspots, hotspotIndex, coord) => {
+export const fillEmptyCoordWithPrevious = (hotspots, hotspotIndex, coord) => {
   const coordIndexes = new Array(hotspotIndex);
 
   const intialValue = '0%';

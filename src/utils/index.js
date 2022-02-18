@@ -10,8 +10,8 @@ export { getContainerResponsiveWidth } from './responsive/get-container-responsi
 export { getContainerResponsiveHeight } from './responsive/get-container-responsive-height';
 export { getMovingDirection } from './spin-y/get-moving-direction';
 export { initControls } from './controls/init-controls';
-export { addClass } from './common/add-class';
-export { removeClass } from './common/remove-class';
+export { addClass } from './class-names/add-class';
+export { removeClass } from './class-names/remove-class';
 export { getItemSkipped } from './controls/get-item-skipped';
 export * from './container-elements';
 export { loop } from './auto-play/loop';

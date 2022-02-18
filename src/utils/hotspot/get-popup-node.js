@@ -1,5 +1,5 @@
 export const getPopupNode = (popupId) => {
-  const popupSelector = 'data-CI-360-anchor';
+  const popupSelector = 'data-cloudimage-360-hotspots';
 
   const popupNode = document.querySelector(`[${popupSelector}=${popupId}]`);
 

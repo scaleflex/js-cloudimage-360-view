@@ -16,7 +16,7 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
 
     const popupConfig = generatePopupConfig(popupProps);
     const uniqueID = Math.floor(Math.random() * 10000);
-    const anchorId = variant?.anchorId || `cloudimage-${uniqueID}`;
+    const anchorId = variant?.anchorId || `cloudimage-360-${uniqueID}`;
 
     const hotspotConfig = {
       variant : { ...variant, anchorId },
