@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v2.7.5-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v2.7.6-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -308,25 +308,49 @@ Open 360 spin view in full screen modal.
 
 Magnifier to zoom image.
 
-### ~~data-ratio (or ratio)~~ [deprecated]
+### data-ratio (or ratio)
 
 
-###### ~~Type: **Number** (height / width) | Default: **none** | _optional_~~
+###### Type: **Number** (width / height) or JSON object | Default: **none** | _optional_
+#### `ratio`: string
 
-~~Prevents page from jumping.~~
-### data-width (or width)
+Setting the height relative to the container width according to the provided ratio</br>
+In the following example, the height should be 0.3 the container width
 
-###### Type: **Number** | Default: **none** | _optional_
+```html
+<div
+	id="cloudimage-360-car"
+	class="cloudimage-360"
+	data-folder="https://scaleflex.airstore.io/demo/360-car/"
+	data-filename-x="iris-{index}.jpeg"
+	data-amount-x="36"
+	data-ratio="2"
+></div>
+```
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-g4wyt1?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+#### `ratio`: JSON
+Setting the height relative to the container width at any window size.
 
-Set a responsive width for the container.
-It will maintain the aspect ratio in respect to width
-### data-height (or height)
+In the following example, the height should be 1.3 the container width at window size less than or equal to 567px
+and 2.22 at window size less than or equal to 768px.
 
-###### Type: **Number** | Default: **none** | _optional_
-
-Set a responsive height for the container.
-It will maintain the aspect ratio in respect to height
-
+```html
+<div
+	id="cloudimage-360-car"
+	class="cloudimage-360"
+	data-folder="https://scaleflex.airstore.io/demo/360-car/"
+	data-filename-x="iris-{index}.jpeg"
+	data-amount-x="36"
+	data-ratio='{
+		"576": "1.3",
+		"768": "2.22",
+		"992": "2.23",
+		"1200": "3",
+		"2400": "3.2"
+	}'
+></div>
+```
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-5tssb7?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 ### data-autoplay-reverse (or autoplay-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
