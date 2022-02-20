@@ -25,6 +25,11 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.6 - 2022-02-20
+### Fixed
+- drag speed
+- responsive canvas width and height
+
 ## 2.7.5 - 2022-02-08
 ### Added
 - update method to re-render or re-init the plugin

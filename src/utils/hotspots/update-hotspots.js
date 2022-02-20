@@ -14,7 +14,7 @@ export const updateHotspots = (container, hotspotsProps, activeImageX = 0, activ
     } = hotspotProps;
 
     const hotspotOriantaion = getHotspotOriantaion(movingDirection);
-    const currentImage = orientation === 'x' ? activeImageX : activeImageY;
+    const currentImageIndex = orientation === 'x' ? activeImageX : activeImageY;
 
     const { open } = popupProps;
     const { anchorId } = variant;
@@ -22,7 +22,7 @@ export const updateHotspots = (container, hotspotsProps, activeImageX = 0, activ
     const hotspotsPositions = prepareHotspotsPositions(hotspots);
 
     const currentPosition = hotspotsPositions
-      .find((hotspotPosition) => hotspotPosition.imageIndex === currentImage);
+      .find((hotspotPosition) => hotspotPosition.imageIndex === currentImageIndex);
 
     const popup = getHotspotPopupNode(anchorId, open, currentPosition);
     const hotspotIcon = getHotspotIcon(anchorId);

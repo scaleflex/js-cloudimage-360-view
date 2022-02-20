@@ -28,8 +28,6 @@ import {
   createBoxShadow,
   getSpeedFactor,
   isCompletedOneCycle,
-  getContainerResponsiveWidth,
-  getContainerResponsiveHeight,
   getMovingDirection,
   applyStylesToContainer,
   initControls,
@@ -45,6 +43,7 @@ import {
   isMouseOnHotspot,
   hideHotspotsIcons,
   isSrcPropsChanged,
+  getImageAspectRatio,
   } from './utils';
 
   class CI360Viewer {
@@ -68,7 +67,7 @@ import {
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
-    this.hotspotConfig = hotspotConfig ? generateHotspotsConfigs(hotspotConfig) : null;
+    this.hotspotConfig = hotspotConfig && generateHotspotsConfigs(hotspotConfig);
     this.isMagnifyOpen = false;
     this.isDragged = false;
     this.startPointerZoom = false;
@@ -668,12 +667,8 @@ import {
     loop(this.autoplayBehavior, this.spinY, reversed, loopTriggers);
   }
 
-  updateContainerSize(image) {
-    const parentEl = this.container.parentNode || {};
-    const imageAspectRatio = image.width / image.height;
-    const isProvidedHeightLessThanWidth = this.containerHeight < this.containerWidth;
-    const containerWidth = getContainerResponsiveWidth(parentEl, this.containerWidth);
-    const containerHeight = getContainerResponsiveHeight(this.container, containerWidth, this.containerHeight);
+  updateContainerAndCanvasSize(image) {
+    const imageAspectRatio = getImageAspectRatio(image, this.ratio);
 
     if (this.fullscreenView) {
       this.container.width = window.innerWidth * this.devicePixelRatio;
@@ -685,26 +680,11 @@ import {
       return;
     }
 
-    if (this.containerWidth && this.containerHeight) {
-      this.container.style.width = containerWidth + 'px';
-      this.container.style.height = containerHeight / imageAspectRatio + 'px';
+    this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
+    this.canvas.style.width = this.container.offsetWidth + 'px';
 
-      return;
-    }
-
-    if (!this.containerWidth && !this.containerHeight) {
-      this.container.style.height = containerHeight / imageAspectRatio + 'px';
-
-      return;
-    }
-
-    if ((isProvidedHeightLessThanWidth || !this.containerWidth) && this.containerHeight) {
-      this.container.style.maxWidth = containerHeight * imageAspectRatio + 'px';
-      this.container.style.height = containerHeight + 'px';
-    } else {
-      this.container.style.maxWidth = containerWidth + 'px';
-      this.container.style.height = containerWidth / imageAspectRatio + 'px';
-    }
+    this.canvas.height = (this.container.offsetWidth / imageAspectRatio) * this.devicePixelRatio;
+    this.canvas.style.height = (this.container.offsetWidth / imageAspectRatio) + 'px';
   }
 
   onResizedImageLoad(orientation, image, index) {
@@ -732,7 +712,7 @@ import {
   }
 
   showImageInfo(ctx) {
-    ctx.font = this.fullscreenView ? '28px serif' : '14px serif';
+    ctx.font = `${this.fullscreenView ? 28 : 14}px serif`;
     ctx.fillStyle = (this.info === 'white' ? '#FFF' : '#000');
 
     const imageDimension = `image-dimension: ${this.container.offsetWidth}x${this.container.offsetHeight}px`;
@@ -750,7 +730,7 @@ import {
     const responsive = this.ciParams.ciToken;
     const firstImage = this.imagesX[0];
 
-    this.updateContainerSize(firstImage);
+    this.updateContainerAndCanvasSize(firstImage);
     this.update();
 
     this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
@@ -786,12 +766,6 @@ import {
 
     const ctx = this.canvas.getContext("2d");
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
-
-    this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-    this.canvas.style.width = this.container.offsetWidth + 'px';
-
-    this.canvas.height = this.container.offsetHeight * this.devicePixelRatio;
-    this.canvas.style.height = this.container.offsetHeight + 'px';
 
     if (this.fullscreenView) {
       const { width, height, offsetX, offsetY } =
@@ -1266,7 +1240,7 @@ import {
   init(container, update = false, reload = false) {
     let {
       folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, containerWidth, containerHeight, pointerZoom, imageInfo = 'black'
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black'
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1307,11 +1281,10 @@ import {
     this.logoSrc = logoSrc;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
-    this.containerWidth = containerWidth;
-    this.containerHeight = containerHeight;
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 3) : 0;
     this.keysReverse = keysReverse;
     this.info = imageInfo;
+    this.ratio =  ratio && JSON.parse(ratio);
 
     if (reload) {
       new CI360Viewer(this.container);
@@ -1407,7 +1380,7 @@ import {
       if (this.lazyloadX || this.lazyloadY) return initLazyload(image, orientation);
 
       if (isFirstImageLoaded) {
-        this.updateContainerSize(image);
+        this.updateContainerAndCanvasSize(image);
         this.onFirstImageLoaded(image);
       }
 
