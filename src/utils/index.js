@@ -17,8 +17,8 @@ export { loop } from './auto-play/loop';
 export { getSpeedFactor } from './auto-play/get-speed-factor';
 export { isCompletedOneCycle } from './auto-play/is-completed-one-cycle';
 
-export { addClass } from './common/add-class';
-export { removeClass } from './common/remove-class';
+export { addClass } from './class-names/add-class';
+export { removeClass } from './class-names/remove-class';
 
 export { getMovingDirection } from './spin-y/get-moving-direction';
 
@@ -27,8 +27,8 @@ export { initControls } from './controls/init-controls';
 
 export * from './container-elements';
 
-export { updateHotspots } from './hotspot/update-hotspots';
-export { createHotspots } from './hotspot/elements/create-hotspots';
-export { generateHotspotsConfigs } from './hotspot/generate-hotspots-configs';
-export { isMouseOnHotspot } from './hotspot/is-mouse-on-hotspot';
-export { hideHotspotsIcons } from './hotspot/hide-hotspots-icons';
+export { updateHotspots } from './hotspots/update-hotspots';
+export { createHotspots } from './hotspots/elements/create-hotspots';
+export { generateHotspotsConfigs } from './hotspots/generate-hotspots-configs';
+export { isMouseOnHotspot } from './hotspots/is-mouse-on-hotspot';
+export { hideHotspotsIcons } from './hotspots/hide-hotspots-icons';

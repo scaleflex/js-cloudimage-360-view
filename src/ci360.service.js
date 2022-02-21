@@ -7,6 +7,7 @@ import {
   AUTOPLAY_BEHAVIOR,
 } from './constants/';
 import './static/css/style.css';
+import './static/css/hotspots.css';
 import {
   generateImagesPath,
   preloadImages,
@@ -36,12 +37,17 @@ import {
   loop,
   generateZoomInSteps,
   generateZoomOutSteps,
+  updateHotspots,
+  createHotspots,
+  generateHotspotsConfigs,
+  isMouseOnHotspot,
+  hideHotspotsIcons,
   isSrcPropsChanged,
   getImageAspectRatio,
   } from './utils';
 
   class CI360Viewer {
-  constructor(container, fullscreen) {
+  constructor(container, fullscreen, hotspotConfig) {
     this.container = container;
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
@@ -61,7 +67,7 @@ import {
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
-    this.init(container);
+    this.hotspotConfig = hotspotConfig && generateHotspotsConfigs(hotspotConfig);
     this.isMagnifyOpen = false;
     this.isDragged = false;
     this.startPointerZoom = false;
@@ -70,13 +76,13 @@ import {
     this.intialPositions = { x: 0, y: 0 };
     this.pointerCurrentPosition = { x: 0, y: 0 };
     this.isStartedLoadOriginalImages = false;
+    this.init(container);
   }
 
   mouseDown(event) {
     if (!this.imagesLoaded) return;
 
-    event.preventDefault();
-
+    const isMouseOnHotspotElement = isMouseOnHotspot();
     const { pageX, pageY } = event;
 
     this.hideInitialIcons();
@@ -91,6 +97,10 @@ import {
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
     this.isDragged = false;
+
+    if (isMouseOnHotspotElement) {
+      this.isClicked = false;
+    }
   }
 
   mouseUp() {
@@ -204,6 +214,10 @@ import {
 
       const zoomSteps = generateZoomInSteps(this.pointerZoom);
 
+      if (this.hotspotConfig) {
+        hideHotspotsIcons();
+      }
+
       zoomSteps.forEach((step) => {
         setTimeout(() => {
           this.zoomIntensity = step;
@@ -274,6 +288,8 @@ import {
   touchStart(event) {
     if (!this.imagesLoaded) return;
 
+    const isMouseOnHotspotElement = isMouseOnHotspot();
+
     this.hideInitialIcons();
 
     if (this.autoplay || this.loopTimeoutId) {
@@ -284,6 +300,10 @@ import {
     this.intialPositions = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.movementStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
     this.isClicked = true;
+
+    if (isMouseOnHotspotElement) {
+      this.isClicked = false;
+    }
   }
 
   touchEnd() {
@@ -691,6 +711,21 @@ import {
     }
   }
 
+  showImageInfo(ctx) {
+    ctx.font = `${this.fullscreenView ? 28 : 14}px serif`;
+    ctx.fillStyle = (this.info === 'white' ? '#FFF' : '#000');
+
+    const imageDimension = `image-dimension: ${this.container.offsetWidth}x${this.container.offsetHeight}px`;
+
+    const currentXImage = 'active-index-x: ' + this.activeImageX;
+    const currentYImage = 'active-index-y: ' + this.activeImageY;
+
+    const imageIndex = [currentXImage, currentYImage].join(' | ');
+
+    ctx.fillText(imageDimension, 20, this.container.offsetHeight - 35);
+    ctx.fillText(imageIndex, 20, this.container.offsetHeight - 10);
+  }
+
   requestResizedImages() {
     const responsive = this.ciParams.ciToken;
     const firstImage = this.imagesX[0];
@@ -741,8 +776,21 @@ import {
       if (this.mouseTracked) {
         this.updateImageScale(ctx);
       } else {
+        if (this.hotspotConfig && !this.autoplay) {
+          updateHotspots(
+            this.container,
+            this.hotspotConfig,
+            this.activeImageX,
+            this.activeImageY,
+            this.movingDirection
+          );
+        }
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
+    }
+
+    if (this.info) {
+      this.showImageInfo(ctx);
     }
   }
 
@@ -792,6 +840,8 @@ import {
 
       this.offset = { x: offsetX, y: offsetY };
 
+      this.addCloseFullscreenView();
+
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
       this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
@@ -803,8 +853,8 @@ import {
       ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
 
-    if (this.fullscreenView) {
-      this.addCloseFullscreenView();
+    if (this.info) {
+      this.showImageInfo(ctx)
     }
 
     if (this.magnifier) {
@@ -821,6 +871,16 @@ import {
 
     if (this.fullscreen && !this.fullscreenView) {
       this.addFullscreenIcon();
+    }
+
+    if (this.hotspotConfig && !this.autoplay) {
+      updateHotspots(
+        this.container,
+        this.hotspotConfig,
+        this.activeImageX,
+        this.activeImageY,
+        this.movingDirection
+      );
     }
   }
 
@@ -902,7 +962,7 @@ import {
 
     const fullscreenContainer = createFullscreenModal(this.container);
 
-    new CI360Viewer(fullscreenContainer, true);
+    new CI360Viewer(fullscreenContainer, true, this.hotspotConfig);
   }
 
   setFullscreenEvents(_, event) {
@@ -1180,7 +1240,7 @@ import {
   init(container, update = false, reload = false) {
     let {
       folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black'
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1223,6 +1283,7 @@ import {
     this.apiVersion = apiVersion;
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 3) : 0;
     this.keysReverse = keysReverse;
+    this.info = imageInfo;
     this.ratio =  ratio && JSON.parse(ratio);
 
     if (reload) {
@@ -1242,6 +1303,10 @@ import {
     this.canvas = createCanvas(this.innerBox);
     this.loader = createLoader(this.innerBox);
 
+    if (this.hotspotConfig && !this.fullscreenView) {
+      createHotspots(container, this.hotspotConfig);
+    }
+
     applyStylesToContainer(this.container);
 
     this.srcXConfig = {
@@ -1256,7 +1321,7 @@ import {
       lazySelector,
       amount: this.amountX,
       indexZeroBase,
-      fullscreen: this.fullscreenView
+      fullscreen: this.fullscreenView,
     }
 
     this.srcYConfig = {

@@ -49,6 +49,7 @@ const get360ViewProps = (image) => ({
   hide360Logo: isTrue(image, 'hide-360-logo'),
   logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg',
   ratio: attr(image, 'ratio') || attr(image, 'data-ratio') || null,
+  imageInfo: attr(image, 'info')|| attr(image, 'data-info') || isTrue(image, 'info')
 });
 
 const isTrue = (image, type) => {
@@ -78,5 +79,6 @@ const debounce = (func, timeout) => {
 export {
   get360ViewProps,
   setView360Icon,
+  attr,
   debounce
 }

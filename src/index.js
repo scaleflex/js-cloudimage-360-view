@@ -2,13 +2,22 @@ import 'core-js/features/array/for-each';
 import 'core-js/features/array/filter';
 import 'core-js/features/array/includes';
 import CI360Viewer from './ci360.service';
+import { attr } from './ci360.utils';
 
 
 function init() {
   const viewers = [];
   const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
+  const hotspotsConfigs = window.CI360.hotspots|| {};
 
-  [].slice.call(view360Array).forEach(container => { viewers.push(new CI360Viewer(container)); });
+  [].slice.call(view360Array).forEach(container => {
+    const hotspotInstanceName = attr(container, 'hotspot-instance') ||
+      attr(container, 'data-hotspot-instance');
+
+    const hotspotConfig = hotspotsConfigs[hotspotInstanceName] ? hotspotsConfigs[hotspotInstanceName] : null;
+
+    viewers.push(new CI360Viewer(container, false, hotspotConfig));
+  })
 
   window.CI360._viewers = viewers;
 }
