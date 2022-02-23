@@ -17,6 +17,6 @@ if (isMobile) {
     'data-folder',
     'https://scaleflex.cloudimg.io/v7/https://cdn.scaleflex.it/demo/360-car/'
   );
-  mercedes360View.setAttribute('data-ratio', '0.666');
+  mercedes360View.setAttribute('data-ratio', '1.7');
   mercedes360View.setAttribute('data-bottom-circle-offset', '22');
 }

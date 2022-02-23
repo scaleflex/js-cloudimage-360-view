@@ -730,7 +730,6 @@ import {
     const responsive = this.ciParams.ciToken;
     const firstImage = this.imagesX[0];
 
-    this.updateContainerAndCanvasSize(firstImage);
     this.update();
 
     this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
@@ -766,6 +765,7 @@ import {
 
     const ctx = this.canvas.getContext("2d");
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
+    this.updateContainerAndCanvasSize(image);
 
     if (this.fullscreenView) {
       const { width, height, offsetX, offsetY } =
@@ -785,6 +785,7 @@ import {
             this.movingDirection
           );
         }
+
         ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
       }
     }
