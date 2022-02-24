@@ -25,6 +25,11 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.7 - 2022-02-24
+### Fixed
+- container width on mobile
+- re-render method
+
 ## 2.7.6 - 2022-02-20
 ### Fixed
 - drag speed
