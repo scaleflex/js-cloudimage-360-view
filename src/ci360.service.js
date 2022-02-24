@@ -44,6 +44,7 @@ import {
   hideHotspotsIcons,
   isSrcPropsChanged,
   getImageAspectRatio,
+  removeChildFromParent,
   } from './utils';
 
   class CI360Viewer {
@@ -863,7 +864,7 @@ import {
     }
 
     if (this.boxShadow && !this.fullscreenView) {
-      createBoxShadow(this.boxShadow, this.innerBox);
+      this.boxShadowEl =createBoxShadow(this.boxShadow, this.innerBox);
     }
 
     if (this.bottomCircle && !this.fullscreenView) {
@@ -1294,6 +1295,38 @@ import {
     }
 
     if (update) {
+      removeChildFromParent(this.innerBox, this.iconsContainer);
+      removeChildFromParent(this.innerBox, this.boxShadowEl);
+      removeChildFromParent(this.innerBox, this.view360Icon);
+      this.remove360ViewCircleIcon();
+
+      this.iconsContainer = createIconsContainer(this.innerBox);
+
+      if (!this.hide360Logo && !this.lazyload && this.logoSrc) {
+        this.add360ViewIcon();
+        setView360Icon(this.view360Icon, this.logoSrc);
+      }
+
+      if (this.magnifier) {
+        this.addMagnifier();
+      }
+
+      if (this.info) {
+        this.showImageInfo(ctx);
+      }
+
+      if (this.bottomCircle && !this.fullscreenView) {
+        this.add360ViewCircleIcon();
+      }
+
+      if (this.fullscreen && !this.fullscreenView) {
+        this.addFullscreenIcon();
+      }
+
+      if (this.boxShadow && !this.fullscreenView) {
+        this.boxShadowEl = createBoxShadow(this.boxShadow, this.innerBox);
+      }
+
       this.onAllImagesLoaded();
 
       return;

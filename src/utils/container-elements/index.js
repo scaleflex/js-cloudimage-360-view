@@ -10,3 +10,4 @@ export { createBoxShadow } from './create-box-shadow';
 export { createLoader } from './create-loader';
 export { applyStylesToContainer } from './apply-styles-to-container';
 export { createFullscreenModal } from './create-fullscreen-modal';
+export { removeChildFromParent } from './remove-child-from-parent';
