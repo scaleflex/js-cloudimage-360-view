@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.9 - 2022-02-27
+### Fixed
+- typo in documentation
+
 ## 2.7.8 - 2022-02-27
 ### Added
 - possibility to add new view to CI360 views
