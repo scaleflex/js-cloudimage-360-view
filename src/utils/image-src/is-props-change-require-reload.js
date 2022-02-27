@@ -1,10 +1,10 @@
-import { IMAGE_SRC_PROPS } from "../../constants/image-src-props";
+import { PROPS_REQUIRE_RELOAD } from "../../constants/props-require-reload";
 
-export const isSrcPropsChanged = (currentProps, changedProps) => (
+export const isPropsChangeRequireReload = (currentProps, changedProps) => (
   Object.keys(changedProps)
     .reduce((acc, current) => {
       const isPropChanged = currentProps[current] !== changedProps[current];
-      const isSrcProp = IMAGE_SRC_PROPS.includes(current);
+      const isSrcProp = PROPS_REQUIRE_RELOAD.includes(current);
 
       if (isSrcProp && isPropChanged) {
         acc = true;

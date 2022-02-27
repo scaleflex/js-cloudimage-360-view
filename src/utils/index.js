@@ -1,4 +1,4 @@
-export { isSrcPropsChanged } from './image-src/is-src-props-changed';
+export { isPropsChangeRequireReload } from './image-src/is-props-change-require-reload';
 
 export { generateImagesPath } from './image-src/generate-images-path';
 export { preloadImages } from './load-images/preload-images';

@@ -112,6 +112,17 @@ window.CI360.init();
 > <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2/js-cloudimage-360-view.min.js"></script>
 > <script>window.CI360.init(); // initialize the plugin when you need</script>
 > ```
+
+### addView
+
+###### Type: **Function**
+
+add new view by id to cloudimage 360 views.
+
+```javascript
+window.CI360.addView(idOfView: string);
+```
+
 ### update
 
 ###### Type: **Function**

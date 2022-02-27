@@ -42,7 +42,7 @@ import {
   generateHotspotsConfigs,
   isMouseOnHotspot,
   hideHotspotsIcons,
-  isSrcPropsChanged,
+  isPropsChangeRequireReload,
   getImageAspectRatio,
   removeChildFromParent,
   } from './utils';
@@ -765,6 +765,7 @@ import {
     }
 
     const ctx = this.canvas.getContext("2d");
+
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
     this.updateContainerAndCanvasSize(image);
 
@@ -831,12 +832,9 @@ import {
 
     const ctx = this.canvas.getContext("2d");
 
-    if (this.fullscreenView) {
-      this.canvas.width = window.innerWidth * this.devicePixelRatio;
-      this.canvas.style.width = window.innerWidth + 'px';
-      this.canvas.height = window.innerHeight * this.devicePixelRatio;
-      this.canvas.style.height = window.innerHeight + 'px';
+    this.updateContainerAndCanvasSize(image);
 
+    if (this.fullscreenView) {
       const { offsetX, offsetY, width, height } =
         contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
@@ -846,12 +844,6 @@ import {
 
       ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
-      this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-      this.canvas.style.width = this.container.offsetWidth + 'px';
-
-      this.canvas.height = this.container.offsetHeight * this.devicePixelRatio;
-      this.canvas.style.height = this.container.offsetHeight + 'px';
-
       ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -1012,23 +1004,33 @@ import {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  updatePlugin(forceUpdate) {
-    const container = this.container;
+  updateView(forceUpdate, viewers) {
+    let container = this.container;
 
     const imageProps = get360ViewProps(container);
-    const srcPropsChanged = isSrcPropsChanged(this, imageProps);
+    const srcPropsChanged = isPropsChangeRequireReload(this, imageProps);
+    const reInitView = srcPropsChanged || forceUpdate;
 
-    const reloadPlugin = srcPropsChanged || forceUpdate;
+    if (reInitView) {
+      const oldElement = this.container;
+      const viewIndex = viewers.findIndex(view => view.id === this.container.id);
+      container = container.cloneNode(true);
+
+      container.className = container.className.replace(' initialized', '');
+      container.innerHTML = '';
+
+      oldElement.parentNode.replaceChild(container, oldElement);
+
+      return viewers.splice(viewIndex, 1, new CI360Viewer(container));
+    }
 
     container.style.position = 'relative';
     container.style.width = '100%';
     container.style.cursor = 'default';
     container.setAttribute('draggable', 'false');
 
-    if (reloadPlugin) container.innerHTML = '';
-
     this.stop();
-    this.init(container, !reloadPlugin, reloadPlugin);
+    this.init(container, true);
   }
 
   destroy() {
@@ -1239,7 +1241,7 @@ import {
     document.addEventListener('keydown', this.keyDownGeneral.bind(this));
   }
 
-  init(container, update = false, reload = false) {
+  init(container, update = false) {
     let {
       folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black'
@@ -1286,13 +1288,8 @@ import {
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 3) : 0;
     this.keysReverse = keysReverse;
     this.info = imageInfo;
+    this.keys = keys;
     this.ratio =  ratio && JSON.parse(ratio);
-
-    if (reload) {
-      new CI360Viewer(this.container);
-
-      return;
-    }
 
     if (update) {
       removeChildFromParent(this.innerBox, this.iconsContainer);
@@ -1327,9 +1324,7 @@ import {
         this.boxShadowEl = createBoxShadow(this.boxShadow, this.innerBox);
       }
 
-      this.onAllImagesLoaded();
-
-      return;
+      return this.onAllImagesLoaded();
     }
 
     this.innerBox = createInnerBox(this.container);
@@ -1414,7 +1409,6 @@ import {
       if (this.lazyloadX || this.lazyloadY) return initLazyload(image, orientation);
 
       if (isFirstImageLoaded) {
-        this.updateContainerAndCanvasSize(image);
         this.onFirstImageLoaded(image);
       }
 
