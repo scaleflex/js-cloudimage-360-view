@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v10-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v2.7.10-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
@@ -113,7 +113,7 @@ window.CI360.init();
 > <script>window.CI360.init(); // initialize the plugin when you need</script>
 > ```
 
-### addView
+### add
 
 ###### Type: **Function**
 
@@ -248,7 +248,6 @@ data-api-version="v7"
 ```javascript
 data-api-version="null"
 ```
-### data-filename (or filename)
 ### data-filename-x (or filename-x)
 ### ~~data-filename (or filename)~~ [deprecated]
 
