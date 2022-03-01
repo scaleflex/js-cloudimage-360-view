@@ -25,7 +25,7 @@ Types of changes:
 - ...
 
 -------------
-## 2.8.10 - 2022-03-01
+## 2.7.10 - 2022-03-01
 ### Fixed
 - image quality in fullscreen
 - resized image loading

@@ -74,7 +74,6 @@ function update(id = null, forceUpdate = false) {
     window.CI360._viewers
       .forEach(viewer => { viewer.updateView(forceUpdate, window.CI360._viewers); });
   }
-
 }
 
 function isNoViewers() {
