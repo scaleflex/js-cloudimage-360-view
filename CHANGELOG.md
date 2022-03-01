@@ -25,6 +25,11 @@ Types of changes:
 - ...
 
 -------------
+## 2.8.10 - 2022-03-01
+### Fixed
+- image quality in fullscreen
+- resized image loading
+
 ## 2.7.9 - 2022-02-27
 ### Fixed
 - typo in documentation

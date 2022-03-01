@@ -239,12 +239,13 @@ import {
     }
 
     const loadedOriginalXImages = this.originalImagesX
-      .filter(image => !!image);
+      .filter(image => image);
     const loadedOriginalYImages = this.originalImagesY
-      .filter(image => !!image);
+      .filter(image => image);
 
     const totalAmount = this.amountX + this.amountY;
     const totalLoadedImages = loadedOriginalXImages.length + loadedOriginalYImages.length;
+
     const isAllImagesLoaded = (
       loadedOriginalXImages.length + loadedOriginalYImages.length === this.amountX + this.amountY
     );
@@ -279,7 +280,7 @@ import {
       const srcY = generateImagesPath(this.srcYConfig);
 
       preloadOriginalImages(
-        this.srcXConfig,
+        this.srcYConfig,
         srcY,
         this.onOriginalImageLoad.bind(this, ORIENTATIONS.Y, event)
       );
@@ -678,6 +679,11 @@ import {
       this.container.style.height = window.innerHeight + 'px';
       this.container.style.maxWidth = 'unset';
 
+      this.canvas.width = window.innerWidth * this.devicePixelRatio;
+      this.canvas.style.width = window.innerWidth + 'px';
+      this.canvas.height = window.innerHeight * this.devicePixelRatio;
+      this.canvas.style.height = window.innerHeight + 'px';
+
       return;
     }
 
@@ -696,9 +702,9 @@ import {
     }
 
     const loadedResizedXImages = this.resizedImagesX
-      .filter(image => !!image);
+      .filter(image => image);
     const loadedResizedYImages = this.resizedImagesY
-      .filter(image => !!image);
+      .filter(image => image);
 
     const isAllImagesLoaded = (
       loadedResizedXImages.length + loadedResizedYImages.length === this.amountX + this.amountY
@@ -742,7 +748,6 @@ import {
       this.srcXConfig,
       srcX,
       this.onResizedImageLoad.bind(this, ORIENTATIONS.X),
-      true
     )
 
     if (this.allowSpinY) {
@@ -752,7 +757,6 @@ import {
         this.srcYConfig,
         srcY,
         this.onResizedImageLoad.bind(this, ORIENTATIONS.Y),
-        true
       )
     }
   }
@@ -831,7 +835,6 @@ import {
     if (!this.hide360Logo && !this.lazyload) this.add360ViewIcon();
 
     const ctx = this.canvas.getContext("2d");
-
     this.updateContainerAndCanvasSize(image);
 
     if (this.fullscreenView) {
@@ -848,7 +851,7 @@ import {
     }
 
     if (this.info) {
-      this.showImageInfo(ctx)
+      this.showImageInfo(ctx);
     }
 
     if (this.magnifier) {
@@ -856,7 +859,7 @@ import {
     }
 
     if (this.boxShadow && !this.fullscreenView) {
-      this.boxShadowEl =createBoxShadow(this.boxShadow, this.innerBox);
+      this.boxShadowEl = createBoxShadow(this.boxShadow, this.innerBox);
     }
 
     if (this.bottomCircle && !this.fullscreenView) {
@@ -1014,10 +1017,11 @@ import {
     if (reInitView) {
       const oldElement = this.container;
       const viewIndex = viewers.findIndex(view => view.id === this.container.id);
+
+      container.removeChild(this.innerBox);
       container = container.cloneNode(true);
 
       container.className = container.className.replace(' initialized', '');
-      container.innerHTML = '';
 
       oldElement.parentNode.replaceChild(container, oldElement);
 
@@ -1209,10 +1213,10 @@ import {
 
     const controlsElements = initControls(controlsConfig, controlsTriggers);
 
-    this.topElem = controlsElements.top || {};
-    this.bottomElem = controlsElements.bottom || {};
-    this.leftElem = controlsElements.left || {};
-    this.rightElem = controlsElements.right || {};
+    this.topElem = controlsElements.top;
+    this.bottomElem = controlsElements.bottom;
+    this.leftElem = controlsElements.left;
+    this.rightElem = controlsElements.right;
   }
 
   attachEvents(draggable, swipeable, keys) {
@@ -1308,10 +1312,6 @@ import {
         this.addMagnifier();
       }
 
-      if (this.info) {
-        this.showImageInfo(ctx);
-      }
-
       if (this.bottomCircle && !this.fullscreenView) {
         this.add360ViewCircleIcon();
       }
@@ -1391,8 +1391,8 @@ import {
         this.imagesY[index] = image;
       }
 
-      const loadedXImages = this.imagesX.filter(image => !!image);
-      const loadedYImages = this.imagesY.filter(image => !!image);
+      const loadedXImages = this.imagesX.filter(image => image);
+      const loadedYImages = this.imagesY.filter(image => image);
 
       const totalAmount = this.amountX + this.amountY;
       const totalLoadedImages = this.imagesX.length + this.imagesY.length;
