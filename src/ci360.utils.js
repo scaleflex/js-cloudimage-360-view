@@ -48,7 +48,7 @@ const get360ViewProps = (image) => ({
   stopAtEdges: isTrue(image, 'stop-at-edges'),
   hide360Logo: isTrue(image, 'hide-360-logo'),
   logoSrc: attr(image, 'logo-src') || 'https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg',
-  ratio: attr(image, 'ratio') || attr(image, 'data-ratio') || null,
+  ratio: attr(image, 'ratio') || attr(image, 'data-ratio'),
   imageInfo: attr(image, 'info')|| attr(image, 'data-info') || isTrue(image, 'info')
 });
 

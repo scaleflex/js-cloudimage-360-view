@@ -769,8 +769,8 @@ import {
     }
 
     const ctx = this.canvas.getContext("2d");
-
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
+
     this.updateContainerAndCanvasSize(image);
 
     if (this.fullscreenView) {
@@ -835,6 +835,7 @@ import {
     if (!this.hide360Logo && !this.lazyload) this.add360ViewIcon();
 
     const ctx = this.canvas.getContext("2d");
+    ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
     this.updateContainerAndCanvasSize(image);
 
     if (this.fullscreenView) {

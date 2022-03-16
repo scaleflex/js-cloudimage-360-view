@@ -6,7 +6,7 @@ export const getImageAspectRatio = (image, providedRatio) => {
       imageAspectRatio = providedRatio;
     }
 
-    if (typeof providedRatio === 'object') {
+    if (providedRatio && typeof providedRatio === 'object') {
       const mediaQueries = Object.keys(providedRatio)
         .sort((a, b) => a - b);
 
