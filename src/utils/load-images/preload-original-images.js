@@ -3,23 +3,21 @@ import { prepareImagesFromFolder } from './images-from-folder/prepare-images-fro
 import { prepareImagesFromList } from './images-from-list/prepare-images-from-list';
 import { loadOriginalImages } from './load-original-images';
 
-export const preloadOriginalImages = (srcConfig, imagesSrc, onImageLoadCallback) => {
+export const preloadOriginalImages = (srcConfig, imagesSrc, cb) => {
   const { imageList } = srcConfig || {};
-  let imagesSets = {};
+  let imagesSrcs = [];
 
   if (imageList) {
     try {
       const images = JSON.parse(imageList);
 
-      imagesSets = prepareImagesFromList(images, srcConfig);
+      imagesSrcs = prepareImagesFromList(images, srcConfig, true);
     } catch (error) {
       console.error(`Wrong format in image-list attribute: ${error.message}`);
     }
   } else {
-    imagesSets = prepareImagesFromFolder(imagesSrc, srcConfig);
+    imagesSrcs = prepareImagesFromFolder(imagesSrc, srcConfig, true);
   }
 
-  const { originalSrc } = imagesSets || {};
-
-  loadOriginalImages(originalSrc, onImageLoadCallback);
+  loadOriginalImages(imagesSrcs, cb);
 };

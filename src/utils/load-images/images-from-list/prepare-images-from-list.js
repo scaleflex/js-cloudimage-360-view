@@ -1,22 +1,19 @@
 import { generateImagesPath } from '../../image-src/generate-images-path';
 
-export const prepareImagesFromList = (images, srcConfig) => {
+export const prepareImagesFromList = (images, srcConfig, loadOriginalImages ) => {
   const { folder } = srcConfig;
-  const resultSrc = [];
-  const originalSrc = [];
 
-  images.forEach((src) => {
+  return images.map((src) => {
     const nextSrcConfig = { ...srcConfig };
     nextSrcConfig.folder = /(http(s?)):\/\//gi.test(src) ? '' : folder;
     nextSrcConfig.filename = src;
-    const lastIndex = resultSrc.lastIndexOf('//');
 
-    resultSrc.push(generateImagesPath(nextSrcConfig));
-    originalSrc.push(resultSrc.slice(lastIndex));
+    if (loadOriginalImages) {
+      const lastIndex = resultSrc.lastIndexOf('//');
+
+      return resultSrc.slice(lastIndex);
+    }
+
+    return generateImagesPath(nextSrcConfig);
   });
-
-  return {
-    resultSrc,
-    originalSrc,
-  };
 };

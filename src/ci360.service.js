@@ -45,6 +45,7 @@ import {
   isPropsChangeRequireReload,
   getImageAspectRatio,
   removeChildFromParent,
+  initLazyload,
   } from './utils';
 
   class CI360Viewer {
@@ -78,6 +79,15 @@ import {
     this.pointerCurrentPosition = { x: 0, y: 0 };
     this.isStartedLoadOriginalImages = false;
     this.init(container);
+  }
+
+  isReady() {
+    const loadedXImages = this.imagesX.filter(image => image);
+    const loadedYImages = this.imagesY.filter(image => image);
+
+    const totalAmount = this.amountX + this.amountY;
+
+    return loadedXImages.length + loadedYImages.length === totalAmount;
   }
 
   mouseDown(event) {
@@ -734,15 +744,17 @@ import {
   }
 
   requestResizedImages() {
+    if (!this.isReady()) return;
+
     const responsive = this.ciParams.ciToken;
     const firstImage = this.imagesX[0];
 
     this.update();
+    if (!responsive || this.container.offsetWidth < firstImage.width *  1.5) return;
 
     this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
     const srcX = generateImagesPath(this.srcXConfig);
 
-    if (!responsive || this.container.offsetWidth < firstImage.width *  1.5) return;
 
     preloadImages(
       this.srcXConfig,
@@ -1278,8 +1290,6 @@ import {
     this.disableDrag = disableDrag;
     this.fullscreen = fullscreen;
     this.magnifier = !this.isMobile && magnifier > 1 ? Math.min(magnifier, 5) : 0;
-    this.lazyloadX = lazyload;
-    this.lazyloadY = lazyload;
     this.lazySelector = lazySelector;
     this.spinReverse = spinReverse;
     this.controlReverse = controlReverse;
@@ -1347,7 +1357,6 @@ import {
       innerBox: this.innerBox,
       apiVersion,
       ciParams,
-      lazyload,
       lazySelector,
       amount: this.amountX,
       indexZeroBase,
@@ -1363,27 +1372,6 @@ import {
     }
 
     const srcX = generateImagesPath(this.srcXConfig);
-    const srcY = generateImagesPath(this.srcYConfig);
-
-    const initLazyload = (image, orientation) => {
-      const lazyloadXConfig = {...this.srcXConfig, lazyload: false};
-      const lazyloadYConfig = {...this.srcYConfig, lazyload: false};
-
-      if (orientation === ORIENTATIONS.Y) {
-        this.lazyloadY = false;
-
-        preloadImages(lazyloadXConfig, srcX, (
-          onImageLoad.bind(this, ORIENTATIONS.X)
-        ));
-      } else {
-        this.lazyloadX = false;
-        this.lazyloadInitImageX = image;
-
-        preloadImages(lazyloadYConfig, srcY, (
-          onImageLoad.bind(this, ORIENTATIONS.Y)
-        ));
-      }
-    }
 
     const onImageLoad = (orientation, image, index) => {
       if (orientation !== ORIENTATIONS.Y) {
@@ -1396,39 +1384,48 @@ import {
       const loadedYImages = this.imagesY.filter(image => image);
 
       const totalAmount = this.amountX + this.amountY;
-      const totalLoadedImages = this.imagesX.length + this.imagesY.length;
-      const isFirstImageLoaded = index === 0 && orientation !== ORIENTATIONS.Y;
+      const totalLoadedImages = loadedXImages.length + loadedYImages.length;
 
-      const isAllImagesLoaded = (
-        loadedXImages.length + loadedYImages.length === this.amountX + this.amountY
-      );
-
+      const isFirstImageLoaded = !index && orientation !== ORIENTATIONS.Y;
       const percentage = Math.round(totalLoadedImages / totalAmount * 100);
 
       this.updatePercentageInLoader(percentage);
-
-      if (this.lazyloadX || this.lazyloadY) return initLazyload(image, orientation);
 
       if (isFirstImageLoaded) {
         this.onFirstImageLoaded(image);
       }
 
-      if (isAllImagesLoaded) {
+      if (this.isReady()) {
         this.onAllImagesLoaded();
-        if (lazyload) {
-          this.innerBox.removeChild(this.lazyloadInitImageX);
-        }
       }
     }
 
-    preloadImages(this.srcXConfig, srcX, (
-      onImageLoad.bind(this, ORIENTATIONS.X)
-    ));
-
-    if (this.allowSpinY) {
-      preloadImages(this.srcYConfig, srcY, (
-        onImageLoad.bind(this, ORIENTATIONS.Y)
+    const loadImages = () => {
+      preloadImages(this.srcXConfig, srcX, (
+        onImageLoad.bind(this, ORIENTATIONS.X)
       ));
+
+      if (this.allowSpinY) {
+        const srcY = generateImagesPath(this.srcYConfig);
+
+        preloadImages(
+          this.srcYConfig,
+          srcY,
+          onImageLoad.bind(this, ORIENTATIONS.Y)
+        );
+      }
+    }
+
+    if (lazyload) {
+      const onFirstImageLoad = (image) => {
+        this.innerBox.removeChild(image);
+
+        loadImages();
+      }
+
+      initLazyload(srcX, this.srcXConfig, onFirstImageLoad);
+    } else {
+      loadImages();
     }
 
     this.attachEvents(draggable, swipeable, keys);

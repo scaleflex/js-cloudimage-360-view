@@ -1,25 +1,21 @@
 import { AND_SYMBOL_REGEX, ORGINAL_SIZE_REGEX } from '../../../constants/regex';
 import { pad } from '../pad';
 
-export const prepareImagesFromFolder = (imagesSrc, srcConfig) => {
+export const prepareImagesFromFolder = (imagesSrc, srcConfig, loadOriginalImages) => {
   const { amount, indexZeroBase } = srcConfig || {};
 
-  const resultSrc = [];
-  const originalSrc = [];
-
-  [...new Array(amount)].forEach((_item, index) => {
+  return [...new Array(amount)].map((_item, index) => {
     const nextZeroFilledIndex = pad(index + 1, indexZeroBase);
-    const imageResultSrc = imagesSrc.replace('{index}', nextZeroFilledIndex);
-    const imageOriginalSrc = imageResultSrc
-      .replace(ORGINAL_SIZE_REGEX, '')
-      .replace(AND_SYMBOL_REGEX, '?');
+    const imageSrc = imagesSrc.replace('{index}', nextZeroFilledIndex);
 
-    resultSrc.push(imageResultSrc);
-    originalSrc.push(imageOriginalSrc);
+    if (loadOriginalImages) {
+      const imageOriginalSrc = imageSrc
+        .replace(ORGINAL_SIZE_REGEX, '')
+        .replace(AND_SYMBOL_REGEX, '?');
+
+      return imageOriginalSrc;
+    }
+
+    return imageSrc;
   });
-
-  return {
-    resultSrc,
-    originalSrc,
-  };
 };

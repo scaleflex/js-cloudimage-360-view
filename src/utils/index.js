@@ -3,6 +3,7 @@ export { isPropsChangeRequireReload } from './image-src/is-props-change-require-
 export { generateImagesPath } from './image-src/generate-images-path';
 export { preloadImages } from './load-images/preload-images';
 export { preloadOriginalImages } from './load-images/preload-original-images';
+export { initLazyload } from './load-images/lazyload/init-lazyload'
 
 export { contain } from './responsive/contain';
 export { getImageAspectRatio } from './responsive/get-image-aspect-ratio';

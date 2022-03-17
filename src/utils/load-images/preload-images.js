@@ -3,23 +3,21 @@ import { loadImagesRelativeToContainerSize } from './load-images-relative-to-con
 import { prepareImagesFromFolder } from './images-from-folder/prepare-images-from-folder';
 import { prepareImagesFromList } from './images-from-list/prepare-images-from-list';
 
-export const preloadImages = (srcConfig, imagesSrc, onImageLoadCallback) => {
+export const preloadImages = (srcConfig, imagesSrc, cb) => {
   const { imageList } = srcConfig || {};
-  let imagesSets = {};
+  let imagesSrcs = [];
 
   if (imageList) {
     try {
       const images = JSON.parse(imageList);
 
-      imagesSets = prepareImagesFromList(images, srcConfig);
+      imagesSrcs = prepareImagesFromList(images, srcConfig);
     } catch (error) {
       console.error(`Wrong format in image-list attribute: ${error.message}`);
     }
   } else {
-    imagesSets = prepareImagesFromFolder(imagesSrc, srcConfig);
+    imagesSrcs = prepareImagesFromFolder(imagesSrc, srcConfig);
   }
 
-  const { resultSrc } = imagesSets || {};
-
-  loadImagesRelativeToContainerSize(resultSrc, srcConfig, onImageLoadCallback);
+  loadImagesRelativeToContainerSize(imagesSrcs, cb);
 };
