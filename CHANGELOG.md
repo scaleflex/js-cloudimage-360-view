@@ -25,6 +25,11 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.11 - 2022-03-17
+### Fixed
+- canvas aspect ratio
+- initialization of lazyloading
+
 ## 2.7.10 - 2022-03-01
 ### Fixed
 - image quality in fullscreen
