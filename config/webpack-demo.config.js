@@ -5,7 +5,12 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
   filename: "./index.html"
 });
 module.exports = {
-  entry: path.join(__dirname, "../examples/src/index.js"),
+  entry: {
+    index: [
+      path.join(__dirname, "../examples/src/index.js"),
+      path.join(__dirname, "../examples/src/styles/main.css"),
+    ]
+  },
   output: {
     path: path.join(__dirname, "../examples/dist"),
     filename: "bundle[hash].js"

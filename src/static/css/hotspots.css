@@ -128,8 +128,14 @@
   margin: 0 auto;
 }
 
+.cloudimage-360-images-carousel {
+  background-color: #f5f4f4;
+  border-radius: 2px;
+}
+
 .cloudimage-360-images-carousel .cloudimage-360-carousel-image {
   display: none;
+  object-fit: contain;
   min-height: 187px;
   max-width: 100%;
   max-height: 100%;
