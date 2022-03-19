@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 2.7.12 - 2022-03-19
+### Changed
+- hotspots init method
+
 ## 2.7.11 - 2022-03-17
 ### Fixed
 - canvas aspect ratio

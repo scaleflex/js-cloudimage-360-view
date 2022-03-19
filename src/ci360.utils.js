@@ -80,5 +80,6 @@ export {
   get360ViewProps,
   setView360Icon,
   attr,
+  isTrue,
   debounce
 }

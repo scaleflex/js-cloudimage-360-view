@@ -35,7 +35,7 @@
   border: 1px solid #FFFFFF33;
   border-radius: 50%;
   box-sizing: border-box;
-  transition: opacity 800ms ease-in-out;
+  transition: opacity 300ms ease-in-out;
   cursor: auto;
 }
 
@@ -61,7 +61,7 @@
 .cloudimage-360-hotspot-custom-icon::after {
   content: '+';
   position: absolute;
-  width: 8px;
+  line-height: 20px;
   left: 50%;
   top: 100%;
   color: #FFF;
@@ -131,6 +131,8 @@
 .cloudimage-360-images-carousel .cloudimage-360-carousel-image {
   display: none;
   min-height: 187px;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .cloudimage-360-images-carousel .cloudimage-360-carousel-image.active-image {
@@ -194,10 +196,10 @@
   padding: 4px 8px;
   transition: background-color 200ms ease-in-out;
   border-radius: 2px;
+  text-decoration: none;
 }
 
 .cloudimage-360-modal-more-details:hover {
-  text-decoration: none;
   color: #76AD01;
   background-color: #e1f5d8;
 }

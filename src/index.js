@@ -2,9 +2,9 @@ import 'core-js/features/array/for-each';
 import 'core-js/features/array/filter';
 import 'core-js/features/array/includes';
 import CI360Viewer from './ci360.service';
-import { attr } from './ci360.utils';
+import { isTrue } from './ci360.utils';
 
-function setContainerId(container) {
+function getContainerWithId(container) {
   const containerId = container.id;
 
   if (!containerId) {
@@ -20,17 +20,15 @@ function setContainerId(container) {
 function init() {
   const viewers = [];
   const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
-  const hotspotsConfigs = window.CI360.hotspots|| {};
 
-  [].slice.call(view360Array).forEach(container => {
-    const containerWithId = setContainerId(container);
+  [].slice.call(view360Array).forEach(_container => {
+    const container = getContainerWithId(_container);
 
-    const hotspotInstanceName = attr(containerWithId, 'hotspot-instance') ||
-      attr(containerWithId, 'data-hotspot-instance');
+    const isHotspotsEnabled = isTrue(container, 'hotspots')
 
-    const hotspotConfig = hotspotsConfigs?.[hotspotInstanceName];
-
-    viewers.push(new CI360Viewer(containerWithId, false, hotspotConfig));
+    if (!isHotspotsEnabled) {
+      viewers.push(new CI360Viewer(container));
+    }
   })
 
   window.CI360._viewers = viewers;
@@ -80,12 +78,23 @@ function isNoViewers() {
   return !(window.CI360._viewers && window.CI360._viewers.length > 0);
 }
 
+function addHotspots(instanceId, config) {
+  const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
+  const container = Array.from(view360Array)
+    .find(view => view.id === instanceId);
+
+  if (container) {
+    window.CI360._viewers.push(new CI360Viewer(container, false, config))
+  }
+}
+
 window.CI360 = window.CI360 || {};
 window.CI360.init = init;
 window.CI360.destroy = destroy;
 window.CI360.getActiveIndexByID = getActiveIndexByID;
 window.CI360.update = update;
 window.CI360.add = add;
+window.CI360.addHotspots = addHotspots;
 
 if (!window.CI360.notInitOnLoad) {
   init();

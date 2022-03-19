@@ -47,9 +47,10 @@ import {
   removeChildFromParent,
   initLazyload,
   } from './utils';
+import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
   class CI360Viewer {
-  constructor(container, fullscreen, hotspotConfig) {
+  constructor(container, fullscreen, hotspotsConfigs) {
     this.container = container;
     this.movementStart = { x: 0, y: 0 };
     this.isStartSpin = false;
@@ -69,7 +70,7 @@ import {
     this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
     this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
     this.id = container.id;
-    this.hotspotConfig = hotspotConfig && generateHotspotsConfigs(hotspotConfig);
+    this.hotspotsConfigs = hotspotsConfigs && generateHotspotsConfigs(hotspotsConfigs);
     this.isMagnifyOpen = false;
     this.isDragged = false;
     this.startPointerZoom = false;
@@ -109,6 +110,10 @@ import {
     this.isClicked = true;
     this.isDragged = false;
 
+    if (this.hotspotsConfigs) {
+      togglePopupEvents(this.hotspotsConfigs, event, true);
+    }
+
     if (isMouseOnHotspotElement) {
       this.isClicked = false;
     }
@@ -123,6 +128,10 @@ import {
 
     if (this.bottomCircle && !this.mouseTracked) {
       this.show360ViewCircleIcon();
+    }
+
+    if (this.hotspotsConfigs) {
+      togglePopupEvents(this.hotspotsConfigs);
     }
 
     if (this.pointerZoom && !this.fullscreenView) {
@@ -225,7 +234,7 @@ import {
 
       const zoomSteps = generateZoomInSteps(this.pointerZoom);
 
-      if (this.hotspotConfig) {
+      if (this.hotspotsConfigs) {
         hideHotspotsIcons();
       }
 
@@ -794,13 +803,14 @@ import {
       if (this.mouseTracked) {
         this.updateImageScale(ctx);
       } else {
-        if (this.hotspotConfig && !this.autoplay) {
+        if (this.hotspotsConfigs && !this.autoplay) {
           updateHotspots(
             this.container,
-            this.hotspotConfig,
+            this.hotspotsConfigs,
             this.activeImageX,
             this.activeImageY,
-            this.movingDirection
+            this.movingDirection,
+            this.isClicked
           );
         }
 
@@ -883,10 +893,10 @@ import {
       this.addFullscreenIcon();
     }
 
-    if (this.hotspotConfig && !this.autoplay) {
+    if (this.hotspotsConfigs && !this.autoplay) {
       updateHotspots(
         this.container,
-        this.hotspotConfig,
+        this.hotspotsConfigs,
         this.activeImageX,
         this.activeImageY,
         this.movingDirection
@@ -921,6 +931,16 @@ import {
     }
 
     this.initControls();
+
+    if (this.hotspotsConfigs && !this.autoplay) {
+      updateHotspots(
+        this.container,
+        this.hotspotsConfigs,
+        this.activeImageX,
+        this.activeImageY,
+        this.movingDirection
+      );
+    }
   }
 
   magnify(event) {
@@ -972,7 +992,7 @@ import {
 
     const fullscreenContainer = createFullscreenModal(this.container);
 
-    new CI360Viewer(fullscreenContainer, true, this.hotspotConfig);
+    new CI360Viewer(fullscreenContainer, true, this.hotspotsConfigs);
   }
 
   setFullscreenEvents(_, event) {
@@ -1343,8 +1363,8 @@ import {
     this.canvas = createCanvas(this.innerBox);
     this.loader = createLoader(this.innerBox);
 
-    if (this.hotspotConfig && !this.fullscreenView) {
-      createHotspots(container, this.hotspotConfig);
+    if (this.hotspotsConfigs && !this.fullscreenView) {
+      createHotspots(container, this.hotspotsConfigs);
     }
 
     applyStylesToContainer(this.container);
