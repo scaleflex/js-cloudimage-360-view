@@ -152,13 +152,17 @@ body {
   color: #4d5c74;
 }
 
-.accessories-popup .cloudimage-360-modal-wrapper {
-  max-width: 222px;
-  text-align: center;
+.cloudimage-360-modal-more-details {
+  color: #fff7f4;
+  background-color: #db5e2e;
 }
 
-.air-intake-popup .cloudimage-360-modal-description,
-.car-cabin .cloudimage-360-modal-description{
+.cloudimage-360-modal-more-details:hover {
+  background-color: #a53e16;
+  color: #fff7f4;
+}
+
+.cloudimage-360-modal-description{
   font-size: 11px;
 }
 
@@ -169,13 +173,11 @@ body {
   font-weight: 700;
 }
 
-.car-cabin .cloudimage-360-carousel-dots,
-.accessories-popup .cloudimage-360-carousel-dots {
+.cloudimage-360-carousel-dots {
   column-gap: 6px;
 }
 
-.car-cabin .cloudimage-360-carousel-dot,
-.accessories-popup .cloudimage-360-carousel-dot {
+.cloudimage-360-carousel-dot {
   width: 6px;
   height: 6px;
 }
@@ -244,8 +246,7 @@ body {
 }
 
 .content-wrapper .customer-logos .force-logo {
-  width: 33.09px;
-  height: 33.09px;
+  width: 101.16px;
 }
 
 .gallery-section {

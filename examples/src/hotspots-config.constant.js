@@ -65,7 +65,7 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
       moreDetailsTitle: 'Download accessories brochure',
       moreDetailsUrl: 'https://www.forcegurkha.co.in/wp-content/themes/force-motors/assets/pdf/Force-Gurkha-accessories-E-brochure.pdf'
     },
-    popupProps: { popupSelector: 'accessories-popup', open: true},
+    popupProps: { popupSelector: 'accessories-popup'},
     initialDimensions: [ 1170, 662 ],
     hotspots: [
       { imageIndex: 11, xCoord: 683, yCoord: 151 },
