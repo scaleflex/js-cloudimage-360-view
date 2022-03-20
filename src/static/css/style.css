@@ -88,6 +88,8 @@
   width: 80%;
   height: auto;
   margin: auto;
+  pointer-events: none;
+  user-select: none;
   transition: 0.5s all;
   z-index: 2;
 }
