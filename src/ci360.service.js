@@ -789,6 +789,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       image = this.imagesY[this.activeImageY - 1];
     }
 
+    if (!image) return;
+
     const ctx = this.canvas.getContext("2d");
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
 
@@ -1183,8 +1185,10 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   remove360ViewIcon() {
     if (!this.view360Icon) return;
 
-    this.innerBox.removeChild(this.view360Icon);
-    this.view360Icon = null;
+    try {
+      this.innerBox.removeChild(this.view360Icon);
+      this.view360Icon = null;
+    } catch {}
   }
 
   initControls() {
