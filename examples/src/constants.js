@@ -30,7 +30,7 @@ const PLUGIN_PROPS = {
   "data-filename-x": { value: "{index}.jpg", isRequired: true },
   "data-amount-x": { value: 233, isRequired: true },
   "data-speed": { value: 100, isRequired: true },
-  "data-drag-speed": { value: 100, isRequired: true },
+  "data-drag-speed": { value: 120, isRequired: true },
   "data-autoplay": { isRequired: true }
 };
 const PROPERTIES_COLORS = {
