@@ -84,6 +84,8 @@ body {
   line-height: 58px;
   font-weight: 700;
   color: #203254;
+  text-align: center;
+  max-width: 971px;
 }
 
 .content-wrapper .content h1 span {
@@ -97,6 +99,7 @@ body {
   color: #4d5c74;
   margin-top: 8px;
   max-width: 775px;
+  text-align: center;
 }
 
 .content-wrapper .content .github-sandbox-buttons-wrapper {
@@ -320,7 +323,6 @@ body {
 .demo-usage {
   background-color: #f2f7fa;
   margin-top: 73px;
-  min-height: 1399px;
   padding: 60px 25px 91px 25px;
 }
 
@@ -349,7 +351,7 @@ body {
 
 .demo-usage .demo-usage-wrapper .demo-usage-content {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   margin-top: 32px;
   column-gap: 30px;
@@ -393,11 +395,16 @@ body {
   border-radius: 4px;
   padding: 32px 93.21px 32px 32px;
   white-space: nowrap;
-  overflow-x: scroll;
+  overflow: scroll;
+  max-height: 270px;
 }
 
-.demo-usage .output-code-wrapper::-webkit-scrollbar {
-  display: none;
+.demo-usage .demo-usage-wrapper .output-code-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.demo-usage .demo-usage-wrapper .output-code-wrapper::-webkit-scrollbar-thumb {
+  background: #dbdddf;
 }
 
 .demo-usage .output-code-wrapper .output-code {
@@ -409,6 +416,11 @@ body {
 
 .demo-usage .output-code-wrapper .code {
   padding-left: 10px;
+}
+
+.demo-usage .demo-usage-content .plugin-options-wrapper {
+  display: flex;
+  column-gap: 30px;
 }
 
 .demo-usage .demo-usage-content .image-source {
@@ -481,6 +493,17 @@ body {
   row-gap: 20.5px;
   padding-top: 28px;
   max-width: 270px;
+  max-height: 600px;
+  overflow-y: scroll;
+  min-width: fit-content;
+}
+
+.demo-usage-wrapper .demo-usage-content .customize::-webkit-scrollbar {
+  width: 8px;
+}
+
+.demo-usage-wrapper .demo-usage-content .customize::-webkit-scrollbar-thumb {
+  background: #dbdddf;
 }
 
 .demo-usage-wrapper .demo-usage-content .customize h3 {
@@ -881,7 +904,7 @@ body {
   opacity: 0;
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1224px) {
   .demo-usage .demo-usage-wrapper .demo-usage-content {
     display: grid;
     grid-template-columns: repeat(2, 0.5fr);
@@ -889,11 +912,32 @@ body {
     margin-top: 32px;
     column-gap: 30px;
     flex-wrap: wrap;
-    grid-template-rows: 388px;
+  }
+
+  .demo-usage .demo-usage-content .plugin-options-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    overflow-y: scroll;
+    min-width: fit-content;
+    max-height: 621px;
+  }
+
+  .demo-usage .demo-usage-content .plugin-options-wrapper::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .demo-usage .demo-usage-content .plugin-options-wrapper::-webkit-scrollbar-thumb {
+    background: #dbdddf;
   }
 
   .demo-usage-wrapper .demo-usage-content .customize {
+    margin-top: 0;
+    max-height: unset;
+    min-height: unset;
+    overflow-y: unset;
     grid-column: 2;
+    padding-top: 0;
   }
 }
 
@@ -915,16 +959,27 @@ body {
   }
 
   .demo-usage .demo-usage-content .image-source {
-    width: 80%;
+    width: 50%;
+    padding-top: 0;
   }
 
   .demo-usage .image-source .plugin-options {
     width: 100%;
   }
 
+  .demo-usage .demo-usage-content .plugin-options-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 80.2%;
+    margin-top: 30px;
+    overflow-y: unset;
+  }
+
   .demo-usage-wrapper .demo-usage-content .customize {
-    width: 80%;
+    width: 50%;
     max-width: unset;
+    max-height: 600px;
+    overflow-y: scroll;
   }
 
   .demo-usage-wrapper .customize .customize-selectors {
@@ -938,9 +993,97 @@ body {
   }
 }
 
+@media(max-width: 768px){
+  .content-wrapper .header {
+    display: flex;
+    padding: 23.5px 16px 0 16px;
+  }
+
+  .content-wrapper .content {
+    align-items: flex-start;
+  }
+
+  .content-wrapper .content h1 {
+    text-align: left;
+  }
+
+  .content-wrapper .content .content-text {
+    text-align: left;
+  }
+
+  .content-wrapper .content .customer-logos {
+    justify-content: space-between;
+  }
+
+  .content-wrapper .content {
+    padding: 0 16px;
+  }
+
+  .content-wrapper .content .car-image .content-text {
+    text-align: left;
+  }
+
+  .gallery-section {
+   padding: 0 16px;
+  }
+
+  .demo-usage {
+    padding: 60px 16px 91px 16px;
+  }
+
+  .demo-usage .usage-title {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .demo-usage .demo-usage-wrapper .earbuds {
+    width: 100%;
+  }
+
+  .content-wrapper .github-sandbox-buttons-wrapper .github-button {
+    padding: 8px 11.6px;
+  }
+
+  .content-wrapper .github-sandbox-buttons-wrapper .github-button a {
+    white-space: nowrap;
+  }
+
+  .demo-usage .demo-usage-content .image-source {
+    width: 100%;
+  }
+
+  .demo-usage-wrapper .demo-usage-content .customize {
+    width: 100%;
+    max-width: unset;
+  }
+
+  .demo-usage .demo-usage-content .plugin-options-wrapper {
+    width: 100%;
+  }
+
+  .questions {
+    padding: 60px 16px;
+    align-items: flex-start;
+  }
+
+  .questions .issue-button-wrapper {
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 650px) {
   .content-wrapper .header .navbar {
     display: none;
+  }
+
+  .demo-usage .demo-usage-content .plugin-options-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+  }
+
+  .demo-usage-wrapper .demo-usage-content .customize {
+    overflow-y: unset;
   }
 
   .footer {
@@ -971,6 +1114,11 @@ body {
   .content-wrapper .content h1 {
     font-size: 9.4vw;
     line-height: 11.3vw;
+    text-align: left;
+  }
+
+  .content-wrapper .content .content-text {
+    text-align: left;
   }
 
   .content-wrapper .header .header-logo {

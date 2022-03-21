@@ -18,6 +18,7 @@ const imageXSelector = document.getElementById("x-images-selector");
 const nikeXSelector = document.getElementById("nike-x-images");
 const copyText = document.getElementById("copy-text");
 const codeBlock = document.getElementById("code-block");
+const codeWrapper = document.getElementById("code-wrapper");
 const controlOption = document.getElementById("control-option");
 const autoPlayBehavior = document.getElementById("auto-play-behavior");
 let container = document.getElementById("demo-generator");
@@ -269,6 +270,7 @@ function updateCodeBlock() {
     }
 
     codeBlock.appendChild(propertyWrapper);
+    codeWrapper.scrollTop = codeWrapper.scrollHeight;
   });
 }
 
