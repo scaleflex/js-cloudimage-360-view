@@ -182,6 +182,10 @@ body {
   height: 6px;
 }
 
+.cloudimage-360-carousel-dot.active-dot {
+  background-color: #db5e2e;
+}
+
 .content-wrapper .content .customer-logos {
   width: 100%;
   display: grid;
