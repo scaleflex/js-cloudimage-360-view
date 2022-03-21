@@ -798,7 +798,7 @@ body {
   margin-left: 0.375em;
 }
 
-.footer .navbar .git-hub {
+.footer .navbar .github {
   border: 1px solid #5d6d7e;
   border-radius: 4px;
   display: flex;
@@ -814,7 +814,7 @@ body {
   height: 41px;
 }
 
-.footer .navbar .git-hub img {
+.footer .navbar .github img {
   width: 14.53px;
   height: 16px;
   margin-right: 4px;
