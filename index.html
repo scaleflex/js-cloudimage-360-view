@@ -1,582 +1,809 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="images work in 360 dimensions with several options" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="https://cdn.jolipage.co/5c1376c5-e4cd-4250-b760-4c810d7f5fdd/fdf058fa-5faf-4c83-bffa-4faa42b6d252/dc8ef1f26116405e2b275c5020ad8ce1ac071f86bf2134f143c23e692e396f76.png?vh=3632c0">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Rubik:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>JS-Cloudimage-360-view</title>
+  <link href="main.css" rel="stylesheet"></head>
 
-  .on-load {
-      overflow: hidden;
-  }
-  
-  .spinner-grow {
-    color: #343a40 !important;
-    display: inline-block;
-    vertical-align: text-bottom;
-    background-color: currentColor;
-    border-radius: 50%;
-    opacity: 0;
-    -webkit-animation: spinner-grow .75s linear infinite;
-    animation: spinner-grow .75s linear infinite;
-    width: 100px;
-    height: 100px;
-    z-index: 1;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -50px;
-  }
-
-  .github-button {
-    color: transparent;
-  }
-  </style>
-  <style>
-    .cloudimage-360 .cloudimage-360-prev, .cloudimage-360 .cloudimage-360-next {
-      padding: 8px;
-      background: rgb(244, 244, 244);
-      border: none;
-      border-radius: 4px;
-    }
-
-    .cloudimage-360 .cloudimage-360-prev:focus, .cloudimage-360 .cloudimage-360-next:focus {
-      outline: none;
-    }
-
-    .cloudimage-360 .cloudimage-360-prev {
-      display: none;
-      position: absolute;
-      z-index: 100;
-      top: calc(50% - 15px);
-      left: 20px;
-    }
-
-    .cloudimage-360 .cloudimage-360-next {
-      display: none;
-      position: absolute;
-      z-index: 100;
-      top: calc(50% - 15px);
-      right: 20px;
-    }
-
-    .cloudimage-360 .cloudimage-360-prev:before, .cloudimage-360 .cloudimage-360-next:before {
-      content: '';
-      display: block;
-      width: 30px;
-      height: 30px;
-      background: 50% 50% / cover no-repeat;
-    }
-
-    .cloudimage-360 .cloudimage-360-prev:before {
-      background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
-    }
-
-    .cloudimage-360 .cloudimage-360-next:before {
-      background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
-    }
-
-    .cloudimage-360 .cloudimage-360-prev.not-active, .cloudimage-360 .cloudimage-360-next.not-active {
-      opacity: 0.4;
-      cursor: default;
-    }
-  </style>
-  <title>JS-cloudimage-360-view</title>
-</head>
-<body class="on-load">
-<div id="spinner" class="spinner-grow text-dark" role="status"></div>
-
-<div id="main" class="wrapper" style="visibility: hidden;overflow: hidden;">
-  <section class="home">
-    <div class="container">
-      <a class="logo" href="https://scaleflex.github.io/js-cloudimage-360-view/">js-cloudimage-360-view</a>
-      <div style="margin-top: 10px;">
-        <a class="github-button" target="_blank"
-           href="https://github.com/Scaleflex/js-cloudimage-360-view/subscription" data-icon="octicon-eye"
-           aria-label="Watch Scaleflex/js-cloudimage-360-view on GitHub">Watch</a>
-        <a class="github-button" target="_blank" href="https://github.com/Scaleflex/js-cloudimage-360-view"
-           data-show-count="true" data-icon="octicon-star" aria-label="Star Scaleflex/js-cloudimage-360-view on GitHub"
-        >Star</a>
-        <a class="github-button" target="_blank" href="https://github.com/Scaleflex/js-cloudimage-360-view/fork"
-           data-icon="octicon-repo-forked" aria-label="Fork Scaleflex/js-cloudimage-360-view on GitHub">Fork</a>
-        <a class="twitter-share-button btn btn-info" target="_blank"
-           href="https://twitter.com/intent/tweet?text=Engage%20your%20customers%20with%20a%20stunning%20360%20viewvof%20your%20products&url=https://scaleflex.github.io/js-cloudimage-360-view/&via=cloudimage&hashtags=images,cloudimage">
-          <i> </i>
-          <span>Tweet</span>
-        </a>
-        <!--<a class="github-button" href="https://github.com/Scaleflex/filerobot-uploader/archive/master.zip" data-icon="octicon-cloud-download" aria-label="Download Scaleflex/filerobot-uploader on GitHub">Download</a>-->
-      </div>
-      <h1>Show every detail from any angle</h1>
-      <h2>Engage your customers with a stunning <strong>360 view of your products</strong></h2>
-
-
-      <div class="actions-wrapper">
-        <a
-           id="view-github-btn"
-           href="https://github.com/scaleflex/js-cloudimage-360-view"
-           class="btn btn-primary"
-           target="_blank"
-        >View on GitHub</a>
-        <a
-           href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"
-           class="btn btn-light"
-           target="_blank"
-        >Edit on CodeSandbox</a>
-        <!--<a href="#" class="btn btn-light btn-lg">Read on Medium</a>-->
-      </div>
-    </div>
-
-    <a href="https://github.com/scaleflex/js-cloudimage-360-view" target="_blank">
-      <img
-         class="fork-me-on-github"
-         src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
-         alt="Fork me on GitHub">
-    </a>
-
-    <a href="https://www.filerobot.com/" class="robot-icon">
-      <img style="width:100%;" id="robot-icon"
-           src="https://demo.cloudimg.io/v7/https://cdn.scaleflex.it/filerobot/assets/robot-icon-left.png"
-           alt="">
-    </a>
-  </section>
-
-  <section class="main-360-spin">
-    <div
-       id="mercedes-360-view"
-       class="cloudimage-360"
-       data-folder="https://cdn.scaleflex.it/demo/360-car/"
-       data-filename="iris-{index}.jpeg"
-       data-amount="36"
-       data-bottom-circle
-       data-bottom-circle-offset="5"
-       data-keys
-       data-autoplay
-       data-magnifier="3"
-       data-box-shadow="inset 0 0 100px #222"
-       data-ratio="0.365"
-       data-responsive="scaleflex"
-       data-spin-reverse
-    ></div>
-    <p class="view-360-capture">36 images, autoplay (desktop only), bottom 360 view circle, arrow keys support (desktop
-      only), magnifier (desktop only), inner box shadow</p>
-  </section>
-
-  <section class="container ready-to-start">
-    <h2 class="text-center">More examples</h2>
-
-    <p>A simple, interactive resource that can be used to provide a virtual tour of your product.</p>
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-md-6">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-72/"
-             data-filename="chair_{index}.jpg"
-             data-amount="72"
-             data-speed="50"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">72 images</p>
-      </div>
-      <div class="col-md-6">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-magnifier="3"
-             data-ratio="1"
-             data-full-screen
-             data-responsive="scaleflex"
-             data-magnify-icon-selector="magnify-glass-icon"
-             data-fullscreen-icon-selector="fullscreen-modified-icon"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, customize icons</p>
-      </div>
-    </div>
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-md-6">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-ratio="1"
-             data-full-screen
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, full screen</p>
-      </div>
-      <div class="col-md-6">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-magnifier="3"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, magnifier (desktop only)</p>
-      </div>
-    </div>
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-ratio="1"
-             data-responsive="scaleflex"
-             data-pointer-zoom
-             data-zoom-factor="2"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, wheel zoom, pinch zoom </p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-box-shadow="inset 0 0 100px #222"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, box-shadow</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-ratio="1"
-             data-to-start-pointer-zoom="scroll"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, scroll to start zoom</p>
-      </div>
-    </div>
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          >
-            <button class="cloudimage-360-prev"></button>
-            <button class="cloudimage-360-next"></button>
-          </div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, controls</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-ratio="1"
-             data-responsive="scaleflex"
-             data-stop-at-edges
-          >
-            <button class="cloudimage-360-prev"></button>
-            <button class="cloudimage-360-next"></button>
-          </div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, controls, stop at edges</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-ratio="1"
-             data-responsive="scaleflex"
-             disable-drag
-          >
-            <button class="cloudimage-360-prev"></button>
-            <button class="cloudimage-360-next"></button>
-          </div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, controls, disable drag</p>
-      </div>
-    </div>
-
-    <div class="row no-mobile" style="margin-top: 40px;">
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-72/"
-             data-filename="chair_{index}.jpg"
-             data-amount="72"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-autoplay
-             data-speed="150"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">72 images, bottom 360 view circle, autoplay</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-autoplay
-             data-play-once
-             data-speed="150"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, autoplay , play once</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-autoplay
-             data-autoplay-reverse
-             data-speed="150"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, autoplay reverse</p>
-      </div>
-    </div>
-    <div class="row no-mobile" style="margin-top: 40px;">
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-72/"
-             data-filename="chair_{index}.jpg"
-             data-amount="72"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-autoplay
-             data-playOnce
-             data-speed="150"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">72 images, bottom 360 view circle, autoplay, autoplay once</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-image-offset="8"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-autoplay
-             data-speed="150"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, offset 10 images</p>
-      </div>
-      <div class="col-md-4">
-        <div style="max-width: 1000px;">
-          <div
-             class="cloudimage-360"
-             data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-             data-filename="chair_{index}.jpg"
-             data-amount="36"
-             data-bottom-circle
-             data-bottom-circle-offset="2"
-             data-autoplay
-             data-playOnce
-             data-autoplay-reverse
-             data-speed="150"
-             data-ratio="1"
-             data-responsive="scaleflex"
-          ></div>
-        </div>
-        <p class="view-360-capture">36 images, bottom 360 view circle, autoplay, autoplay reverse, autoplay once</p>
-      </div>
-    </div>
-  </section>
-  <section class="container ready-to-start">
-    <h2 class="text-center">View cloudimage-360 inside a modal</h2>
-    <button id="show-modal-btn">Show Modal</button>
-    <div id="cloudimage-modal-overlay"></div>
-    <div id="cloudimage-modal">
-      <div style="width: 600px; height: 600px;">
-        <div
-          class="cloudimage-360"
-          data-folder="https://cdn.scaleflex.it/demo/chair-360-36/"
-          data-filename="chair_{index}.jpg"
-          data-amount="36"
-          data-ratio="1"
-          data-full-screen
-          data-responsive="scaleflex"
-        ></div>
-      </div>
-    </div>
-  </section>
-  <section class="container ready-to-start">
-    <h2 class="text-center">Ready to get started?</h2>
-  </section>
-
-  <section class="container">
-    <div id="js-version-box" class="">
-      <div class="action-wrapper first-action">
-        <p>Include the following script into your project after all content in body tag</p>
-        <figure class="highlight">
-        <pre><code class="javascript">
-&lt;script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.1/js-cloudimage-360-view.min.js"&gt;&lt;/script&gt;
-</code></pre>
-        </figure>
-      </div>
-
-      <div class="action-wrapper second-action">
-        <p>
-          Configure 360 view component with class="cloudimage-360", folder path, filename, and amount of images
-        </p>
-        <figure class="highlight">
-        <pre><code class="javascript">&lt;div
-   class="cloudimage-360"
-   data-folder="https://cdn.scaleflex.it/demo/360-car/"
-   data-filename="iris-{index}.jpeg"
-   data-amount="36"
-&gt;&lt;/div&gt;</code></pre>
-        </figure>
-      </div>
-
-      <div class="action-wrapper third-action">
-        <p>
-          …and you're done!
-          <a href="https://github.com/scaleflex/js-cloudimage-360-view#table-of-contents" target="_blank">
-            Visit the full documentation here.
+  <body>
+    <section class="content-wrapper">
+      <header class="header">
+        <div class="header-logo">
+          <a href="https://www.scaleflex.com/en/home" target="_blank">
+            <img src="https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/scaleflex-logo.svg" alt="scaleflex logo" />
           </a>
+          <a
+          class="cloud-img-title"
+          href="https://github.com/Scaleflex/js-cloudimage-360-view"
+          target="_blank"
+          >
+            JS Cloudimage 360 view
+          </a>
+        </div>
+        <div class="navbar">
+          <a
+            class="stars-button"
+            href="https://github.com/scaleflex/js-cloudimage-360-view/stargazers"
+            target="_blank"
+          >
+            <img class="github-icons" src="https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/star-icon.svg" alt="star" />
+            <img
+              src="https://img.shields.io/github/stars/scaleflex/js-cloudimage-360-view?color=%23F1F8FF&logo=none&style=social"
+              alt="star-img"
+            />
+          </a>
+          <a
+            class="git-button"
+            href="https://github.com/Scaleflex/js-cloudimage-360-view"
+            target="_blank"
+          >
+            <img
+              class="github-icons"
+              src="https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/github-icon.svg"
+              alt="github-icon"
+            />
+            GutHub
+          </a>
+        </div>
+      </header>
+
+      <div class="content">
+        <h1>Show <span>every detail</span> from any angle</h1>
+        <h2 class="content-text">
+          Engage your customers with a stunning 360 view of your products.
+        </h2>
+        <div class="github-sandbox-buttons-wrapper">
+            <a
+              class="github-button transition-filled-button"
+              href="https://github.com/Scaleflex/js-cloudimage-360-view"
+              target="_blank"
+            >
+              View on GitHub
+            </a>
+            <a
+            class="code-sand-box-button"
+            href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"
+            target="_blank"
+            >
+              Edit to CodeSandbox
+            </a>
+        </div>
+        <div class="car-image container-fluid">
+          <div
+            class="cloudimage-360"
+            id="gurkha-suv"
+            data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+            data-filename-x="orange-{index}.jpg"
+            data-amount-x="73"
+            data-lazyload
+            data-autoplay
+            data-play-once
+            data-hide-360-logo
+            data-speed="120"
+            data-lazy-selector="lazyload"
+            data-hotspots
+            data-responsive="scaleflex"
+          ></div>
+          <p class="content-text">
+            36 images, autoplay (desktop only), bottom 360 view circle, arrow
+            keys support (desktop only), magnifier (desktop only), inner box
+            shadow
+          </p>
+          <div class="cyan-blur-circle hide-in-mobile"></div>
+          <div class="blue-blur-circle hide-in-mobile"></div>
+        </div>
+        <div class="customer-logos container-fluid">
+          <img class="vivo-logo" src="https://scaleflex.cloudimg.io/v7/demo/company-logos/Vivo.png?vh=f930bb" alt="vivo logo" />
+          <img class="jawa-logo" src="https://scaleflex.cloudimg.io/v7/demo/company-logos/Vector+%281%29.png?vh=b9e7a3" alt="jawa logo" />
+          <img
+            class="sennheiser-logo"
+            src="https://scaleflex.cloudimg.io/v7/demo/company-logos/Sennheiser.png?vh=d6e9e7"
+            alt="Sennheiser logo"
+          />
+          <img
+            class="geelly-logo"
+            src="https://scaleflex.cloudimg.io/v7/demo/company-logos/Geelly.png?vh=1bd4d0"
+            alt="Geelly logo"
+          />
+          <img
+            class="yamaha-logo"
+            src="https://scaleflex.cloudimg.io/v7/demo/company-logos/Yamaha.png?vh=be161d"
+            alt="yamaha logo"
+          />
+          <div class="force-logo-wrapper">
+            <img
+              class="force-logo"
+              src="https://scaleflex.cloudimg.io/v7/demo/company-logos/Force.png?vh=afc507"
+              alt="force logo"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-section container-fluid">
+      <div class="gallery-title">
+        <h2>Gallery</h2>
+        <p>Who use our plugin.</p>
+      </div>
+      <div class="gallery-content container-fluid">
+        <div class="motorcycle">
+          <div
+            class="cloudimage-360"
+            data-folder="https://scaleflex.cloudimg.io/v7/demo/jawa-motorcycle/"
+            data-filename-x="{index}.jpg"
+            data-amount-x="16"
+            data-lazyload
+            data-lazy-selector="lazyload"
+            data-responsive="scaleflex"
+          ></div>
+          <p>Toyota</p>
+        </div>
+        <div class="vivo-mobile">
+          <div
+            class="cloudimage-360"
+            data-folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+            data-filename-x="product-{index}.jpg"
+            data-amount-x="60"
+            data-lazyload
+            data-lazy-selector="lazyload"
+            data-responsive="scaleflex"
+          ></div>
+          <p>Vivo</p>
+        </div>
+        <div class="geely-car">
+          <div
+            class="cloudimage-360"
+            data-folder="https://scaleflex.cloudimg.io/v7/demo/geely-car/"
+            data-filename-x="Okavango-3-{index}.jpg"
+            data-amount-x="24"
+            data-bottom-circle
+            data-lazyload
+            data-lazy-selector="lazyload"
+            data-responsive="scaleflex"
+          ></div>
+          <p>Geely</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo-usage">
+      <div class="usage-title">
+        <h2>Try it out</h2>
+        <p>
+          A simple, interactive resource that can be used to provide a virtual
+          tour of your product.
         </p>
       </div>
-    </div>
-  </section>
 
-  <section style="text-align: center;">
-    <div class="container ready-to-start">
+      <div class="demo-usage-wrapper container-fluid">
+        <div class="demo-usage-content">
+          <div class="earbuds">
+            <div
+              id="demo-generator"
+              class="cloudimage-360"
+              data-folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
+              data-filename-x="{index}.jpg"
+              data-amount-x="233"
+              data-autoplay
+              data-speed="100"
+              data-drag-speed="100"
+              data-responsive="scaleflex"
+              data-lazyload
+              data-lazy-selector="lazyload"
+            >
+              <button class="cloudimage-360-left control-buttons"></button>
+              <button class="cloudimage-360-right control-buttons"></button>
+              <button
+                id="control-up-button"
+                class="cloudimage-360-top control-buttons"
+              ></button>
+              <button
+                id="control-down-button"
+                class="cloudimage-360-bottom control-buttons"
+              ></button>
+            </div>
+            <div class="copy-button-wrapper">
+              <div class="copy-button">
+                <img src="https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/copy-icon.svg" alt="copy icon">
+                <p id="copy-text">Copy</p>
+              </div>
+            </div>
+            <div class="output-code-wrapper" id="code-wrapper">
+              <div class="output-code">
+                &lt;div
+                <div class="code" id="code-block"></div>
+                >&lt;/div&gt;
+              </div>
+            </div>
+          </div>
+        <div class="plugin-options-wrapper">
+          <div class="image-source">
+            <div class="image-source-options">
+              <h3>Images source</h3>
+              <select
+                class="plugin-options plugin-selector"
+                id="spin-directions"
+              >
+                <option value="X">spin x demo</option>
+                <option value="Y">spin y demo</option>
+              </select>
+            </div>
+            <div class="image-name-option">
+              <p class="input-title">Images name x</p>
+              <input
+                class="plugin-options"
+                type="text"
+                placeholder="airbuds_{index}.jpg"
+                disabled
+              />
+            </div>
+            <div class="x-amount-option">
+              <p class="input-title">Select amount-x</p>
+              <select
+                class="plugin-options plugin-selector"
+                data-plugin-value="data-amount-x"
+                plugin-input
+                id="x-images-selector"
+              >
+                <option value="233">233</option>
+                <option value="72">72</option>
+                <option value="36">36</option>
+              </select>
+              <select
+                class="plugin-options plugin-selector"
+                data-plugin-value="data-amount-x"
+                plugin-input
+                id="nike-x-images"
+              >
+                <option value="35">35 images</option>
+                <option value="25">25 images</option>
+                <option value="15">15 images</option>
+              </select>
+            </div>
+            <div id="images-y" class="y-amount-option">
+              <p class="input-title">Select amount-y</p>
+              <select
+                class="plugin-options plugin-selector"
+                data-plugin-value="data-amount-y"
+                plugin-input
+              >
+                <option value="36">36 images</option>
+              </select>
+            </div>
+          </div>
+          <div class="customize">
+            <h3>Customize</h3>
+            <div class="customize">
+              <div class="customize-options">
+                <div class="pointer-checkbox">
+                  <label class="checkbox-container">
+                    Pointer zoom
+                    <input
+                      class="customize-inputs"
+                      data-plugin-value="data-pointer-zoom"
+                      data-checkbox="pointer-checkbox"
+                      type="checkbox"
+                      id="pointer-checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="customize-selectors-wrappers">
+                  <p class="selectors-wrappers-text">zoom scale</p>
+                  <select
+                    class="customize-selectors plugin-selector"
+                    data-input="pointer-checkbox"
+                    data-plugin-value="data-pointer-zoom"
+                    id="pointer-selector"
+                    plugin-input
+                    disabled
+                  >
+                    <option value="1.5">1.5</option>
+                    <option value="2">2</option>
+                    <option value="2.5">2.5</option>
+                    <option value="3.5">3.5</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+              </div>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Auto play behavior</p>
+                <select
+                  class="customize-selectors plugin-selector"
+                  id="auto-play-behavior"
+                  data-plugin-value="data-autoplay-behavior"
+                  plugin-input
+                  disabled
+                >
+                  <option value="spin-xy">spin-xy</option>
+                  <option value="spin-x">spin-x</option>
+                  <option value="spin-y">spin-y</option>
+                  <option value="spin-yx">spin-yx</option>
+                </select>
+              </div>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Auto play speed(milliseconds)</p>
+                <input
+                  id="spin-speed"
+                  class="customize-selectors"
+                  data-plugin-value="data-speed"
+                  plugin-input
+                  type="number"
+                  value="100"
+                  placeholder="e.g. 100"
+                />
+              </div>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Drag speed(milliseconds)</p>
+                <input
+                  id="drag-speed"
+                  class="customize-selectors"
+                  data-plugin-value="data-drag-speed"
+                  plugin-input
+                  type="number"
+                  value="120"
+                  placeholder="e.g. 120"
+                />
+              </div>
+              <div class="checkbox-group">
+                <div>
+                  <label class="checkbox-container">
+                    Magnifier
+                    <input
+                      id="image-magnifier"
+                      class="customize-inputs plugin-option"
+                      data-plugin-value="data-magnifier"
+                      value="2"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Auto play
+                    <input
+                      data-plugin-value="data-autoplay"
+                      class="plugin-option"
+                      type="checkbox"
+                      checked
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Auto play once
+                    <input
+                      data-plugin-value="data-play-once"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Auto play reverse
+                    <input
+                      data-plugin-value="data-autoplay-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Fullscreen
+                    <input
+                      data-plugin-value="data-fullscreen"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Disable drag
+                    <input
+                      data-plugin-value="disable-drag"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Drag reverse
+                    <input
+                      data-plugin-value="data-spin-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Hide 360 logo
+                    <input
+                      data-plugin-value="hide-360-logo"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control
+                    <input
+                      id="control-option"
+                      class="plugin-option"
+                      type="checkbox"
+                      data-plugin-value="data-control"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control reverse
+                    <input
+                      data-plugin-value="control-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control by keyboard
+                    <input
+                      data-plugin-value="data-keys"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control by keyboard reverse
+                    <input
+                      data-plugin-value="data-control-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Stop at edges
+                    <input
+                      data-plugin-value="stop-at-edges"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Bottom circle
+                    <input
+                      data-plugin-value="data-bottom-circle"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="customize-options">
+                <div class="box-shadow-checkbox">
+                  <label class="checkbox-container">
+                    Box shadow
+                    <input
+                      class="customize-inputs"
+                      id="box-shadow"
+                      data-plugin-value="box-shadow"
+                      data-checkbox="box-shadow"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="customize-selectors-wrappers">
+                  <p class="selectors-wrappers-text">Box Shadow</p>
+                  <input
+                    class="customize-selectors"
+                    disabled
+                    data-input="box-shadow"
+                    data-plugin-value="box-shadow"
+                    box-shadow-option
+                    plugin-input
+                    value="inset 0 0 100px #222"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="customize-options">
+                <div class="respons-checkbox">
+                  <label class="checkbox-container">
+                    Responsive
+                    <input class="customize-inputs"
+                    id="responsive-checkbox"
+                    data-plugin-value="data-responsive"
+                    type="checkbox" />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="customize-selectors-wrappers">
+                  <p class="selectors-wrappers-text">Token</p>
+                  <input
+                    class="customize-selectors"
+                    value="scaleflex"
+                    responsive-option
+                    data-plugin-value="data-responsive"
+                    plugin-input
+                    disabled
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Transformation</p>
+                <input
+                  class="customize-selectors plugin-option"
+                  data-plugin-value="data-transformation"
+                  responsive-option
+                  plugin-input
+                  value="w=400&h=200&func=fit"
+                  type="text"
+                  disabled
+                />
+              </div>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Filter</p>
+                <input
+                  class="customize-selectors plugin-option"
+                  data-plugin-value="data-filters"
+                  responsive-option
+                  plugin-input
+                  value="bright:15,contrast:30"
+                  type="text"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="questions">
       <h2>Any questions?</h2>
       <p>
-        Contact us at <a href="mailto:hello@cloudimage.io">hello@cloudimage.io</a>, our experts will be happy to help!
+        Contact us at <span>hello@filerobot.com</span>, our experts will be
+        happy to help!
       </p>
-    </div>
-  </section>
+      <div class="issue-button-wrapper">
+        <a
+          class="issue-button transition-filled-button"
+          href="https://github.com/scaleflex/js-cloudimage-360-view/issues/new"
+          target="_blank"
+        >
+          Submit GitHub issue
+        </a>
+      </div>
+      <div class="cyan-blur-circle hide-in-mobile"></div>
+      <div class="green-blur-circle hide-in-mobile"></div>
+    </section>
 
-  <footer>
-    <div style="background: #fff">
-      <section class="container ready-to-start filerobot-ui-family">
-        <div class="row">
-          <div class="col-sm-3 filerobot-ui-family-label" style="max-width: 200px; min-width: 200px;">
-            <h5>Filerobot UI family:</h5>
+    <section class="footer container-fluid">
+      <div class="accordion-wrapper">
+        <div>
+          <div class="filerobot-accordion">
+            <button data-accordion="2">Info</button>
+            <img
+              data-accordion="2"
+              src="https://scaleflex.cloudimg.io/v7/assets/cloudimage-responsive-assets/down-arrow-icon.png"
+              alt="down-arrow"
+            />
           </div>
-          <div class="col-sm-9 filerobot-ui-family-libs" style="max-width: calc(100% - 200px);">
-            <ul>
-              <li><a target="_blank" href="https://github.com/scaleflex/react-cloudimage-responsive">JS Cloudimage
-                Responsive</a></li>
-              <li><a target="_blank" href="https://github.com/scaleflex/react-cloudimage-responsive">React Cloudimage
-                Responsive</a></li>
-              <li><a target="_blank" href="https://github.com/scaleflex/ng-cloudimage-responsive">Angular Cloudimage
-                Responsive</a></li>
-              <li><a target="_blank" href="https://github.com/scaleflex/filerobot-uploader">Uploader</a></li>
-              <li><a target="_blank" href="https://github.com/scaleflex/filerobot-image-editor">Image Editor</a></li>
-            </ul>
+          <div class="accordion-content" data-accordion-content="2">
+            <div class="footer-info-content">
+              <a
+                href="https://github.com/scaleflex/js-cloudimage-360-view"
+                target="_blank"
+              >
+                View GitHub
+              </a>
+              <a
+                href="https://github.com/scaleflex/js-cloudimage-360-view/issues/"
+                target="_blank"
+              >
+                Current Issues
+              </a>
+              <a
+                href="https://github.com/scaleflex/js-cloudimage-360-view#table_of_contents"
+                target="_blank"
+              >
+                Documentation
+              </a>
+            </div>
           </div>
         </div>
-      </section>
-    </div>
-    <hr/>
-    <div class="copyright">
-      <div class="container">
-        <div class="row">
-          <div class="team-desc col-sm-8">
-            <div>Made with ❤ in 2019 in Paris, Munich and Sofia by the Scaleflex team, the guys behind <a
-               href="https://www.cloudimage.io/en/home" target="_blank">Cloudimage.io</a>.
-            </div>
-            <div style="margin-top: 10px;">Powered by <a href="https://www.scaleflex.it/en/home" target="_blank">Scaleflex
-              team</a>.
-              All rights reserved.
-            </div>
+        <div>
+          <div class="filerobot-accordion">
+            <button data-accordion="1">Filerobot</button>
+            <img
+              data-accordion="1"
+              src="https://scaleflex.cloudimg.io/v7/assets/cloudimage-responsive-assets/down-arrow-icon.png"
+              alt="down-arrow"
+            />
           </div>
-          <div class="footer-menu col-sm-4">
-            <ul>
-              <li><a href="https://github.com/scaleflex/js-cloudimage-360-view" target="_blank">View GitHub</a></li>
-              <li><a href="https://github.com/scaleflex/js-cloudimage-360-view/issues" target="_blank">Current
-                Issues</a>
-              </li>
-              <li><a href="https://github.com/scaleflex/js-cloudimage-360-view#table-of-contents" target="_blank">Documentation</a>
-              </li>
-            </ul>
+          <div class="accordion-content" data-accordion-content="1">
+            <div class="footer-filerobot-content">
+              <a
+                href="https://scaleflex.cloudimg.io/v7/plugins/filerobot-widget/demo/index.html?vh=d6c246&func=proxy&fmaw_path=/"
+                target="_blank"
+              >
+                Filerobot Media Asset Widget
+              </a>
+              <a
+                href="https://scaleflex.github.io/filerobot-image-editor/"
+                target="_blank"
+              >
+              Filerobot Image Editor
+            </a>
+              <a
+                href="https://scaleflex.github.io/react-cloudimage-responsive/"
+                target="_blank"
+              >
+                React Cloudimage Responsive
+              </a>
+              <a
+                href="https://scaleflex.github.io/js-cloudimage-responsive/"
+                target="_blank"
+              >
+                JS Cloudimage Responsive
+              </a>
+              <a
+                href="https://scaleflex.github.io/js-cloudimage-360-view/"
+                target="_blank"
+              >
+                JS Cloudimage 360 view
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </footer>
-
-</div>
-<script type="text/javascript" src="bundle2a172da10a7bfe58644c.js"></script></body>
+      <div class="navbar">
+        <a
+          class="stars"
+          href="https://github.com/scaleflex/js-cloudimage-360-view/stargazers"
+          target="_blank"
+        >
+          <img class="star" src="https://scaleflex.cloudimg.io/v7/assets/cloudimage-responsive-assets/star-icon.svg" alt="star" />
+          <img
+            class="stars-label"
+            src="https://img.shields.io/github/stars/scaleflex/js-cloudimage-360-view?logo=none&style=social"
+            alt="star-img"
+          />
+        </a>
+        <a
+          class="github"
+          href="https://github.com/scaleflex/js-cloudimage-360-view"
+          target="_blank"
+        >
+          <img
+            src="https://scaleflex.cloudimg.io/v7/assets/cloudimage-responsive-assets/github-icon.svg"
+            alt="github-icon"
+          />
+          <p>GitHub</p>
+        </a>
+      </div>
+      <div class="footer-logo">
+        <a href="https://www.scaleflex.com/en/home" target="_blank">
+          <img src="https://scaleflex.cloudimg.io/v7/assets/cloudimage-responsive-assets/scaleflex-logo.svg" alt="scaleflex-logo" />
+        </a>
+        <p>
+          Made with ❤ by the
+          <span>
+            <a href=" https://scaleflex.com/en/home" target="_blank">Scaleflex</a>
+          </span>
+          team, the guys behind
+          <span>
+            <a href=" https://cloudimage.io/en/home" target="_blank"
+              >Cloudimage.io</a></span>. Powered by
+          <span>
+            <a href="https://filerobot.com/en/home" target="_blank">Filerobot</a></span>. All rights reserved.
+        </p>
+        <div class="footer-blur-circle"></div>
+      </div>
+      <div class="footer-wrapper">
+        <div class="footer-info">
+          <h4>Info</h4>
+          <div class="footer-info-content">
+            <a
+              href="https://github.com/scaleflex/js-cloudimage-360-view"
+              target="_blank"
+            >
+              View GitHub
+            </a>
+            <a
+              href="https://github.com/scaleflex/js-cloudimage-360-view/issues/"
+              target="_blank"
+            >
+              Current Issues
+            </a>
+            <a
+              href="https://github.com/scaleflex/js-cloudimage-360-view#table_of_contents"
+              target="_blank"
+            >
+              Documentation
+            </a>
+          </div>
+        </div>
+        <div class="footer-filerobot">
+          <h4>Filerobot UI Family</h4>
+          <div class="footer-filerobot-content">
+            <a
+              href="https://scaleflex.cloudimg.io/v7/plugins/filerobot-widget/demo/index.html?vh=d6c246&func=proxy&fmaw_path=/"
+              target="_blank"
+            >
+              Filerobot Media Asset Widget
+            </a>
+            <a
+              href="https://scaleflex.github.io/filerobot-image-editor/"
+              target="_blank"
+            >
+              Filerobot Image Editor
+            </a>
+            <a
+              href="https://scaleflex.github.io/react-cloudimage-responsive/"
+              target="_blank"
+            >
+              React Cloudimage Responsive
+            </a>
+            <a
+              href="https://scaleflex.github.io/js-cloudimage-responsive/"
+              target="_blank"
+            >
+              JS Cloudimage Responsive
+            </a>
+            <a
+              href="https://scaleflex.github.io/js-cloudimage-360-view"
+              target="_blank"
+            >
+              JS Cloudimage 360 view
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js"></script>
+  <script type="text/javascript" src="bundled044da22f294a8f27c5e.js"></script></body>
 </html>
