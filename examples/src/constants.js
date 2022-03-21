@@ -8,6 +8,7 @@ const NIKE_PLUGIN = {
   "data-amount-y": "36",
   "data-autoplay-behavior": "spin-xy",
 };
+
 const EARBUDS_PLUGIN = {
   "data-folder": "https://scaleflex.cloudimg.io/v7/demo/earbuds/",
   "data-filename-x": "{index}.jpg",
@@ -33,20 +34,11 @@ const PLUGIN_PROPS = {
   "data-drag-speed": { value: 100, isRequired: true },
   "data-autoplay": { isRequired: true }
 };
+
 const PROPERTIES_COLORS = {
-  required: "#7B9200",
-  url: "#2D88CB"
-}
-const REQUIRED_PROPERTIES = [
-  "class",
-  "data-folder",
-  "data-filename-x",
-  "data-amount-x",
-  "data-filename-y",
-  "data-amount-y",
-  "data-drag-speed",
-  "data-speed"
-];
+  NAME: "#7B9200",
+  URL: "#2D88CB"
+};
 
 const URL_PROPERTIES = ["data-folder", "class"];
 
@@ -56,7 +48,6 @@ export {
   SPIN_DIRECTION_PROPS,
   PLUGIN_PROPS,
   PROPERTIES_COLORS,
-  REQUIRED_PROPERTIES,
   URL_PROPERTIES,
   GURKHA_SUV_HOTSPOTS_CONFIG
 }

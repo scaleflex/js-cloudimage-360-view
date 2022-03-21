@@ -4,8 +4,9 @@ import './controllers.css';
 
 import {
   EARBUDS_PLUGIN,
-  NIKE_PLUGIN, PLUGIN_PROPS,
-  REQUIRED_PROPERTIES,PROPERTIES_COLORS,
+  NIKE_PLUGIN,
+  PLUGIN_PROPS,
+  PROPERTIES_COLORS,
   URL_PROPERTIES,
   GURKHA_SUV_HOTSPOTS_CONFIG,
 } from "./constants";
@@ -251,12 +252,10 @@ function updateCodeBlock() {
 
     propertyName.innerText = key;
 
-    if (REQUIRED_PROPERTIES.includes(key)) {
-      propertyName.style.color = PROPERTIES_COLORS.required;
-    }
+    propertyName.style.color = PROPERTIES_COLORS.NAME;
 
     if (URL_PROPERTIES.includes(key)) {
-      propertyValue.style.color = PROPERTIES_COLORS.url;
+      propertyValue.style.color = PROPERTIES_COLORS.URL;
     }
 
     propertyWrapper.appendChild(propertyName);
