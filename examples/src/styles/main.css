@@ -904,6 +904,23 @@ body {
   opacity: 0;
 }
 
+.transition-outline-button {
+  transition: all 300ms ease-in-out;
+}
+
+.transition-outline-button:hover {
+  background-color: #3daba4;
+  color: #FFF !important;
+}
+
+.transition-filled-button {
+  transition: all 300ms ease-in-out;
+}
+
+.transition-filled-button:hover {
+  background-color: #35918a !important;
+}
+
 @media (max-width: 1224px) {
   .demo-usage .demo-usage-wrapper .demo-usage-content {
     display: grid;
