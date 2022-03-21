@@ -1027,11 +1027,24 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
       if (this.playOnce && isPlayedOnce) {
         window.clearTimeout(this.loopTimeoutId);
+        this.autoplay = false;
 
-        this.add360ViewIcon();
+        if (!this.hide360Logo) {
+          this.add360ViewIcon();
+          this.view360Icon.innerText = '';
+          setView360Icon(this.view360Icon, this.logoSrc);
+        }
 
-        this.view360Icon.innerText = '';
-        setView360Icon(this.view360Icon, this.logoSrc);
+        if (this.hotspotsConfigs) {
+          updateHotspots(
+            this.container,
+            this.hotspotsConfigs,
+            this.activeImageX,
+            this.activeImageY,
+            this.movingDirection,
+            this.isClicked
+          );
+        }
       }
     }, this.autoplaySpeed);
   }

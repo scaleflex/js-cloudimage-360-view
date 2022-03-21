@@ -90,6 +90,7 @@
             data-lazyload
             data-autoplay
             data-play-once
+            data-hide-360-logo
             data-speed="120"
             data-lazy-selector="lazyload"
             data-hotspots
@@ -285,312 +286,314 @@
           </div>
           <div class="customize">
             <h3>Customize</h3>
-            <div class="customize-options">
-              <div class="pointer-checkbox">
-                <label class="checkbox-container">
-                  Pointer zoom
-                  <input
-                    class="customize-inputs"
+            <div class="customize">
+              <div class="customize-options">
+                <div class="pointer-checkbox">
+                  <label class="checkbox-container">
+                    Pointer zoom
+                    <input
+                      class="customize-inputs"
+                      data-plugin-value="data-pointer-zoom"
+                      data-checkbox="pointer-checkbox"
+                      type="checkbox"
+                      id="pointer-checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="customize-selectors-wrappers">
+                  <p class="selectors-wrappers-text">zoom scale</p>
+                  <select
+                    class="customize-selectors plugin-selector"
+                    data-input="pointer-checkbox"
                     data-plugin-value="data-pointer-zoom"
-                    data-checkbox="pointer-checkbox"
-                    type="checkbox"
-                    id="pointer-checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
+                    id="pointer-selector"
+                    plugin-input
+                    disabled
+                  >
+                    <option value="1.5">1.5</option>
+                    <option value="2">2</option>
+                    <option value="2.5">2.5</option>
+                    <option value="3.5">3.5</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
               </div>
               <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">zoom scale</p>
+                <p class="selectors-wrappers-text">Auto play behavior</p>
                 <select
                   class="customize-selectors plugin-selector"
-                  data-input="pointer-checkbox"
-                  data-plugin-value="data-pointer-zoom"
-                  id="pointer-selector"
+                  id="auto-play-behavior"
+                  data-plugin-value="data-autoplay-behavior"
                   plugin-input
                   disabled
                 >
-                  <option value="1.5">1.5</option>
-                  <option value="2">2</option>
-                  <option value="2.5">2.5</option>
-                  <option value="3.5">3.5</option>
-                  <option value="4">4</option>
+                  <option value="spin-xy">spin-xy</option>
+                  <option value="spin-x">spin-x</option>
+                  <option value="spin-y">spin-y</option>
+                  <option value="spin-yx">spin-yx</option>
                 </select>
               </div>
-            </div>
-            <div class="customize-selectors-wrappers">
-              <p class="selectors-wrappers-text">Auto play behavior</p>
-              <select
-                class="customize-selectors plugin-selector"
-                id="auto-play-behavior"
-                data-plugin-value="data-autoplay-behavior"
-                plugin-input
-                disabled
-              >
-                <option value="spin-xy">spin-xy</option>
-                <option value="spin-x">spin-x</option>
-                <option value="spin-y">spin-y</option>
-                <option value="spin-yx">spin-yx</option>
-              </select>
-            </div>
-            <div class="customize-selectors-wrappers">
-              <p class="selectors-wrappers-text">Auto play speed(milliseconds)</p>
-              <input
-                id="spin-speed"
-                class="customize-selectors"
-                data-plugin-value="data-speed"
-                plugin-input
-                type="number"
-                value="100"
-                placeholder="e.g. 100"
-              />
-            </div>
-            <div class="customize-selectors-wrappers">
-              <p class="selectors-wrappers-text">Drag speed(milliseconds)</p>
-              <input
-                id="drag-speed"
-                class="customize-selectors"
-                data-plugin-value="data-drag-speed"
-                plugin-input
-                type="number"
-                value="120"
-                placeholder="e.g. 120"
-              />
-            </div>
-            <div class="checkbox-group">
-              <div>
-                <label class="checkbox-container">
-                  Magnifier
-                  <input
-                    id="image-magnifier"
-                    class="customize-inputs plugin-option"
-                    data-plugin-value="data-magnifier"
-                    value="2"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Auto play speed(milliseconds)</p>
+                <input
+                  id="spin-speed"
+                  class="customize-selectors"
+                  data-plugin-value="data-speed"
+                  plugin-input
+                  type="number"
+                  value="100"
+                  placeholder="e.g. 100"
+                />
               </div>
-              <div>
-                <label class="checkbox-container">
-                  Auto play
-                  <input
-                    data-plugin-value="data-autoplay"
-                    class="plugin-option"
-                    type="checkbox"
-                    checked
-                  />
-                  <span class="checkmark"></span>
-                </label>
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Drag speed(milliseconds)</p>
+                <input
+                  id="drag-speed"
+                  class="customize-selectors"
+                  data-plugin-value="data-drag-speed"
+                  plugin-input
+                  type="number"
+                  value="120"
+                  placeholder="e.g. 120"
+                />
               </div>
-              <div>
-                <label class="checkbox-container">
-                  Auto play once
-                  <input
-                    data-plugin-value="data-play-once"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
+              <div class="checkbox-group">
+                <div>
+                  <label class="checkbox-container">
+                    Magnifier
+                    <input
+                      id="image-magnifier"
+                      class="customize-inputs plugin-option"
+                      data-plugin-value="data-magnifier"
+                      value="2"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Auto play
+                    <input
+                      data-plugin-value="data-autoplay"
+                      class="plugin-option"
+                      type="checkbox"
+                      checked
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Auto play once
+                    <input
+                      data-plugin-value="data-play-once"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Auto play reverse
+                    <input
+                      data-plugin-value="data-autoplay-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Fullscreen
+                    <input
+                      data-plugin-value="data-fullscreen"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Disable drag
+                    <input
+                      data-plugin-value="disable-drag"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Drag reverse
+                    <input
+                      data-plugin-value="data-spin-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Hide 360 logo
+                    <input
+                      data-plugin-value="hide-360-logo"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control
+                    <input
+                      id="control-option"
+                      class="plugin-option"
+                      type="checkbox"
+                      data-plugin-value="data-control"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control reverse
+                    <input
+                      data-plugin-value="control-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control by keyboard
+                    <input
+                      data-plugin-value="data-keys"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Control by keyboard reverse
+                    <input
+                      data-plugin-value="data-control-reverse"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Stop at edges
+                    <input
+                      data-plugin-value="stop-at-edges"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div>
+                  <label class="checkbox-container">
+                    Bottom circle
+                    <input
+                      data-plugin-value="data-bottom-circle"
+                      class="plugin-option"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
               </div>
-              <div>
-                <label class="checkbox-container">
-                  Auto play reverse
+              <div class="customize-options">
+                <div class="box-shadow-checkbox">
+                  <label class="checkbox-container">
+                    Box shadow
+                    <input
+                      class="customize-inputs"
+                      id="box-shadow"
+                      data-plugin-value="box-shadow"
+                      data-checkbox="box-shadow"
+                      type="checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="customize-selectors-wrappers">
+                  <p class="selectors-wrappers-text">Box Shadow</p>
                   <input
-                    data-plugin-value="data-autoplay-reverse"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Fullscreen
-                  <input
-                    data-plugin-value="data-fullscreen"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Disable drag
-                  <input
-                    data-plugin-value="disable-drag"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Drag reverse
-                  <input
-                    data-plugin-value="data-spin-reverse"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Hide 360 logo
-                  <input
-                    data-plugin-value="hide-360-logo"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Control
-                  <input
-                    id="control-option"
-                    class="plugin-option"
-                    type="checkbox"
-                    data-plugin-value="data-control"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Control reverse
-                  <input
-                    data-plugin-value="control-reverse"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Control by keyboard
-                  <input
-                    data-plugin-value="data-keys"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Control by keyboard reverse
-                  <input
-                    data-plugin-value="data-control-reverse"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Stop at edges
-                  <input
-                    data-plugin-value="stop-at-edges"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div>
-                <label class="checkbox-container">
-                  Bottom circle
-                  <input
-                    data-plugin-value="data-bottom-circle"
-                    class="plugin-option"
-                    type="checkbox"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-            </div>
-            <div class="customize-options">
-              <div class="box-shadow-checkbox">
-                <label class="checkbox-container">
-                  Box shadow
-                  <input
-                    class="customize-inputs"
-                    id="box-shadow"
+                    class="customize-selectors"
+                    disabled
+                    data-input="box-shadow"
                     data-plugin-value="box-shadow"
-                    data-checkbox="box-shadow"
-                    type="checkbox"
+                    box-shadow-option
+                    plugin-input
+                    value="inset 0 0 100px #222"
+                    type="text"
                   />
-                  <span class="checkmark"></span>
-                </label>
+                </div>
+              </div>
+              <div class="customize-options">
+                <div class="respons-checkbox">
+                  <label class="checkbox-container">
+                    Responsive
+                    <input class="customize-inputs"
+                    id="responsive-checkbox"
+                    data-plugin-value="data-responsive"
+                    type="checkbox" />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="customize-selectors-wrappers">
+                  <p class="selectors-wrappers-text">Token</p>
+                  <input
+                    class="customize-selectors"
+                    value="scaleflex"
+                    responsive-option
+                    data-plugin-value="data-responsive"
+                    plugin-input
+                    disabled
+                    type="text"
+                  />
+                </div>
               </div>
               <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Box Shadow</p>
+                <p class="selectors-wrappers-text">Transformation</p>
                 <input
-                  class="customize-selectors"
-                  disabled
-                  data-input="box-shadow"
-                  data-plugin-value="box-shadow"
-                  box-shadow-option
-                  plugin-input
-                  value="inset 0 0 100px #222"
-                  type="text"
-                />
-              </div>
-            </div>
-            <div class="customize-options">
-              <div class="respons-checkbox">
-                <label class="checkbox-container">
-                  Responsive
-                  <input class="customize-inputs"
-                  id="responsive-checkbox"
-                  data-plugin-value="data-responsive"
-                  type="checkbox" />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Token</p>
-                <input
-                  class="customize-selectors"
-                  value="scaleflex"
+                  class="customize-selectors plugin-option"
+                  data-plugin-value="data-transformation"
                   responsive-option
-                  data-plugin-value="data-responsive"
                   plugin-input
-                  disabled
+                  value="w=400&h=200&func=fit"
                   type="text"
+                  disabled
                 />
               </div>
-            </div>
-            <div class="customize-selectors-wrappers">
-              <p class="selectors-wrappers-text">Transformation</p>
-              <input
-                class="customize-selectors plugin-option"
-                data-plugin-value="data-transformation"
-                responsive-option
-                plugin-input
-                value="w=400&h=200&func=fit"
-                type="text"
-                disabled
-              />
-            </div>
-            <div class="customize-selectors-wrappers">
-              <p class="selectors-wrappers-text">Filter</p>
-              <input
-                class="customize-selectors plugin-option"
-                data-plugin-value="data-filters"
-                responsive-option
-                plugin-input
-                value="bright:15,contrast:30"
-                type="text"
-                disabled
-              />
+              <div class="customize-selectors-wrappers">
+                <p class="selectors-wrappers-text">Filter</p>
+                <input
+                  class="customize-selectors plugin-option"
+                  data-plugin-value="data-filters"
+                  responsive-option
+                  plugin-input
+                  value="bright:15,contrast:30"
+                  type="text"
+                  disabled
+                />
+              </div>
             </div>
           </div>
         </div>
