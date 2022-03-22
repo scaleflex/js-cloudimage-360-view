@@ -1,7 +1,7 @@
 [![Release](https://img.shields.io/badge/release-v2.7.12-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.it/en/home)
+[![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.com/en/home)
 
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Engage%20your%20customers%20with%20a%20stunning%20360%20viewvof%20your%20products&url=https://scaleflex.github.io/js-cloudimage-360-view/&via=cloudimage&hashtags=images,cloudimage)
 
