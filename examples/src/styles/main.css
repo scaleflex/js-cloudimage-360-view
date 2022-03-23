@@ -716,7 +716,6 @@ body {
   position: relative;
   padding: 60px 25px;
   box-sizing: content-box;
-  height: 325px;
   display: flex;
   justify-content: space-between;
 }
