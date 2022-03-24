@@ -76,7 +76,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.5/js-cloudimage-360-view.min.js"></script>
+<script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/3.0.0/js-cloudimage-360-view.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
@@ -111,7 +111,7 @@ window.CI360.init();
 > NOTE: initialization of the plugin runs on the script load. In case you need to postpone the initialization of the plugin you can disable it with **notInitOnLoad** param
 > ```javascript
 > <script>window.CI360 = { notInitOnLoad: true }</script>
-> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.5/js-cloudimage-360-view.min.js"></script>
+> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/3.0.0/js-cloudimage-360-view.min.js"></script>
 > <script>window.CI360.init(); // initialize the plugin when you need</script>
 > ```
 
@@ -120,24 +120,24 @@ window.CI360.init();
 ###### Type: **Function**
 
 ```javascript
-window.CI360.add(idOfView: string);
+window.CI360.add(idOftheView: string);
 ```
 lazy init cloudimage-360 view by id.
 ### Properties
-#### `idOfView`: string
+#### `idOftheView`: string
 The id of the new view
 
 ### update
 
 ###### Type: **Function**
 ```javascript
-window.CI360.update(idOfView, forceUpdate);
+window.CI360.update(idOftheView, forceUpdate);
 ```
 Update cloudimage 360 viewer instance.<br/>
 For any update in source attributes after plugin initialization (e.g. `data-folder`, `data-filename-x`, `data-amount-y`),
 the plugin will re-init.
 ### Properties
-#### `idOfView`: string
+#### `idOftheView`: string
 The id of the new view
 #### `forceUpdate`: bool
 Force the view to reinitialize.
@@ -689,7 +689,7 @@ const HOTSPOTS_CONFIG = [
 ## Add Hotspots
 we need this function to link the created config with the 360-view.
 ```js
-window.CI360.addHotspots(idOfView, hotspotsConfig);
+window.CI360.addHotspots(idOftheView, hotspotsConfig);
 ```
 example:
 ```js
