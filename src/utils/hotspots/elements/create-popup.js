@@ -20,15 +20,15 @@ export const createPopup = (container, hotspotConfig, popupProps) => {
 
   popup.onclick = (e) => e.stopPropagation();
 
-  if (images || description || moreDetailsUrl || (title && !url)) {
+  if (typeof variant === 'object' && images || description || moreDetailsUrl || (title && !url)) {
     createModalElements(variant, container, popup);
   } else if (url) {
     const hotspotPopupLink = createHotspotPopupLink(variant);
 
     popup.appendChild(hotspotPopupLink);
-  } else {
+  } else if (typeof variant === 'string'){
     try {
-      const popupNode = getPopupNode(anchorId);
+      const popupNode = getPopupNode(variant);
       const userPopup = popupNode.cloneNode(true);
 
       popup.appendChild(userPopup);

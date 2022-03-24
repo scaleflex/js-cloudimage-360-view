@@ -1,7 +1,7 @@
 import { createCarouselDot } from './create-carousel-dot';
 import { createCarouselImage } from './create-carousel-image';
 
-export const createImagesCarousel = (imagesSrcs, popup, container) => {
+export const createImagesCarousel = (images, popup, container) => {
   const imagesCarousel = document.createElement('div');
   const carouselDots = document.createElement('div');
 
@@ -10,8 +10,8 @@ export const createImagesCarousel = (imagesSrcs, popup, container) => {
 
   carouselDots.className = 'cloudimage-360-carousel-dots';
 
-  imagesSrcs.forEach((imageSrc, imageIndex) => {
-    const carouselImage = createCarouselImage(imageSrc, imageIndex);
+  images.forEach((image, imageIndex) => {
+    const carouselImage = createCarouselImage(image, imageIndex);
     const carouselDot = createCarouselDot(carouselImage, imageIndex, popup);
 
     carouselDots.appendChild(carouselDot);

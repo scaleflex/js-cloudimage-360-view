@@ -1,3 +1,4 @@
+
 [![Release](https://img.shields.io/badge/release-v2.7.12-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -37,15 +38,14 @@
 </p>
 
 A simple, interactive resource that can be used to provide a virtual tour of your product.
-
-<p align="center">
+<p align="left">
 	<img
 		alt="The Lounge"
-		src="https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/demo-chair-500.gif?sanitize=true">
+		src="https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/demo-min.gif?vh=ecac07">
 </p>
 
 powered by [Cloudimage](https://www.cloudimage.io/)
-([Watch the video here](https://www.youtube.com/watch?time_continue=2&v=JFZSE1vYb0k))
+([Watch the video here](https://www.youtube.com/watch?v=tk4j_MpqvM8))
 
 ## <a name="table_of_contents"></a>Table of contents
 
@@ -56,6 +56,7 @@ powered by [Cloudimage](https://www.cloudimage.io/)
 * [Customize elements](#customize-elements)
 * [Configuration](#configuration)
 * [Controls](#controls)
+* [Hotspots](#hotspots)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
 * [Lazy loading integration](#lazy-loading)
 * [Best practices](#best-practices)
@@ -86,9 +87,10 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 ```html
 <div
    class="cloudimage-360"
-   data-folder="https://scaleflex.airstore.io/demo/360-car/"
-   data-filename-x="iris-{index}.jpeg"
-   data-amount-x="36"
+   id="gurkha-suv"
+   data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+   data-filename-x="orange-{index}.jpg"
+   data-amount-x="73"
 ></div>
 ```
 
@@ -109,7 +111,7 @@ window.CI360.init();
 > NOTE: initialization of the plugin runs on the script load. In case you need to postpone the initialization of the plugin you can disable it with **notInitOnLoad** param
 > ```javascript
 > <script>window.CI360 = { notInitOnLoad: true }</script>
-> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2/js-cloudimage-360-view.min.js"></script>
+> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2.7.5/js-cloudimage-360-view.min.js"></script>
 > <script>window.CI360.init(); // initialize the plugin when you need</script>
 > ```
 
@@ -117,39 +119,42 @@ window.CI360.init();
 
 ###### Type: **Function**
 
-add new view by id to cloudimage 360 views.
-
 ```javascript
 window.CI360.add(idOfView: string);
 ```
+lazy init cloudimage-360 view by id.
+### Properties
+#### `idOfView`: string
+The id of the new view
 
 ### update
 
 ###### Type: **Function**
 ```javascript
-window.CI360.update(idOfInstance, forceUpdate);
+window.CI360.update(idOfView, forceUpdate);
 ```
 Update cloudimage 360 viewer instance.<br/>
 For any update in source attributes after plugin initialization (e.g. `data-folder`, `data-filename-x`, `data-amount-y`),
 the plugin will re-init.
 ### Properties
-#### `idOfInstance`: string
-The id of the instance
+#### `idOfView`: string
+The id of the new view
+#### `forceUpdate`: bool
+Force the view to reinitialize.
 
 ```html
 <div
-   id="cloudimage-360-car"
    class="cloudimage-360"
-   data-folder="https://scaleflex.airstore.io/demo/360-car/"
-   data-filename-x="iris-{index}.jpeg"
-   data-amount-x="36"
+   id="gurkha-suv"
+   data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+   data-filename-x="orange-{index}.jpg"
+   data-amount-x="73"
 ></div>
 ```
 ```javascript
-window.CI360.update('cloudimage-360-car');
+window.CI360.update('gurkha-suv');
 ```
-#### `forceUpdate`: bool
-Force the plugin to re-init.
+
 ```javascript
 window.CI360.update(null, true);
 ```
@@ -249,7 +254,6 @@ data-api-version="v7"
 data-api-version="null"
 ```
 ### data-filename-x (or filename-x)
-### ~~data-filename (or filename)~~ [deprecated]
 
 ###### Type: **String** | Default: **image-{index}.jpg** | _optional_
 
@@ -258,15 +262,12 @@ The filename pattern for your 360 image. Must include {index}, which the library
 ### data-filename-y (or filename-y)
 
 ###### Type: **String** | Default: **image-y-{index}.jpg** | _optional_
-
-The filename pattern for y-oriantation images. Must include {index}, which the library will replace with a number between 1 and [data-amount-y](#data-amount-y).
-
+The same for [data-amount-x](#data-amount-x) but for images set in Y-axis.
 
 ### <a name="data-amount-x"></a> data-amount-x (or amount-x)
-###  ~~data-amount (or amount-x)~~ [deprecated]
 ###### Type: **Number** | Default: **36** | _optional_
 
-Amount of images to load for 360 view.
+Amount of images to load in X-axis for 360 view .
 
 ### <a name="data-amount-y"></a> data-amount-y (or amount-y)
 
@@ -307,7 +308,6 @@ Changing autoplay behavior
 Available behaviors (spin-x, spin-y, spin-xy, spin-yx)
 
 ### data-fullscreen (or fullscreen)
-### ~~data-full-screen (or full-screen)~~ [deprecated]
 ###### Type: **Bool** | Default: **false** | _optional_
 
 Open 360 spin view in full screen modal.
@@ -319,22 +319,19 @@ Open 360 spin view in full screen modal.
 Magnifier to zoom image.
 
 ### data-ratio (or ratio)
-
-
 ###### Type: **Number** (width / height) or JSON object | Default: **none** | _optional_
 #### `ratio`: string
 
 Setting the height relative to the container width according to the provided ratio</br>
-In the following example, the height should be 0.3 the container width
 
 ```html
 <div
-	id="cloudimage-360-car"
-	class="cloudimage-360"
-	data-folder="https://scaleflex.airstore.io/demo/360-car/"
-	data-filename-x="iris-{index}.jpeg"
-	data-amount-x="36"
-	data-ratio="2"
+   class="cloudimage-360"
+   id="gurkha-suv"
+   data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+   data-filename-x="orange-{index}.jpg"
+   data-amount-x="73"
+   data-ratio="2"
 ></div>
 ```
 <a href="https://codesandbox.io/s/js-cloudimage-360-view-g4wyt1?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
@@ -346,21 +343,22 @@ and 2.22 at window size less than or equal to 768px.
 
 ```html
 <div
-	id="cloudimage-360-car"
-	class="cloudimage-360"
-	data-folder="https://scaleflex.airstore.io/demo/360-car/"
-	data-filename-x="iris-{index}.jpeg"
-	data-amount-x="36"
-	data-ratio='{
-		"576": "1.3",
-		"768": "2.22",
-		"992": "2.23",
-		"1200": "3",
-		"2400": "3.2"
-	}'
+   class="cloudimage-360"
+   id="gurkha-suv"
+   data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+   data-filename-x="orange-{index}.jpg"
+   data-amount-x="73"
+   data-ratio='{
+      "576": "1.3",
+      "768": "2.22",
+      "992": "2.23",
+      "1200": "3",
+      "2400": "3.2"
+   }'
 ></div>
 ```
 <a href="https://codesandbox.io/s/js-cloudimage-360-view-5tssb7?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+
 ### data-autoplay-reverse (or autoplay-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
@@ -409,13 +407,6 @@ Display 360 view line at the bottom of container.
 
 Hide 360 view icon.
 
-### ~~data-logo-src (or logo-src)~~ [deprecated]
-
-###### ~~Type: **String** | Default: **https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg** | _optional_~~
-
-~~URL of asset to use as the 360 view icon.~~
-
-kindly read [Customize elements](#customize-elements)
 ### data-control-reverse (or control-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
@@ -441,8 +432,6 @@ Bottom offset for 360 view line.
 Left zero padding on filename. For example: index-zero-base="4" => image index will be "0004"
 
 ### data-image-list-x (or data-image-list-x)
-### ~~data-image-list (or image-list)~~ [deprecated]
-
 ###### Type: **Array** | _optional_
 
 Option to add list of images in x-oriantation instead of `folder` , `filename-x` & `amount-x`.
@@ -458,6 +447,7 @@ data-image-list-x='[
    "https://scaleflex.airstore.io/demo/360-car/iris-15.jpeg"
    ]’
 ```
+
 ### data-image-list-y (or data-image-list-y)
 
 ###### Type: **Array** | _optional_
@@ -479,14 +469,13 @@ data-image-list-y='[
 
 ###### Type: **Number** | Default: **none** | _optional_
 
-Pointer zoom scale
+Option to scale images on click on it to provided value.
 
 example:
 
 ```javascript
 data-pointer-zoom="3"
 ```
-when mouse clicked the image scale will be multiplied by 3.
 
 ### data-lazyload (or lazyload)
 
@@ -502,7 +491,7 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ## <a name="controls"></a> Controls
 
-You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right**, **cloudimage-360-top**, **cloudimage-360-bottom , ~~**cloudimage-360-prev**, **cloudimage-360-next**~~ [deprecated]
+You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right**, **cloudimage-360-top**, **cloudimage-360-bottom 
 
 ### Example CSS
 ```css
@@ -562,6 +551,157 @@ You can add controls by adding elements with the following classes: **cloudimage
 ```
 
 <a href="https://codesandbox.io/s/js-cloudimage-360-view-361eb?fontsize=14"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+## <a name="hotspots"/> Hotspots or Markers
+Display information about the product on specific areas. Once a hotspot is created it can be used on more than one image.
+### Requirements
+First, we need to set `data-hotspots` attribute to the view we want to add hotspots or markers on it, to prevent the plugin to init the view without hotspots config.
+Also we need to set an `id` attribute, we will need it to link the view with the hotspots config.
+
+### Create hotspots configuration
+The hotspots config should be an array of objects, each object in the array indicates a single hotspot config.
+For each item in the array, we need to set the positions (X-coord and Y-coord) of the hotspot at every image index we need to show the hotspot on it. <br>hint: To know the current image index we will need to set `data-info="white || black"` attribute.
+
+example:
+
+```js
+const HOTSPOTS_CONFIG = [
+ {
+  positions: [
+   { imageIndex: 0, xCoord: 527, yCoord: 319 },
+   { imageIndex: 1, xCoord: 524 },
+   { imageIndex: 2, xCoord: 520 },
+   { imageIndex: 3, xCoord: 498 },
+   { imageIndex: 4, xCoord: 470 },
+   { imageIndex: 5, xCoord: 441 },
+  ]
+ }
+]
+```
+In the previous example, we have only set the Ycoord a single time at the image index 0.
+So if the coord didn't change there's no need to reset it, it will already take the previous value.
+
+Now we need to set the hotspot variant, we have three types of hotspots (link, popup, and custom), as it will be explained below.
+## Variant
+### Link
+we need to provide the URL of the link and the link title.
+
+example:
+
+```js
+const HOTSPOTS_CONFIG = [
+ {
+  positions,
+  variant: {
+  title: 'New Gurkha Technical Specifications',
+  url: 'https://www.forcegurkha.co.in/specifications/',
+  newTab: true
+  }
+ }
+]
+```
+---
+### Popup
+Only the property inserted will displayed.
+| Property  |Type | Default | Description |
+| ------------- | ------------- | ------------- |------------- |
+| images  | Array| [] | To display a carousel of images we need an array of objects, each object should include the src and the alt of each image  |
+| title  |String| null | Display title underneath the images  |
+| description| String | null | Display description underneath the title  |
+| moreDetailsUrl | String | null | Display a button underneath the description to navigate to a provided URL |
+| moreDetailsTitle  | String | null| Set the title of the more details button  |
+
+   example:
+```js
+const HOTSPOTS_CONFIG = [
+ {
+  positions,
+  variant: {
+   images: [
+    { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/AIR_SNORKEL_FINAL_JPG.png?vh=88bccb', alt: 'air snorkel' }
+   ], // optional
+   title: 'Air Intake Snorkel', // optional
+   description: 'The snorkel gives the Gurkha an unmatched water-wading ability and ensures ample supply of fresh air for combustion.', // optional
+   moreDetailsUrl: 'https://forcegurkha.co.in', // optional
+   moreDetailsTitle: 'Read more' // optional
+  }
+ }
+]
+```
+---
+### Custom
+Display any element in the DOM in a popup and link it with the hotspot.</br>
+We will need to set the variant property value to the id of the element.
+
+example:
+```js
+const HOTSPOTS_CONFIG = [
+ {
+  positions,
+  variant: 'gurkha-suv'
+ }
+]
+```
+## PopupProps
+Options to customize the hotspot popup.
+### Properties
+| Property  | Type | Defaullt |Description |
+| ------------- | ------------- | ------------- | ------------- |
+| popupSelector |String| null |Set className to the popup wrapper  |
+| open |Boolean | false |Open the popup  |
+| arrow |Boolean| true |Dipslay an arrow that points toward the hotspot element|
+| offset|Array | [0, 0] |Set a distance between the hotspot element and the popup  |
+| placement|String| Auto|- we can adjust the position of the hotspot popup relative to the hotspot element. (top - bottom - left - right)|
+
+
+example:
+```js
+const HOTSPOTS_CONFIG = [
+ {
+  positions,
+  variant,
+  popupProps: {
+   popupSelector: 'air-intake-popup', // optional
+   offset: [20, 5], // optional
+   arrow: false, // optional
+   placement: 'bottom' // optional
+  },
+  indicatorSelector: 'first-hotspot-icon' // optional
+ }
+]
+```
+## Responsive hotspots
+Now we need to make our hotspots responsive to have an accurate positioning in different screens.
+we have to set `initialDimensions` property to every hotspot config. which indicates the dimension of the cloudimage-360 view.<br/>
+hint: `data-info` can be used to get view size.
+
+example:
+```js
+const HOTSPOTS_CONFIG = [
+ {
+   positions,
+   variant,
+   popupProps,
+   indicatorSelector,
+   initialDimensions: [ 1170, 662 ]
+ }
+]
+```
+## Add Hotspots
+we need this function to link the created config with the 360-view.
+```js
+window.CI360.addHotspots(idOfView, hotspotsConfig);
+```
+example:
+```js
+window.CI360.addHotspots("gurkha-suv", HOTSPOTS_CONFIG);
+```
+<a href="https://codesandbox.io/s/competent-bogdan-49b0u6?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+
+### data-responsive (or responsive)
+
+###### Type: **String** (Cloudimage token) | Default: **none** | _required for cloudimage responsive plugin_
+
+Enables cloudimage responsive plugin for 360 view.
 
 ## <a name="cloudimage-responsive-integration"/> Cloudimage Responsive Integration
 
@@ -620,27 +760,6 @@ Lazy loading is not included into js-cloudimage-360-view by default. There are w
 
 [Implementation example with lozad.js](https://codesandbox.io/s/0185934m8p?fontsize=14)
 
-to save API calls you man want to use one of our cdn bundles:
-
-CDN link to js-cloudimage-360-view 1.1.0 + lazysizes 4.1.7
-
-```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.lazysizes.min.js"></script>
-```
-
-CDN link to js-cloudimage-360-view 1.1.0 + yall.js 3.1.1
-
-```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.yall.min.js"></script>
-```
-
-CDN link to js-cloudimage-360-view 1.1.0 + lozad.js 1.9.0
-
-```javascript
-<script src="https://cdn.scaleflex.it/filerobot/js-cloudimage-360-view/v2.0.0.lozad.min.js"></script>
-```
-
-
 ## <a name="best-practices"/> Best practices
 
 * In order to use cloudimage responsive with 360 view, your original (master) images should be stored on a server
@@ -667,4 +786,3 @@ All contributions are super welcome!
 
 ## <a name="license"></a>License
 JS Cloudimage 360 View is provided under the [MIT License](https://opensource.org/licenses/MIT)
-

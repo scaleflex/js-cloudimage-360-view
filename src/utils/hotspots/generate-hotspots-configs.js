@@ -5,7 +5,7 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
   const hotspotsConfigs = hotspotsProps.map((hotspotProps) => {
     const {
       variant = {},
-      hotspots = [],
+      positions = [],
       indicatorSelector = '',
       popupProps = {},
       orientation = 'x',
@@ -25,7 +25,7 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
     const hotspotConfig = {
       variant : { ...variant, anchorId },
       popupProps: popupConfig,
-      hotspots,
+      positions,
       indicatorSelector,
       initialDimensions,
       orientation: orientation.toLowerCase(),

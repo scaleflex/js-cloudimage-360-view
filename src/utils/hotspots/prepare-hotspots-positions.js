@@ -1,15 +1,15 @@
 import { fillEmptyCoordWithPrevious } from './fill-empty-coord-with-previous';
 
-export const prepareHotspotsPositions = (hotspots) => hotspots.reduce((accumulate, current, currentIndex) => {
+export const prepareHotspotsPositions = (positions) => positions.reduce((accumulate, current, currentIndex) => {
   const isIncludesXcoord = !!current?.xCoord;
   const isIncludesYcoord = !!current?.yCoord;
 
   if (!isIncludesXcoord) {
-    current.xCoord = fillEmptyCoordWithPrevious(hotspots, currentIndex, 'xCoord');
+    current.xCoord = fillEmptyCoordWithPrevious(positions, currentIndex, 'xCoord');
   }
 
   if (!isIncludesYcoord) {
-    current.yCoord = fillEmptyCoordWithPrevious(hotspots, currentIndex, 'yCoord');
+    current.yCoord = fillEmptyCoordWithPrevious(positions, currentIndex, 'yCoord');
   }
 
   accumulate.push(current);
