@@ -188,7 +188,7 @@ function showAccordionContent(event) {
 function copyCodeHandler() {
   navigator.clipboard.writeText(outputCode.innerText);
 
-  copyText.innerHTML = "copied";
+  copyText.innerHTML = "Copied";
 
   setTimeout(() => {
     copyText.innerHTML = "Copy";
