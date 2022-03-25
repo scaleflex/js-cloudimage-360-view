@@ -117,6 +117,16 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     if (isMouseOnHotspotElement) {
       this.isClicked = false;
     }
+
+    if (this.hotspotsConfigs) {
+      updateHotspots(
+        this.container,
+        this.hotspotsConfigs,
+        this.activeImageX,
+        this.activeImageY,
+        this.movingDirection
+      );
+    }
   }
 
   mouseUp() {
@@ -856,7 +866,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   onFirstImageLoaded(image) {
-    if (!this.hide360Logo && !this.lazyload) this.add360ViewIcon();
+    this.add360ViewIcon();
 
     const ctx = this.canvas.getContext("2d");
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
@@ -895,15 +905,6 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.addFullscreenIcon();
     }
 
-    if (this.hotspotsConfigs && !this.autoplay) {
-      updateHotspots(
-        this.container,
-        this.hotspotsConfigs,
-        this.activeImageX,
-        this.activeImageY,
-        this.movingDirection
-      );
-    }
   }
 
   onAllImagesLoaded() {
@@ -927,22 +928,14 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     }
 
     if (this.view360Icon) {
+      if (this.hide360Logo) return this.remove360ViewIcon();
+
       this.view360Icon.innerText = '';
       //TODO [deprecated]: remove setView360Icon in the upcoming versions
       if (this.logoSrc) setView360Icon(this.view360Icon, this.logoSrc);
     }
 
     this.initControls();
-
-    if (this.hotspotsConfigs && !this.autoplay) {
-      updateHotspots(
-        this.container,
-        this.hotspotsConfigs,
-        this.activeImageX,
-        this.activeImageY,
-        this.movingDirection
-      );
-    }
   }
 
   magnify(event) {
@@ -1028,12 +1021,6 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       if (this.playOnce && isPlayedOnce) {
         window.clearTimeout(this.loopTimeoutId);
         this.autoplay = false;
-
-        if (!this.hide360Logo) {
-          this.add360ViewIcon();
-          this.view360Icon.innerText = '';
-          setView360Icon(this.view360Icon, this.logoSrc);
-        }
 
         if (this.hotspotsConfigs) {
           updateHotspots(

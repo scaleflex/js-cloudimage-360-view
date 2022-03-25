@@ -27,9 +27,9 @@ Types of changes:
 -------------
 ## 3.0.0 - 2022-03-25
 ### Added
-- possiblity to add makers or hotspots to each image
-- possiblity add views after init the plugin
-- possiblity to update views
+- possibility to add makers or hotspots to each image
+- possibility add views after init the plugin
+- possibility to update views
 ### Fixed
 - hide 360 logo after play once
 
