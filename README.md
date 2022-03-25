@@ -8,12 +8,12 @@
 <p align="center">
 	<a href="https://www.cloudimage.io/#gh-light-mode-only">
 		<img
-			alt="The Lounge"
+			alt="cloudimage logo"
 			src="https://scaleflex.cloudimg.io/v7/cloudimage.io/LOGO+WITH+SCALEFLEX-01.png?vh=f6080d&w=350">
 	</a>
 		<a href="https://www.cloudimage.io/#gh-dark-mode-only">
 		<img
-			alt="The Lounge"
+			alt="cloudimage logo"
 			src="https://scaleflex.cloudimg.io/v7/cloudimage.io/cloudimage-logo-light.png?vh=b798ab&w=350">
 	</a>
 </p>
@@ -39,7 +39,7 @@
 <p align="center">
 	<img
 		alt="The Lounge"
-		src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/demos/assets/a1.gif?vh=968eca">
+		src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/demos/assets/a2.gif">
 </p>
 
 ## <a name="table_of_contents"></a>Table of contents
