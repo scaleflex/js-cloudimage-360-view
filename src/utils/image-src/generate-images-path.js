@@ -14,11 +14,16 @@ export const generateImagesPath = (srcConfig) => {
   if (ciToken) {
     const imageOffsetWidth = container.offsetWidth;
 
-    const vesrion = FALSY_VALUES.includes(apiVersion) ? null : apiVersion;
-    const finalApiVersion = vesrion ? `${vesrion}/` : '';
+    const version = !FALSY_VALUES.includes(apiVersion) ? apiVersion : null;
+
+    const finalApiVersion = version ? `${version}/` : '';
     const ciSizeNext = getSizeAccordingToPixelRatio(getResponsiveWidthOfContainer(imageOffsetWidth));
 
-    src = `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}?${ciTransformation || `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`;
+    const isCloudImageUrl = new URL(src).origin.includes('cloudimg');
+    const cdn = isCloudImageUrl ? src
+      : `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}`;
+
+    src = `${cdn}?${ciTransformation || `width=${ciSizeNext}`}${ciFilters ? `&f=${ciFilters}` : ''}`;
   }
 
   return src;

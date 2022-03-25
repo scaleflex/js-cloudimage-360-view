@@ -2,9 +2,8 @@
 [![Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-the%20Scaleflex%20team-6986fa.svg)](https://www.scaleflex.com/en/home)
-
-[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Engage%20your%20customers%20with%20a%20stunning%20360%20viewvof%20your%20products&url=https://scaleflex.github.io/js-cloudimage-360-view/&via=cloudimage&hashtags=images,cloudimage)
+[![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20-Scaleflex%20team-6986fa.svg)](https://www.scaleflex.com/en/home)
+[![Cloudimage](https://img.shields.io/badge/Powered%20by-cloudimage-blue)](https://www.cloudimage.io/en/home)
 
 <p align="center">
 	<a href="https://www.cloudimage.io/#gh-light-mode-only">
@@ -36,16 +35,12 @@
 		<a href="https://medium.com/cloudimage/e-merchandising-how-can-a-360-view-of-your-products-boost-your-revenue-24b16eb9cd62" target="_blank">Why</a>
 	</strong>
 </p>
-
-A simple, interactive resource that can be used to provide a virtual tour of your product.
-<p align="left">
+<p align="center">A simple, interactive resource that can be used to provide a virtual tour of your product.</p>
+<p align="center">
 	<img
 		alt="The Lounge"
-		src="https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/demo-min.gif?vh=ecac07">
+		src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/demos/assets/a1.gif?vh=968eca">
 </p>
-
-powered by [Cloudimage](https://www.cloudimage.io/)
-([Watch the video here](https://www.youtube.com/watch?v=tk4j_MpqvM8))
 
 ## <a name="table_of_contents"></a>Table of contents
 
