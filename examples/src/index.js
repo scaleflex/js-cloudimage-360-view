@@ -1,4 +1,3 @@
-import './mobile.init';
 import '../../src';
 import './controllers.css';
 import './styles/main.css';
