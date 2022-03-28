@@ -2,14 +2,17 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   {
     variant: {
       images: [
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/AIR_SNORKEL_FINAL_JPG.png?vh=88bccb', alt: 'air snorkel' }
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/AIR_SNORKEL_FINAL_JPG.png?vh=88bccb',
+          alt: 'air snorkel'
+        }
       ],
       title: 'Air Intake Snorkel',
       description: 'The snorkel gives the Gurkha an unmatched water-wading ability and ensures ample supply of fresh air for combustion.',
       moreDetailsUrl: 'https://forcegurkha.co.in',
     },
     popupProps: { popupSelector: 'air-intake-popup' },
-    initialDimensions: [ 1170, 662 ],
+    initialDimensions: [1170, 662],
     positions: [
       { imageIndex: 0, xCoord: 527, yCoord: 319 },
       { imageIndex: 1, xCoord: 527, yCoord: 319 },
@@ -57,15 +60,24 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   {
     variant: {
       images: [
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/transparent+%281%29.jpg', alt: 'car accessory' },
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/transparent+%282%29.jpg', alt: 'spoiler' },
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/transparent.jpg', alt: 'car accessory' }
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/transparent+%281%29.jpg',
+          alt: 'car accessory'
+        },
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/transparent+%282%29.jpg',
+          alt: 'spoiler'
+        },
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/transparent.jpg',
+          alt: 'car accessory'
+        }
       ],
       description: 'The All New Force Gurkha ensures best-in-class safety for passengers and security for the vehicle with its full metal body structure.',
       moreDetailsTitle: 'Download accessories brochure',
       moreDetailsUrl: 'https://www.forcegurkha.co.in/wp-content/themes/force-motors/assets/pdf/Force-Gurkha-accessories-E-brochure.pdf'
     },
-    popupProps: { popupSelector: 'accessories-popup'},
+    popupProps: { popupSelector: 'accessories-popup' },
     initialDimensions: [ 1170, 662 ],
     positions: [
       { imageIndex: 11, xCoord: 683, yCoord: 151 },
@@ -95,9 +107,18 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   {
     variant: {
       images: [
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/feature-5.png', alt: 'car top'},
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/ALL_AROUND_VISIBILITY_UPDATED.png', alt: 'car inside' },
-        { src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/feature-2.png', alt: 'transmission' }
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/feature-5.png',
+          alt: 'car top'
+        },
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/ALL_AROUND_VISIBILITY_UPDATED.png',
+          alt: 'car inside'
+        },
+        {
+          src: 'https://scaleflex.cloudimg.io/v7/demo/360-assets/feature-2.png',
+          alt: 'transmission'
+        }
       ],
       description:'All four captain seats with ample head room, leg room and shoulder room.Easy ingress and egress from the rear door into the widest gangway in the category that makes space for all your luggage',
       moreDetailsUrl: 'https://www.forcegurkha.co.in/wp-content/themes/force-motors/assets/pdf/Force-Gurkha-accessories-E-brochure.pdf',

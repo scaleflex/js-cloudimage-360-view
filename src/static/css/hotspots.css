@@ -141,7 +141,7 @@
 
 .cloudimage-360-carousel-dots {
   display: flex;
-  column-gap: 3px;
+  column-gap: 6px;
   justify-content: center;
   flex-wrap: wrap;
   margin: 5px auto;
@@ -151,8 +151,8 @@
 }
 
 .cloudimage-360-carousel-dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   background-color: #C9D0DE;
   border-radius: 50%;
   cursor: pointer;

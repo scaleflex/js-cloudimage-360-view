@@ -176,15 +176,6 @@ body {
   font-weight: 700;
 }
 
-.cloudimage-360-carousel-dots {
-  column-gap: 6px;
-}
-
-.cloudimage-360-carousel-dot {
-  width: 6px;
-  height: 6px;
-}
-
 .cloudimage-360-carousel-dot.active-dot {
   background-color: #db5e2e;
 }
@@ -279,7 +270,6 @@ body {
   line-height: 30px;
   font-weight: 400;
   color: #4d5c74;
-  margin-top: 8px;
 }
 
 .gallery-section .gallery-content {
