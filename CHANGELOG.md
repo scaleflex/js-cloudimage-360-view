@@ -25,6 +25,13 @@ Types of changes:
 - ...
 
 -------------
+## 3.0.1 - 2022-03-28
+### Changed
+- hotspots icons
+
+### Fixed
+- loader is hidden if hide-360-logo is active
+
 ## 3.0.0 - 2022-03-25
 ### Added
 - possibility to add makers or hotspots to each image
