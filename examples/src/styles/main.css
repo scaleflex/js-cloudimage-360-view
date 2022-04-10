@@ -463,7 +463,6 @@ body {
   font-weight: 500;
   color: #203254;
   cursor: pointer;
-  background-color: #ffff;
 }
 
 .demo-usage .image-source .plugin-options:nth-child(3) {
@@ -485,24 +484,15 @@ body {
   padding-top: 28px;
   max-width: 270px;
   max-height: 600px;
-  min-width: fit-content;
-}
-
-.demo-usage-wrapper .demo-usage-content .customize-wrapper {
-  display: flex;
-  flex-direction: column;
-  row-gap: 20.5px;
-  max-width: 270px;
-  max-height: 600px;
   overflow-y: scroll;
   min-width: fit-content;
 }
 
-.demo-usage-wrapper .demo-usage-content .customize-wrapper::-webkit-scrollbar {
+.demo-usage-wrapper .demo-usage-content .customize::-webkit-scrollbar {
   width: 8px;
 }
 
-.demo-usage-wrapper .demo-usage-content .customize-wrapper::-webkit-scrollbar-thumb {
+.demo-usage-wrapper .demo-usage-content .customize::-webkit-scrollbar-thumb {
   background: #dbdddf;
 }
 
@@ -553,7 +543,6 @@ body {
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
-  background-color: #ffff;
 }
 
 .demo-usage-wrapper .customize .customize-selectors::-webkit-inner-spin-button {
@@ -948,7 +937,7 @@ body {
     background: #dbdddf;
   }
 
-  .demo-usage-wrapper .demo-usage-content .customize-wrapper {
+  .demo-usage-wrapper .demo-usage-content .customize {
     margin-top: 0;
     max-height: unset;
     min-height: unset;
@@ -994,13 +983,6 @@ body {
 
   .demo-usage-wrapper .demo-usage-content .customize {
     width: 50%;
-    max-width: unset;
-    max-height: 600px;
-    padding-top: 0;
-  }
-
-  .demo-usage-wrapper .demo-usage-content .customize-wrapper {
-    width: 100%;
     max-width: unset;
     max-height: 600px;
     overflow-y: scroll;
@@ -1106,7 +1088,7 @@ body {
     overflow-y: scroll;
   }
 
-  .demo-usage-wrapper .demo-usage-content .customize-wrapper {
+  .demo-usage-wrapper .demo-usage-content .customize {
     overflow-y: unset;
   }
 
