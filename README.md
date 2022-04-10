@@ -1,5 +1,5 @@
 
-[![Release](https://img.shields.io/badge/release-v3.0.1-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20-Scaleflex%20team-6986fa.svg)](https://www.scaleflex.com/en/home)
@@ -71,7 +71,7 @@ To see the Cloudimage 360 view plugin in action, please check out the
 Add script tag with CDN link to js-cloudimage-360-view lib after all content in body tag
 
 ```javascript
-<script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/3.0.1/js-cloudimage-360-view.min.js"></script>
+<script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/3.0.0/js-cloudimage-360-view.min.js"></script>
 ```
 
 ## <a name="initialize"></a>Step 2: Initialize
@@ -106,7 +106,7 @@ window.CI360.init();
 > NOTE: initialization of the plugin runs on the script load. In case you need to postpone the initialization of the plugin you can disable it with **notInitOnLoad** param
 > ```javascript
 > <script>window.CI360 = { notInitOnLoad: true }</script>
-> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/3.0./js-cloudimage-360-view.min.js"></script>
+> <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/3.0.0/js-cloudimage-360-view.min.js"></script>
 > <script>window.CI360.init(); // initialize the plugin when you need</script>
 > ```
 
