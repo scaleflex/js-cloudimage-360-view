@@ -52,6 +52,7 @@
 * [Customize elements](#customize-elements)
 * [Configuration](#configuration)
 * [Controls](#controls)
+* [Spin in X and Y axis](#spin_x_y)
 * [Hotspots](#hotspots)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
 * [Lazy loading integration](#lazy-loading)
@@ -202,10 +203,10 @@ You can customize elements by adding the following classes:
   	bottom: 0;
 }
 .cloudimage-360-magnifier-icon {
-	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
+	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/loupe.svg) 50% 50% / cover no-repeat;
 }
 .cloudimage-360-close-fullscreen-icon {
-	background: url(https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
+	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/cross.svg) 50% 50% / cover no-repeat;
 }
 .cloudimage-360-view-360-circle {
   	margin: auto;
@@ -214,7 +215,7 @@ You can customize elements by adding the following classes:
 	margin: auto;
 }
 .cloudimage-360-view-360-icon {
-	background: url(hhttps://scaleflex.ultrafast.io/https://scaleflex.airstore.io/filerobot/js-cloudimage-360-view/360_view.svg) 50% 50% / cover no-repeat;
+	background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg) 50% 50% / cover no-repeat;
 }
 .cloudimage-360-box-shadow {
 	top: 0;
@@ -264,12 +265,12 @@ The filename pattern for your 360 image. Must include {index}, which the library
 ###### Type: **String** | Default: **image-y-{index}.jpg** | _optional_
 The same for [data-amount-x](#data-amount-x) but for images set in Y-axis.
 
-### <a name="data-amount-x"></a> data-amount-x (or amount-x)
+### data-amount-x (or amount-x)
 ###### Type: **Number** | Default: **36** | _optional_
 
 Amount of images to load in X-axis for 360 view .
 
-### <a name="data-amount-y"></a> data-amount-y (or amount-y)
+### data-amount-y (or amount-y)
 
 ###### Type: **Number** | Default: **0** | _optional_
 
@@ -439,12 +440,12 @@ Option to add list of images in x-oriantation instead of `folder` , `filename-x`
 example:
 
 ```javascript
-data-folder="https://scaleflex.airstore.io/demo/360-car/"
+data-folder="https://scaleflex.cloudimg.io/v7/demo/360-car/"
 data-image-list-x='[
    "iris-1.jpeg",
    "iris-4.jpeg",
-   "https://scaleflex.airstore.io/demo/360-car/iris-12.jpeg",
-   "https://scaleflex.airstore.io/demo/360-car/iris-15.jpeg"
+   "https://scaleflex.cloudimg.io/v7/demo/360-car/iris-12.jpeg",
+   "https://scaleflex.cloudimg.io/v7/demo/360-car/iris-15.jpeg"
    ]’
 ```
 
@@ -457,12 +458,12 @@ Option to add list of images in y-oriantation instead of `folder` , `filename-y`
 example:
 
 ```javascript
-data-folder="https://scaleflex.airstore.io/demo/360-car/"
+data-folder="https://scaleflex.cloudimg.io/v7/demo/360-car/"
 data-image-list-y='[
    "iris-2-y.jpeg",
    "iris-6-y.jpeg",
-   "https://scaleflex.airstore.io/demo/360-car/iris-8-y.jpeg",
-   "https://scaleflex.airstore.io/demo/360-car/iris-30-y.jpeg"
+   "https://scaleflex.cloudimg.io/v7/demo/360-car/iris-8-y.jpeg",
+   "https://scaleflex.cloudimg.io/v7/demo/360-car/iris-30-y.jpeg"
    ]’
 ```
 ### data-pointer-zoom (or pointer-zoom)
@@ -491,7 +492,7 @@ Helper class to apply lazy-loading depending on library you choose, see [Lazy lo
 
 ## <a name="controls"></a> Controls
 
-You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right**, **cloudimage-360-top**, **cloudimage-360-bottom 
+You can add controls by adding elements with the following classes: **cloudimage-360-left**, **cloudimage-360-right**, **cloudimage-360-top**, **cloudimage-360-bottom
 
 ### Example CSS
 ```css
@@ -540,7 +541,7 @@ You can add controls by adding elements with the following classes: **cloudimage
 ```html
 <div
 	class="cloudimage-360"
-	data-folder="https://scaleflex.airstore.io/demo/indoor/"
+	data-folder="https://scaleflex.cloudimg.io/v7/demo/360-car/"
 	data-filename-x="{index}.jpeg"
 >
 	<button class="cloudimage-360-left"></button>
@@ -551,6 +552,30 @@ You can add controls by adding elements with the following classes: **cloudimage
 ```
 
 <a href="https://codesandbox.io/s/js-cloudimage-360-view-controls-30dr9l?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+
+## <a name="spin_x_y"/> Spin in X and Y axes
+Allow the view to spin in both X, Y axes
+### Requirements
+We need to provide the `file-name` of the y-axis images using <a href="#data-filename-y-or-filename-y">data-filename-y</a>
+
+Also as we did for the x-axis if we are intializing the view using <a href="#data-folder-or-folder">data-folder</a> and <a href="#data-filename-y-or-filename-y">data-filename-y</a>
+so we need to provide <a href="#data-amount-y-or-amount-y">data-amount-y</a> which indicates the number of images on the y-axis.
+example:
+
+```javascript
+<div
+   class="cloudimage-360"
+   data-folder="https://scaleflex.cloudimg.io/v7/demo/360-nike/"
+   data-filename-x="nike-{index}.jpg"
+   data-filename-y="nike-y-{index}.jpg"
+   data-amount-x="35"
+   data-amount-y="36"
+>
+</div>
+```
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-wc9j12?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a></br>
+> Note: We can initilize the view in x, y axes without providing add `data-folder`, `data-amount-y`, `data-amount-y`.</br>
+Just we need to provide the <a href="#data-amount-y-or-amount-y">data-amount-y</a>
 ## <a name="hotspots"/> Hotspots or Markers
 Display information about the product on specific areas. Once a hotspot is created it can be used on more than one image.
 ### Requirements
