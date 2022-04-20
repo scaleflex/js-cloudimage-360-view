@@ -1,5 +1,6 @@
-
 [![Release](https://img.shields.io/badge/release-v3.0.1-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Size](https://img.shields.io/bundlephobia/min/js-cloudimage-360-view)](https://img.shields.io/bundlephobia/min/js-cloudimage-360-view)
+[![Download](https://img.shields.io/npm/dt/js-cloudimage-360-view?logoColor=orange)](https://img.shields.io/npm/dt/js-cloudimage-360-view?logoColor=orange)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scaleflex team](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20-Scaleflex%20team-6986fa.svg)](https://www.scaleflex.com/en/home)
@@ -28,7 +29,7 @@
 		•
 		<a href="https://scaleflex.github.io/js-cloudimage-360-view/" target="_blank">Demo</a>
 		•
-		<a href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html" target="_blank">Code Sandbox</a>
+		<a href="https://codesandbox.io/s/js-cloudimage-360-view-o4nuxh?file=/index.html" target="_blank">Code Sandbox</a>
 		•
 		<a href="https://youtu.be/zXUgrvZ7FMc" target="_blank">Video Tutorial</a>
 		•
@@ -89,7 +90,7 @@ After adding the js-cloudimage-360-view lib, simply initialize it with **class n
 ></div>
 ```
 
-<a href="https://codesandbox.io/s/6479n17j73?fontsize=14&module=%2Findex.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-9p4oo1?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
 ## <a name="methods"></a> Methods
 
@@ -121,6 +122,8 @@ lazy init cloudimage-360 view by id.
 ### Properties
 #### `idOftheView`: string
 The id of the new view
+
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-9zwfl2?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
 ### update
 
@@ -154,6 +157,8 @@ window.CI360.update('gurkha-suv');
 window.CI360.update(null, true);
 ```
 
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-v5e7u6?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+
 ### destroy
 
 ###### Type: **Function**
@@ -163,7 +168,7 @@ Destroying a cloudimage 360 viewer instance will reset the HTML to its original 
 ```javascript
 window.CI360.destroy();
 ```
-<a href="https://codesandbox.io/s/js-cloudimage-360-view-initdestroy-y1il9">
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-init-destroy-u6kxuo?file=/index.html">
 	<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 
 ### getActiveIndexByID
@@ -329,7 +334,7 @@ Setting the height relative to the container width according to the provided rat
    data-ratio="2"
 ></div>
 ```
-<a href="https://codesandbox.io/s/js-cloudimage-360-view-g4wyt1?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-i2kqj5?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 #### `ratio`: JSON
 Setting the height relative to the container width at any window size.
 
@@ -545,7 +550,7 @@ You can add controls by adding elements with the following classes: **cloudimage
 </div>
 ```
 
-<a href="https://codesandbox.io/s/js-cloudimage-360-view-361eb?fontsize=14"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
+<a href="https://codesandbox.io/s/js-cloudimage-360-view-controls-30dr9l?file=/index.html"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
 ## <a name="hotspots"/> Hotspots or Markers
 Display information about the product on specific areas. Once a hotspot is created it can be used on more than one image.
 ### Requirements
