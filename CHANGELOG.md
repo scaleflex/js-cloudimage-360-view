@@ -14,7 +14,7 @@ Types of changes:
 
 > Date format: YYYY-MM-DD
 
-> If we have some "Breaking changes" we can mark it in message by `**BREAKING**` preffix, like:  
+> If we have some "Breaking changes" we can mark it in message by `**BREAKING**` preffix, like:
 > `- **BREAKING**: Some message`
 
 -------------
@@ -25,7 +25,11 @@ Types of changes:
 - ...
 
 -------------
-## 3.0.2 - 2022-04-05
+## 3.0.3 - 2022-05-04
+### Fixed
+- Error on loading original images from image list
+
+## 3.0.2 - 2022-05-04
 ### Changed
 - documentation
 

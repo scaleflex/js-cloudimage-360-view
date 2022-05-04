@@ -8,12 +8,6 @@ export const prepareImagesFromList = (images, srcConfig, loadOriginalImages ) =>
     nextSrcConfig.folder = /(http(s?)):\/\//gi.test(src) ? '' : folder;
     nextSrcConfig.filename = src;
 
-    if (loadOriginalImages) {
-      const lastIndex = resultSrc.lastIndexOf('//');
-
-      return resultSrc.slice(lastIndex);
-    }
-
-    return generateImagesPath(nextSrcConfig);
+    return generateImagesPath(nextSrcConfig, loadOriginalImages);
   });
 };

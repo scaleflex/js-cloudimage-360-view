@@ -1425,9 +1425,11 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     }
 
     const loadImages = () => {
-      preloadImages(this.srcXConfig, srcX, (
-        onImageLoad.bind(this, ORIENTATIONS.X)
-      ));
+      preloadImages(
+        this.srcXConfig,
+        srcX,
+        (onImageLoad.bind(this, ORIENTATIONS.X))
+      );
 
       if (this.allowSpinY) {
         const srcY = generateImagesPath(this.srcYConfig);
