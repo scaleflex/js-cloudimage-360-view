@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/release-v3.0.1-blue.svg)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
+[![Release](https://img.shields.io/github/v/release/scaleflex/js-cloudimage-360-view)](https://github.com/scaleflex/js-cloudimage-360-view/releases)
 [![Size](https://img.shields.io/bundlephobia/min/js-cloudimage-360-view)](https://img.shields.io/bundlephobia/min/js-cloudimage-360-view)
 [![Download](https://img.shields.io/npm/dt/js-cloudimage-360-view?logoColor=orange)](https://img.shields.io/npm/dt/js-cloudimage-360-view?logoColor=orange)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](#contributing)

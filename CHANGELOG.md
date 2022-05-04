@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 3.0.2 - 2022-04-05
+### Changed
+- documentation
+
 ## 3.0.1 - 2022-03-28
 ### Changed
 - hotspots icons
