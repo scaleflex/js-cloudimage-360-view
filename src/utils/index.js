@@ -3,7 +3,7 @@ export { isPropsChangeRequireReload } from './image-src/is-props-change-require-
 export { generateImagesPath } from './image-src/generate-images-path';
 export { preloadImages } from './load-images/preload-images';
 export { preloadOriginalImages } from './load-images/preload-original-images';
-export { initLazyload } from './load-images/lazyload/init-lazyload'
+export { initLazyload } from './load-images/lazyload/init-lazyload';
 
 export { contain } from './responsive/contain';
 export { getImageAspectRatio } from './responsive/get-image-aspect-ratio';
@@ -18,8 +18,8 @@ export { loop } from './auto-play/loop';
 export { getSpeedFactor } from './auto-play/get-speed-factor';
 export { isCompletedOneCycle } from './auto-play/is-completed-one-cycle';
 
-export { addClass } from './class-names/add-class';
-export { removeClass } from './class-names/remove-class';
+export { addClass } from './classnames/add-class';
+export { removeClass } from './classnames/remove-class';
 
 export { getMovingDirection } from './spin-y/get-moving-direction';
 

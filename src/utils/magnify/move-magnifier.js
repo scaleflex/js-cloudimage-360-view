@@ -1,5 +1,6 @@
 import { getCursorPosition } from './get-cursor-position';
 
+
 export const moveMagnifier = (e, containerConfig, glass) => {
   const {
     container, w, h, zoom, bw, offsetX, offsetY,

@@ -1,6 +1,7 @@
 import { ORIENTATIONS } from '../../constants/orientations';
 import { AND_SYMBOL_REGEX, ORGINAL_SIZE_REGEX } from '../../constants/regex';
 
+
 export const getCurrentOriginalImage = (movingDirection, imagesX, imagesY, activeImageX, activeImageY) => {
   const currentImage = new Image();
 

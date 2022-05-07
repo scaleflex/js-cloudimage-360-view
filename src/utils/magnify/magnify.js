@@ -1,5 +1,6 @@
 import { moveMagnifier } from './move-magnifier';
 
+
 export const magnify = (container, offset, currentImage, glass, zoom) => {
   const { x: offsetX = 0, y: offsetY = 0 } = offset || {};
   const backgroundSizeX = (container.offsetWidth - (offsetX * 2)) * zoom;

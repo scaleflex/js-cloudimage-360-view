@@ -1,5 +1,6 @@
-import { isTrue } from "../../ci360.utils";
-import { getHotspotIcon } from "./get-hotspot-icon";
+import { isTrue } from '../container-elements';
+import { getHotspotIcon } from './get-hotspot-icon';
+
 
 export const togglePopupEvents = (hotspotsProps, event, isMouseDown) => {
   const iClickOnHotspotIcon = event && isTrue(event.target, 'data-cloudimage-360-hotspot');
@@ -14,4 +15,4 @@ export const togglePopupEvents = (hotspotsProps, event, isMouseDown) => {
 
     hotspotIcon.style.pointerEvents = isMouseDown ? 'none' : 'all';
   });
-}
+};

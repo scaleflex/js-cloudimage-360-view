@@ -1,4 +1,5 @@
-import { PROPS_REQUIRE_RELOAD } from "../../constants/props-require-reload";
+import { PROPS_REQUIRE_RELOAD } from '../../constants/props-require-reload';
+
 
 export const isPropsChangeRequireReload = (currentProps, changedProps) => (
   Object.keys(changedProps)

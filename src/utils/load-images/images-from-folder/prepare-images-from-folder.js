@@ -1,6 +1,7 @@
 import { AND_SYMBOL_REGEX, ORGINAL_SIZE_REGEX } from '../../../constants/regex';
 import { pad } from '../pad';
 
+
 export const prepareImagesFromFolder = (imagesSrc, srcConfig, loadOriginalImages) => {
   const { amount, indexZeroBase } = srcConfig || {};
 

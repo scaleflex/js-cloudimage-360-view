@@ -23,4 +23,4 @@ export const getImageAspectRatio = (image, providedRatio) => {
   } catch {
     return 1;
   }
-}
+};

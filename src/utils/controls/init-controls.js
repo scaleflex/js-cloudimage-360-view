@@ -1,4 +1,5 @@
-import { addClass } from '../class-names/add-class';
+import { addClass } from '../classnames/add-class';
+
 
 export const initControls = (controlsConfig, controlsTriggers) => {
   const {

@@ -1,5 +1,6 @@
 import { fillEmptyCoordWithPrevious } from './fill-empty-coord-with-previous';
 
+
 export const prepareHotspotsPositions = (positions) => positions.reduce((accumulate, current, currentIndex) => {
   const isIncludesXcoord = !!current?.xCoord;
   const isIncludesYcoord = !!current?.yCoord;

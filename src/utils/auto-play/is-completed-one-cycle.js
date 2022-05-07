@@ -1,5 +1,6 @@
 import { AUTOPLAY_BEHAVIOR } from '../../constants/auto-play-behavior';
 
+
 export const isCompletedOneCycle = (autoplayBehavior, activeImageX, activeImageY, amountX, amountY, isReversed) => {
   switch (autoplayBehavior) {
     case AUTOPLAY_BEHAVIOR.SPIN_XY:

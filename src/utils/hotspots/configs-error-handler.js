@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 export const configsErrorHandler = (hotspotProps) => {
   const { variant = {} } = hotspotProps;
 
@@ -7,7 +8,7 @@ export const configsErrorHandler = (hotspotProps) => {
     anchorId,
     images,
     description,
-    moreDetailsUrl
+    moreDetailsUrl,
   } = variant;
 
   if (url && !title) {

@@ -11,3 +11,5 @@ export { createLoader } from './create-loader';
 export { applyStylesToContainer } from './apply-styles-to-container';
 export { createFullscreenModal } from './create-fullscreen-modal';
 export { removeChildrenFromParent } from './remove-children-from-parent';
+export { attr } from './attr';
+export { isTrue } from './is-true';

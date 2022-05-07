@@ -1,0 +1,83 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-useless-escape": "off",
+        "linebreak-style": 0,
+        "no-debugger":"off",
+        "jsx-quotes": [
+          "error",
+          "prefer-double"
+        ],
+        "max-lines": [
+          "warn",
+          {
+            "max": 1250,
+            "skipBlankLines": true,
+            "skipComments": true
+          }
+        ],
+        "max-len": [
+          "warn",
+          {
+            "code": 1120,
+            "tabWidth": 4,
+            "ignoreComments": true,
+            "ignoreTrailingComments": true,
+            "ignoreUrls": true
+          }
+        ],
+        "no-param-reassign": 0,
+        "no-multiple-empty-lines": [
+          "error",
+          {
+            "max": 2,
+            "maxEOF": 0
+          }
+        ],
+        "no-use-before-define": [
+          "error",
+          {
+            "functions": false
+          }
+        ],
+        "no-unused-vars": "warn",
+        "no-underscore-dangle": "off",
+        "no-plusplus": "off",
+        "camelcase": "off",
+        "import/newline-after-import": [
+          "error",
+          {
+            "count": 2
+          }
+        ],
+        "import/no-unresolved": "error",
+        "import/no-cycle": "off",
+        "import/no-unused-modules": "off",
+        "import/no-commonjs": "error",
+        "import/no-nodejs-modules": "warn",
+        "import/first": "warn",
+        "import/exports-last": "error",
+        "import/no-duplicates": "warn",
+        "import/no-namespace": "off",
+        "import/order": "warn",
+        "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-anonymous-default-export": "error",
+        "jsx-a11y/no-noninteractive-element-interactions": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "default-param-last": "off",
+        "no-new": "off",
+        "consistent-return": "off",
+        "no-unused-expressions": "off"
+      }
+}

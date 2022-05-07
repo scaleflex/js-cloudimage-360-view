@@ -1,6 +1,7 @@
 import { configsErrorHandler } from './configs-error-handler';
 import { generatePopupConfig } from './generate-popup-config';
 
+
 export const generateHotspotsConfigs = (hotspotsProps) => {
   const hotspotsConfigs = hotspotsProps.map((hotspotProps) => {
     const {
@@ -19,11 +20,11 @@ export const generateHotspotsConfigs = (hotspotsProps) => {
 
     if (!anchorId) {
       const uniqueID = Math.floor(Math.random() * 10000);
-      anchorId = `cloudimage-360-${uniqueID}`
+      anchorId = `cloudimage-360-${uniqueID}`;
     }
 
     const hotspotConfig = {
-      variant : { ...variant, anchorId },
+      variant: { ...variant, anchorId },
       popupProps: popupConfig,
       positions,
       indicatorSelector,

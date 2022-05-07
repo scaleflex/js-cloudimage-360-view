@@ -1,6 +1,7 @@
-import { generateImagesPath } from "../../../image-src/generate-images-path";
+import { generateImagesPath } from '../../../image-src/generate-images-path';
 
-export const prepareFirstImageFromList =  (images, srcConfig) => {
+
+export const prepareFirstImageFromList = (images, srcConfig) => {
   const { folder } = srcConfig;
 
   const firstImageSrc = images[0];
@@ -10,4 +11,4 @@ export const prepareFirstImageFromList =  (images, srcConfig) => {
   nextSrcConfig.filename = firstImageSrc;
 
   return generateImagesPath(nextSrcConfig);
-}
+};

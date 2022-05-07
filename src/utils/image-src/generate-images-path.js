@@ -2,6 +2,7 @@ import { FALSY_VALUES } from '../../constants/falsy-values';
 import { getResponsiveWidthOfContainer } from '../responsive/get-responsive-width-of-container';
 import { getSizeAccordingToPixelRatio } from '../responsive/get-size-according-to-pixel-ratio';
 
+
 export const generateImagesPath = (srcConfig, loadOriginalImages) => {
   const {
     container, folder, apiVersion, filename = '', ciParams,
@@ -23,7 +24,7 @@ export const generateImagesPath = (srcConfig, loadOriginalImages) => {
     const cdn = isCloudImageUrl ? src
       : `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}`;
 
-    src = `${cdn}?${ciTransformation || `${!loadOriginalImages ? `width=${ciSizeNext}`: ''} `}${ciFilters ? `&f=${ciFilters}` : ''}`;
+    src = `${cdn}?${ciTransformation || `${!loadOriginalImages ? `width=${ciSizeNext}` : ''} `}${ciFilters ? `&f=${ciFilters}` : ''}`;
   }
 
   return src;

@@ -3,7 +3,8 @@ export const removeChildrenFromParent = (parent, children) => {
     try {
       children.forEach((child) => {
         parent.removeChild(child);
-      })
-    } catch {}
+      });
+    // eslint-disable-next-line no-empty
+    } catch { }
   }
-}
+};

@@ -4,9 +4,11 @@ import { updateHotspotIconPosition } from './update-hotspot-icon-position';
 import { hideHotspotIcon } from './hide-hotspot-icon';
 import { getHotspotOriantaion } from './get-hotspot-orientation';
 
+
 export const updateHotspots = (container, hotspotsProps, activeImageX = 0, activeImageY = 0, movingDirection = 'x-axis') => {
   hotspotsProps.forEach((hotspotProps) => {
-    const { positions, initialDimensions, orientation, variant
+    const {
+      positions, initialDimensions, orientation, variant,
     } = hotspotProps;
     const { anchorId } = variant;
 

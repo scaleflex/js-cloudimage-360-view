@@ -1,6 +1,7 @@
 import { generateImagesPath } from '../../image-src/generate-images-path';
 
-export const prepareImagesFromList = (images, srcConfig, loadOriginalImages ) => {
+
+export const prepareImagesFromList = (images, srcConfig, loadOriginalImages) => {
   const { folder } = srcConfig;
 
   return images.map((src) => {

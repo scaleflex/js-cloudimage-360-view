@@ -5,7 +5,7 @@ import {
 import {
   ORIENTATIONS,
   AUTOPLAY_BEHAVIOR,
-} from './constants/';
+} from './constants';
 import './static/css/style.css';
 import './static/css/hotspots.css';
 import {
@@ -46,10 +46,11 @@ import {
   getImageAspectRatio,
   removeChildrenFromParent,
   initLazyload,
-  } from './utils';
+} from './utils';
 import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
-  class CI360Viewer {
+
+class CI360Viewer {
   constructor(container, fullscreen, hotspotsConfigs) {
     this.container = container;
     this.movementStart = { x: 0, y: 0 };
@@ -83,8 +84,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   isReady() {
-    const loadedXImages = this.imagesX.filter(image => image);
-    const loadedYImages = this.imagesY.filter(image => image);
+    const loadedXImages = this.imagesX.filter((image) => image);
+    const loadedYImages = this.imagesY.filter((image) => image);
 
     const totalAmount = this.amountX + this.amountY;
 
@@ -124,7 +125,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         this.hotspotsConfigs,
         this.activeImageX,
         this.activeImageY,
-        this.movingDirection
+        this.movingDirection,
       );
     }
   }
@@ -160,7 +161,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   mouseClick(event) {
-    if (!this.pointerZoom  || this.fullscreenView) return;
+    if (!this.pointerZoom || this.fullscreenView) return;
 
     this.setCursorPosition(event);
     this.hideInitialIcons();
@@ -171,7 +172,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
     if (this.isAllOriginalImagesLoaded && !this.isDragged && this.isZoomReady) {
       this.togglePointerZoom(event);
-    };
+    }
   }
 
   mouseMove(event) {
@@ -197,7 +198,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         this.allowSpinY,
         this.intialPositions,
         nextPositions,
-        this.movingDirection
+        this.movingDirection,
       );
 
       this.onMoveHandler(event);
@@ -236,9 +237,9 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
           if (isReachedIntialScale) {
             this.mouseTracked = false;
             this.update();
-          };
+          }
         }, (this.pointerZoom - step) * 200);
-      })
+      });
     } else {
       if (this.bottomCircle) this.hide360ViewCircleIcon();
 
@@ -253,7 +254,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
           this.zoomIntensity = step;
           this.update();
         }, step * 200);
-      })
+      });
 
       this.mouseTracked = true;
       this.container.style.cursor = 'zoom-out';
@@ -268,9 +269,9 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     }
 
     const loadedOriginalXImages = this.originalImagesX
-      .filter(image => image);
+      .filter((loadedImage) => loadedImage);
     const loadedOriginalYImages = this.originalImagesY
-      .filter(image => image);
+      .filter((loadedImage) => loadedImage);
 
     const totalAmount = this.amountX + this.amountY;
     const totalLoadedImages = loadedOriginalXImages.length + loadedOriginalYImages.length;
@@ -279,7 +280,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       loadedOriginalXImages.length + loadedOriginalYImages.length === this.amountX + this.amountY
     );
 
-    const percentage = Math.round(totalLoadedImages / totalAmount * 100);
+    const percentage = Math.round((totalLoadedImages / totalAmount) * 100);
 
     this.updatePercentageInLoader(percentage);
 
@@ -302,7 +303,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     preloadOriginalImages(
       this.srcXConfig,
       srcX,
-      this.onOriginalImageLoad.bind(this, ORIENTATIONS.X, event)
+      this.onOriginalImageLoad.bind(this, ORIENTATIONS.X, event),
     );
 
     if (this.allowSpinY) {
@@ -311,7 +312,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       preloadOriginalImages(
         this.srcYConfig,
         srcY,
-        this.onOriginalImageLoad.bind(this, ORIENTATIONS.Y, event)
+        this.onOriginalImageLoad.bind(this, ORIENTATIONS.Y, event),
       );
     }
   }
@@ -361,7 +362,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.allowSpinY,
       this.intialPositions,
       nextPositions,
-      this.movingDirection
+      this.movingDirection,
     );
 
     this.onMoveHandler(event);
@@ -374,7 +375,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.closeMagnifier();
     }
 
-    if (event.keyCode === 27) { //ESC
+    if (event.keyCode === 27) { // ESC
       if (this.mouseTracked) {
         this.togglePointerZoom();
       }
@@ -394,16 +395,16 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   setCursorPosition(event) {
     this.mousePositions = {
       x: event.clientX,
-      y: event.clientY
+      y: event.clientY,
     };
   }
 
   getCursorPositionInCanvas() {
-    const canvasRect =  this.canvas.getBoundingClientRect();
+    const canvasRect = this.canvas.getBoundingClientRect();
 
     this.pointerCurrentPosition = {
       x: this.mousePositions.x - canvasRect.left,
-      y: this.mousePositions.y - canvasRect.top
+      y: this.mousePositions.y - canvasRect.top,
     };
 
     return this.pointerCurrentPosition;
@@ -517,13 +518,11 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
         if (this.rightElem) removeClass(this.rightElem, 'not-active');
       }
+    } else if (this.activeImageX - itemsSkipped < 1) {
+      this.activeImageX = this.amountX + (this.activeImageX - itemsSkipped);
+      this.spinY = true;
     } else {
-      if (this.activeImageX - itemsSkipped < 1) {
-        this.activeImageX = this.amountX + (this.activeImageX - itemsSkipped);
-        this.spinY = true;
-      } else {
-        this.activeImageX -= itemsSkipped;
-      }
+      this.activeImageX -= itemsSkipped;
     }
   }
 
@@ -571,13 +570,11 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
         if (this.topElem) removeClass(this.topElem, 'not-active');
       }
+    } else if (this.activeImageY - itemsSkipped < 1) {
+      this.activeImageY = this.amountY + (this.activeImageY - itemsSkipped);
+      this.spinY = false;
     } else {
-      if (this.activeImageY - itemsSkipped < 1) {
-        this.activeImageY = this.amountY + (this.activeImageY - itemsSkipped);
-        this.spinY = false;
-      } else {
-        this.activeImageY -= itemsSkipped;
-      }
+      this.activeImageY -= itemsSkipped;
     }
   }
 
@@ -585,7 +582,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const itemsSkippedRight = getItemSkipped(currentPositionX, this.movementStart.x, this.speedFactor);
 
     this.spinReverse ? this.moveActiveIndexDown(itemsSkippedRight)
-    : this.moveActiveIndexUp(itemsSkippedRight);
+      : this.moveActiveIndexUp(itemsSkippedRight);
 
     this.movementStart.x = currentPositionX;
     this.activeImageY = 1;
@@ -596,7 +593,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const itemsSkippedLeft = getItemSkipped(this.movementStart.x, currentPositionX, this.speedFactor);
 
     this.spinReverse ? this.moveActiveIndexUp(itemsSkippedLeft)
-    : this.moveActiveIndexDown(itemsSkippedLeft);
+      : this.moveActiveIndexDown(itemsSkippedLeft);
 
     this.activeImageY = 1;
     this.movementStart.x = currentPositionX;
@@ -604,10 +601,10 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   moveTop(currentPositionY) {
-    const itemsSkippedTop =  getItemSkipped(this.movementStart.y, currentPositionY, this.speedFactor);
+    const itemsSkippedTop = getItemSkipped(this.movementStart.y, currentPositionY, this.speedFactor);
 
     this.spinReverse ? this.moveActiveYIndexUp(itemsSkippedTop)
-    : this.moveActiveYIndexDown(itemsSkippedTop);
+      : this.moveActiveYIndexDown(itemsSkippedTop);
 
     this.activeImageX = 1;
     this.movementStart.y = currentPositionY;
@@ -618,7 +615,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const itemsSkippedBottom = getItemSkipped(currentPositionY, this.movementStart.y, this.speedFactor);
 
     this.spinReverse ? this.moveActiveYIndexDown(itemsSkippedBottom)
-    : this.moveActiveYIndexUp(itemsSkippedBottom);
+      : this.moveActiveYIndexUp(itemsSkippedBottom);
 
     this.activeImageX = 1;
     this.movementStart.y = currentPositionY;
@@ -692,8 +689,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       left: this.left.bind(this),
       right: this.right.bind(this),
       top: this.top.bind(this),
-      bottom: this.bottom.bind(this)
-    }
+      bottom: this.bottom.bind(this),
+    };
 
     loop(this.autoplayBehavior, this.spinY, reversed, loopTriggers);
   }
@@ -703,24 +700,24 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
     if (this.fullscreenView) {
       this.container.width = window.innerWidth * this.devicePixelRatio;
-      this.container.style.width = window.innerWidth + 'px';
+      this.container.style.width = `${window.innerWidth}px`;
       this.container.height = window.innerHeight * this.devicePixelRatio;
-      this.container.style.height = window.innerHeight + 'px';
+      this.container.style.height = `${window.innerHeight}px`;
       this.container.style.maxWidth = 'unset';
 
       this.canvas.width = window.innerWidth * this.devicePixelRatio;
-      this.canvas.style.width = window.innerWidth + 'px';
+      this.canvas.style.width = `${window.innerWidth}px`;
       this.canvas.height = window.innerHeight * this.devicePixelRatio;
-      this.canvas.style.height = window.innerHeight + 'px';
+      this.canvas.style.height = `${window.innerHeight}px`;
 
       return;
     }
 
     this.canvas.width = this.container.offsetWidth * this.devicePixelRatio;
-    this.canvas.style.width = this.container.offsetWidth + 'px';
+    this.canvas.style.width = `${this.container.offsetWidth}px`;
 
     this.canvas.height = (this.container.offsetWidth / imageAspectRatio) * this.devicePixelRatio;
-    this.canvas.style.height = (this.container.offsetWidth / imageAspectRatio) + 'px';
+    this.canvas.style.height = `${this.container.offsetWidth / imageAspectRatio}px`;
   }
 
   onResizedImageLoad(orientation, image, index) {
@@ -731,19 +728,19 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     }
 
     const loadedResizedXImages = this.resizedImagesX
-      .filter(image => image);
+      .filter((loadedImage) => loadedImage);
     const loadedResizedYImages = this.resizedImagesY
-      .filter(image => image);
+      .filter((loadedImage) => loadedImage);
 
     const isAllImagesLoaded = (
       loadedResizedXImages.length + loadedResizedYImages.length === this.amountX + this.amountY
     );
 
     if (isAllImagesLoaded) {
-    this.imagesX = this.resizedImagesX;
-    this.imagesY = this.resizedImagesY;
+      this.imagesX = this.resizedImagesX;
+      this.imagesY = this.resizedImagesY;
 
-    this.update();
+      this.update();
     }
   }
 
@@ -753,8 +750,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
     const imageDimension = `image-dimension: ${this.container.offsetWidth}x${this.container.offsetHeight}px`;
 
-    const currentXImage = 'active-index-x: ' + this.activeImageX;
-    const currentYImage = 'active-index-y: ' + this.activeImageY;
+    const currentXImage = `active-index-x: ${this.activeImageX}`;
+    const currentYImage = `active-index-y: ${this.activeImageY}`;
 
     const imageIndex = [currentXImage, currentYImage].join(' | ');
 
@@ -769,7 +766,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const firstImage = this.imagesX[0];
 
     this.update();
-    if (!responsive || this.container.offsetWidth < firstImage.width *  1.5) return;
+    if (!responsive || this.container.offsetWidth < firstImage.width * 1.5) return;
 
     this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
     const srcX = generateImagesPath(this.srcXConfig);
@@ -779,7 +776,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.srcXConfig,
       srcX,
       this.onResizedImageLoad.bind(this, ORIENTATIONS.X),
-    )
+    );
 
     if (this.allowSpinY) {
       const srcY = generateImagesPath(this.srcYConfig);
@@ -788,7 +785,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         this.srcYConfig,
         srcY,
         this.onResizedImageLoad.bind(this, ORIENTATIONS.Y),
-      )
+      );
     }
   }
 
@@ -801,33 +798,32 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
     if (!image) return;
 
-    const ctx = this.canvas.getContext("2d");
+    const ctx = this.canvas.getContext('2d');
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
 
     this.updateContainerAndCanvasSize(image);
 
     if (this.fullscreenView) {
-      const { width, height, offsetX, offsetY } =
-        contain(this.canvas.width, this.canvas.height, image.width, image.height);
+      const {
+        width, height, offsetX, offsetY,
+      } = contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
-        ctx.drawImage(image, offsetX, offsetY, width, height);
+      ctx.drawImage(image, offsetX, offsetY, width, height);
+    } else if (this.mouseTracked) {
+      this.updateImageScale(ctx);
     } else {
-      if (this.mouseTracked) {
-        this.updateImageScale(ctx);
-      } else {
-        if (this.hotspotsConfigs && !this.autoplay) {
-          updateHotspots(
-            this.container,
-            this.hotspotsConfigs,
-            this.activeImageX,
-            this.activeImageY,
-            this.movingDirection,
-            this.isClicked
-          );
-        }
-
-        ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+      if (this.hotspotsConfigs && !this.autoplay) {
+        updateHotspots(
+          this.container,
+          this.hotspotsConfigs,
+          this.activeImageX,
+          this.activeImageY,
+          this.movingDirection,
+          this.isClicked,
+        );
       }
+
+      ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
     }
 
     if (this.info) {
@@ -849,32 +845,33 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const width = (this.canvas.width * this.zoomIntensity);
     const height = (this.canvas.height * this.zoomIntensity);
 
-    const pointX = 0 - ( (position.x / imageWidth) * (width - this.canvas.width) );
-    const pointY = 0 - ( (position.y / imageHeight) * (height - this.canvas.height) );
+    const pointX = 0 - ((position.x / imageWidth) * (width - this.canvas.width));
+    const pointY = 0 - ((position.y / imageHeight) * (height - this.canvas.height));
 
     ctx.drawImage(image, pointX, pointY, width, height);
   }
 
   updatePercentageInLoader(percentage) {
     if (this.loader) {
-      this.loader.style.width = percentage + '%';
+      this.loader.style.width = `${percentage}%`;
     }
 
     if (this.view360Icon) {
-      this.view360Icon.innerText = percentage + '%';
+      this.view360Icon.innerText = `${percentage}%`;
     }
   }
 
   onFirstImageLoaded(image) {
     this.add360ViewIcon();
 
-    const ctx = this.canvas.getContext("2d");
+    const ctx = this.canvas.getContext('2d');
     ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
     this.updateContainerAndCanvasSize(image);
 
     if (this.fullscreenView) {
-      const { offsetX, offsetY, width, height } =
-        contain(this.canvas.width, this.canvas.height, image.width, image.height);
+      const {
+        offsetX, offsetY, width, height,
+      } = contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
       this.offset = { x: offsetX, y: offsetY };
 
@@ -904,7 +901,6 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     if (this.fullscreen && !this.fullscreenView) {
       this.addFullscreenIcon();
     }
-
   }
 
   onAllImagesLoaded() {
@@ -931,7 +927,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       if (this.hide360Logo) return this.remove360ViewIcon();
 
       this.view360Icon.innerText = '';
-      //TODO [deprecated]: remove setView360Icon in the upcoming versions
+      // TODO [deprecated]: remove setView360Icon in the upcoming versions
       if (this.logoSrc) setView360Icon(this.view360Icon, this.logoSrc);
     }
 
@@ -948,7 +944,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.imagesX,
       this.imagesY,
       this.activeImageX,
-      this.activeImageY
+      this.activeImageY,
     );
 
     this.isMagnifyOpen = true;
@@ -967,7 +963,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.offset,
       currentOriginalImage,
       this.glass,
-      this.magnifier || 3
+      this.magnifier || 3,
     );
   }
 
@@ -1015,7 +1011,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         this.activeImageY,
         this.amountX,
         this.amountY,
-        this.reversed
+        this.reversed,
       );
 
       if (this.playOnce && isPlayedOnce) {
@@ -1029,7 +1025,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
             this.activeImageX,
             this.activeImageY,
             this.movingDirection,
-            this.isClicked
+            this.isClicked,
           );
         }
       }
@@ -1043,7 +1039,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   updateView(forceUpdate, viewers) {
-    let container = this.container;
+    let { container } = this;
 
     const imageProps = get360ViewProps(container);
     const srcPropsChanged = isPropsChangeRequireReload(this, imageProps);
@@ -1051,7 +1047,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
     if (reInitView) {
       const oldElement = this.container;
-      const viewIndex = viewers.findIndex(view => view.id === this.container.id);
+      const viewIndex = viewers.findIndex((view) => view.id === this.container.id);
 
       container.removeChild(this.innerBox);
       container = container.cloneNode(true);
@@ -1073,7 +1069,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   destroy() {
-    stop();
+    this.stop();
 
     const oldElement = this.container;
     const newElement = oldElement.cloneNode(true);
@@ -1188,7 +1184,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     try {
       this.innerBox.removeChild(this.view360Icon);
       this.view360Icon = null;
-    } catch {}
+    } catch { return false; }
   }
 
   initControls() {
@@ -1226,7 +1222,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.bottom();
 
       this.loopTimeoutId = window.setInterval(this.bottom.bind(this), this.autoplaySpeed);
-    }
+    };
 
     const onEventEnd = () => {
       this.onFinishSpin();
@@ -1237,8 +1233,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       container: this.container,
       controlReverse: this.controlReverse,
       spinReverse: this.spinReverse,
-      stopAtEdges: this.stopAtEdges
-    }
+      stopAtEdges: this.stopAtEdges,
+    };
 
     const controlsTriggers = {
       onLeftStart,
@@ -1259,7 +1255,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   attachEvents(draggable, swipeable, keys) {
     window.addEventListener('resize', this.requestResizedImages.bind(this));
 
-    if ( (draggable) && (!this.disableDrag) ) {
+    if ((draggable) && (!this.disableDrag)) {
       this.container.addEventListener('click', this.mouseClick.bind(this));
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
       this.container.addEventListener('mousemove', this.mouseMove.bind(this));
@@ -1268,7 +1264,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       document.addEventListener('mouseup', this.mouseUp.bind(this));
     }
 
-    if ( (swipeable) && (!this.disableDrag) ) {
+    if ((swipeable) && (!this.disableDrag)) {
       this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
       this.container.addEventListener('touchend', this.touchEnd.bind(this));
       this.container.addEventListener('touchmove', this.touchMove.bind(this));
@@ -1283,9 +1279,9 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   init(container, update = false) {
-    let {
-      folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black'
+    const {
+      folder, apiVersion, filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black',
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1302,7 +1298,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.allowSpinY = (!!this.amountY);
     this.activeImageX = autoplayReverse ? this.amountX : 1;
     this.activeImageY = autoplayReverse ? this.amountY : 1;
-    this.spinY = (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX) ? true : false;
+    this.spinY = (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX);
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.boxShadow = boxShadow;
@@ -1318,7 +1314,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.spinReverse = spinReverse;
     this.controlReverse = controlReverse;
     this.dragSpeed = Math.max(dragSpeed, 50);
-    this.autoplaySpeed = this.speed * 36 / this.amountX;
+    this.autoplaySpeed = (this.speed * 36) / this.amountX;
     this.stopAtEdges = stopAtEdges;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
@@ -1328,12 +1324,12 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.keysReverse = keysReverse;
     this.info = imageInfo;
     this.keys = keys;
-    this.ratio =  ratio && JSON.parse(ratio);
+    this.ratio = ratio && JSON.parse(ratio);
 
     if (update) {
       removeChildrenFromParent(
         this.innerBox,
-        [this.iconsContainer, this.boxShadowEl, this.view360Icon]
+        [this.iconsContainer, this.boxShadowEl, this.view360Icon],
       );
 
       this.remove360ViewCircleIcon();
@@ -1387,15 +1383,15 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       amount: this.amountX,
       indexZeroBase,
       fullscreen: this.fullscreenView,
-    }
+    };
 
     this.srcYConfig = {
       ...this.srcXConfig,
       filename: filenameY,
       orientation: ORIENTATIONS.Y,
       imageList: imageListY,
-      amount: this.amountY
-    }
+      amount: this.amountY,
+    };
 
     const srcX = generateImagesPath(this.srcXConfig);
 
@@ -1406,14 +1402,14 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         this.imagesY[index] = image;
       }
 
-      const loadedXImages = this.imagesX.filter(image => image);
-      const loadedYImages = this.imagesY.filter(image => image);
+      const loadedXImages = this.imagesX.filter((loadedImage) => loadedImage);
+      const loadedYImages = this.imagesY.filter((loadedImage) => loadedImage);
 
       const totalAmount = this.amountX + this.amountY;
       const totalLoadedImages = loadedXImages.length + loadedYImages.length;
 
       const isFirstImageLoaded = !index && orientation !== ORIENTATIONS.Y;
-      const percentage = Math.round(totalLoadedImages / totalAmount * 100);
+      const percentage = Math.round((totalLoadedImages / totalAmount) * 100);
 
       this.updatePercentageInLoader(percentage);
 
@@ -1424,13 +1420,13 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       if (this.isReady()) {
         this.onAllImagesLoaded();
       }
-    }
+    };
 
     const loadImages = () => {
       preloadImages(
         this.srcXConfig,
         srcX,
-        (onImageLoad.bind(this, ORIENTATIONS.X))
+        (onImageLoad.bind(this, ORIENTATIONS.X)),
       );
 
       if (this.allowSpinY) {
@@ -1439,17 +1435,17 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
         preloadImages(
           this.srcYConfig,
           srcY,
-          onImageLoad.bind(this, ORIENTATIONS.Y)
+          onImageLoad.bind(this, ORIENTATIONS.Y),
         );
       }
-    }
+    };
 
     if (lazyload) {
       const onFirstImageLoad = (image) => {
         this.innerBox.removeChild(image);
 
         loadImages();
-      }
+      };
 
       initLazyload(srcX, this.srcXConfig, onFirstImageLoad);
     } else {

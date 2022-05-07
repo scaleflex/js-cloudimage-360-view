@@ -1,5 +1,6 @@
-import { prepareFirstImageFromFolder } from "./prepare-first-image/prepare-first-image-from-folder";
-import { prepareFirstImageFromList } from "./prepare-first-image/prepare-first-image-from-list";
+import { prepareFirstImageFromFolder } from './prepare-first-image/prepare-first-image-from-folder';
+import { prepareFirstImageFromList } from './prepare-first-image/prepare-first-image-from-list';
+
 
 export const initLazyload = (imagesSrc, srcConfig, cb) => {
   const { imageList, lazySelector, innerBox } = srcConfig || {};
@@ -11,6 +12,7 @@ export const initLazyload = (imagesSrc, srcConfig, cb) => {
 
       firstImageSrc = prepareFirstImageFromList(images, srcConfig);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(`Wrong format in image-list attribute: ${error.message}`);
     }
   } else {
@@ -35,4 +37,4 @@ export const initLazyload = (imagesSrc, srcConfig, cb) => {
   if (cb) {
     image.onload = () => cb(image);
   }
-}
+};
