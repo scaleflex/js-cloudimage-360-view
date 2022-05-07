@@ -44,7 +44,7 @@ import {
   hideHotspotsIcons,
   isPropsChangeRequireReload,
   getImageAspectRatio,
-  removeChildFromParent,
+  removeChildrenFromParent,
   initLazyload,
   } from './utils';
 import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
@@ -1331,9 +1331,11 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.ratio =  ratio && JSON.parse(ratio);
 
     if (update) {
-      removeChildFromParent(this.innerBox, this.iconsContainer);
-      removeChildFromParent(this.innerBox, this.boxShadowEl);
-      removeChildFromParent(this.innerBox, this.view360Icon);
+      removeChildrenFromParent(
+        this.innerBox,
+        [this.iconsContainer, this.boxShadowEl, this.view360Icon]
+      );
+
       this.remove360ViewCircleIcon();
 
       this.iconsContainer = createIconsContainer(this.innerBox);
