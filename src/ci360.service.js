@@ -745,8 +745,8 @@ class CI360Viewer {
   }
 
   showImageInfo(ctx) {
-    ctx.font = `${this.fullscreenView ? 28 : 14}px serif`;
-    ctx.fillStyle = (this.info === 'white' ? '#FFF' : '#000');
+    ctx.font = `${this.fullscreenView ? 28 : 16}px serif`;
+    ctx.fillStyle = this.info;
 
     const imageDimension = `image-dimension: ${this.container.offsetWidth}x${this.container.offsetHeight}px`;
 
@@ -1281,7 +1281,7 @@ class CI360Viewer {
   init(container, update = false) {
     const {
       folder, apiVersion, filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black',
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo,
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1357,7 +1357,7 @@ class CI360Viewer {
         this.boxShadowEl = createBoxShadow(this.boxShadow, this.innerBox);
       }
 
-      return this.onAllImagesLoaded();
+      this.onAllImagesLoaded();
     }
 
     this.innerBox = createInnerBox(this.container);

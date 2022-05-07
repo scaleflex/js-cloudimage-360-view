@@ -1,5 +1,5 @@
 import { AUTOPLAY_BEHAVIOR } from './constants';
-import { attr, isTrue } from './utils';
+import { attr, attrWithDefaultValue, isTrue } from './utils';
 
 // TODO [deprecated]: remove filename, amount in the upcoming versions
 const get360ViewProps = (image) => ({
@@ -51,7 +51,7 @@ const get360ViewProps = (image) => ({
   hide360Logo: isTrue(image, 'hide-360-logo'),
   logoSrc: attr(image, 'logo-src') || 'https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg',
   ratio: attr(image, 'ratio') || attr(image, 'data-ratio'),
-  imageInfo: attr(image, 'info') || attr(image, 'data-info') || isTrue(image, 'info'),
+  imageInfo: attrWithDefaultValue(image, 'info', '#FFF') || attrWithDefaultValue(image, 'info', '#FFF'),
 });
 
 const setView360Icon = (view360Icon, logoSrc) => {

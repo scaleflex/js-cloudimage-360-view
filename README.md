@@ -396,6 +396,7 @@ Spin direction, by default it uses counterclockwise (image indexes from 1 to dat
 
 Apply box shadow for container.
 
+
 ### data-bottom-circle (or bottom-circle)
 
 ###### Type: **Bool** | Default: **false** | _optional_
@@ -489,6 +490,11 @@ Only 360 view images close to the client's viewport will be loaded, hence accele
 
 Helper class to apply lazy-loading depending on library you choose, see [Lazy loading](#lazy-loading)
 
+### data-info (or info)
+
+###### Type: **String** (e.g. data-info="#CCC") | Default: **#FFF** | _optional_
+
+Show the active image info at the view bottom corner
 
 ## <a name="controls"></a> Controls
 
@@ -584,7 +590,7 @@ Also we need to set an `id` attribute, we will need it to link the view with the
 
 ### Create hotspots configuration
 The hotspots config should be an array of objects, each object in the array indicates a single hotspot config.
-For each item in the array, we need to set the positions (X-coord and Y-coord) of the hotspot at every image index we need to show the hotspot on it. <br>hint: To know the current image index we will need to set `data-info="white || black"` attribute.
+For each item in the array, we need to set the positions (X-coord and Y-coord) of the hotspot at every image index we need to show the hotspot on it. <br>hint: To know the current image index we will need to set <a href="#data-info-or-info">data-info</a> attribute.
 
 example:
 
@@ -697,7 +703,7 @@ const HOTSPOTS_CONFIG = [
 ## Responsive hotspots
 Now we need to make our hotspots responsive to have an accurate positioning in different screens.
 we have to set `initialDimensions` property to every hotspot config. which indicates the dimension of the cloudimage-360 view.<br/>
-hint: `data-info` can be used to get view size.
+hint: <a href="#data-info-or-info">data-info</a> attribute can be used to get view size.
 
 example:
 ```js

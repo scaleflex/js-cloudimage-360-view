@@ -13,3 +13,4 @@ export { createFullscreenModal } from './create-fullscreen-modal';
 export { removeChildrenFromParent } from './remove-children-from-parent';
 export { attr } from './attr';
 export { isTrue } from './is-true';
+export { attrWithDefaultValue } from './attr-with-default-value';
