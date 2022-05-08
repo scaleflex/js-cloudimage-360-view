@@ -1,6 +1,8 @@
 export { isPropsChangeRequireReload } from './image-src/is-props-change-require-reload';
 
 export { generateImagesPath } from './image-src/generate-images-path';
+export { getSrcXConfig } from './image-src/get-src-x-config';
+export { getSrcYConfig } from './image-src/get-src-y-config';
 export { preloadImages } from './load-images/preload-images';
 export { preloadOriginalImages } from './load-images/preload-original-images';
 export { initLazyload } from './load-images/lazyload/init-lazyload';

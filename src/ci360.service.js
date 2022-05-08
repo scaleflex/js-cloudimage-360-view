@@ -46,6 +46,8 @@ import {
   getImageAspectRatio,
   removeChildrenFromParent,
   initLazyload,
+  getSrcXConfig,
+  getSrcYConfig,
 } from './utils';
 import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
@@ -1373,27 +1375,8 @@ class CI360Viewer {
 
     applyStylesToContainer(this.container);
 
-    this.srcXConfig = {
-      folder,
-      filename: filenameX,
-      imageList: imageListX,
-      container,
-      innerBox: this.innerBox,
-      apiVersion,
-      ciParams,
-      lazySelector,
-      amount: this.amountX,
-      indexZeroBase,
-      fullscreen: this.fullscreenView,
-    };
-
-    this.srcYConfig = {
-      ...this.srcXConfig,
-      filename: filenameY,
-      orientation: ORIENTATIONS.Y,
-      imageList: imageListY,
-      amount: this.amountY,
-    };
+    this.srcXConfig = getSrcXConfig(container, this.innerBox, this.fullscreenView);
+    this.srcYConfig = getSrcYConfig(container, this.innerBox, this.fullscreenView);
 
     const srcX = generateImagesPath(this.srcXConfig);
 
