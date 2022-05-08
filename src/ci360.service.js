@@ -82,7 +82,7 @@ class CI360Viewer {
     this.intialPositions = { x: 0, y: 0 };
     this.pointerCurrentPosition = { x: 0, y: 0 };
     this.isStartedLoadOriginalImages = false;
-    this.init(container);
+    this.initAndUpdate(container);
   }
 
   isReady() {
@@ -1067,7 +1067,7 @@ class CI360Viewer {
     container.setAttribute('draggable', 'false');
 
     this.stop();
-    this.init(container, true);
+    this.initAndUpdate(container, true);
   }
 
   destroy() {
@@ -1280,7 +1280,7 @@ class CI360Viewer {
     document.addEventListener('keydown', this.keyDownGeneral.bind(this));
   }
 
-  init(container, update = false) {
+  initAndUpdate(container, update = false) {
     const {
       folder, apiVersion, filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo,
