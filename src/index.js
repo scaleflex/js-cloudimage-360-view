@@ -44,13 +44,12 @@ function destroy() {
 }
 
 function getActiveIndexByID(id, oriantation) {
-  if (isNoViewers()) return null;
+  if (isNoViewers()) return;
 
   const currentViewer = window.CI360._viewers.filter((viewer) => viewer.id === id)[0];
   const yDirection = 'y';
-
-
-  const activeIndex = (oriantation === yDirection ? currentViewer.activeImageY : currentViewer.activeImageX) - 1;
+  const activeIndex = ((oriantation === yDirection)
+    ? currentViewer.activeImageY : currentViewer.activeImageX) - 1;
 
   return activeIndex;
 }
@@ -69,8 +68,11 @@ function add(id) {
 
 function update(id = null, forceUpdate = false) {
   if (id) {
-    const view = window.CI360._viewers.filter((viewer) => viewer.id === id)[0];
-    view.updateView(forceUpdate, window.CI360._viewers);
+    const view = window.CI360._viewers.find((viewer) => viewer.id === id);
+
+    if (view) {
+      view.updateView(forceUpdate, window.CI360._viewers);
+    }
   } else {
     window.CI360._viewers
       .forEach((viewer) => { viewer.updateView(forceUpdate, window.CI360._viewers); });

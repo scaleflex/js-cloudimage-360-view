@@ -1358,6 +1358,8 @@ class CI360Viewer {
       }
 
       this.onAllImagesLoaded();
+
+      return;
     }
 
     this.innerBox = createInnerBox(this.container);
