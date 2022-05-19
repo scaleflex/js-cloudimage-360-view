@@ -53,7 +53,7 @@
 * [Configuration](#configuration)
 * [Controls](#controls)
 * [Spin in X and Y axis](#spin_x_y)
-* [Hotspots](#hotspots)
+* [Hotspots or Markers](#hotspots)
 * [Cloudimage responsive integration](#cloudimage-responsive-integration)
 * [Lazy loading integration](#lazy-loading)
 * [Best practices](#best-practices)
