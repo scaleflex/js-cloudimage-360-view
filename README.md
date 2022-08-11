@@ -120,8 +120,8 @@ window.CI360.init();
 window.CI360.add(idOftheView: string);
 ```
 lazy init cloudimage-360 view by id.
-### Properties
-#### `idOftheView`: string
+###### arguments
+`idOftheView`: string
 The id of the new view
 
 <a href="https://codesandbox.io/s/js-cloudimage-360-view-examples-vxlmoi"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="edit in codesandbox"/></a>
@@ -135,10 +135,11 @@ window.CI360.update(idOftheView, forceUpdate);
 Update cloudimage 360 viewer instance.<br/>
 For any update in source attributes after plugin initialization (e.g. `data-folder`, `data-filename-x`, `data-amount-y`),
 the plugin will re-init.
-### Properties
-#### `idOftheView`: string
+###### arguments
+`idOftheView`: string
 The id of the new view
-#### `forceUpdate`: bool
+
+`forceUpdate`: bool
 Force the view to reinitialize.
 
 ```html
@@ -181,11 +182,11 @@ Get the {index} of the image that is being viewed.
 ```javascript
 window.CI360.getActiveIndexByID(idOfInstance: string, oriantation: string);
 ```
-### Properties
-#### `idOfInstance`: string
+###### arguments
+`idOfInstance`: string
 The id of the instance
 
-#### `oriantation`: string
+`oriantation`: string
 The oriantation of the active index
 
 ## <a name="customize-elements"></a> Customize elements
