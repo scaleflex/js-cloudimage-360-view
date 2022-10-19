@@ -31,7 +31,7 @@
     "clean:demo": "rm -rf examples/dist",
     "build:demo": "npm run clean:demo && webpack --mode production  --config config/webpack-demo.config.js",
     "deploy:demo": "gh-pages -d examples/dist",
-    "publish:demo": "npm run build-demo && npm run deploy-demo"
+    "publish:demo": "npm run build:demo && npm run deploy:demo"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.0",
