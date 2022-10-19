@@ -7,7 +7,7 @@ const banner = `
  ${pkg.name} v${pkg.version}
  ${pkg.repository.url}
 
- Copyright (c) 2019 ${pkg.author}
+ Copyright (c) ${new Date().getFullYear()} ${pkg.author}
  Released under the ${pkg.license} license
 
  Date: ${now.toISOString()}

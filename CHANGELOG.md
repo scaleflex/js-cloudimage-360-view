@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 3.0.4 - 2022-10-19
+### Fixed
+- Hotspot icons width
+
 ## 3.0.3 - 2022-05-04
 ### Fixed
 - Error on loading original images from image list
