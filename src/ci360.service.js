@@ -63,6 +63,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.fullscreenView = !!fullscreen;
     this.imagesX = [];
     this.imagesY = [];
+    this.imagesXY = [];
     this.originalImagesX = [];
     this.originalImagesY = [];
     this.resizedImagesX = [];
@@ -85,10 +86,14 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   isReady() {
     const loadedXImages = this.imagesX.filter(image => image);
     const loadedYImages = this.imagesY.filter(image => image);
+    const loadedXYImages = this.imagesXY.filter(image => image);
 
-    const totalAmount = this.amountX + this.amountY;
+    let totalAmount = this.amountX + this.amountY;
+    if (this.modeXY) {
+      totalAmount = this.amountX * this.amountY;
+    }
 
-    return loadedXImages.length + loadedYImages.length === totalAmount;
+    return loadedXImages.length + loadedYImages.length + loadedXYImages.length === totalAmount;
   }
 
   mouseDown(event) {
@@ -473,110 +478,215 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   moveActiveIndexUp(itemsSkipped) {
-    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+    if (this.modeXY) {
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
-    if (this.stopAtEdges) {
-      const isReachedTheEdge = this.activeImageX + itemsSkipped >= this.amountX;
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageXModeXY + itemsSkipped >= this.amountX - 1;
 
-      if (isReachedTheEdge) {
-        this.activeImageX = this.amountX;
+        if (isReachedTheEdge) {
+          this.activeImageXModeXY = this.amountX - 1;
 
-        if (isReverse ? this.leftElem : this.rightElem) {
-          addClass(isReverse ? this.leftElem : this.rightElem, 'not-active');
+          if (isReverse ? this.leftElem : this.rightElem) {
+            addClass(isReverse ? this.leftElem : this.rightElem, 'not-active');
+          }
+        } else {
+          this.activeImageXModeXY += itemsSkipped;
+
+          if (this.rightElem) removeClass(this.rightElem, 'not-active');
+
+          if (this.leftElem) removeClass(this.leftElem, 'not-active');
         }
       } else {
-        this.activeImageX += itemsSkipped;
-
-        if (this.rightElem) removeClass(this.rightElem, 'not-active');
-
-        if (this.leftElem) removeClass(this.leftElem, 'not-active');
+        this.activeImageXModeXY = (this.activeImageXModeXY + itemsSkipped) % this.amountX;
       }
     } else {
-      this.activeImageX = (this.activeImageX + itemsSkipped) % this.amountX || this.amountX;
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
-      if (this.activeImageX === this.amountX && this.allowSpinY) this.spinY = true;
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageX + itemsSkipped >= this.amountX;
+
+        if (isReachedTheEdge) {
+          this.activeImageX = this.amountX;
+
+          if (isReverse ? this.leftElem : this.rightElem) {
+            addClass(isReverse ? this.leftElem : this.rightElem, 'not-active');
+          }
+        } else {
+          this.activeImageX += itemsSkipped;
+
+          if (this.rightElem) removeClass(this.rightElem, 'not-active');
+
+          if (this.leftElem) removeClass(this.leftElem, 'not-active');
+        }
+      } else {
+        this.activeImageX = (this.activeImageX + itemsSkipped) % this.amountX || this.amountX;
+
+        if (this.activeImageX === this.amountX && this.allowSpinY) this.spinY = true;
+      }
     }
   }
 
   moveActiveIndexDown(itemsSkipped) {
-    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+    if (this.modeXY) {
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
-    if (this.stopAtEdges) {
-      const isReachedTheEdge = this.activeImageX - itemsSkipped <= 1;
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageXModeXY - itemsSkipped <= 0;
 
-      if (isReachedTheEdge) {
-        this.activeImageX = 1;
+        if (isReachedTheEdge) {
+          this.activeImageXModeXY = 0;
 
-        if (isReverse ? this.rightElem : this.leftElem) {
-          addClass(isReverse ? this.rightElem : this.leftElem, 'not-active');
+          if (isReverse ? this.rightElem : this.leftElem) {
+            addClass(isReverse ? this.rightElem : this.leftElem, 'not-active');
+          }
+        } else {
+          this.activeImageXModeXY -= itemsSkipped;
+
+          if (this.leftElem) removeClass(this.leftElem, 'not-active');
+
+          if (this.rightElem) removeClass(this.rightElem, 'not-active');
         }
       } else {
-        this.activeImageX -= itemsSkipped;
-
-        if (this.leftElem) removeClass(this.leftElem, 'not-active');
-
-        if (this.rightElem) removeClass(this.rightElem, 'not-active');
+        if (this.activeImageXModeXY - itemsSkipped < 0) {
+          this.activeImageXModeXY = this.amountX + (this.activeImageXModeXY - itemsSkipped);
+        } else {
+          this.activeImageXModeXY -= itemsSkipped;
+        }
       }
     } else {
-      if (this.activeImageX - itemsSkipped < 1) {
-        this.activeImageX = this.amountX + (this.activeImageX - itemsSkipped);
-        this.spinY = true;
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageX - itemsSkipped <= 1;
+
+        if (isReachedTheEdge) {
+          this.activeImageX = 1;
+
+          if (isReverse ? this.rightElem : this.leftElem) {
+            addClass(isReverse ? this.rightElem : this.leftElem, 'not-active');
+          }
+        } else {
+          this.activeImageX -= itemsSkipped;
+
+          if (this.leftElem) removeClass(this.leftElem, 'not-active');
+
+          if (this.rightElem) removeClass(this.rightElem, 'not-active');
+        }
       } else {
-        this.activeImageX -= itemsSkipped;
-      }
+        if (this.activeImageX - itemsSkipped < 1) {
+          this.activeImageX = this.amountX + (this.activeImageX - itemsSkipped);
+          this.spinY = true;
+        } else {
+          this.activeImageX -= itemsSkipped;
+        }
+      }      
     }
   }
 
   moveActiveYIndexUp(itemsSkipped) {
-    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+    if (this.modeXY) {
+      // move down - see moveActiveYIndexDown
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
-    if (this.stopAtEdges) {
-      const isReachedTheEdge = this.activeImageY + itemsSkipped >= this.amountY;
-
-      if (isReachedTheEdge) {
-        this.activeImageY = this.amountY;
-
-        if (isReverse ? this.bottomElem : this.topElem) {
-          addClass(isReverse ? this.bottomElem : this.topElem, 'not-active');
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageYModeXY - itemsSkipped <= 0;
+  
+        if (isReachedTheEdge) {
+          this.activeImageYModeXY = 0;
+  
+          if (isReverse ? this.topElem : this.bottomElem) {
+            addClass(isReverse ? this.topElem : this.bottomElem, 'not-active');
+          }
+        } else {
+          this.activeImageYModeXY -= itemsSkipped;
+  
+          if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
+          if (this.topElem) removeClass(this.topElem, 'not-active');
         }
       } else {
-        this.activeImageY += itemsSkipped;
-
-        if (this.topElem) removeClass(this.topElem, 'not-active');
-
-        if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
+        if (this.activeImageYModeXY - itemsSkipped < 0) {
+          this.activeImageYModeXY = this.amountY + (this.activeImageYModeXY - itemsSkipped);
+        } else {
+          this.activeImageYModeXY -= itemsSkipped;
+        }
       }
     } else {
-      this.activeImageY = (this.activeImageY + itemsSkipped) % this.amountY || this.amountY;
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
-      if (this.activeImageY === this.amountY) this.spinY = false;
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageY + itemsSkipped >= this.amountY;
+  
+        if (isReachedTheEdge) {
+          this.activeImageY = this.amountY;
+  
+          if (isReverse ? this.bottomElem : this.topElem) {
+            addClass(isReverse ? this.bottomElem : this.topElem, 'not-active');
+          }
+        } else {
+          this.activeImageY += itemsSkipped;
+  
+          if (this.topElem) removeClass(this.topElem, 'not-active');
+  
+          if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
+        }
+      } else {
+        this.activeImageY = (this.activeImageY + itemsSkipped) % this.amountY || this.amountY;
+  
+        if (this.activeImageY === this.amountY) this.spinY = false;
+      }
     }
   }
 
   moveActiveYIndexDown(itemsSkipped) {
-    const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+    if (this.modeXY) {
+      // move up - see moveActiveYIndexUp
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
 
-    if (this.stopAtEdges) {
-      const isReachedTheEdge = this.activeImageY - itemsSkipped <= 1;
-
-      if (isReachedTheEdge) {
-        this.activeImageY = 1;
-
-        if (isReverse ? this.topElem : this.bottomElem) {
-          addClass(isReverse ? this.topElem : this.bottomElem, 'not-active');
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageYModeXY + itemsSkipped >= this.amountY - 1;
+  
+        if (isReachedTheEdge) {
+          this.activeImageYModeXY = this.amountY - 1;
+  
+          if (isReverse ? this.bottomElem : this.topElem) {
+            addClass(isReverse ? this.bottomElem : this.topElem, 'not-active');
+          }
+        } else {
+          this.activeImageYModeXY += itemsSkipped;
+  
+          if (this.topElem) removeClass(this.topElem, 'not-active');
+  
+          if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
         }
       } else {
-        this.activeImageY -= itemsSkipped;
-
-        if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
-        if (this.topElem) removeClass(this.topElem, 'not-active');
-      }
+        this.activeImageYModeXY = (this.activeImageYModeXY + itemsSkipped) % this.amountY;  
+      }      
     } else {
-      if (this.activeImageY - itemsSkipped < 1) {
-        this.activeImageY = this.amountY + (this.activeImageY - itemsSkipped);
-        this.spinY = false;
+      const isReverse = this.controlReverse ? !this.spinReverse : this.spinReverse;
+
+      if (this.stopAtEdges) {
+        const isReachedTheEdge = this.activeImageY - itemsSkipped <= 1;
+  
+        if (isReachedTheEdge) {
+          this.activeImageY = 1;
+  
+          if (isReverse ? this.topElem : this.bottomElem) {
+            addClass(isReverse ? this.topElem : this.bottomElem, 'not-active');
+          }
+        } else {
+          this.activeImageY -= itemsSkipped;
+  
+          if (this.bottomElem) removeClass(this.bottomElem, 'not-active');
+          if (this.topElem) removeClass(this.topElem, 'not-active');
+        }
       } else {
-        this.activeImageY -= itemsSkipped;
+        if (this.activeImageY - itemsSkipped < 1) {
+          this.activeImageY = this.amountY + (this.activeImageY - itemsSkipped);
+          this.spinY = false;
+        } else {
+          this.activeImageY -= itemsSkipped;
+        }
       }
     }
   }
@@ -797,6 +907,10 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
     if (this.movingDirection === ORIENTATIONS.Y) {
       image = this.imagesY[this.activeImageY - 1];
+    }
+    if (this.modeXY) {
+      const imageIndex = this.activeImageXModeXY + this.activeImageYModeXY * this.amountX;
+      image = this.imagesXY[imageIndex];
     }
 
     if (!image) return;
@@ -1284,12 +1398,13 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
   init(container, update = false) {
     let {
-      folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
+      modeXY, folder, apiVersion,filenameX, filenameXY, filenameY, imageListX, imageListXY, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black'
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
 
+    this.modeXY = modeXY;
     this.folder = folder;
     this.apiVersion = apiVersion;
     this.filenameX = filenameX;
@@ -1302,6 +1417,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.allowSpinY = (!!this.amountY);
     this.activeImageX = autoplayReverse ? this.amountX : 1;
     this.activeImageY = autoplayReverse ? this.amountY : 1;
+    this.activeImageXModeXY = 0;
+    this.activeImageYModeXY = 0;
     this.spinY = (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX) ? true : false;
     this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
@@ -1387,6 +1504,25 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       fullscreen: this.fullscreenView,
     }
 
+    this.srcXYConfig = {
+      x: 0,
+      y: 0,
+      folder,
+      filename: filenameXY,
+      imageList: imageListXY,
+      container,
+      innerBox: this.innerBox,
+      apiVersion,
+      ciParams,
+      lazySelector,
+      amountX: this.amountX,
+      amountY: this.amountY,
+      amount: this.amountX * this.amountY,
+      indexZeroBase,
+      fullscreen: this.fullscreenView,
+      modeXY: true,
+    }
+
     this.srcYConfig = {
       ...this.srcXConfig,
       filename: filenameY,
@@ -1396,21 +1532,30 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     }
 
     const srcX = generateImagesPath(this.srcXConfig);
+    const srcXY = generateImagesPath(this.srcXYConfig);
 
     const onImageLoad = (orientation, image, index) => {
-      if (orientation !== ORIENTATIONS.Y) {
-        this.imagesX[index] = image;
+      if (orientation === ORIENTATIONS.XY) {
+        this.imagesXY[index] = image;
+      } else if (orientation !== ORIENTATIONS.Y) {
+          this.imagesX[index] = image;
       } else {
         this.imagesY[index] = image;
       }
 
       const loadedXImages = this.imagesX.filter(image => image);
       const loadedYImages = this.imagesY.filter(image => image);
+      const loadedXYImages = this.imagesXY.filter(image => image);
 
-      const totalAmount = this.amountX + this.amountY;
-      const totalLoadedImages = loadedXImages.length + loadedYImages.length;
+      let totalAmount;
+      if (orientation === ORIENTATIONS.XY) {
+        totalAmount = this.amountX * this.amountY; 
+      } else {
+        totalAmount = this.amountX + this.amountY; 
+      }
+      const totalLoadedImages = loadedXImages.length + loadedYImages.length + loadedXYImages.length;
 
-      const isFirstImageLoaded = !index && orientation !== ORIENTATIONS.Y;
+      let isFirstImageLoaded = !index && orientation !== ORIENTATIONS.Y;
       const percentage = Math.round(totalLoadedImages / totalAmount * 100);
 
       this.updatePercentageInLoader(percentage);
@@ -1425,21 +1570,30 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     }
 
     const loadImages = () => {
-      preloadImages(
-        this.srcXConfig,
-        srcX,
-        (onImageLoad.bind(this, ORIENTATIONS.X))
-      );
-
-      if (this.allowSpinY) {
-        const srcY = generateImagesPath(this.srcYConfig);
-
+      if (this.modeXY) {
         preloadImages(
-          this.srcYConfig,
-          srcY,
-          onImageLoad.bind(this, ORIENTATIONS.Y)
+          this.srcXYConfig,
+          srcXY,
+          (onImageLoad.bind(this, ORIENTATIONS.XY))
         );
+      } else {
+        preloadImages(
+          this.srcXConfig,
+          srcX,
+          (onImageLoad.bind(this, ORIENTATIONS.X))
+        );
+  
+        if (this.allowSpinY) {
+          const srcY = generateImagesPath(this.srcYConfig);
+  
+          preloadImages(
+            this.srcYConfig,
+            srcY,
+            onImageLoad.bind(this, ORIENTATIONS.Y)
+          );
+        }
       }
+
     }
 
     if (lazyload) {

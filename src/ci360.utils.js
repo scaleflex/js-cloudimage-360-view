@@ -9,7 +9,10 @@ const get360ViewProps = (image) => ({
   || 'image-{index}.jpg',
   filenameY: attr(image, 'filename-y') ||
   attr(image, 'data-filename-y') || 'image-y-{index}.jpg',
+  filenameXY: attr(image, 'filename-xy') ||
+  attr(image, 'data-filename-xy') || 'image-{y}-{x}.jpg',
   imageListX: attr(image, 'image-list-x') || attr(image, 'data-image-list-x') || null,
+  imageListXY: attr(image, 'image-list-xy') || attr(image, 'data-image-list-xy') || null,
   imageListY: attr(image, 'image-list-y') || attr(image, 'data-image-list-y') || null,
   indexZeroBase: parseInt(attr(image, 'index-zero-base') || attr(image, 'data-index-zero-base') || 0, 10),
   amountX: parseInt(attr(image, 'amount') || attr(image, 'data-amount')
@@ -23,6 +26,7 @@ const get360ViewProps = (image) => ({
   keysReverse: isTrue(image, 'keys-reverse'),
   boxShadow: attr(image, 'box-shadow') || attr(image, 'data-box-shadow'),
   autoplay: isTrue(image, 'autoplay'),
+  modeXY: isTrue(image, 'mode-xy'),
   autoplayBehavior: attr(image, 'autoplay-behavior')
   || attr(image, 'data-autoplay-behavior')
   || AUTOPLAY_BEHAVIOR.SPIN_X,
