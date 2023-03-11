@@ -6,7 +6,16 @@ export const prepareImagesFromFolder = (imagesSrc, srcConfig, loadOriginalImages
 
   return [...new Array(amount)].map((_item, index) => {
     const nextZeroFilledIndex = pad(index + 1, indexZeroBase);
-    const imageSrc = imagesSrc.replace('{index}', nextZeroFilledIndex);
+    let imageSrc;
+    if (srcConfig.modeXY) {
+      const x = index % srcConfig.amountX;
+      const y = Math.floor(index / srcConfig.amountX);
+      imageSrc = imagesSrc;
+      imageSrc = imageSrc.replace('{x}', x);
+      imageSrc = imageSrc.replace('{y}', y);
+    } else {
+      imageSrc = imagesSrc.replace('{index}', nextZeroFilledIndex);
+    }
 
     if (loadOriginalImages) {
       const imageOriginalSrc = imageSrc
