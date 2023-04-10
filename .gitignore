@@ -1,4 +1,5 @@
 /node_modules
+/build
 .DS_Store
 .env.local
 .env.development.local

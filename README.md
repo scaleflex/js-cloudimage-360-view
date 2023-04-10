@@ -748,6 +748,12 @@ CDN traffic per month for free.
 
 Enables cloudimage responsive plugin for 360 view.
 
+### data-request-responsive-images (or request-responsive-images)
+
+###### Type: **Bool** | Default: **false**
+
+Request new images on resize, based on the container width.
+
 ### data-transformation (or transformation)
 
 ###### Type: **String** | Default: **none** | _optional_

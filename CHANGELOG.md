@@ -25,6 +25,13 @@ Types of changes:
 - ...
 
 -------------
+## 3.1.0 - 2023-04-10
+### Added
+- possibility to enable/disable the request of new image on resize using `data-request-responsive-images`
+
+### Fixed
+- Page scroll, even spin-y is not active
+
 ## 3.0.4 - 2022-10-19
 ### Fixed
 - Hotspot icons width
