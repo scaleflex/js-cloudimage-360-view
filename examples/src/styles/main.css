@@ -1049,7 +1049,7 @@ body {
   }
 
   .gallery-section {
-   padding: 0 16px;
+    padding: 0 16px;
   }
 
   .demo-usage {
@@ -1109,6 +1109,11 @@ body {
 
   .demo-usage-wrapper .demo-usage-content .customize-wrapper {
     overflow-y: unset;
+  }
+
+  .gallery-section .gallery-content .motorcycle,
+  .gallery-section .gallery-content .geely-car {
+    width: 380px;
   }
 
   .footer {
