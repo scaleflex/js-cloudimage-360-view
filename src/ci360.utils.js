@@ -49,7 +49,8 @@ const get360ViewProps = (image) => ({
   hide360Logo: isTrue(image, 'hide-360-logo'),
   logoSrc: attr(image, 'logo-src') || 'https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg',
   ratio: attr(image, 'ratio') || attr(image, 'data-ratio'),
-  imageInfo: attr(image, 'info')|| attr(image, 'data-info') || isTrue(image, 'info')
+  imageInfo: attr(image, 'info')|| attr(image, 'data-info') || isTrue(image, 'info'),
+  requestResponsiveImages:  isTrue(image, 'request-responsive-images')
 });
 
 const isTrue = (image, type) => {

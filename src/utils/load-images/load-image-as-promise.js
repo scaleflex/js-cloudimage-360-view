@@ -1,23 +1,9 @@
-export const loadImageAsPromise = async (src, index, cb) => {
+export const loadImageAsPromise = (src, cb) => {
   const image = new Image();
-
   image.src = src;
 
-  return new Promise((reslove) => {
-    image.onload = () => {
-      reslove(image);
+  const onImageLoad = () => cb(image);
 
-      if (cb) {
-        cb(image, index);
-      }
-    };
-
-    image.onerror = () => {
-      reslove(image);
-
-      if (cb) {
-        cb(image, index);
-      }
-    };
-  });
+  image.onload = onImageLoad
+  image.onerror = onImageLoad
 };

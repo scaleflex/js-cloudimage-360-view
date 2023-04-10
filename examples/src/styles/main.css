@@ -104,7 +104,8 @@ body {
 
 .content-wrapper .content .github-sandbox-buttons-wrapper {
   display: flex;
-  column-gap: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-top: 24px;
 }
 

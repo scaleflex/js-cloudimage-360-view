@@ -46,10 +46,10 @@ import {
   getImageAspectRatio,
   removeChildFromParent,
   initLazyload,
-  } from './utils';
+} from './utils';
 import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
-  class CI360Viewer {
+class CI360Viewer {
   constructor(container, fullscreen, hotspotsConfigs) {
     this.container = container;
     this.movementStart = { x: 0, y: 0 };
@@ -83,12 +83,9 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   isReady() {
-    const loadedXImages = this.imagesX.filter(image => image);
-    const loadedYImages = this.imagesY.filter(image => image);
-
     const totalAmount = this.amountX + this.amountY;
 
-    return loadedXImages.length + loadedYImages.length === totalAmount;
+    return (this.imagesX.length + this.imagesY.length) === totalAmount;
   }
 
   mouseDown(event) {
@@ -160,7 +157,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   mouseClick(event) {
-    if (!this.pointerZoom  || this.fullscreenView) return;
+    if (!this.pointerZoom || this.fullscreenView) return;
 
     this.setCursorPosition(event);
     this.hideInitialIcons();
@@ -350,7 +347,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   touchMove(event) {
     if (!this.isClicked || !this.imagesLoaded) return;
 
-    if (event.cancelable) {
+    if (event.cancelable && this.allowSpinY) {
       event.preventDefault();
     }
 
@@ -399,7 +396,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   getCursorPositionInCanvas() {
-    const canvasRect =  this.canvas.getBoundingClientRect();
+    const canvasRect = this.canvas.getBoundingClientRect();
 
     this.pointerCurrentPosition = {
       x: this.mousePositions.x - canvasRect.left,
@@ -585,7 +582,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const itemsSkippedRight = getItemSkipped(currentPositionX, this.movementStart.x, this.speedFactor);
 
     this.spinReverse ? this.moveActiveIndexDown(itemsSkippedRight)
-    : this.moveActiveIndexUp(itemsSkippedRight);
+      : this.moveActiveIndexUp(itemsSkippedRight);
 
     this.movementStart.x = currentPositionX;
     this.activeImageY = 1;
@@ -596,7 +593,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const itemsSkippedLeft = getItemSkipped(this.movementStart.x, currentPositionX, this.speedFactor);
 
     this.spinReverse ? this.moveActiveIndexUp(itemsSkippedLeft)
-    : this.moveActiveIndexDown(itemsSkippedLeft);
+      : this.moveActiveIndexDown(itemsSkippedLeft);
 
     this.activeImageY = 1;
     this.movementStart.x = currentPositionX;
@@ -604,10 +601,10 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   moveTop(currentPositionY) {
-    const itemsSkippedTop =  getItemSkipped(this.movementStart.y, currentPositionY, this.speedFactor);
+    const itemsSkippedTop = getItemSkipped(this.movementStart.y, currentPositionY, this.speedFactor);
 
     this.spinReverse ? this.moveActiveYIndexUp(itemsSkippedTop)
-    : this.moveActiveYIndexDown(itemsSkippedTop);
+      : this.moveActiveYIndexDown(itemsSkippedTop);
 
     this.activeImageX = 1;
     this.movementStart.y = currentPositionY;
@@ -618,7 +615,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const itemsSkippedBottom = getItemSkipped(currentPositionY, this.movementStart.y, this.speedFactor);
 
     this.spinReverse ? this.moveActiveYIndexDown(itemsSkippedBottom)
-    : this.moveActiveYIndexUp(itemsSkippedBottom);
+      : this.moveActiveYIndexUp(itemsSkippedBottom);
 
     this.activeImageX = 1;
     this.movementStart.y = currentPositionY;
@@ -730,20 +727,15 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       this.resizedImagesX[index] = image;
     }
 
-    const loadedResizedXImages = this.resizedImagesX
-      .filter(image => image);
-    const loadedResizedYImages = this.resizedImagesY
-      .filter(image => image);
-
     const isAllImagesLoaded = (
-      loadedResizedXImages.length + loadedResizedYImages.length === this.amountX + this.amountY
+      this.resizedImagesX.length + this.resizedImagesY.length === this.amountX + this.amountY
     );
 
     if (isAllImagesLoaded) {
-    this.imagesX = this.resizedImagesX;
-    this.imagesY = this.resizedImagesY;
+      this.imagesX = this.resizedImagesX;
+      this.imagesY = this.resizedImagesY;
 
-    this.update();
+      this.update();
     }
   }
 
@@ -769,11 +761,11 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const firstImage = this.imagesX[0];
 
     this.update();
-    if (!responsive || this.container.offsetWidth < firstImage.width *  1.5) return;
+
+    if (!responsive || !this.requestResponsiveImages || (this.container.offsetWidth < firstImage.width * 1.5)) return;
 
     this.speedFactor = getSpeedFactor(this.dragSpeed, this.amountX, this.container.offsetWidth);
     const srcX = generateImagesPath(this.srcXConfig);
-
 
     preloadImages(
       this.srcXConfig,
@@ -810,7 +802,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       const { width, height, offsetX, offsetY } =
         contain(this.canvas.width, this.canvas.height, image.width, image.height);
 
-        ctx.drawImage(image, offsetX, offsetY, width, height);
+      ctx.drawImage(image, offsetX, offsetY, width, height);
     } else {
       if (this.mouseTracked) {
         this.updateImageScale(ctx);
@@ -849,8 +841,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const width = (this.canvas.width * this.zoomIntensity);
     const height = (this.canvas.height * this.zoomIntensity);
 
-    const pointX = 0 - ( (position.x / imageWidth) * (width - this.canvas.width) );
-    const pointY = 0 - ( (position.y / imageHeight) * (height - this.canvas.height) );
+    const pointX = 0 - ((position.x / imageWidth) * (width - this.canvas.width));
+    const pointY = 0 - ((position.y / imageHeight) * (height - this.canvas.height));
 
     ctx.drawImage(image, pointX, pointY, width, height);
   }
@@ -904,7 +896,6 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     if (this.fullscreen && !this.fullscreenView) {
       this.addFullscreenIcon();
     }
-
   }
 
   onAllImagesLoaded() {
@@ -1073,7 +1064,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   }
 
   destroy() {
-    stop();
+    this.stop();
 
     const oldElement = this.container;
     const newElement = oldElement.cloneNode(true);
@@ -1188,7 +1179,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     try {
       this.innerBox.removeChild(this.view360Icon);
       this.view360Icon = null;
-    } catch {}
+    } catch { }
   }
 
   initControls() {
@@ -1259,7 +1250,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
   attachEvents(draggable, swipeable, keys) {
     window.addEventListener('resize', this.requestResizedImages.bind(this));
 
-    if ( (draggable) && (!this.disableDrag) ) {
+    if ((draggable) && (!this.disableDrag)) {
       this.container.addEventListener('click', this.mouseClick.bind(this));
       this.container.addEventListener('mousedown', this.mouseDown.bind(this));
       this.container.addEventListener('mousemove', this.mouseMove.bind(this));
@@ -1268,7 +1259,7 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
       document.addEventListener('mouseup', this.mouseUp.bind(this));
     }
 
-    if ( (swipeable) && (!this.disableDrag) ) {
+    if ((swipeable) && (!this.disableDrag)) {
       this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
       this.container.addEventListener('touchend', this.touchEnd.bind(this));
       this.container.addEventListener('touchmove', this.touchMove.bind(this));
@@ -1284,8 +1275,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
 
   init(container, update = false) {
     let {
-      folder, apiVersion,filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
-      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black'
+      folder, apiVersion, filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
+      autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black', requestResponsiveImages
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1328,7 +1319,8 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     this.keysReverse = keysReverse;
     this.info = imageInfo;
     this.keys = keys;
-    this.ratio =  ratio && JSON.parse(ratio);
+    this.ratio = ratio && JSON.parse(ratio);
+    this.requestResponsiveImages = requestResponsiveImages
 
     if (update) {
       removeChildFromParent(this.innerBox, this.iconsContainer);
@@ -1398,25 +1390,22 @@ import { togglePopupEvents } from './utils/hotspots/toggle-popup-events';
     const srcX = generateImagesPath(this.srcXConfig);
 
     const onImageLoad = (orientation, image, index) => {
-      if (orientation !== ORIENTATIONS.Y) {
+      if (orientation === ORIENTATIONS.X) {
         this.imagesX[index] = image;
       } else {
         this.imagesY[index] = image;
       }
 
-      const loadedXImages = this.imagesX.filter(image => image);
-      const loadedYImages = this.imagesY.filter(image => image);
-
       const totalAmount = this.amountX + this.amountY;
-      const totalLoadedImages = loadedXImages.length + loadedYImages.length;
-
+      const totalLoadedImages = this.imagesX.length + this.imagesY.length;
       const isFirstImageLoaded = !index && orientation !== ORIENTATIONS.Y;
       const percentage = Math.round(totalLoadedImages / totalAmount * 100);
 
       this.updatePercentageInLoader(percentage);
-
       if (isFirstImageLoaded) {
         this.onFirstImageLoaded(image);
+      } else if (this.autoplay) {
+        this.moveRight(index)
       }
 
       if (this.isReady()) {
