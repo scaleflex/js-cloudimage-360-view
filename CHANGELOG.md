@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 3.1.1 - 2023-04-19
+### Fixed
+- Remove CVE vulnerabilities
+
 ## 3.1.0 - 2023-04-10
 ### Added
 - possibility to enable/disable the request of new image on resize using `data-request-responsive-images`
