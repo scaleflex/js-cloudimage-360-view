@@ -64,10 +64,17 @@ function add(id) {
   }
 }
 
-function update(id = null, forceUpdate = false) {
+function update(id = null, forceUpdate = false, hotspotConfigs = null) {
   if (id) {
     const view = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
-    view.updateView(forceUpdate, window.CI360._viewers);
+
+    if (hotspotConfigs) {
+      const view360Array = document.querySelectorAll('.cloudimage-360');
+      const container = Array.from(view360Array).find((view) => view.id === id);
+      container.setAttribute('data-hotspots', true);
+    }
+
+    view.updateView(forceUpdate, window.CI360._viewers, hotspotConfigs);
   } else {
     window.CI360._viewers
       .forEach(viewer => { viewer.updateView(forceUpdate, window.CI360._viewers); });
@@ -80,11 +87,14 @@ function isNoViewers() {
 
 function addHotspots(instanceId, config) {
   const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
-  const container = Array.from(view360Array)
-    .find(view => view.id === instanceId);
+  const notInitializedContainer = Array.from(view360Array).find(view => view.id === instanceId);
 
-  if (container) {
-    window.CI360._viewers.push(new CI360Viewer(container, false, config))
+  if (notInitializedContainer) {
+      container.setAttribute('data-hotspots', true)
+
+    return window.CI360._viewers.push(new CI360Viewer(container, false, config))
+  } else {
+    update(instanceId, false, config)
   }
 }
 

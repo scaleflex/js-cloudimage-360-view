@@ -25,6 +25,10 @@ Types of changes:
 - ...
 
 -------------
+## 3.2.0 - 2023-09-25
+### Added
+- Possibility to add hotspots dynamically
+
 ## 3.1.1 - 2023-04-19
 ### Fixed
 - Remove CVE vulnerabilities

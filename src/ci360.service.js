@@ -1033,7 +1033,7 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
   }
 
-  updateView(forceUpdate, viewers) {
+  updateView(forceUpdate, viewers, hotspotConfigs) {
     let container = this.container;
 
     const imageProps = get360ViewProps(container);
@@ -1060,7 +1060,7 @@ class CI360Viewer {
     container.setAttribute('draggable', 'false');
 
     this.stop();
-    this.init(container, true);
+    this.init(container, true, hotspotConfigs);
   }
 
   destroy() {
@@ -1273,7 +1273,7 @@ class CI360Viewer {
     document.addEventListener('keydown', this.keyDownGeneral.bind(this));
   }
 
-  init(container, update = false) {
+  init(container, update = false, hotspotsConfigs = null) {
     let {
       folder, apiVersion, filenameX, filenameY, imageListX, imageListY, indexZeroBase, amountX, amountY, draggable = true, swipeable = true, keys, keysReverse, bottomCircle, bottomCircleOffset, boxShadow,
       autoplay, autoplayBehavior, playOnce, speed, autoplayReverse, disableDrag = true, fullscreen, magnifier, ciToken, ciFilters, ciTransformation, lazyload, lazySelector, spinReverse, dragSpeed, stopAtEdges, controlReverse, hide360Logo, logoSrc, pointerZoom, ratio, imageInfo = 'black', requestResponsiveImages
@@ -1350,6 +1350,12 @@ class CI360Viewer {
       if (this.boxShadow && !this.fullscreenView) {
         this.boxShadowEl = createBoxShadow(this.boxShadow, this.innerBox);
       }
+
+
+    if (hotspotsConfigs && !this.fullscreenView) {
+      this.hotspotsConfigs = generateHotspotsConfigs(hotspotsConfigs);
+      createHotspots(container, this.hotspotsConfigs);
+    }
 
       return this.onAllImagesLoaded();
     }
