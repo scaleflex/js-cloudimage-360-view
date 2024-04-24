@@ -1116,6 +1116,7 @@ class CI360Viewer {
   }
 
   addMagnifier() {
+    if (this.iconsContainer.querySelector('.cloudimage-360-magnifier-icon')) return null;
     this.magnifierIcon = createMagnifierIcon();
     this.magnifierIcon.onclick = this.magnify.bind(this);
 
