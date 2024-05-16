@@ -1,6 +1,6 @@
-import '../../src';
-import './controllers.css';
-import './styles/main.css';
+import "../../src";
+import "./controllers.css";
+import "./styles/main.css";
 
 import {
   EARBUDS_PLUGIN,
@@ -55,7 +55,9 @@ function toggleControlButtons() {
       button.style.visibility = "hidden";
 
       button.style.visibility =
-        controlOption.checked && !yButtonsIds.includes(button.id) ? "visible" : "hidden";
+        controlOption.checked && !yButtonsIds.includes(button.id)
+          ? "visible"
+          : "hidden";
     }
   });
 }
@@ -68,9 +70,9 @@ function changeSpinDirectionHandler(event) {
 
   nikePlugin.forEach(([key, value]) => {
     updatePluginValues(key, { value }, null, !isSpinYDirection);
-    isSpinYDirection ?
-      container.setAttribute(key, value) :
-      container.removeAttribute(key);
+    isSpinYDirection
+      ? container.setAttribute(key, value)
+      : container.removeAttribute(key);
   });
 
   if (isSpinYDirection) {
@@ -92,7 +94,7 @@ function changeSpinDirectionHandler(event) {
     imagesY.style.display = "none";
   }
 
-  autoPlayBehavior.disabled = !autoPlayBehavior.disabled
+  autoPlayBehavior.disabled = !autoPlayBehavior.disabled;
 
   CLOUDIMAGE_360.update("demo-generator");
   updateContainer();
@@ -105,24 +107,21 @@ function changePointerZoomHandler(event) {
   const nextCheckbox = event.target.getAttribute("data-checkbox");
   const pluginInput = document.querySelector(`[data-input=${nextCheckbox}]`);
   const pluginAttribute = event.target.getAttribute("data-plugin-value");
-  const value = pluginInput[pluginInput.type === "checkbox" ? "checked" : "value"];
+  const value =
+    pluginInput[pluginInput.type === "checkbox" ? "checked" : "value"];
 
   if (ispluginCheckboxChecked) {
     container.setAttribute(pluginAttribute, value);
-  } else  {
+  } else {
     container.removeAttribute(pluginAttribute);
   }
 
-  pluginInput.disabled=!pluginInput.disabled
+  pluginInput.disabled = !pluginInput.disabled;
 
   CLOUDIMAGE_360.update("demo-generator");
   updateContainer();
 
-  updatePluginValues(
-    pluginAttribute,
-    { value: value },
-    event.target.type,
-  );
+  updatePluginValues(pluginAttribute, { value: value }, event.target.type);
 }
 
 function changeResponsiveOptionHandler(event) {
@@ -137,14 +136,14 @@ function changeResponsiveOptionHandler(event) {
       updatePluginValues(
         pluginAttribute,
         { value: input.value },
-        event.target.type,
+        event.target.type
       );
     } else {
       container.removeAttribute(pluginAttribute);
       updatePluginValues(pluginAttribute, { value: "" }, event.target.type);
     }
 
-    input.disabled=!input.disabled
+    input.disabled = !input.disabled;
   });
 
   CLOUDIMAGE_360.update("demo-generator", true);
@@ -156,20 +155,20 @@ function changeBoxShadowOptionHandler(event) {
   const ispluginCheckboxChecked = event.target.checked;
   const pluginAttribute = shadowBoxInput.getAttribute("data-plugin-value");
 
-    if (ispluginCheckboxChecked) {
-      container.setAttribute(pluginAttribute, shadowBoxInput.value);
+  if (ispluginCheckboxChecked) {
+    container.setAttribute(pluginAttribute, shadowBoxInput.value);
 
-      updatePluginValues(
-        pluginAttribute,
-        { value: shadowBoxInput.value },
-        event.target.type,
-      );
-    } else {
-      container.removeAttribute(pluginAttribute);
-      updatePluginValues(pluginAttribute, { value: "" }, event.target.type);
-    }
+    updatePluginValues(
+      pluginAttribute,
+      { value: shadowBoxInput.value },
+      event.target.type
+    );
+  } else {
+    container.removeAttribute(pluginAttribute);
+    updatePluginValues(pluginAttribute, { value: "" }, event.target.type);
+  }
 
-    shadowBoxInput.disabled=!shadowBoxInput.disabled
+  shadowBoxInput.disabled = !shadowBoxInput.disabled;
 
   CLOUDIMAGE_360.update("demo-generator", true);
   updateContainer();
@@ -177,11 +176,13 @@ function changeBoxShadowOptionHandler(event) {
 
 function showAccordionContent(event) {
   const contentID = event.target.getAttribute("data-accordion");
-  const accordionContent = (
-    document.querySelector(`[data-accordion-content="${contentID}"]`)
+  const accordionContent = document.querySelector(
+    `[data-accordion-content="${contentID}"]`
   );
 
-  accordionContent.style.display = !accordionContent.offsetWidth ? "block": "none";
+  accordionContent.style.display = !accordionContent.offsetWidth
+    ? "block"
+    : "none";
 }
 
 function copyCodeHandler() {
@@ -197,8 +198,8 @@ function copyCodeHandler() {
 function pluginCheckboxOptionsHandler(event) {
   const ispluginCheckboxChecked = event.target.checked;
   const pluginAttribute = event.target.getAttribute("data-plugin-value");
-  const defaultValue = event.target.value
-  const value = defaultValue === "on" ? "" : defaultValue
+  const defaultValue = event.target.value;
+  const value = defaultValue === "on" ? "" : defaultValue;
 
   if (ispluginCheckboxChecked) {
     container.setAttribute(pluginAttribute, value);
@@ -231,8 +232,8 @@ function updatePluginValues(key, properties = {}, inputType, removeProp) {
   const isEmptyInput = !isCheckbox && !properties.value;
 
   if (
-    Object.keys(PLUGIN_PROPS).includes(key)
-    && (isCheckbox || isEmptyInput || removeProp)
+    Object.keys(PLUGIN_PROPS).includes(key) &&
+    (isCheckbox || isEmptyInput || removeProp)
   ) {
     delete PLUGIN_PROPS[key];
   } else if (key) {
@@ -283,11 +284,11 @@ responsive.addEventListener("change", changeResponsiveOptionHandler);
 boxShadow.addEventListener("change", changeBoxShadowOptionHandler);
 pointerZoomCheckbox.addEventListener("change", changePointerZoomHandler);
 accordions.forEach((accordion) => {
-  accordion.addEventListener("click", showAccordionContent)
+  accordion.addEventListener("click", showAccordionContent);
 });
 pluginCheckboxOptions.forEach((option) => {
-  option.addEventListener("change", pluginCheckboxOptionsHandler)
+  option.addEventListener("change", pluginCheckboxOptionsHandler);
 });
 pluginInputs.forEach((input) => {
-  input.addEventListener("change", changePluginInputsHandler)
+  input.addEventListener("change", changePluginInputsHandler);
 });

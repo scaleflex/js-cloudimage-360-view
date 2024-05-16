@@ -1,18 +1,28 @@
-import { loadImageAsPromise } from './load-image-as-promise';
+import { loadImageAsPromise } from "./load-image-as-promise";
 
+/**
+ * Loads images relative to container size.
+ * @param {Array} imagesSrc - Array of image sources.
+ * @param {Function} cb - Callback function to be executed after each image is loaded.
+ */
+export const loadImagesRelativeToContainerSize = (imagesSrc, cb) => {
+  let currentIndex = 0;
 
-export const loadImagesRelativeToContainerSize = (imagesSrcs, cb, index = 0) => {
-  const imageSrc = imagesSrcs[index];
+  const handleImageLoad = (image) => {
+    cb(image, currentIndex);
 
-  if (index > (imagesSrcs.length - 1)) return;
+    currentIndex++;
 
-  const imageLoadCallback = (image) => {
-    const _index = index + 1;
+    loadNextImage();
+  };
 
+  const loadNextImage = () => {
+    if (currentIndex >= imagesSrc.length) {
+      return;
+    }
 
-    cb(image, index);
-    loadImagesRelativeToContainerSize(imagesSrcs, cb, _index);
-  }
+    loadImageAsPromise(imagesSrc[currentIndex], handleImageLoad);
+  };
 
-  loadImageAsPromise(imageSrc, imageLoadCallback);
+  loadNextImage();
 };
