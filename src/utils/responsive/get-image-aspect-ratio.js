@@ -7,12 +7,11 @@ export const getImageAspectRatio = (image, providedRatio) => {
     }
 
     if (providedRatio && typeof providedRatio === 'object') {
-      const mediaQueries = Object.keys(providedRatio)
-        .sort((a, b) => a - b);
+      const mediaQueries = Object.keys(providedRatio).sort((a, b) => a - b);
 
-      const activeMedia = mediaQueries.find((mediaQuery) => (
-        window.innerWidth <= parseInt(mediaQuery, 10)
-      ));
+      const activeMedia = mediaQueries.find(
+        (mediaQuery) => window.innerWidth <= parseInt(mediaQuery, 10)
+      );
 
       if (activeMedia) {
         imageAspectRatio = providedRatio[activeMedia];
@@ -23,4 +22,4 @@ export const getImageAspectRatio = (image, providedRatio) => {
   } catch {
     return 1;
   }
-}
+};

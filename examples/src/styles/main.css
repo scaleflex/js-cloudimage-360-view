@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: "Inter";
+  font-family: 'Inter';
   overflow-x: hidden;
 }
 
@@ -166,14 +166,14 @@ body {
   color: #fff7f4;
 }
 
-.cloudimage-360-modal-description{
+.cloudimage-360-modal-description {
   font-size: 11px;
 }
 
 .popup-link a {
   font-size: 11px;
   line-height: 16px;
-  color: #0C6DC7;
+  color: #0c6dc7;
   font-weight: 700;
 }
 
@@ -472,7 +472,7 @@ body {
 }
 
 .demo-usage .plugin-selector {
-  background: url("https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/input-arrow.svg");
+  background: url('https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/input-arrow.svg');
   background-repeat: no-repeat;
   background-position-x: calc(100% - 20px);
   background-position-y: 17.12px;
@@ -503,7 +503,9 @@ body {
   width: 8px;
 }
 
-.demo-usage-wrapper .demo-usage-content .customize-wrapper::-webkit-scrollbar-thumb {
+.demo-usage-wrapper
+  .demo-usage-content
+  .customize-wrapper::-webkit-scrollbar-thumb {
   background: #dbdddf;
 }
 
@@ -609,7 +611,7 @@ body {
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
@@ -625,7 +627,7 @@ body {
   top: 4px;
   width: 19px;
   height: 13px;
-  background-image: url("https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/check-icon.svg");
+  background-image: url('https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/check-icon.svg');
   background-repeat: no-repeat;
 }
 
@@ -901,17 +903,13 @@ body {
   color: #4d5c74;
 }
 
-.cloudimage-360-loader {
-  opacity: 0;
-}
-
 .transition-outline-button {
   transition: all 300ms ease-in-out;
 }
 
 .transition-outline-button:hover {
   background-color: #3daba4;
-  color: #FFF !important;
+  color: #fff !important;
 }
 
 .transition-filled-button {
@@ -945,7 +943,9 @@ body {
     width: 8px;
   }
 
-  .demo-usage .demo-usage-content .plugin-options-wrapper::-webkit-scrollbar-thumb {
+  .demo-usage
+    .demo-usage-content
+    .plugin-options-wrapper::-webkit-scrollbar-thumb {
     background: #dbdddf;
   }
 
@@ -1018,7 +1018,7 @@ body {
   }
 }
 
-@media(max-width: 768px){
+@media (max-width: 768px) {
   .content-wrapper .header {
     display: flex;
     padding: 23.5px 16px 0 16px;
@@ -1175,7 +1175,7 @@ body {
   }
 
   .gallery-section {
-   padding: 0 16px;
+    padding: 0 16px;
   }
 
   .demo-usage {

@@ -13,30 +13,27 @@ const banner = `
  Date: ${now.toISOString()}
 `;
 
-
 module.exports = {
-  entry: path.join(__dirname, "../src/index.js"),
+  entry: path.join(__dirname, '../src/index.js'),
   output: {
-    path: path.join(__dirname, "../build"),
-    filename: `${pkg.name}.min.js`
+    path: path.join(__dirname, '../build'),
+    filename: `${pkg.name}.min.js`,
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use: "babel-loader",
-        exclude: /node_modules/
+        use: 'babel-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
-  plugins: [
-    new webpack.BannerPlugin(banner),
-  ],
+  plugins: [new webpack.BannerPlugin(banner)],
   resolve: {
-    extensions: [".js", ".jsx"]
-  }
+    extensions: ['.js', '.jsx'],
+  },
 };

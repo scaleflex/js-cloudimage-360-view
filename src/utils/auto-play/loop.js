@@ -1,53 +1,38 @@
-import { AUTOPLAY_BEHAVIOR } from '../../constants/auto-play-behavior';
+import { AUTOPLAY_BEHAVIOR } from '../constants';
 
-export const loop = (autoplayBehavior, spinY, reversed, loopTriggers) => {
-  const {
-    bottom, top, left, right,
-  } = loopTriggers;
+const handleSpinY = (reversed, { bottom, top }) => {
+  if (reversed) {
+    bottom();
+  } else {
+    top();
+  }
+};
 
+const handleSpinX = (reversed, { left, right }) => {
+  if (reversed) {
+    left();
+  } else {
+    right();
+  }
+};
+
+export const loop = ({ autoplayBehavior, spinY, reversed, loopTriggers }) => {
   switch (autoplayBehavior) {
-    case AUTOPLAY_BEHAVIOR.SPIN_Y:
-      if (reversed) {
-        bottom();
-      } else {
-        top();
-      }
-      break;
-
     case AUTOPLAY_BEHAVIOR.SPIN_XY:
-      if (spinY) {
-        if (reversed) {
-          bottom();
-        } else {
-          top();
-        }
-      } else if (reversed) {
-        left();
-      } else {
-        right();
-      }
-      break;
-
     case AUTOPLAY_BEHAVIOR.SPIN_YX:
       if (spinY) {
-        if (reversed) {
-          bottom();
-        } else {
-          top();
-        }
-      } else if (reversed) {
-        left();
+        handleSpinY(reversed, loopTriggers);
       } else {
-        right();
+        handleSpinX(reversed, loopTriggers);
       }
+      break;
+
+    case AUTOPLAY_BEHAVIOR.SPIN_Y:
+      handleSpinY(reversed, loopTriggers);
       break;
 
     case AUTOPLAY_BEHAVIOR.SPIN_X:
     default:
-      if (reversed) {
-        left();
-      } else {
-        right();
-      }
+      handleSpinX(reversed, loopTriggers);
   }
 };

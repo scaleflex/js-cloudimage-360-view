@@ -8,4 +8,4 @@ export const createReadMoreBtn = (moreDetailsUrl, moreDetailsTitle) => {
   readMoreBtn.target = '_blank';
 
   return readMoreBtn;
-}
+};

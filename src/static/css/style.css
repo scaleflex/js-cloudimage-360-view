@@ -1,29 +1,43 @@
+.cloudimage-360 {
+  width: 100%;
+  position: relative;
+}
+
+.cloudimage-360-inner-box {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+}
+
 .cloudimage-360-icons-container {
   position: absolute;
   display: flex;
-  top: 5px;
+  top: 15px;
   right: 5px;
-  width: 30px;
-  height: 95%;
+  width: 25px;
+  height: 100%;
   flex-direction: column;
   align-items: center;
-  z-index: 101;
+  z-index: 100;
+  gap: 8px;
 }
 
 .cloudimage-360-magnifier-icon {
-  width: 25px;
+  width: 100%;
   height: 25px;
-  margin-bottom: 5px;
   cursor: pointer;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% / cover no-repeat;
+  transition: all 200ms ease-out;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/loupe.svg') 50%
+    50% / cover no-repeat;
 }
 
 .cloudimage-360-fullscreen-icon {
-  width: 25px;
+  width: 100%;
   height: 25px;
-  margin-bottom: 5px;
   cursor: pointer;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% / cover no-repeat;
+  transition: all 200ms ease-out;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/full_screen.svg')
+    50% 50% / cover no-repeat;
 }
 
 .cloudimage-360-reset-zoom-icon {
@@ -32,25 +46,46 @@
   height: 30px;
   margin-top: auto;
   cursor: pointer;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986') 50% 50% / cover no-repeat;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/ic-resize.svg?vh=248986')
+    50% 50% / cover no-repeat;
 }
 
-.cloudimage-360-close-fullscreen-icon {
-  width: 25px;
+.cloudimage-360-close-icon {
+  width: 100%;
   height: 25px;
   cursor: pointer;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% / cover no-repeat;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/cross.svg') 50%
+    50% / cover no-repeat;
 }
 
-.cloudimage-360-loader {
+.cloudimage-initial-icon {
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  width: 0%;
-  height: 8px;
-  background-color: rgb(165, 175, 184);
-  z-index: 100;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(200, 200, 200, 0.5));
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 12px rgba(0, 0, 0, 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.1);
+  transition:
+    200ms all,
+    transform 0.2s;
+  color: #4b4b4b;
+  text-align: center;
+  z-index: 2;
+  line-height: 100px;
+  user-select: none;
+}
+
+.cloudimage-initial-icon:hover {
+  background-color: rgba(200, 200, 200, 0.2); /* Brighten on hover */
 }
 
 .cloudimage-360-box-shadow {
@@ -62,25 +97,6 @@
   z-index: 99;
 }
 
-.cloudimage-360-view-360-icon {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100px;
-  height: 100px;
-  margin: auto;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  box-shadow: rgba(255, 255, 255, 0.5) 0px 0px 4px;
-  transition: 0.5s all;
-  color: rgb(80, 80, 80);
-  text-align: center;
-  line-height: 100px;
-  z-index: 2;
-}
-
 .cloudimage-360-view-360-circle {
   position: absolute;
   left: 0;
@@ -90,7 +106,7 @@
   margin: auto;
   pointer-events: none;
   user-select: none;
-  transition: 0.5s all;
+  transition: 200ms all;
   z-index: 2;
 }
 
@@ -103,16 +119,20 @@
   width: 100%;
   height: 100%;
   z-index: 999;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .cloudimage-360-img-magnifier-glass {
-  background-color: #FFF;
+  background-color: #fff;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.8),
+    rgba(240, 240, 240, 0.9)
+  );
   background-repeat: no-repeat;
   position: absolute;
-  border: 3px solid #000;
+  border: 2px solid rgba(0, 0, 0, 0.3); /* Softer border */
   border-radius: 50%;
-  cursor: wait;
   line-height: 200px;
   text-align: center;
   z-index: 1000;
@@ -120,6 +140,12 @@
   height: 250px;
   top: -75px;
   right: -85px;
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 200ms ease;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .cloudimage-360 .cloudimage-360-left,

@@ -9,7 +9,7 @@ export const createModalElements = (variant, container, popup) => {
     title,
     description,
     moreDetailsUrl,
-    moreDetailsTitle = 'Read more'
+    moreDetailsTitle = 'Read more',
   } = variant;
 
   const modalWrapper = document.createElement('div');
@@ -17,7 +17,11 @@ export const createModalElements = (variant, container, popup) => {
 
   if (images) {
     const imagesCarouselWrapper = document.createElement('div');
-    const [imagesCarousel, carouselDots] = createImagesCarousel(images, popup, container);
+    const [imagesCarousel, carouselDots] = createImagesCarousel(
+      images,
+      popup,
+      container
+    );
 
     imagesCarouselWrapper.appendChild(imagesCarousel);
 

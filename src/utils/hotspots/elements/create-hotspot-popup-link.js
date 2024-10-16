@@ -1,7 +1,5 @@
 export const createHotspotPopupLink = (variant) => {
-  const {
-    url, title, newTab,
-  } = variant;
+  const { url, title, newTab } = variant;
 
   const hyperLink = document.createElement('a');
 

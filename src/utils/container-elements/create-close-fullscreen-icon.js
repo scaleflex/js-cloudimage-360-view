@@ -1,6 +1,6 @@
-export const createCloseFullscreenIcon = () => {
-  const closeFullscreenIcon = document.createElement('div');
-  closeFullscreenIcon.className = 'cloudimage-360-close-fullscreen-icon';
+export const createFullscreenIcon = () => {
+  const closeIcon = document.createElement('div');
+  closeIcon.className = 'cloudimage-360-fullscreen-icon';
 
-  return closeFullscreenIcon;
+  return closeIcon;
 };

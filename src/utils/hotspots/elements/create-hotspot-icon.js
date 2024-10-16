@@ -2,10 +2,17 @@ import { hidePopup } from '../attach-events/hide-popup';
 import { showPopup } from '../attach-events/show-popup';
 import { hideHotspotIcon } from '../hide-hotspot-icon';
 
-export const createHotspotIcon = (container, hotspotConfig, popup, popperInstance) => {
+export const createHotspotIcon = (
+  container,
+  hotspotConfig,
+  popup,
+  popperInstance
+) => {
   const { indicatorSelector, variant } = hotspotConfig;
   const { url, anchorId } = variant;
-  const { popupProps: { open = false } } = hotspotConfig;
+  const {
+    popupProps: { open = false },
+  } = hotspotConfig;
 
   let isVisible;
   const hotspotIcon = document.createElement('div');
@@ -25,7 +32,7 @@ export const createHotspotIcon = (container, hotspotConfig, popup, popperInstanc
     isVisible = false;
 
     !open && hidePopup(popup, isVisible);
-  }
+  };
 
   hotspotIcon.onclick = (e) => e.stopPropagation();
 
@@ -38,9 +45,8 @@ export const createHotspotIcon = (container, hotspotConfig, popup, popperInstanc
 
   if (!open) {
     hideEvents.forEach((event) => {
-      hotspotIcon.addEventListener(
-        event,
-        () => setTimeout(() => hidePopup(popup, isVisible), 160)
+      hotspotIcon.addEventListener(event, () =>
+        setTimeout(() => hidePopup(popup, isVisible), 160)
       );
     });
   }

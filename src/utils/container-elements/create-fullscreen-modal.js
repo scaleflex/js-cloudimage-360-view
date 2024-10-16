@@ -5,12 +5,11 @@ export const createFullscreenModal = (container) => {
 
   const fullscreenContainer = container.cloneNode();
 
-  fullscreenContainer.style.height = '100%';
+  fullscreenContainer.style.height = '100vh';
   fullscreenContainer.style.maxHeight = '100%';
 
   fullscreenModal.appendChild(fullscreenContainer);
 
-  window.document.body.style.overflow = 'hidden';
   window.document.body.appendChild(fullscreenModal);
 
   return fullscreenContainer;

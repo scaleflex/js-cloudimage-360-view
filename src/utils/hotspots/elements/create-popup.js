@@ -20,13 +20,18 @@ export const createPopup = (container, hotspotConfig, popupProps) => {
 
   popup.onclick = (e) => e.stopPropagation();
 
-  if (typeof variant === 'object' && images || description || moreDetailsUrl || (title && !url)) {
+  if (
+    (typeof variant === 'object' && images) ||
+    description ||
+    moreDetailsUrl ||
+    (title && !url)
+  ) {
     createModalElements(variant, container, popup);
   } else if (url) {
     const hotspotPopupLink = createHotspotPopupLink(variant);
 
     popup.appendChild(hotspotPopupLink);
-  } else if (typeof variant === 'string'){
+  } else if (typeof variant === 'string') {
     try {
       const popupNode = getPopupNode(variant);
       const userPopup = popupNode.cloneNode(true);
@@ -34,7 +39,9 @@ export const createPopup = (container, hotspotConfig, popupProps) => {
       popup.appendChild(userPopup);
       popupNode.parentNode.removeChild(popupNode);
     } catch {
-      console.error(`Cloudimage-360: Element with anchorId '${anchorId}' not exist in the DOM`);
+      console.error(
+        `Cloudimage-360: Element with anchorId '${anchorId}' not exist in the DOM`
+      );
     }
   }
 

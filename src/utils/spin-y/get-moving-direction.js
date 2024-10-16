@@ -1,17 +1,13 @@
-import { ORIENTATIONS } from '../../constants/orientations';
+export const getMovingDirection = (deltaX, deltaY, allowSpinY, threshold = 1) => {
+  // Check if the movement along the X-axis is greater than along the Y-axis
+  if (Math.abs(deltaX) - threshold > Math.abs(deltaY) || !allowSpinY) {
+    return deltaX > 0 ? 'right' : 'left';
+  }
 
-export const getMovingDirection = (isStartSpin, allowSpinY, prevPosition, nextPositions, currentMovingDirection) => {
-  let movingDirection = ORIENTATIONS.CENTER;
+  // If Y-axis movement is allowed
+  if (Math.abs(deltaY) - threshold > Math.abs(deltaX) && allowSpinY) {
+    return deltaY > 0 ? 'down' : 'up';
+  }
 
-  if (isStartSpin) return currentMovingDirection;
-
-  const differenceInPositionX = Math.abs(prevPosition.x - nextPositions.x);
-  const differenceInPositionY = Math.abs(prevPosition.y - nextPositions.y);
-  const sensitivity = 10;
-
-  if (differenceInPositionX > sensitivity) movingDirection = ORIENTATIONS.X;
-
-  if (differenceInPositionY > sensitivity && allowSpinY) movingDirection = ORIENTATIONS.Y;
-
-  return movingDirection;
+  return null; // Return null if no valid direction is determined
 };

@@ -1,38 +1,57 @@
-import { prepareFirstImageFromFolder } from "./prepare-first-image/prepare-first-image-from-folder";
-import { prepareFirstImageFromList } from "./prepare-first-image/prepare-first-image-from-list";
+import generateLowPreviewCdnUrl from '../../image-src/generate-low-preview-cdn-url';
+import getFirstCdnImage from './prepare-first-image/get-first-cdn-image';
+import getFirstCdnImageFromList from './prepare-first-image/get-first-cdn-mage-from-list';
 
-export const initLazyload = (imagesSrc, srcConfig, cb) => {
-  const { imageList, lazySelector, innerBox } = srcConfig || {};
-  let firstImageSrc;
+const getFirstImageSrc = (imagesSrc, srcConfig) => {
+  const { imageList, indexZeroBase } = srcConfig;
 
   if (imageList) {
     try {
       const images = JSON.parse(imageList);
-
-      firstImageSrc = prepareFirstImageFromList(images, srcConfig);
+      return getFirstCdnImageFromList(images, srcConfig);
     } catch (error) {
       console.error(`Wrong format in image-list attribute: ${error.message}`);
     }
-  } else {
-    firstImageSrc = prepareFirstImageFromFolder(imagesSrc, srcConfig);
   }
 
+  return getFirstCdnImage(imagesSrc, indexZeroBase);
+};
+
+const createImage = (src, lazySelector) => {
   const image = new Image();
+  image.setAttribute('data-src', src);
+  image.style.cssText = `
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: blur(10px);
+  `;
 
-  image.setAttribute('data-src', firstImageSrc);
-  image.style.position = 'absolute';
-  image.style.top = 0;
-  image.style.left = 0;
-  image.style.width = '100%';
-  image.style.maxWidth = '100%';
-  image.style.maxHeight = '100%';
+  if (lazySelector) image.className = `${lazySelector} cloudimage-lazy`;
 
+  return image;
+};
 
-  if (lazySelector) image.className = lazySelector;
+export const initLazyload = (cdnPath, srcConfig, onLoad) => {
+  const { lazySelector, innerBox } = srcConfig || {};
+
+  const firstImageSrc = getFirstImageSrc(cdnPath, srcConfig);
+  const lowPreviewSrc = generateLowPreviewCdnUrl(firstImageSrc);
+  const image = createImage(lowPreviewSrc, lazySelector);
+
+  image.onload = (event) => {
+    if (onLoad) {
+      onLoad({
+        event: event,
+        width: image.width,
+        height: image.height,
+        naturalWidth: image.naturalWidth,
+        naturalHeight: image.naturalHeight,
+        src: lowPreviewSrc,
+      });
+    }
+  };
 
   innerBox.appendChild(image);
-
-  if (cb) {
-    image.onload = () => cb(image);
-  }
-}
+};

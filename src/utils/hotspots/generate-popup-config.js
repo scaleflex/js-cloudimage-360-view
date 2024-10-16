@@ -7,7 +7,6 @@ export const generatePopupConfig = (popupProps) => {
     open = false,
   } = popupProps;
 
-
   const popupConfig = {
     popupSelector,
     arrow,

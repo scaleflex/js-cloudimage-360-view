@@ -1,13 +1,10 @@
-export const getCursorPosition = (event = window.event, container) => {
-  let x = 0;
-  let y = 0;
+export const getCursorPosition = (e, container) => {
+  const rect = container.getBoundingClientRect();
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
 
-  const a = container.getBoundingClientRect();
-
-  x = event.pageX - a.left;
-  y = event.pageY - a.top;
-  x -= window.pageXOffset;
-  y -= window.pageYOffset;
-
-  return { x, y };
+  return {
+    x: x - rect.left,
+    y: y - rect.top,
+  };
 };

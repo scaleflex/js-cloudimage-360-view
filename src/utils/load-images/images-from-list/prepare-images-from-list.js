@@ -1,6 +1,6 @@
-import { generateImagesPath } from '../../image-src/generate-images-path';
+import { generateCdnPath } from '../../image-src/generate-cdn-path';
 
-export const prepareImagesFromList = (images, srcConfig, loadOriginalImages ) => {
+export const prepareImagesFromList = (images, srcConfig, loadOriginalImages) => {
   const { folder } = srcConfig;
 
   return images.map((src) => {
@@ -8,6 +8,6 @@ export const prepareImagesFromList = (images, srcConfig, loadOriginalImages ) =>
     nextSrcConfig.folder = /(http(s?)):\/\//gi.test(src) ? '' : folder;
     nextSrcConfig.filename = src;
 
-    return generateImagesPath(nextSrcConfig, loadOriginalImages);
+    return generateCdnPath(nextSrcConfig, loadOriginalImages);
   });
 };

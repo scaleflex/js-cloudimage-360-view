@@ -25,6 +25,5 @@ export const createPopperInstance = (popper, popupProps, container) => {
     ],
   });
 
-
   return popperInstance;
 };

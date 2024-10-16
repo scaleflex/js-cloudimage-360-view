@@ -18,6 +18,5 @@ export const createImagesCarousel = (images, popup, container) => {
     imagesCarousel.appendChild(carouselImage);
   });
 
-
   return [imagesCarousel, carouselDots];
 };

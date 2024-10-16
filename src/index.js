@@ -19,17 +19,19 @@ function getContainerWithId(container) {
 
 function init() {
   const viewers = [];
-  const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
+  const view360Array = document.querySelectorAll(
+    '.cloudimage-360:not(.initialized)'
+  );
 
-  [].slice.call(view360Array).forEach(_container => {
+  [].slice.call(view360Array).forEach((_container) => {
     const container = getContainerWithId(_container);
 
-    const isHotspotsEnabled = isTrue(container, 'hotspots')
+    const isHotspotsEnabled = isTrue(container, 'hotspots');
 
     if (!isHotspotsEnabled) {
       viewers.push(new CI360Viewer(container));
     }
-  })
+  });
 
   window.CI360._viewers = viewers;
 }
@@ -37,7 +39,9 @@ function init() {
 function destroy() {
   if (isNoViewers()) return;
 
-  window.CI360._viewers.forEach(viewer => { viewer.destroy(); });
+  window.CI360._viewers.forEach((viewer) => {
+    viewer.destroy();
+  });
 
   window.CI360._viewers = [];
 }
@@ -45,28 +49,35 @@ function destroy() {
 function getActiveIndexByID(id, oriantation) {
   if (isNoViewers()) return;
 
-  let currentViewer = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
+  let currentViewer = window.CI360._viewers.filter(
+    (viewer) => viewer.id === id
+  )[0];
 
   if (oriantation === 'y') {
-    return currentViewer && (currentViewer.activeImageY - 1);
+    return currentViewer && currentViewer.activeImageY - 1;
   }
 
-  return currentViewer && (currentViewer.activeImageX - 1);
+  return currentViewer && currentViewer.activeImageX - 1;
 }
 
 function add(id) {
-  const view360Array = Array.from(document.querySelectorAll('.cloudimage-360:not(.initialized)'));
+  const view360Array = Array.from(
+    document.querySelectorAll('.cloudimage-360:not(.initialized)')
+  );
 
   if (view360Array.length && id) {
-    const newViewContainer = view360Array.filter(viewer => viewer.id === id)[0];
+    const newViewContainer = view360Array.filter(
+      (viewer) => viewer.id === id
+    )[0];
 
-    newViewContainer && window.CI360._viewers.push(new CI360Viewer(newViewContainer));
+    newViewContainer &&
+      window.CI360._viewers.push(new CI360Viewer(newViewContainer));
   }
 }
 
 function update(id = null, forceUpdate = false, hotspotConfigs = null) {
   if (id) {
-    const view = window.CI360._viewers.filter(viewer => viewer.id === id)[0];
+    const view = window.CI360._viewers.filter((viewer) => viewer.id === id)[0];
 
     if (hotspotConfigs) {
       const view360Array = document.querySelectorAll('.cloudimage-360');
@@ -76,8 +87,9 @@ function update(id = null, forceUpdate = false, hotspotConfigs = null) {
 
     view.updateView(forceUpdate, window.CI360._viewers, hotspotConfigs);
   } else {
-    window.CI360._viewers
-      .forEach(viewer => { viewer.updateView(forceUpdate, window.CI360._viewers); });
+    window.CI360._viewers.forEach((viewer) => {
+      viewer.updateView(forceUpdate, window.CI360._viewers);
+    });
   }
 }
 
@@ -86,15 +98,21 @@ function isNoViewers() {
 }
 
 function addHotspots(instanceId, config) {
-  const view360Array = document.querySelectorAll('.cloudimage-360:not(.initialized)');
-  const notInitializedContainer = Array.from(view360Array).find(view => view.id === instanceId);
+  const view360Array = document.querySelectorAll(
+    '.cloudimage-360:not(.initialized)'
+  );
+  const notInitializedContainer = Array.from(view360Array).find(
+    (view) => view.id === instanceId
+  );
 
   if (notInitializedContainer) {
-      container.setAttribute('data-hotspots', true)
+    container.setAttribute('data-hotspots', true);
 
-    return window.CI360._viewers.push(new CI360Viewer(container, false, config))
+    return window.CI360._viewers.push(
+      new CI360Viewer(container, false, config)
+    );
   } else {
-    update(instanceId, false, config)
+    update(instanceId, false, config);
   }
 }
 

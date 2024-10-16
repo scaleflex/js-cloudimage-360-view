@@ -8,7 +8,12 @@ export const createHotspots = (container, hotspotsProps) => {
 
     const popup = createPopup(container, hotspotProps, popupProps);
     const popperInstance = createPopperInstance(popup, popupProps, container);
-    const hotspotIcon = createHotspotIcon(container, hotspotProps, popup, popperInstance);
+    const hotspotIcon = createHotspotIcon(
+      container,
+      hotspotProps,
+      popup,
+      popperInstance
+    );
 
     popperInstance.state.elements.reference = hotspotIcon;
     popperInstance.update();

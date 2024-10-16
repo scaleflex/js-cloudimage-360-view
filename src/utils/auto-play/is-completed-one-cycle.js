@@ -1,26 +1,26 @@
-import { AUTOPLAY_BEHAVIOR } from '../../constants/auto-play-behavior';
+import { AUTOPLAY_BEHAVIOR } from '../constants';
 
-export const isCompletedOneCycle = (autoplayBehavior, activeImageX, activeImageY, amountX, amountY, isReversed) => {
+export const isCompletedOneCycle = ({
+  autoplayBehavior,
+  activeImageX,
+  activeImageY,
+  amountX,
+  amountY,
+  autoplayReverse,
+}) => {
+  const checkEdge = (activeImage, amount) => {
+    const lastIndex = amount - 1; // Calculate the last index
+    return autoplayReverse ? activeImage === 0 : activeImage === lastIndex;
+  };
+
   switch (autoplayBehavior) {
     case AUTOPLAY_BEHAVIOR.SPIN_XY:
-    case AUTOPLAY_BEHAVIOR.SPIN_Y: {
-      const isReachedTheEdge = isReversed ? (activeImageY === 1)
-        : (activeImageY === amountY);
-
-      if (isReachedTheEdge) return true;
-
-      return false;
-    }
+    case AUTOPLAY_BEHAVIOR.SPIN_Y:
+      return checkEdge(activeImageY, amountY);
 
     case AUTOPLAY_BEHAVIOR.SPIN_X:
     case AUTOPLAY_BEHAVIOR.SPIN_YX:
-    default: {
-      const isReachedTheEdge = isReversed ? (activeImageX === 1)
-        : (activeImageX === amountX);
-
-      if (isReachedTheEdge) return true;
-
-      return false;
-    }
+    default:
+      return checkEdge(activeImageX, amountX);
   }
 };

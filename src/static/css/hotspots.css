@@ -15,7 +15,7 @@
   width: 16px;
   height: 16px;
   background-image: url('https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/assets/img/link-hotspot.svg');
-  background-color: #0C6DC7;
+  background-color: #0c6dc7;
   background-repeat: no-repeat;
   background-size: 9px;
   background-position: center;
@@ -24,15 +24,15 @@
   transform: translate(-50%, -50%);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
-	animation: pulse 2s infinite;
+  animation: pulse 2s infinite;
   cursor: auto;
 }
 
 .cloudimage-360-hotspot-custom-icon {
   width: 42px;
   height: 42px;
-  background: #76AD0133;
-  border: 1px solid #FFFFFF33;
+  background: #76ad0133;
+  border: 1px solid #ffffff33;
   border-radius: 50%;
   box-sizing: border-box;
   transition: opacity 300ms ease-in-out;
@@ -45,7 +45,7 @@
   width: 16px;
   height: 16px;
   background-image: url('https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/assets/img/plus.svg');
-  background-color: #76AD01;
+  background-color: #76ad01;
   background-repeat: no-repeat;
   background-size: 9px;
   background-position: center;
@@ -54,14 +54,14 @@
   transform: translate(-50%, -50%);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
-	animation: pulse 2s infinite;
+  animation: pulse 2s infinite;
   cursor: auto;
 }
 
 .cloudimage-360-hotspot-popup {
   visibility: hidden;
   opacity: 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 6px;
   border-radius: 2px;
   box-shadow: 0px 4px 4px 0px #00000040;
@@ -153,7 +153,7 @@
 .cloudimage-360-carousel-dot {
   width: 6px;
   height: 6px;
-  background-color: #C9D0DE;
+  background-color: #c9d0de;
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.6s ease;
@@ -162,7 +162,7 @@
 }
 
 .cloudimage-360-carousel-dot.active-dot {
-  background-color: #76AD01;
+  background-color: #76ad01;
 }
 
 .cloudimage-360-carousel-dot:focus,
@@ -186,8 +186,8 @@
 }
 
 .cloudimage-360-modal-more-details {
-  color: #76AD01;
-  background-color: #ECFAE6;
+  color: #76ad01;
+  background-color: #ecfae6;
   font-size: 10px;
   line-height: 16px;
   font-weight: 400;
@@ -198,25 +198,29 @@
 }
 
 .cloudimage-360-modal-more-details:hover {
-  color: #76AD01;
+  color: #76ad01;
   background-color: #e1f5d8;
 }
 
 @keyframes pulse {
-	0% {
-		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0.7);
-	}
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 99, 99, 0.7);
+  }
 
-	70% {
-		box-shadow: 0 0 0 10px rgba(99, 99, 99, 0);
-	}
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 99, 99, 0);
+  }
 
-	100% {
-		box-shadow: 0 0 0 0 rgba(99, 99, 99, 0);
-	}
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 99, 99, 0);
+  }
 }
 
 @keyframes fade-active-image {
-  from { opacity: 0.7 }
-  to { opacity: 1 }
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
 }
