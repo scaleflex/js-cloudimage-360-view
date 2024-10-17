@@ -19,7 +19,7 @@ export const preloadImages = ({
 
   const handleAllImagesLoaded = () => {
     if (allImagesLoaded.x && allImagesLoaded.y) {
-      onAllImagesLoad([...loadedImagesX, ...loadedImagesY]);
+      onAllImagesLoad(loadedImagesX, loadedImagesY);
     }
   };
 

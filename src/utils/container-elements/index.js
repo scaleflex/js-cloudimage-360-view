@@ -11,3 +11,5 @@ export { createLoader } from './create-loader';
 export { applyStylesToContainer } from './apply-styles-to-container';
 export { createFullscreenModal } from './create-fullscreen-modal';
 export { removeElementFromContainer } from './remove-element-from-container';
+export { createLoadingSpinner } from './create-loading-spinner';
+export { createTransitionOverlay } from './create-transition-overlay';

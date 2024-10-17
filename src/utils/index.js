@@ -14,6 +14,9 @@ export { magnify } from './magnify/magnify';
 
 export { generateZoomInSteps } from './zoom/generate-zoom-in-steps';
 export { generateZoomOutSteps } from './zoom/generate-zoom-out-steps';
+export { calculateOffsetFromEvent } from './zoom/calculate-offsets-from-events';
+export { calculateZoomedDimensions } from './zoom/calculate-zoomed-dimensions';
+export { calculateZoomOffsets } from './zoom/calculate-zoomed-offset';
 
 export { loop } from './auto-play/loop';
 export { getSpeedFactor } from './auto-play/get-speed-factor';
@@ -23,13 +26,17 @@ export { addClass } from './class-names/add-class';
 export { removeClass } from './class-names/remove-class';
 
 export { shouldSwitchSpinDirection } from './spin/should-switch-spin-direction';
+export { getDefaultSpinDirection } from './spin/get-default-spin-direction';
 export { switchSpinDirection } from './spin/switch-spin-direction';
+export { isSpinKeysPressed } from './spin/is-spin-keys-pressed';
+
 export { getMovingDirection } from './spin-y/get-moving-direction';
 
 export { getItemSkipped } from './controls/get-item-skipped';
 export { initControls } from './controls/init-controls';
 
 export * from './container-elements';
+export * from './constants';
 
 export { updateHotspots } from './hotspots/update-hotspots';
 export { createHotspots } from './hotspots/elements/create-hotspots';

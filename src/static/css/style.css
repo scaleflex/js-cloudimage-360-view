@@ -1,3 +1,12 @@
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .cloudimage-360 {
   width: 100%;
   position: relative;
@@ -7,13 +16,14 @@
   cursor: grab;
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .cloudimage-360-icons-container {
   position: absolute;
   display: flex;
   top: 15px;
-  right: 5px;
+  right: 10px;
   width: 25px;
   height: 100%;
   flex-direction: column;
@@ -22,13 +32,26 @@
   gap: 8px;
 }
 
+.cloudimage-transition-overlay {
+  position: absolute;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  opacity: 0;
+  transition: all 1s ease-out;
+  z-index: 10;
+}
+
 .cloudimage-360-magnifier-icon {
   width: 100%;
   height: 25px;
   cursor: pointer;
   transition: all 200ms ease-out;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/loupe.svg') 50%
-    50% / cover no-repeat;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/loupe.svg') 50% 50% /
+    cover no-repeat;
 }
 
 .cloudimage-360-fullscreen-icon {
@@ -36,8 +59,8 @@
   height: 25px;
   cursor: pointer;
   transition: all 200ms ease-out;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/full_screen.svg')
-    50% 50% / cover no-repeat;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/full_screen.svg') 50% 50% /
+    cover no-repeat;
 }
 
 .cloudimage-360-reset-zoom-icon {
@@ -54,8 +77,8 @@
   width: 100%;
   height: 25px;
   cursor: pointer;
-  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/cross.svg') 50%
-    50% / cover no-repeat;
+  background: url('https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/cross.svg') 50% 50% /
+    cover no-repeat;
 }
 
 .cloudimage-initial-icon {
@@ -88,13 +111,20 @@
   background-color: rgba(200, 200, 200, 0.2); /* Brighten on hover */
 }
 
-.cloudimage-360-box-shadow {
+.cloudimage-loading-spinner {
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  border: 3px solid #fff;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 99;
+  top: 15px;
+  left: 15px;
+  border-bottom-color: #a3a3a3;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  opacity: 0;
+  animation: rotation 700ms linear infinite;
 }
 
 .cloudimage-360-view-360-circle {
@@ -124,11 +154,7 @@
 
 .cloudimage-360-img-magnifier-glass {
   background-color: #fff;
-  background-image: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.8),
-    rgba(240, 240, 240, 0.9)
-  );
+  background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.9));
   background-repeat: no-repeat;
   position: absolute;
   border: 2px solid rgba(0, 0, 0, 0.3); /* Softer border */
