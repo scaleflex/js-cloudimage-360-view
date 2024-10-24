@@ -1,6 +1,10 @@
 import { AUTOPLAY_BEHAVIOR } from '../constants';
 
-export const getDefaultSpinDirection = (autoplayBehavior) => {
+export const getDefaultSpinDirection = (autoplayBehavior, allowSpinX, allowSpinY) => {
+  if (!allowSpinY) return 'x';
+
+  if (!allowSpinX) return 'y';
+
   switch (autoplayBehavior) {
     case AUTOPLAY_BEHAVIOR.SPIN_XY:
       return 'x';

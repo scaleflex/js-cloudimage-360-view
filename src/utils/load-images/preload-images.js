@@ -11,11 +11,11 @@ export const preloadImages = ({
   onImageLoad,
   onAllImagesLoad,
 }) => {
-  let imagesXUrls = [];
-  let imagesYUrls = [];
   let allImagesLoaded = { x: false, y: false };
   let loadedImagesX = [];
   let loadedImagesY = [];
+  const loadX = cdnPathX || configX.imageList.length;
+  const loadY = cdnPathY || configY.imageList.length;
 
   const handleAllImagesLoaded = () => {
     if (allImagesLoaded.x && allImagesLoaded.y) {
@@ -23,61 +23,45 @@ export const preloadImages = ({
     }
   };
 
-  const loadImagesForOrientation = (cdnPath, config, orientation) => {
-    let imagesUrls = [];
-
-    if (config.imageList) {
-      try {
-        const images = JSON.parse(config.imageList);
-        // imagesUrls = prepareImagesFromList(images, config);
-      } catch (error) {
-        console.error(`Wrong format in image-list attribute for ${orientation}: ${error.message}`);
-      }
-    } else {
-      imagesUrls = generateImagesCdnLinks(cdnPath, config);
-    }
-
-    return imagesUrls;
-  };
-
-  // Load X Images
-  if (cdnPathX) {
-    imagesXUrls = loadImagesForOrientation(cdnPathX, configX, ORIENTATIONS.X);
+  const loadOrientationImages = ({ cdnPath, config, orientation, loadedImages, onFirstImageLoad }) => {
+    const xOrientation = orientation === ORIENTATIONS.X;
+    const imageList = config.imageList.length ? config.imageList : generateImagesCdnLinks(cdnPath, config);
 
     loadImages({
-      imagesUrls: imagesXUrls,
+      imagesUrls: imageList,
       onFirstImageLoad,
-      onImageLoad: (img, index) => {
-        onImageLoad?.(img, index, ORIENTATIONS.X);
-        loadedImagesX[index] = img;
+      onImageLoad: (imageData, index) => {
+        onImageLoad?.(imageData, index, orientation);
+        loadedImages[index] = imageData;
       },
-      onAllImagesLoad: (loadedImages) => {
-        loadedImagesX = loadedImages;
-        allImagesLoaded.x = true;
+      onAllImagesLoad: (loadedImagesResult) => {
+        loadedImages = loadedImagesResult;
+        allImagesLoaded[xOrientation ? 'x' : 'y'] = true;
         handleAllImagesLoaded();
       },
-      autoplayReverse: configX.autoplayReverse,
+      autoplayReverse: config.autoplayReverse,
+    });
+  };
+
+  if (loadX) {
+    loadOrientationImages({
+      cdnPath: cdnPathX,
+      config: configX,
+      orientation: ORIENTATIONS.X,
+      loadedImages: loadedImagesX,
+      onFirstImageLoad,
     });
   } else {
     allImagesLoaded.x = true;
   }
 
-  // Load Y Images
-  if (cdnPathY) {
-    imagesYUrls = loadImagesForOrientation(cdnPathY, configY, ORIENTATIONS.Y);
-
-    loadImages({
-      imagesUrls: imagesYUrls,
-      onImageLoad: (img, index) => {
-        onImageLoad?.(img, index, ORIENTATIONS.Y);
-        loadedImagesY[index] = img;
-      },
-      onAllImagesLoad: (loadedImages) => {
-        loadedImagesY = loadedImages;
-        allImagesLoaded.y = true;
-        handleAllImagesLoaded();
-      },
-      autoplayReverse: configY.autoplayReverse,
+  if (loadY) {
+    loadOrientationImages({
+      cdnPath: cdnPathY,
+      config: configY,
+      orientation: ORIENTATIONS.Y,
+      loadedImages: loadedImagesY,
+      onFirstImageLoad: !loadX ? onFirstImageLoad : undefined,
     });
   } else {
     allImagesLoaded.y = true;

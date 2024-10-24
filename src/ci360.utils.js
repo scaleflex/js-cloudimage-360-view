@@ -24,7 +24,7 @@ const get360ViewProps = (image) => ({
       attr(image, 'data-amount') ||
       attr(image, 'amount-x') ||
       attr(image, 'data-amount-x') ||
-      36,
+      0,
     10
   ),
   amountY: parseInt(attr(image, 'amount-y') || attr(image, 'data-amount-y') || 0, 10),

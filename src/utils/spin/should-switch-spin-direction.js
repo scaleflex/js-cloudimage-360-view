@@ -9,13 +9,10 @@ export const shouldSwitchSpinDirection = ({
   autoplayReverse,
   spinDirection,
 }) => {
-  const reachedEdgeX = activeImageX === (autoplayReverse ? 0 : amountX);
-  const reachedEdgeY = activeImageY === (autoplayReverse ? 0 : amountY);
+  const reachedEdgeX = activeImageX === (autoplayReverse ? 0 : amountX - 1);
+  const reachedEdgeY = activeImageY === (autoplayReverse ? 0 : amountY - 1);
 
-  if (
-    autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_XY ||
-    autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX
-  ) {
+  if (autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_XY || autoplayBehavior === AUTOPLAY_BEHAVIOR.SPIN_YX) {
     return (spinDirection === 'x' && reachedEdgeX) || (spinDirection === 'y' && reachedEdgeY);
   }
 

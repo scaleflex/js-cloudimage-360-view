@@ -5,7 +5,7 @@ import getFirstCdnImageFromList from './prepare-first-image/get-first-cdn-mage-f
 const getFirstImageSrc = (imagesSrc, srcConfig) => {
   const { imageList, indexZeroBase } = srcConfig;
 
-  if (imageList) {
+  if (imageList.length) {
     try {
       const images = JSON.parse(imageList);
       return getFirstCdnImageFromList(images, srcConfig);
@@ -34,9 +34,9 @@ const createImage = (src, lazySelector) => {
 };
 
 export const initLazyload = (cdnPath, srcConfig, onLoad) => {
-  const { lazySelector, innerBox } = srcConfig || {};
-
-  const firstImageSrc = getFirstImageSrc(cdnPath, srcConfig);
+  const { lazySelector, innerBox, imageList } = srcConfig || {};
+  const [firstImageSrcInList] = imageList;
+  const firstImageSrc = firstImageSrcInList || getFirstImageSrc(cdnPath, srcConfig);
   const lowPreviewSrc = generateLowPreviewCdnUrl(firstImageSrc);
   const image = createImage(lowPreviewSrc, lazySelector);
 

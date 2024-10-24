@@ -85,16 +85,19 @@ class CI360Viewer {
     const deltaX = pageX - this.movementStart.x;
     const deltaY = pageY - this.movementStart.y;
 
-    this.draggingDirection = getMovingDirection(deltaX, deltaY, this.allowSpinY) || this.draggingDirection;
+    this.draggingDirection =
+      getMovingDirection({ deltaX, deltaY, allowSpinX: this.allowSpinX, allowSpinY: this.allowSpinY }) ||
+      this.draggingDirection;
 
     const container = this.fullscreenView ? document.body : this.container;
     const dragFactor = this.dragSpeed / 50;
+
     const speedFactorX = dragFactor * (this.amountX / container.offsetWidth);
     const speedFactorY = dragFactor * (this.amountY / container.offsetHeight);
+    const itemsSkippedX = this.allowSpinX ? Math.abs(Math.round(deltaX * speedFactorX)) : 0;
+    const itemsSkippedY = this.allowSpinY ? Math.abs(Math.round(deltaY * speedFactorY)) : 0;
 
-    const itemsSkippedX = Math.abs(Math.round(deltaX * speedFactorX));
-    const itemsSkippedY = Math.abs(Math.round(deltaY * speedFactorY));
-    const shouldMove = itemsSkippedX !== 0 || (this.allowSpinY && itemsSkippedY !== 0);
+    const shouldMove = (this.allowSpinX && itemsSkippedX !== 0) || (this.allowSpinY && itemsSkippedY !== 0);
 
     if (shouldMove) {
       this.onMoveHandler(this.draggingDirection, itemsSkippedX, itemsSkippedY);
@@ -392,8 +395,10 @@ class CI360Viewer {
   onAllImagesLoaded() {
     this.addAllIcons();
     this.isReady = true;
-    this.amountX = this.imagesX.length - 1;
-    this.amountY = this.imagesY.length - 1;
+    this.amountX = this.imagesX.length;
+    this.amountY = this.imagesY.length;
+    this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0;
+    this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0;
 
     if (this.autoplay) {
       this.hideAllIcons();
@@ -483,7 +488,7 @@ class CI360Viewer {
         reversed: this.autoplayReverse,
         loopTriggers,
       });
-    }, this.autoplaySpeed);
+    }, this.speed);
   }
 
   stopAutoplay() {
@@ -779,16 +784,12 @@ class CI360Viewer {
     } = get360ViewProps(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
+    const parsedImagesListX = imageListX ? JSON.parse(imageListX) : [];
+    const parsedImagesListY = imageListY ? JSON.parse(imageListY) : [];
 
-    this.folder = folder;
-    this.apiVersion = apiVersion;
-    this.filenameX = filenameX;
-    this.filenameY = filenameY;
-    this.imageListX = imageListX;
-    this.imageListY = imageListY;
-    this.indexZeroBase = indexZeroBase;
-    this.amountX = imageListX ? JSON.parse(imageListX).length : amountX;
-    this.amountY = imageListY ? JSON.parse(imageListY).length : amountY;
+    this.amountX = parsedImagesListX.length || amountX;
+    this.amountY = parsedImagesListY.length || amountY;
+    this.allowSpinX = !!this.amountX;
     this.allowSpinY = !!this.amountY;
     this.activeImageX = autoplayReverse ? this.amountX - 1 : 0;
     this.activeImageY = autoplayReverse ? this.amountY - 1 : 0;
@@ -804,7 +805,6 @@ class CI360Viewer {
     this.lazySelector = lazySelector;
     this.controlReverse = controlReverse;
     this.dragSpeed = Math.max(dragSpeed, 50);
-    this.autoplaySpeed = (this.speed * 36) / this.amountX;
     this.stopAtEdges = stopAtEdges;
     this.logoSrc = logoSrc;
     this.ciParams = ciParams;
@@ -816,12 +816,12 @@ class CI360Viewer {
     this.innerBox = createInnerBox(this.container);
     this.initialIconHidden = initialIconHidden;
     this.bottomCircleHidden = bottomCircleHidden;
-    this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior);
+    this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior, this.allowSpinX, this.allowSpinY);
 
     this.srcXConfig = {
       folder,
       filename: filenameX,
-      imageList: imageListX,
+      imageList: parsedImagesListX,
       container,
       innerBox: this.innerBox,
       apiVersion,
@@ -835,27 +835,35 @@ class CI360Viewer {
     this.srcYConfig = {
       ...this.srcXConfig,
       filename: filenameY,
-      imageList: imageListY,
+      imageList: parsedImagesListY,
       orientation: ORIENTATIONS.Y,
       amount: this.amountY,
     };
 
     const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
-    const cdnPathX = generateCdnPath(this.srcXConfig, width);
-    const cdnPathY = this.allowSpinY ? generateCdnPath(this.srcYConfig, width) : null;
+    const cdnPathX =
+      this.allowSpinX && !parsedImagesListX.length ? generateCdnPath(this.srcXConfig, width) : null;
+    const cdnPathY =
+      this.allowSpinY && !parsedImagesListY.length ? generateCdnPath(this.srcYConfig, width) : null;
 
     if (lazyload) {
-      initLazyload(cdnPathX, this.srcXConfig, (event) => {
+      const loadCallback = (event) => {
         preloadImages({
           cdnPathX,
           cdnPathY,
           configX: this.srcXConfig,
           configY: this.srcYConfig,
           onImageLoad: (image, index, orientation) => this.onImageLoad(image, index, orientation),
-          onFirstImageLoad: (image) => this.onFirstImageLoaded(event, image),
+          onFirstImageLoad: (imageData) => this.onFirstImageLoaded(event, imageData),
           onAllImagesLoad: this.onAllImagesLoaded.bind(this),
         });
-      });
+      };
+
+      if (this.allowSpinX) {
+        initLazyload(cdnPathX, this.srcXConfig, loadCallback);
+      } else if (this.allowSpinY) {
+        initLazyload(cdnPathY, this.srcYConfig, loadCallback);
+      }
     }
 
     this.attachEvents(draggable, swipeable, keys);
