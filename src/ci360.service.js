@@ -31,8 +31,6 @@ import {
   THROTTLE_TIME,
   getDefaultSpinDirection,
   isSpinKeysPressed,
-  calculateZoomedDimensions,
-  calculateZoomOffsets,
   calculateOffsetFromEvent,
   createLoadingSpinner,
   createTransitionOverlay,
@@ -51,12 +49,13 @@ class CI360Viewer {
     this.draggingDirection = null;
     this.isReady = false;
     this.currentZoomScale = 1;
+    this.canvasWorker = new Worker(new URL('canvas.worker.js', import.meta.url));
 
     this.init(container);
   }
 
   mouseDown(event) {
-    if (!this.isReady) return;
+    if (!this.isReady || this.glass) return;
 
     const { pageX, pageY } = event;
 
@@ -93,21 +92,22 @@ class CI360Viewer {
     const speedFactorX = dragFactor * (this.amountX / container.offsetWidth);
     const speedFactorY = dragFactor * (this.amountY / container.offsetHeight);
 
-    const itemsSkippedX = Math.round(deltaX * speedFactorX);
-    const itemsSkippedY = Math.round(deltaY * speedFactorY);
+    const itemsSkippedX = Math.abs(Math.round(deltaX * speedFactorX));
+    const itemsSkippedY = Math.abs(Math.round(deltaY * speedFactorY));
     const shouldMove = itemsSkippedX !== 0 || (this.allowSpinY && itemsSkippedY !== 0);
 
     if (shouldMove) {
       this.onMoveHandler(this.draggingDirection, itemsSkippedX, itemsSkippedY);
+      this.movementStart = { x: pageX, y: pageY };
+
       setTimeout(() => {
         this.isDragging = true;
       }, 150);
-      this.movementStart = { x: pageX, y: pageY };
     }
   }
 
   mouseMove(event) {
-    if (!this.isReady || (!this.isClicked && !this.isZoomed)) return;
+    if (!this.isReady || (!this.isClicked && !this.isZoomed) || this.glass) return;
 
     this.hideAllIcons();
     this.drag(event.pageX, event.pageY);
@@ -116,19 +116,19 @@ class CI360Viewer {
   }
 
   mouseClick(event) {
-    if (!this.isReady || this.isDragging || !this.pointerZoom) return;
+    if (!this.isReady || this.isDragging) return;
 
     if (this.glass) {
       this.removeGlass();
       return;
     }
 
-    this.toggleZoom(event);
+    if (this.pointerZoom) this.toggleZoom(event);
   }
 
-  loadOriginalImages(onLoad) {
-    const cdnPathX = generateCdnPath(this.srcXConfig, true);
-    const cdnPathY = this.allowSpinY ? generateCdnPath(this.srcYConfig, true) : null;
+  loadHigherQualityImages(width, onLoad) {
+    const cdnPathX = generateCdnPath(this.srcXConfig, width);
+    const cdnPathY = this.allowSpinY ? generateCdnPath(this.srcYConfig, width) : null;
 
     preloadImages({
       cdnPathX,
@@ -151,9 +151,10 @@ class CI360Viewer {
         this.removeZoom();
       }, 800);
     } else {
-      this.showLoadingSpinner();
+      let width = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
 
-      this.loadOriginalImages(() => {
+      this.showLoadingSpinner();
+      this.loadHigherQualityImages(width, () => {
         this.showTransitionOverlay();
 
         setTimeout(() => {
@@ -179,7 +180,6 @@ class CI360Viewer {
     this.hideLoadingSpinner();
     this.hideTransitionOverlay();
 
-    console.log(this.pointerZoom);
     this.update(ORIENTATIONS.X, this.pointerZoom, offsetX, offsetY);
   }
 
@@ -282,35 +282,35 @@ class CI360Viewer {
     this.activeImageY = (this.activeImageY - itemsSkipped + this.amountY) % this.amountY;
   }
 
-  moveRight(stopAtEdges) {
+  moveRight(stopAtEdges, itemsSkippedX = 1) {
     if (stopAtEdges && this.activeImageX >= this.imagesX.length - 1) return;
 
-    this.moveActiveXIndexUp(1);
+    this.moveActiveXIndexUp(itemsSkippedX);
     this.update(ORIENTATIONS.X);
   }
 
-  moveLeft(stopAtEdges) {
+  moveLeft(stopAtEdges, itemsSkippedX = 1) {
     if (stopAtEdges && this.activeImageX <= 0) return;
 
-    this.moveActiveXIndexDown(1);
+    this.moveActiveXIndexDown(itemsSkippedX);
     this.update(ORIENTATIONS.X);
   }
 
-  moveTop(stopAtEdges) {
+  moveTop(stopAtEdges, itemsSkippedY = 1) {
     if (stopAtEdges && this.activeImageY >= this.imagesY.length - 1) return;
 
-    this.moveActiveYIndexUp(1);
+    this.moveActiveYIndexUp(itemsSkippedY);
     this.update(ORIENTATIONS.Y);
   }
 
-  moveBottom(stopAtEdges) {
+  moveBottom(stopAtEdges, itemsSkippedY = 1) {
     if (stopAtEdges && this.activeImageY <= 0) return;
 
-    this.moveActiveYIndexDown(1);
+    this.moveActiveYIndexDown(itemsSkippedY);
     this.update(ORIENTATIONS.Y);
   }
 
-  onMoveHandler(movingDirection, itemsSkippedX, itemsSkippedY) {
+  onMoveHandler(movingDirection, itemsSkippedX = 1, itemsSkippedY = 1) {
     if (movingDirection === 'right') {
       this.moveRight(this.stopAtEdges, itemsSkippedX);
     } else if (movingDirection === 'left') {
@@ -323,10 +323,10 @@ class CI360Viewer {
   }
 
   update(orientation, zoomScale, offsetX, offsetY) {
-    const image =
+    const imageData =
       orientation === ORIENTATIONS.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
 
-    this.drawImageOnCanvas(image, zoomScale, offsetX, offsetY);
+    this.drawImageOnCanvas(imageData, zoomScale, offsetX, offsetY);
   }
 
   updatePercentageInLoader(percentage = 0) {
@@ -335,73 +335,29 @@ class CI360Viewer {
     this.loader.innerText = percentage + '%';
   }
 
-  drawImageOnCanvas(image, zoomScale = 1, pointerX = 0, pointerY = 0) {
-    if (!this.canvas || !image) return;
-
-    const ctx = this.canvas.getContext('2d');
-
-    // Handle fullscreen mode: use the full screen dimensions if fullscreen is active
+  adaptCanvasSize(imageData) {
+    const { naturalWidth, naturalHeight } = imageData;
+    const imageAspectRatio = naturalWidth / naturalHeight;
     const containerWidth = this.fullscreenView ? window.innerWidth : this.canvas.clientWidth;
     const containerHeight = this.fullscreenView ? window.innerHeight : this.canvas.clientHeight;
 
-    // Set canvas resolution to match container size, with device pixel ratio for sharper rendering
-    this.canvas.width = containerWidth * this.devicePixelRatio;
-    this.canvas.height = containerHeight * this.devicePixelRatio;
+    this.canvasWorker.postMessage({
+      action: 'adaptCanvasSize',
+      devicePixelRatio: this.devicePixelRatio,
+      imageAspectRatio: imageAspectRatio,
+      containerWidth,
+      containerHeight,
+    });
+  }
 
-    ctx.scale(this.devicePixelRatio, this.devicePixelRatio);
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-
-    const imageAspectRatio = image.naturalWidth / image.naturalHeight;
-    const containerAspectRatio = containerWidth / containerHeight;
-
-    let drawWidth, drawHeight, offsetX, offsetY;
-
-    // Adjust image scaling logic based on aspect ratios
-    if (imageAspectRatio > containerAspectRatio) {
-      // Image is wider than container
-      drawWidth = containerWidth;
-      drawHeight = containerWidth / imageAspectRatio;
-      offsetX = 0;
-      offsetY = (containerHeight - drawHeight) / 2;
-    } else {
-      // Image is taller than container
-      drawHeight = containerHeight;
-      drawWidth = containerHeight * imageAspectRatio;
-      offsetX = (containerWidth - drawWidth) / 2;
-      offsetY = 0;
-    }
-
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    if (!this.isZoomed) {
-      ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
-    } else {
-      const { zoomedWidth, zoomedHeight } = calculateZoomedDimensions(drawWidth, drawHeight, zoomScale);
-
-      const { zoomOffsetX, zoomOffsetY } = calculateZoomOffsets({
-        pointerX,
-        pointerY,
-        image,
-        zoomedWidth,
-        zoomedHeight,
-        drawWidth,
-        drawHeight,
-      });
-
-      ctx.drawImage(
-        image,
-        zoomOffsetX,
-        zoomOffsetY,
-        zoomedWidth,
-        zoomedHeight,
-        offsetX,
-        offsetY,
-        drawWidth,
-        drawHeight
-      );
-    }
+  drawImageOnCanvas(imageData, zoomScale = 1, pointerX = 0, pointerY = 0) {
+    this.canvasWorker.postMessage({
+      action: 'drawImageOnCanvas',
+      imageData,
+      zoomScale,
+      pointerX,
+      pointerY,
+    });
   }
 
   pushImageToSet(image, index, orientation) {
@@ -423,9 +379,11 @@ class CI360Viewer {
     this.updatePercentageInLoader(this.calculatePercentage());
   }
 
-  onFirstImageLoaded(event, image) {
+  onFirstImageLoaded(event, imageData) {
     this.createContainers(event);
-    this.drawImageOnCanvas(image);
+
+    this.adaptCanvasSize(imageData);
+    this.drawImageOnCanvas(imageData);
   }
 
   onAllImagesLoaded() {
@@ -444,8 +402,9 @@ class CI360Viewer {
 
   magnify(event) {
     event.stopPropagation();
+    const { src } = this.imagesX[this.activeImageX];
+    const highPreviewCdnUrl = generateHighPreviewCdnUrl(src);
 
-    const highPreviewCdnUrl = generateHighPreviewCdnUrl(this.imagesX[this.activeImageX].src);
     this.createGlass();
 
     const onLoadImage = (image) => {
@@ -688,6 +647,7 @@ class CI360Viewer {
 
   addAllIcons() {
     this.removeLoader();
+    this.innerBox.style.cursor = 'grab';
 
     if (this.pointerZoom) {
       this.createTransitionOverlay();
@@ -759,6 +719,16 @@ class CI360Viewer {
     this.iconsContainer = createIconsContainer(this.innerBox);
     this.canvas = createCanvas(this.innerBox, event);
     this.loader = createLoader(this.innerBox);
+
+    const offscreenCanvas = this.canvas.transferControlToOffscreen();
+    this.canvasWorker.postMessage(
+      {
+        action: 'initCanvas',
+        offscreen: offscreenCanvas,
+        devicePixelRatio: window.devicePixelRatio,
+      },
+      [offscreenCanvas]
+    );
 
     if (this.fullscreenView) this.addCloseFullscreenIcon();
 
@@ -835,7 +805,7 @@ class CI360Viewer {
     this.logoSrc = logoSrc;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
-    this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 3) : null;
+    this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 5) : null;
     this.keysReverse = keysReverse;
     this.info = imageInfo;
     this.keys = keys;
@@ -855,7 +825,6 @@ class CI360Viewer {
       lazySelector,
       amount: this.amountX,
       indexZeroBase,
-      fullscreen: this.fullscreenView,
       autoplayReverse,
     };
 
@@ -867,8 +836,9 @@ class CI360Viewer {
       amount: this.amountY,
     };
 
-    const cdnPathX = generateCdnPath(this.srcXConfig, this.fullscreenView);
-    const cdnPathY = this.allowSpinY ? generateCdnPath(this.srcYConfig, this.fullscreenView) : null;
+    const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
+    const cdnPathX = generateCdnPath(this.srcXConfig, width);
+    const cdnPathY = this.allowSpinY ? generateCdnPath(this.srcYConfig, width) : null;
 
     if (lazyload) {
       initLazyload(cdnPathX, this.srcXConfig, (event) => {

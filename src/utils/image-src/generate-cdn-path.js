@@ -6,15 +6,15 @@ const buildCdnUrl = (src, ciToken, finalApiVersion) => {
   return isCloudImageUrl ? src : `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}`;
 };
 
-const buildTransformationParams = ({ ciTransformation, loadOriginalImages, responsiveWidth, ciFilters }) => {
-  const sizeParam = loadOriginalImages ? '' : `width=${responsiveWidth}`;
+const buildTransformationParams = ({ ciTransformation, responsiveWidth, ciFilters }) => {
+  const sizeParam = `width=${responsiveWidth}`;
   const transformation = ciTransformation || sizeParam;
   const filters = ciFilters ? `&f=${ciFilters}` : '';
   return `${transformation}${filters}`;
 };
 
-export const generateCdnPath = (srcConfig, loadOriginalImages) => {
-  const { container, folder, apiVersion, filename = '', ciParams } = srcConfig;
+export const generateCdnPath = (srcConfig, width) => {
+  const { folder, apiVersion, filename = '', ciParams } = srcConfig;
   const { ciToken, ciFilters, ciTransformation } = ciParams || {};
 
   const src = `${folder}${filename}`;
@@ -23,12 +23,11 @@ export const generateCdnPath = (srcConfig, loadOriginalImages) => {
 
   const version = !FALSY_VALUES.includes(apiVersion) ? apiVersion : null;
   const finalApiVersion = version ? `${version}/` : '';
-  const responsiveWidth = getSizeAccordingToPixelRatio(container.offsetWidth);
+  const responsiveWidth = getSizeAccordingToPixelRatio(width);
 
   const cdn = buildCdnUrl(src, ciToken, finalApiVersion);
   const transformationParams = buildTransformationParams({
     ciTransformation,
-    loadOriginalImages,
     responsiveWidth,
     ciFilters,
   });

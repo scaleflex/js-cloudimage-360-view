@@ -1,18 +1,19 @@
 export const calculateZoomOffsets = ({
   pointerX,
   pointerY,
-  image,
+  imageData,
   zoomedWidth,
   zoomedHeight,
   drawWidth,
   drawHeight,
 }) => {
-  let zoomOffsetX = (pointerX / drawWidth) * image.naturalWidth - zoomedWidth / 2;
-  let zoomOffsetY = (pointerY / drawHeight) * image.naturalHeight - zoomedHeight / 2;
+  const { naturalWidth, naturalHeight } = imageData;
+  let zoomOffsetX = (pointerX / drawWidth) * naturalWidth - zoomedWidth / 2;
+  let zoomOffsetY = (pointerY / drawHeight) * naturalHeight - zoomedHeight / 2;
 
   // Calculate max offset values
-  const maxOffsetX = Math.max(0, image.naturalWidth - zoomedWidth);
-  const maxOffsetY = Math.max(0, image.naturalHeight - zoomedHeight);
+  const maxOffsetX = Math.max(0, naturalWidth - zoomedWidth);
+  const maxOffsetY = Math.max(0, naturalHeight - zoomedHeight);
 
   // Clamp zoom offsets to the valid range
   zoomOffsetX = Math.max(0, Math.min(zoomOffsetX, maxOffsetX));

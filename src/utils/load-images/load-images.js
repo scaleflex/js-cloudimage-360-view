@@ -11,12 +11,23 @@ export const loadImages = ({
 
   const loadImage = (url, index) => {
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.src = url;
 
-    img.onload = () => {
+    img.onload = async () => {
+      const bitmapImage = await createImageBitmap(img);
+
+      const imageData = {
+        src: url,
+        bitmapImage,
+        naturalWidth: firstImg.naturalWidth,
+        naturalHeight: firstImg.naturalHeight,
+      };
+
       loadedCount++;
-      loadedImages[index] = img;
-      onImageLoad?.(img, index);
+      loadedImages[index] = imageData;
+
+      onImageLoad?.(imageData, index);
 
       if (loadedCount === totalImages) {
         onAllImagesLoad?.(loadedImages);
@@ -34,12 +45,24 @@ export const loadImages = ({
   };
 
   const firstImg = new Image();
-  firstImg.src = imagesUrls[autoplayReverse ? imagesUrls.length - 1 : 0];
-  firstImg.onload = () => {
-    loadedImages[0] = firstImg;
+  const src = imagesUrls[autoplayReverse ? imagesUrls.length - 1 : 0];
+  firstImg.crossOrigin = 'anonymous';
+  firstImg.src = src;
+  firstImg.onload = async () => {
+    const bitmapImage = await createImageBitmap(firstImg);
+
+    const imageData = {
+      src,
+      bitmapImage,
+      naturalWidth: firstImg.naturalWidth,
+      naturalHeight: firstImg.naturalHeight,
+    };
+
+    loadedImages[0] = imageData;
     loadedCount++;
-    onFirstImageLoad?.(firstImg);
-    onImageLoad?.(firstImg, 0);
+
+    onFirstImageLoad?.(imageData);
+    onImageLoad?.(imageData, 0);
 
     for (let i = 1; i < imagesUrls.length; i++) {
       loadImage(imagesUrls[i], i);
