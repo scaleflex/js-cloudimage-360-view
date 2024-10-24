@@ -166,8 +166,7 @@ class CI360Viewer {
 
   removeZoom() {
     this.isZoomed = false;
-
-    this.update(ORIENTATIONS.X);
+    this.update();
     this.showAllIcons();
     this.hideTransitionOverlay();
   }
@@ -180,7 +179,7 @@ class CI360Viewer {
     this.hideLoadingSpinner();
     this.hideTransitionOverlay();
 
-    this.update(ORIENTATIONS.X, this.pointerZoom, offsetX, offsetY);
+    this.update(this.pointerZoom, offsetX, offsetY);
   }
 
   touchOutside(event) {
@@ -267,18 +266,22 @@ class CI360Viewer {
   }
 
   moveActiveXIndexUp(itemsSkipped) {
+    this.orientation = ORIENTATIONS.X;
     this.activeImageX = (this.activeImageX + itemsSkipped) % this.amountX;
   }
 
   moveActiveXIndexDown(itemsSkipped) {
+    this.orientation = ORIENTATIONS.X;
     this.activeImageX = (this.activeImageX - itemsSkipped + this.amountX) % this.amountX;
   }
 
   moveActiveYIndexUp(itemsSkipped) {
+    this.orientation = ORIENTATIONS.Y;
     this.activeImageY = (this.activeImageY + itemsSkipped) % this.amountY;
   }
 
   moveActiveYIndexDown(itemsSkipped) {
+    this.orientation = ORIENTATIONS.Y;
     this.activeImageY = (this.activeImageY - itemsSkipped + this.amountY) % this.amountY;
   }
 
@@ -286,28 +289,28 @@ class CI360Viewer {
     if (stopAtEdges && this.activeImageX >= this.imagesX.length - 1) return;
 
     this.moveActiveXIndexUp(itemsSkippedX);
-    this.update(ORIENTATIONS.X);
+    if (!this.isZoomed) this.update();
   }
 
   moveLeft(stopAtEdges, itemsSkippedX = 1) {
     if (stopAtEdges && this.activeImageX <= 0) return;
 
     this.moveActiveXIndexDown(itemsSkippedX);
-    this.update(ORIENTATIONS.X);
+    if (!this.isZoomed) this.update();
   }
 
   moveTop(stopAtEdges, itemsSkippedY = 1) {
     if (stopAtEdges && this.activeImageY >= this.imagesY.length - 1) return;
 
     this.moveActiveYIndexUp(itemsSkippedY);
-    this.update(ORIENTATIONS.Y);
+    if (!this.isZoomed) this.update();
   }
 
   moveBottom(stopAtEdges, itemsSkippedY = 1) {
     if (stopAtEdges && this.activeImageY <= 0) return;
 
     this.moveActiveYIndexDown(itemsSkippedY);
-    this.update(ORIENTATIONS.Y);
+    if (!this.isZoomed) this.update();
   }
 
   onMoveHandler(movingDirection, itemsSkippedX = 1, itemsSkippedY = 1) {
@@ -322,9 +325,9 @@ class CI360Viewer {
     }
   }
 
-  update(orientation, zoomScale, offsetX, offsetY) {
+  update(zoomScale, offsetX, offsetY) {
     const imageData =
-      orientation === ORIENTATIONS.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
+      this.orientation === ORIENTATIONS.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
 
     this.drawImageOnCanvas(imageData, zoomScale, offsetX, offsetY);
   }
@@ -402,7 +405,8 @@ class CI360Viewer {
 
   magnify(event) {
     event.stopPropagation();
-    const { src } = this.imagesX[this.activeImageX];
+    const { src } =
+      this.orientation === ORIENTATIONS.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX];
     const highPreviewCdnUrl = generateHighPreviewCdnUrl(src);
 
     this.createGlass();
