@@ -129,8 +129,8 @@
 .cloudimage-360-view-360-circle {
   position: absolute;
   left: 0;
-  right: 0;
-  width: 80%;
+  bottom: 0;
+  width: 100%;
   height: auto;
   margin: auto;
   pointer-events: none;

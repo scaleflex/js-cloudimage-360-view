@@ -1,6 +1,6 @@
 import throttle from 'lodash.throttle';
 
-import { get360ViewProps } from './ci360.utils';
+import { adaptConfig, getConfigFromImage } from './ci360.utils';
 import './static/css/style.css';
 import './static/css/hotspots.css';
 import {
@@ -37,7 +37,7 @@ import {
 } from './utils';
 
 class CI360Viewer {
-  constructor(container, fullscreen) {
+  constructor(container, config, fullscreen) {
     this.container = container;
     this.isClicked = false;
     this.fullscreenView = !!fullscreen;
@@ -51,7 +51,7 @@ class CI360Viewer {
     this.currentZoomScale = 1;
     this.canvasWorker = new Worker(new URL('canvas.worker.js', import.meta.url));
 
-    this.init(container);
+    this.init(this.container, config);
   }
 
   mouseDown(event) {
@@ -428,7 +428,7 @@ class CI360Viewer {
 
     const fullscreenContainer = createFullscreenModal(this.container);
 
-    new CI360Viewer(fullscreenContainer, true);
+    new CI360Viewer(fullscreenContainer, null, true);
   }
 
   closeFullscreenModal(event) {
@@ -557,7 +557,7 @@ class CI360Viewer {
   showMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
-    this.magnifierIcon.style.visibility = 'visible'; // !TODO: Rework
+    this.magnifierIcon.style.visibility = 'visible';
     this.magnifierIcon.style.opacity = 1;
   }
 
@@ -744,7 +744,7 @@ class CI360Viewer {
     removeElementFromContainer(this.innerBox, '.cloudimage-lazy');
   }
 
-  init(container) {
+  init(container, config) {
     let {
       folder,
       apiVersion,
@@ -781,7 +781,7 @@ class CI360Viewer {
       imageInfo = 'black',
       initialIconHidden,
       bottomCircleHidden,
-    } = get360ViewProps(container);
+    } = config ? adaptConfig(config) : getConfigFromImage(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
     const parsedImagesListX = imageListX ? JSON.parse(imageListX) : [];
@@ -826,6 +826,7 @@ class CI360Viewer {
       innerBox: this.innerBox,
       apiVersion,
       ciParams,
+      lazyload,
       lazySelector,
       amount: this.amountX,
       indexZeroBase,
@@ -846,24 +847,22 @@ class CI360Viewer {
     const cdnPathY =
       this.allowSpinY && !parsedImagesListY.length ? generateCdnPath(this.srcYConfig, width) : null;
 
-    if (lazyload) {
-      const loadCallback = (event) => {
-        preloadImages({
-          cdnPathX,
-          cdnPathY,
-          configX: this.srcXConfig,
-          configY: this.srcYConfig,
-          onImageLoad: (image, index, orientation) => this.onImageLoad(image, index, orientation),
-          onFirstImageLoad: (imageData) => this.onFirstImageLoaded(event, imageData),
-          onAllImagesLoad: this.onAllImagesLoaded.bind(this),
-        });
-      };
+    const loadCallback = (event) => {
+      preloadImages({
+        cdnPathX,
+        cdnPathY,
+        configX: this.srcXConfig,
+        configY: this.srcYConfig,
+        onImageLoad: (image, index, orientation) => this.onImageLoad(image, index, orientation),
+        onFirstImageLoad: (imageData) => this.onFirstImageLoaded(event, imageData),
+        onAllImagesLoad: this.onAllImagesLoaded.bind(this),
+      });
+    };
 
-      if (this.allowSpinX) {
-        initLazyload(cdnPathX, this.srcXConfig, loadCallback);
-      } else if (this.allowSpinY) {
-        initLazyload(cdnPathY, this.srcYConfig, loadCallback);
-      }
+    if (this.allowSpinX) {
+      initLazyload(cdnPathX, this.srcXConfig, loadCallback);
+    } else if (this.allowSpinY) {
+      initLazyload(cdnPathY, this.srcYConfig, loadCallback);
     }
 
     this.attachEvents(draggable, swipeable, keys);

@@ -17,9 +17,9 @@ const getFirstImageSrc = (imagesSrc, srcConfig) => {
   return getFirstCdnImage(imagesSrc, indexZeroBase);
 };
 
-const createImage = (src, lazySelector) => {
+const createImage = (src, lazyload, lazySelector) => {
   const image = new Image();
-  image.setAttribute('data-src', src);
+  image.setAttribute(lazyload ? 'data-src' : 'src', src);
   image.style.cssText = `
     width: 100%;
     height: 100%;
@@ -28,17 +28,17 @@ const createImage = (src, lazySelector) => {
     filter: blur(10px);
   `;
 
-  if (lazySelector) image.className = `${lazySelector} cloudimage-lazy`;
+  image.className = `${lazySelector} cloudimage-lazy`;
 
   return image;
 };
 
 export const initLazyload = (cdnPath, srcConfig, onLoad) => {
-  const { lazySelector, innerBox, imageList } = srcConfig || {};
+  const { lazySelector, innerBox, imageList, lazyLoad } = srcConfig || {};
   const [firstImageSrcInList] = imageList;
   const firstImageSrc = firstImageSrcInList || getFirstImageSrc(cdnPath, srcConfig);
   const lowPreviewSrc = generateLowPreviewCdnUrl(firstImageSrc);
-  const image = createImage(lowPreviewSrc, lazySelector);
+  const image = createImage(lowPreviewSrc, lazyLoad, lazySelector);
 
   image.onload = (event) => {
     if (onLoad) {
