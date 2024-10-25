@@ -734,7 +734,7 @@ class CI360Viewer {
       {
         action: 'initCanvas',
         offscreen: offscreenCanvas,
-        devicePixelRatio: window.devicePixelRatio,
+        devicePixelRatio: this.devicePixelRatio,
       },
       [offscreenCanvas]
     );

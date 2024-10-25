@@ -3,12 +3,8 @@ export { generateCdnPath } from './image-src/generate-cdn-path';
 export { generateHighPreviewCdnUrl } from './image-src/generate-high-preview-cdn-url';
 
 export { preloadImages } from './load-images/preload-images';
-export { preloadOriginalImages } from './load-images/preload-original-images';
 export { initLazyload } from './load-images/lazyload/init-lazyload';
 export { loadImage } from './load-images/load-image';
-
-export { contain } from './responsive/contain';
-export { getImageAspectRatio } from './responsive/get-image-aspect-ratio';
 
 export { magnify } from './magnify/magnify';
 
@@ -19,11 +15,9 @@ export { calculateZoomedDimensions } from './zoom/calculate-zoomed-dimensions';
 export { calculateZoomOffsets } from './zoom/calculate-zoomed-offset';
 
 export { loop } from './auto-play/loop';
-export { getSpeedFactor } from './auto-play/get-speed-factor';
 export { isCompletedOneCycle } from './auto-play/is-completed-one-cycle';
 
 export { addClass } from './class-names/add-class';
-export { removeClass } from './class-names/remove-class';
 
 export { shouldSwitchSpinDirection } from './spin/should-switch-spin-direction';
 export { getDefaultSpinDirection } from './spin/get-default-spin-direction';

@@ -1,4 +1,4 @@
-const removeParamByRegex = (url, paramToRemove) => {
+export const removeParamByRegex = (url, paramToRemove) => {
   const [base, query] = url.split('?');
   if (!query) return url;
 
@@ -10,5 +10,3 @@ const removeParamByRegex = (url, paramToRemove) => {
 
   return cleanedQuery ? `${base}?${cleanedQuery}` : base;
 };
-
-export default removeParamByRegex;

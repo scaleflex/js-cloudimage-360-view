@@ -8,7 +8,6 @@ export { createInnerBox } from './create-inner-box';
 export { createMagnifierIcon } from './create-magnifier-icon';
 export { createBoxShadow } from './create-box-shadow';
 export { createLoader } from './create-loader';
-export { applyStylesToContainer } from './apply-styles-to-container';
 export { createFullscreenModal } from './create-fullscreen-modal';
 export { removeElementFromContainer } from './remove-element-from-container';
 export { createLoadingSpinner } from './create-loading-spinner';

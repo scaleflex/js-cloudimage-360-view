@@ -1,4 +1,4 @@
-import removeParamByRegex from './removeParamByRegex';
+import { removeParamByRegex } from './remove-param-by-regex';
 
 const generateLowPreviewCdnUrl = (cdnUrl) => {
   const cleanedCdnUrl = removeParamByRegex(cdnUrl, 'width');
