@@ -1,4 +1,4 @@
-export const getMovingDirection = ({ deltaX, deltaY, allowSpinX, allowSpinY, threshold = 1 }) => {
+export const getMovingDirection = ({ deltaX, deltaY, allowSpinX, allowSpinY, threshold = 2 }) => {
   const absDeltaX = Math.abs(deltaX);
   const absDeltaY = Math.abs(deltaY);
 

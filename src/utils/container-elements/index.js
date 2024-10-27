@@ -12,3 +12,4 @@ export { createFullscreenModal } from './create-fullscreen-modal';
 export { removeElementFromContainer } from './remove-element-from-container';
 export { createLoadingSpinner } from './create-loading-spinner';
 export { createTransitionOverlay } from './create-transition-overlay';
+export { createHotspotsContainer } from './create-hotspots-container';

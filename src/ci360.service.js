@@ -36,6 +36,8 @@ import {
   createTransitionOverlay,
 } from './utils';
 
+import Hotspot from './hotspots';
+
 class CI360Viewer {
   constructor(container, config, fullscreen) {
     this.container = container;
@@ -329,8 +331,14 @@ class CI360Viewer {
   }
 
   update(zoomScale, offsetX, offsetY) {
+    const activeIndex = this.orientation === ORIENTATIONS.X ? this.activeImageX : this.activeImageY;
+
     const imageData =
       this.orientation === ORIENTATIONS.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
+
+    if (this.hotspotsInstance) {
+      this.hotspotsInstance.updateHotspotPosition(activeIndex, this.orientation);
+    }
 
     this.drawImageOnCanvas(imageData, zoomScale, offsetX, offsetY);
   }
@@ -394,6 +402,11 @@ class CI360Viewer {
 
   onAllImagesLoaded() {
     this.addAllIcons();
+
+    if (this.hotspots) {
+      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox);
+    }
+
     this.isReady = true;
     this.amountX = this.imagesX.length;
     this.amountY = this.imagesY.length;
@@ -428,7 +441,7 @@ class CI360Viewer {
 
     const fullscreenContainer = createFullscreenModal(this.container);
 
-    new CI360Viewer(fullscreenContainer, null, true);
+    new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
   }
 
   closeFullscreenModal(event) {
@@ -735,6 +748,7 @@ class CI360Viewer {
         action: 'initCanvas',
         offscreen: offscreenCanvas,
         devicePixelRatio: this.devicePixelRatio,
+        hotspotsConfig: this.hotspots,
       },
       [offscreenCanvas]
     );
@@ -781,12 +795,14 @@ class CI360Viewer {
       imageInfo = 'black',
       initialIconHidden,
       bottomCircleHidden,
+      hotspots,
     } = config ? adaptConfig(config) : getConfigFromImage(container);
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
     const parsedImagesListX = imageListX ? JSON.parse(imageListX) : [];
     const parsedImagesListY = imageListY ? JSON.parse(imageListY) : [];
 
+    this.viewerConfig = config;
     this.amountX = parsedImagesListX.length || amountX;
     this.amountY = parsedImagesListY.length || amountY;
     this.allowSpinX = !!this.amountX;
@@ -817,6 +833,7 @@ class CI360Viewer {
     this.initialIconHidden = initialIconHidden;
     this.bottomCircleHidden = bottomCircleHidden;
     this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior, this.allowSpinX, this.allowSpinY);
+    this.hotspots = hotspots;
 
     this.srcXConfig = {
       folder,

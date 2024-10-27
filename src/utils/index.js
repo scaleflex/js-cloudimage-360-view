@@ -29,13 +29,9 @@ export { getMovingDirection } from './spin-y/get-moving-direction';
 export { getItemSkipped } from './controls/get-item-skipped';
 export { initControls } from './controls/init-controls';
 
+export { debounce } from './debounce';
+
 export * from './container-elements';
 export * from './constants';
-
-export { updateHotspots } from './hotspots/update-hotspots';
-export { createHotspots } from './hotspots/elements/create-hotspots';
-export { generateHotspotsConfigs } from './hotspots/generate-hotspots-configs';
-export { isMouseOnHotspot } from './hotspots/is-mouse-on-hotspot';
-export { hideHotspotsIcons } from './hotspots/hide-hotspots-icons';
 
 export { delay } from './delay';

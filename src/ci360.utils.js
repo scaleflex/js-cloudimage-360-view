@@ -37,6 +37,7 @@ const DEFAULTS_VALUES = {
   imageInfo: false,
   initialIconHidden: true,
   bottomCircleHidden: true,
+  hotspots: [],
 };
 
 const getConfigFromImage = (image) => ({
@@ -116,6 +117,7 @@ const adaptConfig = (config) => ({
   imageInfo: config.imageInfo ?? DEFAULTS_VALUES.imageInfo,
   initialIconHidden: config.initialIconHidden ?? DEFAULTS_VALUES.initialIconHidden,
   bottomCircleHidden: config.bottomCircleHidden ?? DEFAULTS_VALUES.bottomCircleHidden,
+  hotspots: config.hotspots ?? DEFAULTS_VALUES.hotspots,
 });
 
 // Helper functions
@@ -123,9 +125,9 @@ const getAttr = (element, attribute, defaultValue) =>
   element.getAttribute(attribute) || element.getAttribute(`data-${attribute}`) || defaultValue;
 
 const isTrue = (image, type) => {
-  const imgProp = getAttr(image, type) || getAttr(image, `data-${type}`);
+  const hasAttribute = image.hasAttribute(type) || image.hasAttribute(`data-${type}`);
 
-  return imgProp !== null && imgProp !== 'false';
+  return hasAttribute;
 };
 
 const isFalse = (image, type) => {
