@@ -1,3 +1,3 @@
-import { removeParamByRegex } from './remove-param-by-regex';
+import { addOrUpdateParam } from './add-or-update-param';
 
-export const generateHighPreviewCdnUrl = (url) => removeParamByRegex(url, 'width');
+export const generateHighPreviewCdnUrl = (url, width) => addOrUpdateParam(url, 'width', width);

@@ -444,7 +444,9 @@ class CI360Viewer {
     event.stopPropagation();
     const { src } =
       this.orientation === ORIENTATIONS.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX];
-    const highPreviewCdnUrl = generateHighPreviewCdnUrl(src);
+    const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
+    const imageWidth = width * this.devicePixelRatio * this.magnifier;
+    const highPreviewCdnUrl = generateHighPreviewCdnUrl(src, imageWidth);
 
     this.createGlass();
 
@@ -474,6 +476,7 @@ class CI360Viewer {
     if (this.isClicked) return;
     this.hide360ViewCircleIcon();
 
+    const autoplaySpeed = (this.speed * 36) / (this.amountX + this.amountY);
     const loopTriggers = {
       left: this.moveLeft.bind(this),
       right: this.moveRight.bind(this),
@@ -520,7 +523,7 @@ class CI360Viewer {
         reversed: this.autoplayReverse,
         loopTriggers,
       });
-    }, this.speed);
+    }, autoplaySpeed);
   }
 
   stopAutoplay() {
@@ -532,6 +535,7 @@ class CI360Viewer {
 
   destroy() {
     this.stopAutoplay();
+    if (this.hotspotsInstance) this.hotspotsInstance.destroy();
 
     const oldElement = this.container;
     const newElement = oldElement.cloneNode(true);
@@ -813,6 +817,8 @@ class CI360Viewer {
   }
 
   update(newConfig) {
+    if (!this.isReady) return;
+
     this.stopAutoplay();
     removeElementFromContainer(this.innerBox, '.cloudimage-360-icons-container');
     this.init(this.container, newConfig, true);
