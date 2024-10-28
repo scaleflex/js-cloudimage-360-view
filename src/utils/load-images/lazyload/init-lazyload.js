@@ -24,7 +24,9 @@ const createImage = (src, lazyload, className) => {
   image.setAttribute(lazyload ? 'data-src' : 'src', src);
   image.className = className;
   image.style.cssText = `
+    position: ${lazyload ? 'absolute' : 'static'};
     width: 100%;
+    inset: 0;
     height: 100%;
     object-fit: contain;
     object-position: center;
@@ -43,7 +45,7 @@ export const initLazyload = (cdnPath, srcConfig, onLoad) => {
   const placeholderImage = createImage(lowPreviewSrc, false, 'cloudimage-360-placeholder');
 
   const loadImageCallback = (event) => {
-    removeElementFromContainer(innerBox, '.cloudimage-360-placeholder');
+    removeElementFromContainer(innerBox, '.cloudimage-lazy');
 
     if (onLoad) {
       onLoad({

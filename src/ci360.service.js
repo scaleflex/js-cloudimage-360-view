@@ -819,7 +819,7 @@ class CI360Viewer {
 
     if (this.fullscreenView) this.addCloseFullscreenIcon();
 
-    removeElementFromContainer(this.innerBox, '.cloudimage-lazy');
+    removeElementFromContainer(this.innerBox, '.cloudimage-360-placeholder');
   }
 
   update(newConfig) {
