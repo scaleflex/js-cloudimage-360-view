@@ -7,7 +7,6 @@
 }
 
 .cloudimage-360-hotspot {
-  position: absolute;
   display: inline-block;
   background: radial-gradient(circle, #0e82fe 30%, #00d4ff);
   border-radius: 50%;
@@ -17,6 +16,7 @@
   opacity: 0;
   animation: pulse 2s infinite;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .cloudimage-360-hotspot.visible {

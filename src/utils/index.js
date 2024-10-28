@@ -8,8 +8,6 @@ export { loadImage } from './load-images/load-image';
 
 export { magnify } from './magnify/magnify';
 
-export { generateZoomInSteps } from './zoom/generate-zoom-in-steps';
-export { generateZoomOutSteps } from './zoom/generate-zoom-out-steps';
 export { calculateOffsetFromEvent } from './zoom/calculate-offsets-from-events';
 export { calculateZoomedDimensions } from './zoom/calculate-zoomed-dimensions';
 export { calculateZoomOffsets } from './zoom/calculate-zoomed-offset';
@@ -24,7 +22,7 @@ export { getDefaultSpinDirection } from './spin/get-default-spin-direction';
 export { switchSpinDirection } from './spin/switch-spin-direction';
 export { isSpinKeysPressed } from './spin/is-spin-keys-pressed';
 
-export { getMovingDirection } from './spin-y/get-moving-direction';
+export { getMovingDirection } from './spin/get-moving-direction';
 
 export { getItemSkipped } from './controls/get-item-skipped';
 export { initControls } from './controls/init-controls';
