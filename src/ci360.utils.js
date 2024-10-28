@@ -5,7 +5,7 @@ const DEFAULTS_VALUES = {
   folder: '/',
   apiVersion: 'v7',
   filenameX: 'image-{index}.jpg',
-  filenameY: 'image-y-{index}.jpg',
+  filenameY: null,
   imageListX: null,
   imageListY: null,
   indexZeroBase: 0,
@@ -13,6 +13,8 @@ const DEFAULTS_VALUES = {
   amountY: 0,
   speed: 80,
   dragSpeed: 150,
+  draggable: true,
+  swipeable: true,
   keys: false,
   keysReverse: false,
   boxShadow: null,
@@ -30,14 +32,14 @@ const DEFAULTS_VALUES = {
   ciTransformation: null,
   lazyload: false,
   lazySelector: 'lazyload',
-  spinReverse: false,
+  dragReverse: false,
   controlReverse: false,
   stopAtEdges: false,
   logoSrc: 'https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg',
   imageInfo: false,
   initialIconHidden: true,
   bottomCircleHidden: true,
-  hotspots: [],
+  hotspots: null,
 };
 
 const getConfigFromImage = (image) => ({
@@ -52,6 +54,8 @@ const getConfigFromImage = (image) => ({
   amountY: parseInt(getAttr(image, 'amount-y', DEFAULTS_VALUES.amountY), 10),
   speed: parseInt(getAttr(image, 'speed', DEFAULTS_VALUES.speed), 10),
   dragSpeed: parseInt(getAttr(image, 'drag-speed', DEFAULTS_VALUES.dragSpeed), 10),
+  draggable: isTrue(image, 'draggable', DEFAULTS_VALUES.draggable),
+  swipeable: isTrue(image, 'swipeable', DEFAULTS_VALUES.swipeable),
   keys: isTrue(image, 'keys', DEFAULTS_VALUES.keys),
   keysReverse: isTrue(image, 'keys-reverse', DEFAULTS_VALUES.keysReverse),
   boxShadow: getAttr(image, 'box-shadow', DEFAULTS_VALUES.boxShadow),
@@ -72,7 +76,7 @@ const getConfigFromImage = (image) => ({
   ciTransformation: getAttr(image, 'transformation', DEFAULTS_VALUES.ciTransformation),
   lazyload: isTrue(image, 'lazyload', DEFAULTS_VALUES.lazyload),
   lazySelector: getAttr(image, 'lazyload-selector', DEFAULTS_VALUES.lazySelector),
-  spinReverse: isTrue(image, 'spin-reverse', DEFAULTS_VALUES.spinReverse),
+  dragReverse: isTrue(image, 'drag-reverse', DEFAULTS_VALUES.dragReverse),
   controlReverse: isTrue(image, 'control-reverse', DEFAULTS_VALUES.controlReverse),
   stopAtEdges: isTrue(image, 'stop-at-edges', DEFAULTS_VALUES.stopAtEdges),
   logoSrc: getAttr(image, 'logo-src', DEFAULTS_VALUES.logoSrc),
@@ -92,6 +96,8 @@ const adaptConfig = (config) => ({
   amountX: parseInt(config.amountX ?? DEFAULTS_VALUES.amountX, 10),
   amountY: parseInt(config.amountY ?? DEFAULTS_VALUES.amountY, 10),
   speed: parseInt(config.speed ?? DEFAULTS_VALUES.speed, 10),
+  draggable: config.draggable ?? DEFAULTS_VALUES.draggable,
+  swipeable: config.swipeable ?? DEFAULTS_VALUES.swipeable,
   dragSpeed: parseInt(config.dragSpeed ?? DEFAULTS_VALUES.dragSpeed, 10),
   keys: config.keys ?? DEFAULTS_VALUES.keys,
   keysReverse: config.keysReverse ?? DEFAULTS_VALUES.keysReverse,
@@ -110,7 +116,7 @@ const adaptConfig = (config) => ({
   ciTransformation: config.ciTransformation || DEFAULTS_VALUES.ciTransformation,
   lazyload: config.lazyload ?? DEFAULTS_VALUES.lazyload,
   lazySelector: config.lazySelector || DEFAULTS_VALUES.lazySelector,
-  spinReverse: config.spinReverse ?? DEFAULTS_VALUES.spinReverse,
+  dragReverse: config.dragReverse ?? DEFAULTS_VALUES.dragReverse,
   controlReverse: config.controlReverse ?? DEFAULTS_VALUES.controlReverse,
   stopAtEdges: config.stopAtEdges ?? DEFAULTS_VALUES.stopAtEdges,
   logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
@@ -124,10 +130,10 @@ const adaptConfig = (config) => ({
 const getAttr = (element, attribute, defaultValue) =>
   element.getAttribute(attribute) || element.getAttribute(`data-${attribute}`) || defaultValue;
 
-const isTrue = (image, type) => {
+const isTrue = (image, type, defaultValue) => {
   const hasAttribute = image.hasAttribute(type) || image.hasAttribute(`data-${type}`);
 
-  return hasAttribute;
+  return hasAttribute || defaultValue;
 };
 
 const isFalse = (image, type) => {

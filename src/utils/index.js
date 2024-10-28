@@ -1,4 +1,4 @@
-export { isPropsChangeRequireReload } from './image-src/is-props-change-require-reload';
+export { hasConfigChanged } from './image-src/has-config-changed';
 export { generateCdnPath } from './image-src/generate-cdn-path';
 export { generateHighPreviewCdnUrl } from './image-src/generate-high-preview-cdn-url';
 

@@ -414,7 +414,7 @@ Speed of changing frames for autoplay in milliseconds.
 
 Speed Factor of changing frames on drag event.
 
-### data-spin-reverse (or spin-reverse)
+### data-drag-reverse (or drag-reverse)
 
 ###### Type: **Bool** | Default: **false** | _optional_
 

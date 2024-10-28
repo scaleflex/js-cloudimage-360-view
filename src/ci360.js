@@ -1,4 +1,5 @@
 import CI360Viewer from './ci360.service';
+import { hasConfigChanged } from './utils';
 
 class CI360 {
   constructor() {
@@ -46,6 +47,22 @@ class CI360 {
 
   getViews() {
     return Array.from(this.views.values());
+  }
+
+  updateView(id, config) {
+    const view = this.getViewById(id);
+    const updatedConfig = { ...view.viewerConfig, ...config };
+    const requireReload = hasConfigChanged(view.viewerConfig, config);
+
+    if (requireReload) {
+      view.destroy();
+      const container = document.getElementById(id);
+      this.init(container, updatedConfig);
+    } else {
+      view.update(updatedConfig);
+    }
+
+    return view;
   }
 }
 

@@ -156,26 +156,24 @@
         </div>
         <div class="vivo-mobile">
           <div
-            class=""
+            class="cloudimage-360"
             data-folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
             data-filename-x="product-{index}.jpg"
             data-amount-x="60"
             data-drag-speed="100"
             data-lazyload
-            data-lazy-selector="lazyload"
             data-responsive="scaleflex"
           ></div>
           <p>Vivo</p>
         </div>
         <div class="geely-car">
           <div
-            class=""
+            class="cloudimage-360"
             data-folder="https://scaleflex.cloudimg.io/v7/demo/geely-car/"
             data-filename-x="Okavango-3-{index}.jpg"
             data-amount-x="24"
             data-bottom-circle
             data-lazyload
-            data-lazy-selector="lazyload"
             data-responsive="scaleflex"
           ></div>
           <p>Geely</p>
@@ -202,11 +200,10 @@
               data-amount-x="233"
               data-autoplay
               data-speed="100"
-              data-pointer-zoom="2"
+              data-pointer-zoom="1.5"
               data-drag-speed="100"
               data-responsive="scaleflex"
               data-lazyload
-              data-lazy-selector="lazyload"
             >
               <button class="-left control-buttons"></button>
               <button class="-right control-buttons"></button>
@@ -258,7 +255,7 @@
               <p class="input-title">Select amount-x</p>
               <select
                 class="plugin-options plugin-selector"
-                data-plugin-value="data-amount-x"
+                data-plugin-property="data-amount-x"
                 plugin-input
                 id="x-images-selector"
               >
@@ -268,7 +265,7 @@
               </select>
               <select
                 class="plugin-options plugin-selector"
-                data-plugin-value="data-amount-x"
+                data-plugin-property="data-amount-x"
                 plugin-input
                 id="nike-x-images"
               >
@@ -281,7 +278,7 @@
               <p class="input-title">Select amount-y</p>
               <select
                 class="plugin-options plugin-selector"
-                data-plugin-value="data-amount-y"
+                data-plugin-property="data-amount-y"
                 plugin-input
               >
                 <option value="36">36 images</option>
@@ -296,11 +293,11 @@
                   <label class="checkbox-container">
                     Pointer zoom
                     <input
-                      class="customize-inputs"
-                      data-plugin-value="data-pointer-zoom"
-                      data-checkbox="pointer-checkbox"
-                      type="checkbox"
-                      id="pointer-checkbox"
+                    class="customize-inputs"
+                    data-plugin-property="pointerZoom"
+                    type="checkbox"
+                    checked
+                    id="pointer-checkbox"
                     />
                     <span class="checkmark"></span>
                   </label>
@@ -309,13 +306,11 @@
                   <p class="selectors-wrappers-text">zoom scale</p>
                   <select
                     class="customize-selectors plugin-selector"
-                    data-input="pointer-checkbox"
-                    data-plugin-value="data-pointer-zoom"
-                    id="pointer-selector"
+                    data-plugin-property="data-pointer-zoom"
+                    id="pointer-zoom-selector"
                     plugin-input
-                    disabled
                   >
-                    <option value="1.5">1.5</option>
+                    <option selected value="1.5">1.5</option>
                     <option value="2">2</option>
                     <option value="2.5">2.5</option>
                     <option value="3.5">3.5</option>
@@ -328,7 +323,7 @@
                 <select
                   class="customize-selectors plugin-selector"
                   id="auto-play-behavior"
-                  data-plugin-value="data-autoplay-behavior"
+                  data-plugin-property="data-autoplay-behavior"
                   plugin-input
                   disabled
                 >
@@ -343,7 +338,7 @@
                 <input
                   id="spin-speed"
                   class="customize-selectors"
-                  data-plugin-value="data-speed"
+                  data-plugin-property="data-speed"
                   plugin-input
                   type="number"
                   value="100"
@@ -355,7 +350,7 @@
                 <input
                   id="drag-speed"
                   class="customize-selectors"
-                  data-plugin-value="data-drag-speed"
+                  data-plugin-property="data-drag-speed"
                   plugin-input
                   type="number"
                   value="120"
@@ -369,8 +364,8 @@
                     <input
                       id="image-magnifier"
                       class="customize-inputs plugin-option"
-                      data-plugin-value="data-magnifier"
-                      value="2"
+                      data-plugin-property="magnifier"
+                      data-plugin-value="2"
                       type="checkbox"
                     />
                     <span class="checkmark"></span>
@@ -380,7 +375,7 @@
                   <label class="checkbox-container">
                     Auto play
                     <input
-                      data-plugin-value="data-autoplay"
+                      data-plugin-property="autoplay"
                       class="plugin-option"
                       type="checkbox"
                       checked
@@ -392,7 +387,7 @@
                   <label class="checkbox-container">
                     Auto play once
                     <input
-                      data-plugin-value="data-play-once"
+                      data-plugin-property="playOnce"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -403,7 +398,7 @@
                   <label class="checkbox-container">
                     Auto play reverse
                     <input
-                      data-plugin-value="data-autoplay-reverse"
+                      data-plugin-property="autoplayReverse"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -414,7 +409,7 @@
                   <label class="checkbox-container">
                     Fullscreen
                     <input
-                      data-plugin-value="data-fullscreen"
+                      data-plugin-property="fullscreen"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -423,11 +418,12 @@
                 </div>
                 <div>
                   <label class="checkbox-container">
-                    Disable drag
+                    Draggable
                     <input
-                      data-plugin-value="disable-drag"
+                      data-plugin-property="draggable"
                       class="plugin-option"
                       type="checkbox"
+                      checked
                     />
                     <span class="checkmark"></span>
                   </label>
@@ -436,18 +432,7 @@
                   <label class="checkbox-container">
                     Drag reverse
                     <input
-                      data-plugin-value="data-spin-reverse"
-                      class="plugin-option"
-                      type="checkbox"
-                    />
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div>
-                  <label class="checkbox-container">
-                    Hide 360 logo
-                    <input
-                      data-plugin-value="hide-360-logo"
+                      data-plugin-property="dragReverse"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -461,7 +446,7 @@
                       id="control-option"
                       class="plugin-option"
                       type="checkbox"
-                      data-plugin-value="data-control"
+                      data-plugin-property="data-control"
                     />
                     <span class="checkmark"></span>
                   </label>
@@ -470,7 +455,7 @@
                   <label class="checkbox-container">
                     Control reverse
                     <input
-                      data-plugin-value="control-reverse"
+                      data-plugin-property="control-reverse"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -481,7 +466,7 @@
                   <label class="checkbox-container">
                     Control by keyboard
                     <input
-                      data-plugin-value="data-keys"
+                      data-plugin-property="data-keys"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -492,7 +477,7 @@
                   <label class="checkbox-container">
                     Control by keyboard reverse
                     <input
-                      data-plugin-value="data-control-reverse"
+                      data-plugin-property="data-control-reverse"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -503,100 +488,13 @@
                   <label class="checkbox-container">
                     Stop at edges
                     <input
-                      data-plugin-value="stop-at-edges"
+                      data-plugin-property="stopAtEdges"
                       class="plugin-option"
                       type="checkbox"
                     />
                     <span class="checkmark"></span>
                   </label>
                 </div>
-                <div>
-                  <label class="checkbox-container">
-                    Bottom circle
-                    <input
-                      data-plugin-value="data-bottom-circle"
-                      class="plugin-option"
-                      type="checkbox"
-                    />
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-              </div>
-              <div class="customize-options">
-                <div class="box-shadow-checkbox">
-                  <label class="checkbox-container">
-                    Box shadow
-                    <input
-                      class="customize-inputs"
-                      id="box-shadow"
-                      data-plugin-value="box-shadow"
-                      data-checkbox="box-shadow"
-                      type="checkbox"
-                    />
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div class="customize-selectors-wrappers">
-                  <p class="selectors-wrappers-text">Box Shadow</p>
-                  <input
-                    class="customize-selectors"
-                    disabled
-                    data-input="box-shadow"
-                    data-plugin-value="box-shadow"
-                    box-shadow-option
-                    plugin-input
-                    value="inset 0 0 100px #222"
-                    type="text"
-                  />
-                </div>
-              </div>
-              <div class="customize-options">
-                <div class="respons-checkbox">
-                  <label class="checkbox-container">
-                    Responsive
-                    <input class="customize-inputs"
-                    id="responsive-checkbox"
-                    data-plugin-value="data-responsive"
-                    type="checkbox" />
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div class="customize-selectors-wrappers">
-                  <p class="selectors-wrappers-text">Token</p>
-                  <input
-                    class="customize-selectors"
-                    value="scaleflex"
-                    responsive-option
-                    data-plugin-value="data-responsive"
-                    plugin-input
-                    disabled
-                    type="text"
-                  />
-                </div>
-              </div>
-              <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Transformation</p>
-                <input
-                  class="customize-selectors plugin-option"
-                  data-plugin-value="data-transformation"
-                  responsive-option
-                  plugin-input
-                  value="w=400&h=200&func=fit"
-                  type="text"
-                  disabled
-                />
-              </div>
-              <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Filter</p>
-                <input
-                  class="customize-selectors plugin-option"
-                  data-plugin-value="data-filters"
-                  responsive-option
-                  plugin-input
-                  value="bright:15,contrast:30"
-                  type="text"
-                  disabled
-                />
               </div>
             </div>
           </div>
