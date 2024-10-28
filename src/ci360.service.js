@@ -148,6 +148,12 @@ class CI360Viewer {
     });
   }
 
+  hideHotspots() {
+    if (!this.hotspotsInstance) return;
+
+    this.hotspotsInstance.hideHotspots();
+  }
+
   toggleZoom(event) {
     if (this.isZoomed) {
       this.showTransitionOverlay();
@@ -158,6 +164,7 @@ class CI360Viewer {
     } else {
       let width = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
 
+      this.hideHotspots();
       this.showLoadingSpinner();
       this.loadHigherQualityImages(width, () => {
         this.showTransitionOverlay();
@@ -336,7 +343,7 @@ class CI360Viewer {
     const imageData =
       this.orientation === ORIENTATIONS.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
 
-    if (this.hotspotsInstance) {
+    if (this.hotspotsInstance && !this.isZoomed) {
       this.hotspotsInstance.updateHotspotPosition(activeIndex, this.orientation);
     }
 
