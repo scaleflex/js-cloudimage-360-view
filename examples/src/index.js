@@ -21,13 +21,34 @@ const copyButton = document.querySelector('.copy-button');
 const outputCode = document.querySelector('.output-code');
 const pointerZoomCheckbox = document.getElementById('pointer-checkbox');
 const pluginCheckboxOptions = document.querySelectorAll('.plugin-option');
-
+const imageXAmountSelector = document.getElementById('x-images-selector');
+const imageYSelector = document.getElementById('images-y');
+const autoplaySpeed = document.getElementById('spin-speed');
+const dragSpeed = document.getElementById('drag-speed');
 const instance = new CI360();
 
 function changeSpinDirectionHandler(event) {
   const spinDirection = event.target.value;
-  const config = spinDirection === 'Y' ? NIKE_PLUGIN : EARBUDS_PLUGIN;
+  const isYDirection = spinDirection === 'Y';
+  const config = isYDirection ? NIKE_PLUGIN : EARBUDS_PLUGIN;
   const updatedView = instance.updateView('demo-generator', config);
+
+  imageXAmountSelector.value = isYDirection ? 35 : 233;
+  imageYSelector.style.display = isYDirection ? 'block' : 'none';
+
+  updateCodeBlock(updatedView.viewerConfig);
+}
+
+function changeDragSpeed(event) {
+  const { value } = event.target;
+  const updatedView = instance.updateView('demo-generator', { dragSpeed: parseInt(value, 10) });
+
+  updateCodeBlock(updatedView.viewerConfig);
+}
+
+function changeAutoplaySpeed(event) {
+  const { value } = event.target;
+  const updatedView = instance.updateView('demo-generator', { speed: parseInt(value, 10) });
 
   updateCodeBlock(updatedView.viewerConfig);
 }
@@ -40,6 +61,13 @@ function copyCodeHandler() {
   setTimeout(() => {
     copyText.innerHTML = 'Copy';
   }, 500);
+}
+
+function changeImageXAmount(event) {
+  const { value } = event.target;
+  const updatedView = instance.updateView('demo-generator', { amountX: parseInt(value, 10) });
+
+  updateCodeBlock(updatedView.viewerConfig);
 }
 
 function changePointerZoom(event) {
@@ -105,7 +133,10 @@ function updateCodeBlock(config) {
   });
 }
 
+dragSpeed.addEventListener('change', changeDragSpeed);
+autoplaySpeed.addEventListener('change', changeAutoplaySpeed);
 pointerZoomCheckbox.addEventListener('change', changePointerZoom);
+imageXAmountSelector.addEventListener('change', changeImageXAmount);
 pointerZoomSelector.addEventListener('change', changePointerZoomSelector);
 spinDirections.addEventListener('change', changeSpinDirectionHandler);
 copyButton.addEventListener('click', copyCodeHandler);

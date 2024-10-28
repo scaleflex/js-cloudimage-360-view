@@ -9,6 +9,10 @@ body {
   overflow-x: hidden;
 }
 
+#images-y {
+  display: none;
+}
+
 .cloudimage-360 canvas,
 #demo-generator canvas,
 #gurkha-suv canvas {

@@ -22,6 +22,8 @@ export const PROPS_REQUIRE_RELOAD = [
   'imageListX',
   'imageListY',
   'indexZeroBase',
+  'amountX',
+  'amountY',
 ];
 
 export const LEFT_RIGHT_KEYS = [37, 39];
