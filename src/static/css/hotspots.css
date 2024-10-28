@@ -13,11 +13,13 @@
 
 .cloudimage-360-hotspot {
   display: inline-block;
+  position: absolute;
+  inset: 0;
   background: #00aaff;
   border: 1px solid #fff;
   border-radius: 50%;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
   box-shadow:
     0 0 0 0 rgba(0, 170, 255, 0.6),
     0 2px 6px rgba(0, 0, 0, 0.2);

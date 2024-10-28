@@ -34,6 +34,7 @@ import {
   calculateOffsetFromEvent,
   createLoadingSpinner,
   createTransitionOverlay,
+  isTouchDevice,
 } from './utils';
 
 import Hotspot from './hotspots';
@@ -51,6 +52,7 @@ class CI360Viewer {
     this.draggingDirection = null;
     this.isReady = false;
     this.currentZoomScale = 1;
+    this.touchDevice = isTouchDevice();
     this.canvasWorker = new Worker(new URL('canvas.worker.js', import.meta.url));
 
     this.init(this.container, config);
@@ -134,7 +136,7 @@ class CI360Viewer {
       return;
     }
 
-    if (this.pointerZoom && !this.glass) this.toggleZoom(event);
+    if (this.pointerZoom && !this.glass && !this.touchDevice) this.toggleZoom(event);
   }
 
   loadHigherQualityImages(width, onLoad) {
@@ -422,7 +424,7 @@ class CI360Viewer {
   onAllImagesLoaded() {
     this.addAllIcons();
 
-    if (this.hotspots) {
+    if (this.hotspots && !this.fullscreenView) {
       this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox);
     }
 
@@ -703,7 +705,7 @@ class CI360Viewer {
       this.createTransitionOverlay();
       this.addLoadingSpinner();
     }
-    if (!this.fullscreenView) this.addMagnifierIcon();
+    if (!this.fullscreenView && !this.touchDevice) this.addMagnifierIcon();
     if (!this.fullscreenView) this.addFullscreenIcon();
     if (!this.initialIconHidden) this.addInitialIcon();
     if (!this.bottomCircleHidden) this.add360ViewCircleIcon();

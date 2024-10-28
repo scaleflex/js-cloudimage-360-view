@@ -24,7 +24,7 @@ self.onmessage = async (event) => {
       adaptCanvasSize(imageAspectRatio, containerWidth, containerHeight);
       break;
     case 'drawImageOnCanvas':
-      await drawImageOnCanvas(imageData, zoomScale, pointerX, pointerY);
+      drawImageOnCanvas(imageData, zoomScale, pointerX, pointerY);
       break;
     default:
       break;

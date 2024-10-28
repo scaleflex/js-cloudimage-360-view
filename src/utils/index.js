@@ -26,6 +26,7 @@ export { isSpinKeysPressed } from './spin/is-spin-keys-pressed';
 export { getMovingDirection } from './spin/get-moving-direction';
 
 export { debounce } from './debounce';
+export { isTouchDevice } from './is-touch-device';
 
 export * from './container-elements';
 export * from './constants';
