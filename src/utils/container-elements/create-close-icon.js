@@ -1,7 +1,11 @@
+import closeIcon from '../../static/css/icons/close.svg';
+
 export const createCloseIcon = () => {
-  const fullscreenIcon = document.createElement('div');
+  const close = document.createElement('div');
 
-  fullscreenIcon.className = 'cloudimage-360-close-icon';
+  close.className = 'cloudimage-360-button cloudimage-360-close-icon';
 
-  return fullscreenIcon;
+  close.innerHTML = closeIcon;
+
+  return close;
 };

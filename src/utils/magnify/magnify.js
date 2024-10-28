@@ -5,6 +5,8 @@ export const magnify = (clickEvent, container, offset, currentImage, glass, zoom
   const backgroundSizeX = (container.offsetWidth - offsetX * 2) * zoom;
   const backgroundSizeY = (container.offsetHeight - offsetY * 2) * zoom;
 
+  if (!glass) return;
+
   glass.setAttribute('class', 'cloudimage-360-img-magnifier-glass');
   container.prepend(glass);
 

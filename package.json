@@ -66,6 +66,7 @@
     "mobile-detect": "^1.4.3",
     "prettier": "3.3.3",
     "style-loader": "^3.3.2",
+    "svg-inline-loader": "^0.8.2",
     "webpack": "^5.79.0",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.13.3"

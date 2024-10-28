@@ -129,12 +129,12 @@ class CI360Viewer {
   mouseClick(event) {
     if (!this.isReady || this.isDragging) return;
 
-    if (this.glass) {
+    if (this.glass && this.magnified) {
       this.removeGlass();
       return;
     }
 
-    if (this.pointerZoom) this.toggleZoom(event);
+    if (this.pointerZoom && !this.glass) this.toggleZoom(event);
   }
 
   loadHigherQualityImages(width, onLoad) {
@@ -355,7 +355,7 @@ class CI360Viewer {
     const imageData =
       this.orientation === ORIENTATIONS.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
 
-    if (this.hotspotsInstance && !this.isZoomed) {
+    if (this.hotspotsInstance && !this.isZoomed && !this.autoplay) {
       this.hotspotsInstance.updateHotspotPosition(activeIndex, this.orientation);
     }
 
@@ -445,12 +445,15 @@ class CI360Viewer {
     const { src } =
       this.orientation === ORIENTATIONS.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX];
     const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
-    const imageWidth = width * this.devicePixelRatio * this.magnifier;
+    const imageWidth = width * this.magnifier;
     const highPreviewCdnUrl = generateHighPreviewCdnUrl(src, imageWidth);
 
+    this.showLoadingSpinner();
     this.createGlass();
 
     const onLoadImage = (image) => {
+      this.hideLoadingSpinner();
+      this.magnified = true;
       magnify(event, this.innerBox, this.offset, image, this.glass, this.magnifier);
     };
 
@@ -576,6 +579,7 @@ class CI360Viewer {
     this.showAllIcons();
     this.innerBox.removeChild(this.glass);
     this.glass = null;
+    this.magnified = false;
   }
 
   addMagnifierIcon() {

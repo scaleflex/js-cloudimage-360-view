@@ -204,44 +204,6 @@ The oriantation of the active index
 
 You can customize elements by adding the following classes:
 
-### Example CSS
-
-```css
-.cloudimage-360-icons-container {
-  top: 5px;
-  right: 5px;
-}
-.cloudimage-360-fullscreen-modal {
-  top: 0;
-  bottom: 0;
-}
-.cloudimage-360-magnifier-icon {
-  background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/loupe.svg)
-    50% 50% / cover no-repeat;
-}
-.cloudimage-360-close-icon {
-  background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/cross.svg)
-    50% 50% / cover no-repeat;
-}
-.cloudimage-360-view-360-circle {
-  margin: auto;
-}
-.cloudimage-360-loader {
-  margin: auto;
-}
-.cloudimage-initial-icon {
-  background: url(https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg)
-    50% 50% / cover no-repeat;
-}
-.cloudimage-360-box-shadow {
-  top: 0;
-  left: 0;
-}
-.cloudimage-360-img-magnifier-glass {
-  border: 3px solid #000;
-  border-radius: 50%;
-}
-```
 
 ## <a name="configuration"></a> Config
 

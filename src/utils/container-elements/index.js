@@ -2,7 +2,7 @@ export { create360ViewCircleIcon } from './create-360-view-circle-icon';
 export { createInitialIcon } from './create-initial-icon';
 export { createCanvas } from './create-canvas';
 export { createCloseIcon } from './create-close-icon';
-export { createFullscreenIcon } from './create-close-fullscreen-icon';
+export { createFullscreenIcon } from './create-fullscreen-icon';
 export { createIconsContainer } from './create-icons-container';
 export { createInnerBox } from './create-inner-box';
 export { createMagnifierIcon } from './create-magnifier-icon';
