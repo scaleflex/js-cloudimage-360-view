@@ -9,6 +9,13 @@ body {
   overflow-x: hidden;
 }
 
+.cloudimage-360 canvas,
+#demo-generator canvas,
+#gurkha-suv canvas {
+  overflow: hidden;
+  border-radius: 6px;
+}
+
 .container-fluid {
   max-width: 1170px;
   margin: 0 auto;

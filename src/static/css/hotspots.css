@@ -13,15 +13,20 @@
 
 .cloudimage-360-hotspot {
   display: inline-block;
-  background: radial-gradient(circle, #0e82fe 30%, #00d4ff);
+  background: #00aaff;
+  border: 1px solid #fff;
   border-radius: 50%;
-  height: 15px;
-  width: 15px;
-  box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.6);
+  height: 20px;
+  width: 20px;
+  box-shadow:
+    0 0 0 0 rgba(0, 170, 255, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.2);
   opacity: 0;
   animation: pulse 2s infinite;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition:
+    opacity 0.1s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .cloudimage-360-hotspot.visible {
@@ -30,36 +35,43 @@
 
 @keyframes pulse {
   0% {
-    scale: 1;
+    transform: scale(1);
     box-shadow:
-      0 0 0 0 rgba(0, 123, 255, 0.6),
-      0 0 0 6px rgba(0, 123, 255, 0.4),
-      0 0 0 12px rgba(0, 123, 255, 0.2);
+      0 0 0 0 rgba(0, 170, 255, 0.6),
+      0 0 0 10px rgba(0, 170, 255, 0.4),
+      0 0 0 20px rgba(0, 170, 255, 0.2);
   }
   50% {
-    scale: 1.1;
+    transform: scale(1.1);
     box-shadow:
-      0 0 0 10px rgba(0, 123, 255, 0),
-      0 0 0 20px rgba(0, 123, 255, 0.1),
-      0 0 0 30px rgba(0, 123, 255, 0);
+      0 0 0 10px rgba(0, 170, 255, 0),
+      0 0 0 20px rgba(0, 170, 255, 0.1),
+      0 0 0 30px rgba(0, 170, 255, 0);
   }
   100% {
-    scale: 1;
+    transform: scale(1);
     box-shadow:
-      0 0 0 0 rgba(0, 123, 255, 0),
-      0 0 0 6px rgba(0, 123, 255, 0),
-      0 0 0 12px rgba(0, 123, 255, 0);
+      0 0 0 0 rgba(0, 170, 255, 0),
+      0 0 0 10px rgba(0, 170, 255, 0),
+      0 0 0 20px rgba(0, 170, 255, 0);
   }
 }
 
+.cloudimage-360-hotspot:hover {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 5px rgba(0, 170, 255, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .cloudimage-360-popper {
-  background-color: #333;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 4px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 6px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
   font-size: 14px;
-  max-width: 200px;
+  max-width: 220px;
   z-index: 9999;
   text-align: center;
   transition:
