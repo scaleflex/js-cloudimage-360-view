@@ -14,10 +14,6 @@ export const createHotspotElement = (id) => {
   hotspotElement.className = 'cloudimage-360-hotspot';
   hotspotElement.dataset.hotspotId = id;
 
-  hotspotElement.onclick = (event) => {
-    event.stopPropagation();
-  };
-
   return hotspotElement;
 };
 
@@ -57,7 +53,7 @@ export const createPopperModifiers = (container) => [
   {
     name: 'offset',
     options: {
-      offset: [5, 5],
+      offset: [0, 10],
     },
   },
   {
@@ -71,7 +67,7 @@ export const createPopperModifiers = (container) => [
 export const createPopperElement = (content, id) => {
   const popper = document.createElement('div');
   popper.className = 'cloudimage-360-popper';
-  popper.id = id;
+  popper.id = `cloudimage-360-popper-${id}`;
   popper.dataset.popperId = id;
 
   if (typeof content === 'string' && /<\/?[a-z][\s\S]*>/i.test(content)) {

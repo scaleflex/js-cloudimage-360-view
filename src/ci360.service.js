@@ -102,6 +102,7 @@ class CI360Viewer {
     const shouldMove = (this.allowSpinX && itemsSkippedX !== 0) || (this.allowSpinY && itemsSkippedY !== 0);
 
     if (shouldMove) {
+      this.hideHotspotPopper();
       this.onMoveHandler(this.draggingDirection, itemsSkippedX, itemsSkippedY);
       this.movementStart = { x: pageX, y: pageY };
 
@@ -152,6 +153,12 @@ class CI360Viewer {
     if (!this.hotspotsInstance) return;
 
     this.hotspotsInstance.hideHotspots();
+  }
+
+  hideHotspotPopper() {
+    if (!this.hotspotsInstance) return;
+
+    this.hotspotsInstance.hidePopper();
   }
 
   toggleZoom(event) {
@@ -755,7 +762,6 @@ class CI360Viewer {
         action: 'initCanvas',
         offscreen: offscreenCanvas,
         devicePixelRatio: this.devicePixelRatio,
-        hotspotsConfig: this.hotspots,
       },
       [offscreenCanvas]
     );

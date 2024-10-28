@@ -6,6 +6,11 @@
   z-index: 20;
 }
 
+.cloudimage-360-popper {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
 .cloudimage-360-hotspot {
   display: inline-block;
   background: radial-gradient(circle, #0e82fe 30%, #00d4ff);
