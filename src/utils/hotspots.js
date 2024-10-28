@@ -91,3 +91,43 @@ export const adaptHotspotConfig = (hotspotsConfig) => {
 
   return updatedHotspotConfig;
 };
+
+export const calculateHotspotPositions = ({
+  newWidth,
+  newHeight,
+  initialContainerSize,
+  imageAspectRatio,
+  hotspotsConfig,
+}) => {
+  const [initialWidth, initialHeight] = initialContainerSize;
+  let width = newWidth;
+  let height = newHeight;
+  let offsetX = 0;
+  let offsetY = 0;
+  const containerAspectRatio = newWidth / newHeight;
+  const wideContainer = imageAspectRatio > containerAspectRatio;
+
+  if (wideContainer) {
+    height = newWidth / imageAspectRatio;
+    offsetY = (newHeight - height) / 2;
+  } else {
+    width = newHeight * imageAspectRatio;
+    offsetX = (newWidth - width) / 2;
+  }
+
+  const widthRatio = width / initialWidth;
+  const heightRatio = height / initialHeight;
+
+  return hotspotsConfig.map((hotspot) => {
+    const updatedPositions = {};
+
+    Object.entries(hotspot.initialPositions).forEach(([key, initialPosition]) => {
+      updatedPositions[key] = {
+        x: initialPosition.x * widthRatio + offsetX,
+        y: initialPosition.y * heightRatio + offsetY,
+      };
+    });
+
+    return { ...hotspot, positions: updatedPositions };
+  });
+};

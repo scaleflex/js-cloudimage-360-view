@@ -2,7 +2,7 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   {
     id: 'hotspot-1',
     orientation: 'x',
-    containerSize: [1220, 680],
+    containerSize: [1170, 663],
     positions: {
       0: { x: 527, y: 319 },
       1: { x: 527, y: 319 },

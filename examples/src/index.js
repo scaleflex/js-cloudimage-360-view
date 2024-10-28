@@ -124,7 +124,7 @@ const config = {
   speed: 120,
   pointerZoom: 2,
   responsive: 'scaleflex',
-  autoplay: true,
+  autoplay: false,
   fullscreen: true,
   magnifier: 3,
   playOnce: true,

@@ -15,6 +15,7 @@
   display: inline-block;
   position: absolute;
   inset: 0;
+  transform: translate(-50%, -50%);
   background: #00aaff;
   border: 1px solid #fff;
   border-radius: 50%;
@@ -26,7 +27,6 @@
   opacity: 0;
   animation: pulse 2s infinite;
   transition:
-    opacity 0.1s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }

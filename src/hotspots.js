@@ -1,6 +1,7 @@
 import { createHotspotsContainer } from './utils';
 import {
   adaptHotspotConfig,
+  calculateHotspotPositions,
   createHotspotElement,
   createPopperElement,
   createPopperModifiers,
@@ -9,7 +10,7 @@ import {
 import { createPopper } from '@popperjs/core';
 
 class Hotspot {
-  constructor(hotspotsConfig, container) {
+  constructor(hotspotsConfig, container, imageAspectRatio) {
     this.container = container;
     this.popper = null;
     this.popperInstance = null;
@@ -17,6 +18,7 @@ class Hotspot {
     this.hotspotsConfig = adaptHotspotConfig(hotspotsConfig);
     this.shouldHidePopper = true;
     this.hidePopper = this.hidePopper.bind(this);
+    this.imageAspectRatio = imageAspectRatio;
 
     const { containerSize } = hotspotsConfig[0];
     this.initialContainerSize = containerSize || [container.offsetWidth, container.offsetHeight];
@@ -35,24 +37,12 @@ class Hotspot {
   }
 
   updateHotspotsForResize(newWidth, newHeight) {
-    const [initialWidth, initialHeight] = this.initialContainerSize;
-    const widthRatio = newWidth / initialWidth;
-    const heightRatio = newHeight / initialHeight;
-
-    this.hotspotsConfig.forEach((hotspot) => {
-      const updatedPositions = {};
-
-      Object.entries(hotspot.initialPositions).forEach(([key, initialPosition]) => {
-        const scaledX = initialPosition.x * widthRatio;
-        const scaledY = initialPosition.y * heightRatio;
-
-        updatedPositions[key] = {
-          x: scaledX,
-          y: scaledY,
-        };
-      });
-
-      hotspot.positions = updatedPositions;
+    this.hotspotsConfig = calculateHotspotPositions({
+      newWidth,
+      newHeight,
+      initialContainerSize: this.initialContainerSize,
+      imageAspectRatio: this.imageAspectRatio,
+      hotspotsConfig: this.hotspotsConfig,
     });
 
     this.updateHotspotPosition(this.currentActiveIndex, this.currentOrientation);

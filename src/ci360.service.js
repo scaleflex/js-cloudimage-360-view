@@ -372,14 +372,14 @@ class CI360Viewer {
 
   adaptCanvasSize(imageData) {
     const { naturalWidth, naturalHeight } = imageData;
-    const imageAspectRatio = naturalWidth / naturalHeight;
+    this.imageAspectRatio = naturalWidth / naturalHeight;
     const containerWidth = this.fullscreenView ? window.innerWidth : this.canvas.clientWidth;
     const containerHeight = this.fullscreenView ? window.innerHeight : this.canvas.clientHeight;
 
     this.canvasWorker.postMessage({
       action: 'adaptCanvasSize',
       devicePixelRatio: this.devicePixelRatio,
-      imageAspectRatio: imageAspectRatio,
+      imageAspectRatio: this.imageAspectRatio,
       containerWidth,
       containerHeight,
     });
@@ -424,8 +424,8 @@ class CI360Viewer {
   onAllImagesLoaded() {
     this.addAllIcons();
 
-    if (this.hotspots && !this.fullscreenView) {
-      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox);
+    if (this.hotspots) {
+      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio);
     }
 
     this.isReady = true;
