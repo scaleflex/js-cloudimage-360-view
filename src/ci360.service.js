@@ -860,10 +860,8 @@ class CI360Viewer {
       ciFilters,
       ciTransformation,
       lazyload,
-      lazySelector,
       dragSpeed,
       stopAtEdges,
-      controlReverse,
       logoSrc,
       pointerZoom,
       imageInfo = 'black',
@@ -893,8 +891,6 @@ class CI360Viewer {
     this.autoplayReverse = autoplayReverse;
     this.fullscreen = fullscreen;
     this.magnifier = magnifier > 1 ? Math.min(magnifier, 5) : 0;
-    this.lazySelector = lazySelector;
-    this.controlReverse = controlReverse;
     this.dragSpeed = Math.max(dragSpeed, 50);
     this.stopAtEdges = stopAtEdges;
     this.logoSrc = logoSrc;
@@ -920,7 +916,6 @@ class CI360Viewer {
       apiVersion,
       ciParams,
       lazyload,
-      lazySelector,
       amount: this.amountX,
       indexZeroBase,
       autoplayReverse,

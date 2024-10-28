@@ -25,9 +25,6 @@ export { isSpinKeysPressed } from './spin/is-spin-keys-pressed';
 
 export { getMovingDirection } from './spin/get-moving-direction';
 
-export { getItemSkipped } from './controls/get-item-skipped';
-export { initControls } from './controls/init-controls';
-
 export { debounce } from './debounce';
 
 export * from './container-elements';

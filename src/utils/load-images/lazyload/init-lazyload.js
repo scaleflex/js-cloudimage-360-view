@@ -1,4 +1,6 @@
+import { removeElementFromContainer } from '../../container-elements';
 import generateLowPreviewCdnUrl from '../../image-src/generate-low-preview-cdn-url';
+import lazyLoadImages from './lazyload-image';
 import getFirstCdnImage from './prepare-first-image/get-first-cdn-image';
 import getFirstCdnImageFromList from './prepare-first-image/get-first-cdn-mage-from-list';
 
@@ -17,9 +19,10 @@ const getFirstImageSrc = (imagesSrc, srcConfig) => {
   return getFirstCdnImage(imagesSrc, indexZeroBase);
 };
 
-const createImage = (src, lazyload, lazySelector) => {
+const createImage = (src, lazyload, className) => {
   const image = new Image();
   image.setAttribute(lazyload ? 'data-src' : 'src', src);
+  image.className = className;
   image.style.cssText = `
     width: 100%;
     height: 100%;
@@ -28,30 +31,35 @@ const createImage = (src, lazyload, lazySelector) => {
     filter: blur(10px);
   `;
 
-  image.className = `${lazySelector} cloudimage-lazy`;
-
   return image;
 };
 
 export const initLazyload = (cdnPath, srcConfig, onLoad) => {
-  const { lazySelector, innerBox, imageList, lazyLoad } = srcConfig || {};
+  const { innerBox, imageList, lazyload } = srcConfig || {};
   const [firstImageSrcInList] = imageList;
   const firstImageSrc = firstImageSrcInList || getFirstImageSrc(cdnPath, srcConfig);
   const lowPreviewSrc = generateLowPreviewCdnUrl(firstImageSrc);
-  const image = createImage(lowPreviewSrc, lazyLoad, lazySelector);
+  const lazyloadImage = createImage(lowPreviewSrc, lazyload, 'cloudimage-lazy');
+  const placeholderImage = createImage(lowPreviewSrc, false, 'cloudimage-360-placeholder');
 
-  image.onload = (event) => {
+  const loadImageCallback = (event) => {
+    removeElementFromContainer(innerBox, '.cloudimage-360-placeholder');
+
     if (onLoad) {
       onLoad({
         event: event,
-        width: image.width,
-        height: image.height,
-        naturalWidth: image.naturalWidth,
-        naturalHeight: image.naturalHeight,
+        width: lazyloadImage.width,
+        height: lazyloadImage.height,
+        naturalWidth: lazyloadImage.naturalWidth,
+        naturalHeight: lazyloadImage.naturalHeight,
         src: lowPreviewSrc,
       });
     }
   };
 
-  innerBox.appendChild(image);
+  lazyloadImage.onload = loadImageCallback;
+  innerBox.appendChild(lazyloadImage);
+  innerBox.appendChild(placeholderImage);
+
+  lazyLoadImages(lazyloadImage);
 };

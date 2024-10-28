@@ -26,10 +26,8 @@ declare module CI360 {
     ciFilters?: string | null;
     ciTransformation?: string | null;
     lazyload?: boolean;
-    lazySelector?: string;
     dragSpeed?: number;
     stopAtEdges?: boolean;
-    controlReverse?: boolean;
     logoSrc?: string;
     pointerZoom?: number;
     imageInfo?: string;
