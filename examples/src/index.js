@@ -166,5 +166,4 @@ instance.initAll();
 
 const demoGeneratorInstance = instance.getViewById('demo-generator');
 
-console.log(demoGeneratorInstance);
 updateCodeBlock(demoGeneratorInstance.viewerConfig);

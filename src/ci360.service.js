@@ -55,6 +55,7 @@ class CI360Viewer {
     this.touchDevice = isTouchDevice();
     this.canvasWorker = new Worker(new URL('canvas.worker.js', import.meta.url));
     this.onMoveHandler = this.onMoveHandler.bind(this);
+    this.destroy = this.destroy.bind(this);
     this.init(this.container, config);
   }
 

@@ -41,6 +41,22 @@ class CI360 {
     });
   }
 
+  destroy(id) {
+    const view = this.getViewById(id);
+    if (view) {
+      view.destroy();
+      this.views.delete(id);
+    }
+  }
+
+  destroyAll() {
+    this.views.forEach((view) => {
+      view.destroy();
+    });
+
+    this.views.clear();
+  }
+
   getViewById(id) {
     return this.views.get(id);
   }
