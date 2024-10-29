@@ -1,0 +1,370 @@
+.cloudimage-360 .cloudimage-360-left,
+.cloudimage-360 .cloudimage-360-right {
+  padding: 8px;
+  background: rgb(244, 244, 244);
+  border: none;
+  border-radius: 4px;
+}
+
+.cloudimage-360 .cloudimage-360-left:focus,
+.cloudimage-360 .cloudimage-360-right:focus {
+  outline: none;
+}
+
+.cloudimage-360 .cloudimage-360-left {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: calc(50% - 15px);
+  left: 20px;
+}
+
+.cloudimage-360 .cloudimage-360-right {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: calc(50% - 15px);
+  right: 20px;
+}
+
+.cloudimage-360 .cloudimage-360-left:before,
+.cloudimage-360 .cloudimage-360-right:before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .cloudimage-360-left:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
+}
+
+.cloudimage-360 .cloudimage-360-right:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
+}
+
+.cloudimage-360 .cloudimage-360-left.not-active,
+.cloudimage-360 .cloudimage-360-right.not-active {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.cloudimage-360 .cloudimage-360-top,
+.cloudimage-360 .cloudimage-360-bottom {
+  padding: 8px;
+  background: rgb(244, 244, 244);
+  border: none;
+  border-radius: 4px;
+}
+
+.cloudimage-360 .cloudimage-360-top:focus,
+.cloudimage-360 .cloudimage-360-bottom:focus {
+  outline: none;
+}
+
+.cloudimage-360 .cloudimage-360-top {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  left: calc(50% - 15px);
+  top: 20px;
+  transform: rotate(90deg);
+}
+
+.cloudimage-360 .cloudimage-360-bottom {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  left: calc(50% - 15px);
+  bottom: 20px;
+  transform: rotate(90deg);
+}
+
+.cloudimage-360 .cloudimage-360-top:before,
+.cloudimage-360 .cloudimage-360-bottom:before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: 50% 50% / cover no-repeat;
+}
+
+.cloudimage-360 .cloudimage-360-top:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-left.svg');
+}
+
+.cloudimage-360 .cloudimage-360-bottom:before {
+  background-image: url('https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/assets/img/arrow-right.svg');
+}
+
+.cloudimage-360 .cloudimage-360-top.not-active,
+.cloudimage-360 .cloudimage-360-bottom.not-active {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.cloudimage-360 {
+  width: 100%;
+  position: relative;
+}
+
+.cloudimage-360-inner-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.cloudimage-360-icons-container {
+  position: absolute;
+  display: flex;
+  top: 15px;
+  right: 10px;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+  gap: 8px;
+}
+
+.cloudimage-360-transition-overlay {
+  position: absolute;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  opacity: 0;
+  transition: all 1s ease-out;
+  z-index: 10;
+}
+
+.cloudimage-360-button {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition:
+    transform 150ms ease-out,
+    background-color 150ms ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  color: #4a4a4a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+}
+
+.cloudimage-360-button:hover {
+  transform: scale(1.05);
+  background-color: #e7e6e6;
+}
+
+.cloudimage-360-button svg {
+  width: 18px;
+  height: 18px;
+  fill: #4a4a4a;
+  transition: fill 150ms ease-out;
+}
+
+.cloudimage-360-button:hover svg {
+  fill: #2c2c2c;
+}
+
+.cloudimage-initial-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(200, 200, 200, 0.5));
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 12px rgba(0, 0, 0, 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.1);
+  transition:
+    200ms all,
+    transform 0.2s;
+  color: #4b4b4b;
+  text-align: center;
+  z-index: 2;
+  line-height: 100px;
+  user-select: none;
+}
+
+.cloudimage-initial-icon:hover {
+  background-color: rgba(200, 200, 200, 0.2); /* Brighten on hover */
+}
+
+.cloudimage-loading-spinner {
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  border: 3px solid #fff;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border-bottom-color: #a3a3a3;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  opacity: 0;
+  animation: rotation 700ms linear infinite;
+}
+
+.cloudimage-360-view-360-circle {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  pointer-events: none;
+  user-select: none;
+  transition: 200ms all;
+  z-index: 2;
+}
+
+.cloudimage-360-fullscreen-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: #fff;
+}
+
+.cloudimage-360-img-magnifier-glass {
+  background-color: #fff;
+  background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.9));
+  background-repeat: no-repeat;
+  position: absolute;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  line-height: 200px;
+  text-align: center;
+  z-index: 1000;
+  width: 250px;
+  height: 250px;
+  top: -75px;
+  right: -85px;
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 200ms ease;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cloudimage-360-hotspot-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+}
+
+.cloudimage-360-popper {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.cloudimage-360-hotspot {
+  display: inline-block;
+  position: absolute;
+  inset: 0;
+  transform: translate(-50%, -50%);
+  background: #00aaff;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  height: 18px;
+  width: 18px;
+  box-shadow:
+    0 0 0 0 rgba(0, 170, 255, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  animation: pulse 2s infinite;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cloudimage-360-hotspot.visible {
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 0 rgba(0, 170, 255, 0.6),
+      0 0 0 10px rgba(0, 170, 255, 0.4),
+      0 0 0 20px rgba(0, 170, 255, 0.2);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 0 10px rgba(0, 170, 255, 0),
+      0 0 0 20px rgba(0, 170, 255, 0.1),
+      0 0 0 30px rgba(0, 170, 255, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 0 rgba(0, 170, 255, 0),
+      0 0 0 10px rgba(0, 170, 255, 0),
+      0 0 0 20px rgba(0, 170, 255, 0);
+  }
+}
+
+.cloudimage-360-hotspot:hover {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 5px rgba(0, 170, 255, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cloudimage-360-popper {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 6px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  max-width: 220px;
+  z-index: 9999;
+  text-align: center;
+  transition:
+    opacity 0.2s ease,
+    translate 0.2s ease;
+  opacity: 0;
+  translate: 0 -10px;
+}
+
+.cloudimage-360-popper[data-show] {
+  opacity: 1;
+  translate: 0;
+}
+
+
+/*# sourceMappingURL=main.css.map*/
