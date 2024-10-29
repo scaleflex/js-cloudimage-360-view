@@ -5,7 +5,7 @@ export const createMagnifierIcon = () => {
 
   magnifier.className = 'cloudimage-360-button cloudimage-360-magnifier-button';
 
-  magnifier.innerHTML = MagnifierIcon;
+  magnifier.innerHTML = `<img alt="magnifier icon" src=${MagnifierIcon}>`;
 
   return magnifier;
 };

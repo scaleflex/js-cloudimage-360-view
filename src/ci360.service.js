@@ -37,6 +37,7 @@ import {
   isTouchDevice,
 } from './utils';
 
+import CanvasWorker from './canvas.worker.js?worker&inline';
 import Hotspot from './hotspots';
 
 class CI360Viewer {
@@ -53,7 +54,7 @@ class CI360Viewer {
     this.isReady = false;
     this.currentZoomScale = 1;
     this.touchDevice = isTouchDevice();
-    this.canvasWorker = new Worker(new URL('canvas.worker.js', import.meta.url));
+    this.canvasWorker = new CanvasWorker();
     this.onMoveHandler = this.onMoveHandler.bind(this);
     this.destroy = this.destroy.bind(this);
     this.init(this.container, config);

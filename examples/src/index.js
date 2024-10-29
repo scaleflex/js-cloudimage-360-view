@@ -1,7 +1,6 @@
-import '../../src';
 import './controllers.css';
-import './styles/main.css';
-import CI360 from '../../src/ci360';
+import CI360 from '../../src';
+
 import {
   EARBUDS_PLUGIN,
   GURKHA_SUV_HOTSPOTS_CONFIG,

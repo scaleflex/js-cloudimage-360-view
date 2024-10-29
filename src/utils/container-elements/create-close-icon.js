@@ -5,7 +5,7 @@ export const createCloseIcon = () => {
 
   close.className = 'cloudimage-360-button cloudimage-360-close-icon';
 
-  close.innerHTML = closeIcon;
+  close.innerHTML = `<img alt="close icon" src=${closeIcon}>`;
 
   return close;
 };
