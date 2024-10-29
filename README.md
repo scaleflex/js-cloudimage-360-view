@@ -119,6 +119,13 @@ Then, import it in your JavaScript file:
 import CloudImage360 from 'js-cloudimage-360-view';
 ```
 
+OR
+
+```javascript
+window.CI360
+```
+
+
 Choose the method that best suits your project setup, and refer to the documentation for configuration options and usage examples.
 
 ### 🛠️ Usage

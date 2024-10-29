@@ -29,6 +29,39 @@ Types of changes:
 
 ---
 
+## 4.0.0 - 2024-10-29
+
+### Breaking Changes
+
+This release introduces several breaking changes, with deprecated properties and improved functionalities for performance and configurability.
+
+### Deprecated
+
+The following properties and functionalities have been deprecated:
+
+- **Configuration Properties**: `boxShadow`, `lazySelector`, `hide360Logo`, `logoSrc`, `ratio`, `imageInfo`, and `requestResponsiveImages`.
+- **Hotspot Properties**: `title`, `url`, `newTab`, `description`, `moreDetailsUrl`, `moreDetailsTitle`, `popupSelector`, `open`, `arrow`, `offset`, `placement`.
+- **Control Buttons**: Control buttons have been removed from this version.
+
+### Added
+
+- **360 Canvas Offscreen**: The 360 canvas now operates offscreen, significantly improving performance.
+- **Configurable Hotspots**: Hotspots now offer greater customization options.
+- **Instance Selection by ID**: Instances can now be selected using their IDs.
+- **Lazy Initialization**: Instances can be initialized programmatically, allowing for delayed loading as needed.
+- **Independent Y-Axis Spin**: The Y-axis can now spin independently of the X-axis.
+
+### Fixed
+
+- **Lazy Loading**: Enhanced lazy loading functionality.
+- **Pointer Zoom**: Improved zoom control with pointer interactions.
+- **Drag Speed**: Adjusted drag speed for smoother user control.
+- **Autoplay Speed**: Optimized autoplay speed settings.
+- **Y-Axis Spin Behavior**: Refined Y-axis spin behavior for smoother operation.
+- **Image Loading Speed**: Faster image loading, now performed asynchronously.
+- **Magnifier**: Improved the quality of the magnified image.
+
+
 ## 3.2.0 - 2023-09-25
 
 ### Added
