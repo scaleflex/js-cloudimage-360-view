@@ -705,10 +705,11 @@ class CI360Viewer {
       this.createTransitionOverlay();
       this.addLoadingSpinner();
     }
+
     if (!this.fullscreenView && !this.touchDevice) this.addMagnifierIcon();
     if (!this.fullscreenView) this.addFullscreenIcon();
-    if (!this.initialIconHidden) this.addInitialIcon();
-    if (!this.bottomCircleHidden) this.add360ViewCircleIcon();
+    if (this.initialIconShown) this.addInitialIcon();
+    if (!this.bottomCircle) this.add360ViewCircleIcon();
   }
 
   showAllIcons() {
@@ -833,6 +834,7 @@ class CI360Viewer {
   }
 
   init(container, config, update) {
+    console.log(getConfigFromImage(container));
     const adaptedConfig = config ? adaptConfig(config) : getConfigFromImage(container);
 
     const {
@@ -849,7 +851,6 @@ class CI360Viewer {
       swipeable = true,
       keys,
       keysReverse,
-      bottomCircle,
       bottomCircleOffset,
       autoplay,
       autoplayBehavior,
@@ -864,11 +865,10 @@ class CI360Viewer {
       lazyload,
       dragSpeed,
       stopAtEdges,
-      logoSrc,
       pointerZoom,
       imageInfo = 'black',
-      initialIconHidden,
-      bottomCircleHidden,
+      initialIconShown,
+      bottomCircle,
       hotspots,
       dragReverse,
     } = adaptedConfig;
@@ -884,7 +884,6 @@ class CI360Viewer {
     this.allowSpinY = !!this.amountY;
     this.activeImageX = autoplayReverse ? this.amountX - 1 : 0;
     this.activeImageY = autoplayReverse ? this.amountY - 1 : 0;
-    this.bottomCircle = bottomCircle;
     this.bottomCircleOffset = bottomCircleOffset;
     this.autoplay = autoplay;
     this.autoplayBehavior = autoplayBehavior;
@@ -895,7 +894,6 @@ class CI360Viewer {
     this.magnifier = magnifier > 1 ? Math.min(magnifier, 5) : 0;
     this.dragSpeed = Math.max(dragSpeed, 50);
     this.stopAtEdges = stopAtEdges;
-    this.logoSrc = logoSrc;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 5) : null;
@@ -903,8 +901,8 @@ class CI360Viewer {
     this.info = imageInfo;
     this.keys = keys;
     this.innerBox = this.innerBox ?? createInnerBox(this.container);
-    this.initialIconHidden = initialIconHidden;
-    this.bottomCircleHidden = bottomCircleHidden;
+    this.initialIconShown = initialIconShown;
+    this.bottomCircle = bottomCircle;
     this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior, this.allowSpinX, this.allowSpinY);
     this.dragReverse = dragReverse;
     this.hotspots = hotspots;

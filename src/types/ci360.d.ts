@@ -13,7 +13,6 @@ declare module CI360 {
     swipeable?: boolean;
     keys?: boolean;
     keysReverse?: boolean;
-    bottomCircle?: boolean;
     bottomCircleOffset?: number;
     autoplay?: boolean;
     autoplayBehavior?: string;
@@ -28,10 +27,9 @@ declare module CI360 {
     lazyload?: boolean;
     dragSpeed?: number;
     stopAtEdges?: boolean;
-    logoSrc?: string;
     pointerZoom?: number;
     imageInfo?: string;
-    initialIconHidden?: boolean;
+    initialIconShown?: boolean;
     bottomCircleHidden?: boolean;
   }
 
