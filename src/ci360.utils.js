@@ -29,7 +29,7 @@ const DEFAULTS_VALUES = {
   ciToken: null,
   ciFilters: null,
   ciTransformation: null,
-  lazyload: false,
+  lazyload: true,
   dragReverse: false,
   stopAtEdges: false,
   imageInfo: false,

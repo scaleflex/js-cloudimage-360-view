@@ -151,7 +151,6 @@ const config = {
   filenameX: 'orange-{index}.jpg',
   amountX: 73,
   lazyload: true,
-  hide360Logo: true,
   speed: 120,
   pointerZoom: 2,
   responsive: 'scaleflex',
@@ -167,4 +166,5 @@ instance.initAll();
 
 const demoGeneratorInstance = instance.getViewById('demo-generator');
 
+console.log(demoGeneratorInstance);
 updateCodeBlock(demoGeneratorInstance.viewerConfig);

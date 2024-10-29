@@ -110,16 +110,16 @@ class Hotspot {
   }
 
   createHotspot(hotspot) {
-    const { id, content, keepOpen, onclick } = hotspot;
+    const { id, content, keepOpen, onClick } = hotspot;
     const hotspotElement = createHotspotElement(id);
 
-    if (onclick) {
+    if (onClick) {
       hotspotElement.style.cursor = 'pointer';
     }
 
     hotspotElement.onclick = (event) => {
       event.stopPropagation();
-      onclick?.(event, this.popperInstance, id);
+      onClick?.(event, this.popperInstance, id);
     };
 
     if (content) {

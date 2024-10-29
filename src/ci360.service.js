@@ -54,7 +54,7 @@ class CI360Viewer {
     this.currentZoomScale = 1;
     this.touchDevice = isTouchDevice();
     this.canvasWorker = new Worker(new URL('canvas.worker.js', import.meta.url));
-
+    this.onMoveHandler = this.onMoveHandler.bind(this);
     this.init(this.container, config);
   }
 
@@ -546,7 +546,6 @@ class CI360Viewer {
     const newElement = oldElement.cloneNode(true);
     const innerBox = newElement.querySelector('.cloudimage-360-inner-box');
 
-    newElement.className = newElement.className.replace(' initialized', '');
     newElement.removeChild(innerBox);
     oldElement.parentNode.replaceChild(newElement, oldElement);
   }
@@ -834,7 +833,6 @@ class CI360Viewer {
   }
 
   init(container, config, update) {
-    console.log(getConfigFromImage(container));
     const adaptedConfig = config ? adaptConfig(config) : getConfigFromImage(container);
 
     const {
