@@ -1,0 +1,2111 @@
+var De = Object.defineProperty;
+var Ne = (e, t, i) => t in e ? De(e, t, { enumerable: !0, configurable: !0, writable: !0, value: i }) : e[t] = i;
+var ee = (e, t, i) => Ne(e, typeof t != "symbol" ? t + "" : t, i);
+var Et = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
+function $e(e) {
+  return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
+}
+var Oe = "Expected a function", ie = NaN, Ve = "[object Symbol]", je = /^\s+|\s+$/g, Fe = /^[-+]0x[0-9a-f]+$/i, Ge = /^0b[01]+$/i, ze = /^0o[0-7]+$/i, Ue = parseInt, Ke = typeof Et == "object" && Et && Et.Object === Object && Et, qe = typeof self == "object" && self && self.Object === Object && self, Je = Ke || qe || Function("return this")(), Qe = Object.prototype, _e = Qe.toString, ti = Math.max, ei = Math.min, kt = function() {
+  return Je.Date.now();
+};
+function ii(e, t, i) {
+  var n, o, s, a, r, c, l = 0, h = !1, u = !1, f = !0;
+  if (typeof e != "function")
+    throw new TypeError(Oe);
+  t = ne(t) || 0, Rt(i) && (h = !!i.leading, u = "maxWait" in i, s = u ? ti(ne(i.maxWait) || 0, t) : s, f = "trailing" in i ? !!i.trailing : f);
+  function d(m) {
+    var I = n, E = o;
+    return n = o = void 0, l = m, a = e.apply(E, I), a;
+  }
+  function y(m) {
+    return l = m, r = setTimeout(x, t), h ? d(m) : a;
+  }
+  function g(m) {
+    var I = m - c, E = m - l, S = t - I;
+    return u ? ei(S, s - E) : S;
+  }
+  function v(m) {
+    var I = m - c, E = m - l;
+    return c === void 0 || I >= t || I < 0 || u && E >= s;
+  }
+  function x() {
+    var m = kt();
+    if (v(m))
+      return C(m);
+    r = setTimeout(x, g(m));
+  }
+  function C(m) {
+    return r = void 0, f && n ? d(m) : (n = o = void 0, a);
+  }
+  function O() {
+    r !== void 0 && clearTimeout(r), l = 0, n = c = o = r = void 0;
+  }
+  function b() {
+    return r === void 0 ? a : C(kt());
+  }
+  function w() {
+    var m = kt(), I = v(m);
+    if (n = arguments, o = this, c = m, I) {
+      if (r === void 0)
+        return y(c);
+      if (u)
+        return r = setTimeout(x, t), d(c);
+    }
+    return r === void 0 && (r = setTimeout(x, t)), a;
+  }
+  return w.cancel = O, w.flush = b, w;
+}
+function ni(e, t, i) {
+  var n = !0, o = !0;
+  if (typeof e != "function")
+    throw new TypeError(Oe);
+  return Rt(i) && (n = "leading" in i ? !!i.leading : n, o = "trailing" in i ? !!i.trailing : o), ii(e, t, {
+    leading: n,
+    maxWait: t,
+    trailing: o
+  });
+}
+function Rt(e) {
+  var t = typeof e;
+  return !!e && (t == "object" || t == "function");
+}
+function oi(e) {
+  return !!e && typeof e == "object";
+}
+function si(e) {
+  return typeof e == "symbol" || oi(e) && _e.call(e) == Ve;
+}
+function ne(e) {
+  if (typeof e == "number")
+    return e;
+  if (si(e))
+    return ie;
+  if (Rt(e)) {
+    var t = typeof e.valueOf == "function" ? e.valueOf() : e;
+    e = Rt(t) ? t + "" : t;
+  }
+  if (typeof e != "string")
+    return e === 0 ? e : +e;
+  e = e.replace(je, "");
+  var i = Ge.test(e);
+  return i || ze.test(e) ? Ue(e.slice(2), i ? 2 : 8) : Fe.test(e) ? ie : +e;
+}
+var ri = ni;
+const oe = /* @__PURE__ */ $e(ri), T = {
+  SPIN_X: "spin-x",
+  SPIN_Y: "spin-y",
+  SPIN_XY: "spin-xy",
+  SPIN_YX: "spin-yx"
+}, ai = [!1, 0, null, void 0, "false", "0", "null", "undefined"], A = {
+  X: "x-axis",
+  Y: "y-axis",
+  CENTER: "center"
+}, ci = [
+  "folder",
+  "folderX",
+  "folderY",
+  "filenameX",
+  "filenameY",
+  "imageListX",
+  "imageListY",
+  "indexZeroBase",
+  "amountX",
+  "amountY"
+], li = [37, 39], hi = [38, 40], se = 10, p = {
+  folder: "/",
+  apiVersion: "v7",
+  filenameX: "image-{index}.jpg",
+  filenameY: null,
+  imageListX: null,
+  imageListY: null,
+  indexZeroBase: 0,
+  amountX: 0,
+  amountY: 0,
+  speed: 80,
+  dragSpeed: 150,
+  draggable: !0,
+  swipeable: !0,
+  keys: !1,
+  keysReverse: !1,
+  autoplay: !1,
+  autoplayBehavior: T.SPIN_X,
+  playOnce: !1,
+  autoplayReverse: !1,
+  pointerZoom: 0,
+  fullscreen: !1,
+  magnifier: null,
+  bottomCircle: !0,
+  bottomCircleOffset: 5,
+  ciToken: null,
+  ciFilters: null,
+  ciTransformation: null,
+  lazyload: !0,
+  dragReverse: !1,
+  stopAtEdges: !1,
+  imageInfo: !1,
+  initialIconShown: !0,
+  hotspots: null
+}, di = (e) => ({
+  folder: R(e, "folder", p.folder),
+  apiVersion: R(e, "api-version", p.apiVersion),
+  filenameX: R(e, "filename") || R(e, "filename-x") || p.filenameX,
+  filenameY: R(e, "filename-y", p.filenameY),
+  imageListX: R(e, "image-list-x", p.imageListX),
+  imageListY: R(e, "image-list-y", p.imageListY),
+  indexZeroBase: parseInt(R(e, "index-zero-base", p.indexZeroBase), 10),
+  amountX: parseInt(R(e, "amount-x", p.amountX), 10),
+  amountY: parseInt(R(e, "amount-y", p.amountY), 10),
+  speed: parseInt(R(e, "speed", p.speed), 10),
+  dragSpeed: parseInt(R(e, "drag-speed", p.dragSpeed), 10),
+  draggable: B(e, "draggable", p.draggable),
+  swipeable: B(e, "swipeable", p.swipeable),
+  keys: B(e, "keys", p.keys),
+  keysReverse: B(e, "keys-reverse", p.keysReverse),
+  autoplay: B(e, "autoplay", p.autoplay),
+  autoplayBehavior: R(e, "autoplay-behavior", p.autoplayBehavior),
+  playOnce: B(e, "play-once", p.playOnce),
+  autoplayReverse: B(e, "autoplay-reverse", p.autoplayReverse),
+  pointerZoom: parseFloat(R(e, "pointer-zoom", p.pointerZoom), 10),
+  fullscreen: B(e, "fullscreen") || B(e, "full-screen", p.fullscreen),
+  magnifier: parseFloat(R(e, "magnifier", p.magnifier), 10),
+  bottomCircleOffset: parseInt(
+    R(e, "bottom-circle-offset", p.bottomCircleOffset),
+    10
+  ),
+  ciToken: R(e, "responsive", p.ciToken),
+  ciFilters: R(e, "filters", p.ciFilters),
+  ciTransformation: R(e, "transformation", p.ciTransformation),
+  lazyload: B(e, "lazyload", p.lazyload),
+  dragReverse: B(e, "drag-reverse", p.dragReverse),
+  stopAtEdges: B(e, "stop-at-edges", p.stopAtEdges),
+  imageInfo: B(e, "info", p.imageInfo),
+  initialIconShown: !re(e, "initial-icon"),
+  bottomCircle: !re(e, "bottom-circle")
+}), ui = (e) => ({
+  folder: e.folder || p.folder,
+  apiVersion: e.apiVersion || p.apiVersion,
+  filenameX: e.filenameX || e.filename || p.filenameX,
+  filenameY: e.filenameY || p.filenameY,
+  imageListX: e.imageListX || p.imageListX,
+  imageListY: e.imageListY || p.imageListY,
+  indexZeroBase: parseInt(e.indexZeroBase ?? p.indexZeroBase, 10),
+  amountX: parseInt(e.amountX ?? p.amountX, 10),
+  amountY: parseInt(e.amountY ?? p.amountY, 10),
+  speed: parseInt(e.speed ?? p.speed, 10),
+  draggable: e.draggable ?? p.draggable,
+  swipeable: e.swipeable ?? p.swipeable,
+  dragSpeed: parseInt(e.dragSpeed ?? p.dragSpeed, 10),
+  keys: e.keys ?? p.keys,
+  keysReverse: e.keysReverse ?? p.keysReverse,
+  autoplay: e.autoplay ?? p.autoplay,
+  autoplayBehavior: e.autoplayBehavior || p.autoplayBehavior,
+  playOnce: e.playOnce ?? p.playOnce,
+  autoplayReverse: e.autoplayReverse ?? p.autoplayReverse,
+  pointerZoom: parseFloat(e.pointerZoom ?? p.pointerZoom, 10),
+  fullscreen: e.fullscreen ?? p.fullscreen,
+  magnifier: parseFloat(e.magnifier ?? p.magnifier, 10),
+  bottomCircleOffset: parseInt(e.bottomCircleOffset ?? p.bottomCircleOffset, 10),
+  ciToken: e.ciToken || p.ciToken,
+  ciFilters: e.ciFilters || p.ciFilters,
+  ciTransformation: e.ciTransformation || p.ciTransformation,
+  lazyload: e.lazyload ?? p.lazyload,
+  dragReverse: e.dragReverse ?? p.dragReverse,
+  stopAtEdges: e.stopAtEdges ?? p.stopAtEdges,
+  imageInfo: e.imageInfo ?? p.imageInfo,
+  initialIconShown: e.initialIconShown ?? p.initialIconShown,
+  bottomCircle: e.bottomCircle ?? p.bottomCircle,
+  hotspots: e.hotspots ?? p.hotspots
+}), R = (e, t, i) => e.getAttribute(t) || e.getAttribute(`data-${t}`) || i, B = (e, t, i) => e.hasAttribute(t) || e.hasAttribute(`data-${t}`) || i, re = (e, t) => R(e, t, null) === "false", pi = (e, t, i = ci) => i.some((n) => n in t && t[n] !== e[n]), fi = (e = 1) => {
+  const t = Math.round(window.devicePixelRatio || 1);
+  return parseInt(e) * t;
+}, mi = (e, t, i) => new URL(e).origin.includes("cloudimg") ? e : `https://${t}.cloudimg.io/${i}${e}`, vi = ({ ciTransformation: e, responsiveWidth: t, ciFilters: i }) => {
+  const n = `width=${t}`, o = e || n, s = i ? `&f=${i}` : "";
+  return `${o}${s}`;
+}, gt = (e, t) => {
+  const { folder: i, apiVersion: n, filename: o = "", ciParams: s } = e, { ciToken: a, ciFilters: r, ciTransformation: c } = s || {}, l = `${i}${o}`;
+  if (!a) return l;
+  const h = ai.includes(n) ? null : n, u = h ? `${h}/` : "", f = fi(t), d = mi(l, a, u), y = vi({
+    ciTransformation: c,
+    responsiveWidth: f,
+    ciFilters: r
+  });
+  return `${d}${y ? "?" : ""}${y}`;
+}, gi = (e, t, i) => {
+  const [n, o] = e.split("?"), s = `${t}=${encodeURIComponent(i)}`;
+  if (!o)
+    return `${n}?${s}`;
+  const a = new URLSearchParams(o);
+  return a.set(t, i), `${n}?${a.toString()}`;
+}, yi = (e, t) => gi(e, "width", t), Ee = (e, t = 0) => (e += "", e.length >= t ? e : new Array(t - e.length + 1).join("0") + e), bi = (e, { amount: t = 0, indexZeroBase: i = 0 } = {}) => Array.from({ length: t }, (n, o) => e.replace("{index}", Ee(o + 1, i))), wi = ({
+  imagesUrls: e,
+  onFirstImageLoad: t,
+  onImageLoad: i,
+  onAllImagesLoad: n,
+  autoplayReverse: o
+}) => {
+  let s = 0;
+  const a = e.length, r = [], c = (u, f) => {
+    const d = new Image();
+    d.crossOrigin = "anonymous", d.src = u, d.onload = async () => {
+      const y = await createImageBitmap(d), g = {
+        src: u,
+        bitmapImage: y,
+        naturalWidth: l.naturalWidth,
+        naturalHeight: l.naturalHeight
+      };
+      s++, r[f] = g, i == null || i(g, f), s === a && (n == null || n(r));
+    }, d.onerror = () => {
+      console.error(`Failed to load image: ${u}`), s++, s === a && (n == null || n(r));
+    };
+  }, l = new Image(), h = e[o ? e.length - 1 : 0];
+  l.crossOrigin = "anonymous", l.src = h, l.onload = async () => {
+    const u = await createImageBitmap(l), f = {
+      src: h,
+      bitmapImage: u,
+      naturalWidth: l.naturalWidth,
+      naturalHeight: l.naturalHeight
+    };
+    r[0] = f, s++, t == null || t(f), i == null || i(f, 0);
+    for (let d = 1; d < e.length; d++)
+      c(e[d], d);
+  }, l.onerror = () => {
+    console.error(`Failed to load first image: ${e[0]}`), s++;
+    for (let u = 1; u < e.length; u++)
+      c(e[u], u);
+  };
+}, ae = ({
+  cdnPathX: e,
+  cdnPathY: t,
+  configX: i,
+  configY: n,
+  onFirstImageLoad: o,
+  onImageLoad: s,
+  onAllImagesLoad: a
+}) => {
+  let r = { x: !1, y: !1 }, c = [], l = [];
+  const h = e || i.imageList.length, u = t || n.imageList.length, f = () => {
+    r.x && r.y && a(c, l);
+  }, d = ({ cdnPath: y, config: g, orientation: v, loadedImages: x, onFirstImageLoad: C }) => {
+    const O = v === A.X, b = g.imageList.length ? g.imageList : bi(y, g);
+    wi({
+      imagesUrls: b,
+      onFirstImageLoad: C,
+      onImageLoad: (w, m) => {
+        s == null || s(w, m, v), x[m] = w;
+      },
+      onAllImagesLoad: (w) => {
+        x = w, r[O ? "x" : "y"] = !0, f();
+      },
+      autoplayReverse: g.autoplayReverse
+    });
+  };
+  h ? d({
+    cdnPath: e,
+    config: i,
+    orientation: A.X,
+    loadedImages: c,
+    onFirstImageLoad: o
+  }) : r.x = !0, u ? d({
+    cdnPath: t,
+    config: n,
+    orientation: A.Y,
+    loadedImages: l,
+    onFirstImageLoad: h ? void 0 : o
+  }) : r.y = !0;
+}, xi = (e) => {
+  const t = new Image();
+  return t.src = "https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/assets/img/360.svg", t.style.bottom = `${e}%`, t.className = "cloudimage-360-view-360-circle", t;
+}, Ii = () => {
+  const e = document.createElement("div");
+  return e.className = "cloudimage-initial-icon", e.innerText = "360°", e;
+}, Ci = (e, t) => {
+  const { width: i, height: n } = t, o = document.createElement("canvas");
+  return o.width = i, o.height = n, o.style.width = "100%", o.style.height = "auto", e.appendChild(o), o;
+}, Oi = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20height='20px'%20viewBox='0%20-960%20960%20960'%20width='20px'%20fill='%235f6368'%3e%3cpath%20d='m147-96-51-51%20261-261H192v-72h288v288h-72v-165L147-96Zm333-384v-288h72v165l261-261%2051%2051-261%20261h165v72H480Z'/%3e%3c/svg%3e", Ei = () => {
+  const e = document.createElement("div");
+  return e.className = "cloudimage-360-button cloudimage-360-close-icon", e.innerHTML = `<img alt="close icon" src=${Oi}>`, e;
+}, Si = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20height='20px'%20viewBox='0%20-960%20960%20960'%20width='20px'%20fill='%235f6368'%3e%3cpath%20d='M144-144v-192h72v120h120v72H144Zm480%200v-72h120v-120h72v192H624ZM144-624v-192h192v72H216v120h-72Zm600%200v-120H624v-72h192v192h-72Z'/%3e%3c/svg%3e", Yi = () => {
+  const e = document.createElement("div");
+  return e.className = "cloudimage-360-button cloudimage-360-fullscreen-button", e.innerHTML = `<img alt="fullscreen icon" src=${Si}>`, e;
+}, ce = (e) => {
+  const t = document.createElement("div");
+  return t.className = "cloudimage-360-icons-container", e.appendChild(t), t;
+}, Ri = (e) => {
+  const t = document.createElement("div");
+  return t.className = "cloudimage-360-inner-box", e.appendChild(t), t;
+}, Xi = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20height='20px'%20viewBox='0%20-960%20960%20960'%20width='20px'%20fill='%235f6368'%3e%3cpath%20d='M765-144%20526-383q-30%2022-65.79%2034.5-35.79%2012.5-76.18%2012.5Q284-336%20214-406t-70-170q0-100%2070-170t170-70q100%200%20170%2070t70%20170.03q0%2040.39-12.5%2076.18Q599-464%20577-434l239%20239-51%2051ZM384-408q70%200%20119-49t49-119q0-70-49-119t-119-49q-70%200-119%2049t-49%20119q0%2070%2049%20119t119%2049Z'/%3e%3c/svg%3e", Li = () => {
+  const e = document.createElement("div");
+  return e.className = "cloudimage-360-button cloudimage-360-magnifier-button", e.innerHTML = `<img alt="magnifier icon" src=${Xi}>`, e;
+}, Pi = (e) => {
+  const t = document.createElement("div");
+  t.className = "cloudimage-initial-icon";
+  const i = document.createElement("span");
+  return i.className = "percentage", i.innerText = "0%", t.appendChild(i), e.appendChild(t), t;
+}, Ti = (e) => {
+  const t = document.createElement("div");
+  t.className = "cloudimage-360-fullscreen-modal";
+  const i = e.cloneNode();
+  return i.style.height = "100vh", i.style.maxHeight = "100%", t.appendChild(i), window.document.body.appendChild(t), i;
+}, Wt = (e, t) => {
+  const i = e.querySelector(t);
+  i && i.parentNode.removeChild(i);
+}, Ai = () => {
+  const e = document.createElement("div");
+  return e.className = "cloudimage-loading-spinner", e;
+}, ki = () => {
+  const e = document.createElement("div");
+  return e.className = "cloudimage-360-transition-overlay", e;
+}, Mi = (e) => {
+  const t = document.createElement("div");
+  return t.className = "cloudimage-360-hotspot-container", e.appendChild(t), t;
+}, Wi = (e, t) => {
+  const [i, n] = e.split("?");
+  if (!n) return e;
+  const o = new RegExp(`^${t}=|&${t}=`), s = n.split("&").filter((a) => !o.test(a)).join("&");
+  return s ? `${i}?${s}` : i;
+}, Hi = (e) => {
+  const t = Wi(e, "width"), i = t.includes("?") ? "&" : "?";
+  return `${t}${i}width=${150 * devicePixelRatio}`;
+}, Bi = (e) => {
+  const t = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1
+  }, i = (o) => {
+    const s = o.getAttribute("data-src");
+    s && (o.src = s);
+  };
+  new IntersectionObserver((o, s) => {
+    o.forEach((a) => {
+      a.isIntersecting && (i(a.target), s.unobserve(a.target));
+    });
+  }, t).observe(e);
+}, Zi = (e, t) => {
+  const i = Ee(1, t);
+  return e.replace("{index}", i);
+}, Di = (e, t) => {
+  const [i] = e, n = /(https?):\/\//i.test(i);
+  return gt({
+    ...t,
+    folder: n ? "" : t.folder,
+    filename: i
+  });
+}, Ni = (e, t) => {
+  const { imageList: i, indexZeroBase: n } = t;
+  if (i.length)
+    try {
+      const o = JSON.parse(i);
+      return Di(o, t);
+    } catch (o) {
+      console.error(`Wrong format in image-list attribute: ${o.message}`);
+    }
+  return Zi(e, n);
+}, le = (e, t, i) => {
+  const n = new Image();
+  return n.setAttribute(t ? "data-src" : "src", e), n.className = i, n.style.cssText = `
+    position: ${t ? "absolute" : "static"};
+    width: 100%;
+    inset: 0;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: blur(10px);
+  `, n;
+}, he = (e, t, i) => {
+  const { innerBox: n, imageList: o, lazyload: s } = t || {}, [a] = o, r = a || Ni(e, t), c = Hi(r), l = le(c, s, "cloudimage-lazy"), h = le(c, !1, "cloudimage-360-placeholder"), u = (f) => {
+    Wt(n, ".cloudimage-lazy"), i && i({
+      event: f,
+      width: l.width,
+      height: l.height,
+      naturalWidth: l.naturalWidth,
+      naturalHeight: l.naturalHeight,
+      src: c
+    });
+  };
+  l.onload = u, n.appendChild(l), n.appendChild(h), Bi(l);
+}, $i = (e, t) => {
+  const i = new Image();
+  i.src = e, i.onload = (n) => {
+    t && t({
+      event: n,
+      width: i.width,
+      height: i.height,
+      naturalWidth: i.naturalWidth,
+      naturalHeight: i.naturalHeight,
+      src: e
+    });
+  }, i.onerror = function() {
+  };
+}, Vi = (e, t) => {
+  const i = t.getBoundingClientRect(), n = e.touches ? e.touches[0].clientX : e.clientX, o = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: n - i.left,
+    y: o - i.top
+  };
+}, Mt = (e, t, i) => {
+  const { container: n, w: o, h: s, zoom: a, bw: r, offsetX: c, offsetY: l } = t, h = Vi(e, n);
+  let u = h.x, f = h.y;
+  u = Math.max(o / a, Math.min(u, n.offsetWidth - o / a)), f = Math.max(s / a, Math.min(f, n.offsetHeight - s / a)), i.style.left = `${u - o}px`, i.style.top = `${f - s}px`;
+  const d = (u - c) * a - o + r, y = (f - l) * a - s + r;
+  i.style.backgroundPosition = `-${d}px -${y}px`;
+}, ji = (e, t, i, n, o, s) => {
+  const { x: a = 0, y: r = 0 } = i || {}, c = (t.offsetWidth - a * 2) * s, l = (t.offsetHeight - r * 2) * s;
+  if (!o) return;
+  o.setAttribute("class", "cloudimage-360-img-magnifier-glass"), t.prepend(o), o.style.backgroundImage = `url('${n.src}')`, o.style.backgroundSize = `${c}px ${l}px`;
+  const h = 3, u = o.offsetWidth / 2, f = o.offsetHeight / 2, d = {
+    container: t,
+    w: u,
+    h: f,
+    zoom: s,
+    bw: h,
+    offsetX: a,
+    offsetY: r
+  };
+  Mt(e, d, o);
+  const y = (v) => {
+    Mt(v, d, o);
+  }, g = (v) => {
+    v.preventDefault(), Mt(v, d, o);
+  };
+  o.addEventListener("mousemove", y), t.addEventListener("mousemove", y), t.addEventListener("touchmove", g);
+}, Fi = (e, t, i) => {
+  const { clientX: n, clientY: o } = e, s = t.getBoundingClientRect(), a = t.width / (s.width * i), r = t.height / (s.height * i), c = (n - s.left) * a, l = (o - s.top) * r;
+  return { offsetX: c, offsetY: l };
+}, de = (e, { bottom: t, top: i }) => {
+  e ? t() : i();
+}, ue = (e, { left: t, right: i }) => {
+  e ? t() : i();
+}, Gi = ({ autoplayBehavior: e, spinY: t, reversed: i, loopTriggers: n }) => {
+  switch (e) {
+    case T.SPIN_XY:
+    case T.SPIN_YX:
+      t ? de(i, n) : ue(i, n);
+      break;
+    case T.SPIN_Y:
+      de(i, n);
+      break;
+    case T.SPIN_X:
+    default:
+      ue(i, n);
+  }
+}, zi = ({
+  autoplayBehavior: e,
+  activeImageX: t,
+  activeImageY: i,
+  amountX: n,
+  amountY: o,
+  autoplayReverse: s
+}) => {
+  const a = (r, c) => {
+    const l = c - 1;
+    return s ? r === 0 : r === l;
+  };
+  switch (e) {
+    case T.SPIN_XY:
+    case T.SPIN_Y:
+      return a(i, o);
+    case T.SPIN_X:
+    case T.SPIN_YX:
+    default:
+      return a(t, n);
+  }
+}, Ui = ({
+  autoplayBehavior: e,
+  activeImageX: t,
+  activeImageY: i,
+  amountX: n,
+  amountY: o,
+  autoplayReverse: s,
+  spinDirection: a
+}) => {
+  const r = t === (s ? 0 : n - 1), c = i === (s ? 0 : o - 1);
+  return e === T.SPIN_XY || e === T.SPIN_YX ? a === "x" && r || a === "y" && c : !1;
+}, Ki = (e, t, i) => {
+  if (!i) return "x";
+  if (!t) return "y";
+  switch (e) {
+    case T.SPIN_XY:
+      return "x";
+    case T.SPIN_YX:
+      return "y";
+    case T.SPIN_Y:
+      return "y";
+    case T.SPIN_X:
+    default:
+      return "x";
+  }
+}, qi = (e) => e === "x" ? "y" : "x", pe = (e, t) => {
+  const i = [...li];
+  return t ? [...i, ...hi].includes(e) : i.includes(e);
+}, Ji = ({ deltaX: e, deltaY: t, reversed: i, allowSpinX: n, allowSpinY: o, threshold: s = 1 }) => {
+  const a = Math.abs(e), r = Math.abs(t);
+  return n && a - s > r ? i ? e > 0 ? "left" : "right" : e > 0 ? "right" : "left" : o && r - s > a ? i ? t > 0 ? "up" : "down" : t > 0 ? "down" : "up" : null;
+}, Qi = () => "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, _i = (e, t = 150) => {
+  let i;
+  return function(...n) {
+    clearTimeout(i), i = setTimeout(() => {
+      e.apply(this, n);
+    }, t);
+  };
+}, Se = "KGZ1bmN0aW9uKCl7InVzZSBzdHJpY3QiO2NvbnN0IHg9KGEsdCxlKT0+e2NvbnN0IHM9YS9lLG49dC9lO3JldHVybnt6b29tZWRXaWR0aDpzLHpvb21lZEhlaWdodDpufX0sTz0oe3BvaW50ZXJYOmEscG9pbnRlclk6dCxpbWFnZURhdGE6ZSx6b29tZWRXaWR0aDpzLHpvb21lZEhlaWdodDpuLGRyYXdXaWR0aDppLGRyYXdIZWlnaHQ6Y30pPT57Y29uc3R7bmF0dXJhbFdpZHRoOnIsbmF0dXJhbEhlaWdodDpsfT1lO2xldCBnPWEvaSpyLXMvMix1PXQvYypsLW4vMjtjb25zdCBwPU1hdGgubWF4KDAsci1zKSxJPU1hdGgubWF4KDAsbC1uKTtyZXR1cm4gZz1NYXRoLm1heCgwLE1hdGgubWluKGcscCkpLHU9TWF0aC5tYXgoMCxNYXRoLm1pbih1LEkpKSx7em9vbU9mZnNldFg6Zyx6b29tT2Zmc2V0WTp1fX07bGV0IG8sbSxmLGgsZCx3O3NlbGYub25tZXNzYWdlPWFzeW5jIGE9Pntjb25zdHthY3Rpb246dCxvZmZzY3JlZW46ZSxkZXZpY2VQaXhlbFJhdGlvOnMsaW1hZ2VEYXRhOm4sem9vbVNjYWxlOmkscG9pbnRlclg6Yyxwb2ludGVyWTpyLGltYWdlQXNwZWN0UmF0aW86bCxjb250YWluZXJXaWR0aDpnLGNvbnRhaW5lckhlaWdodDp1fT1hLmRhdGE7c3dpdGNoKHQpe2Nhc2UiaW5pdENhbnZhcyI6dihlLHMpO2JyZWFrO2Nhc2UiYWRhcHRDYW52YXNTaXplIjp6KGwsZyx1KTticmVhaztjYXNlImRyYXdJbWFnZU9uQ2FudmFzIjpDKG4saSxjLHIpO2JyZWFrfX07Y29uc3Qgdj0oYSx0KT0+e289YSxtPW8uZ2V0Q29udGV4dCgiMmQiKSxmPXR9LHo9KGEsdCxlKT0+e2NvbnN0IHM9dC9lO3c9YT5zLG8ud2lkdGg9dCpmLG8uaGVpZ2h0PWUqZixtLnNjYWxlKGYsZiksdz8oaD10LGQ9dC9hKTooZD1lLGg9ZSphKSxtLmltYWdlU21vb3RoaW5nRW5hYmxlZD0hMCxtLmltYWdlU21vb3RoaW5nUXVhbGl0eT0iaGlnaCJ9LEM9KGE9e30sdD0xLGU9MCxzPTApPT57Y29uc3R7Yml0bWFwSW1hZ2U6bn09YTtpZighb3x8IW4pcmV0dXJuO2xldCBpLGM7aWYodz8oaT0wLGM9KG8uaGVpZ2h0L2YtZCkvMik6KGk9KG8ud2lkdGgvZi1oKS8yLGM9MCksbS5jbGVhclJlY3QoMCwwLG8ud2lkdGgsby5oZWlnaHQpLHQhPT0xKXtjb25zdHt6b29tZWRXaWR0aDpyLHpvb21lZEhlaWdodDpsfT14KGgsZCx0KSx7em9vbU9mZnNldFg6Zyx6b29tT2Zmc2V0WTp1fT1PKHtwb2ludGVyWDplLHBvaW50ZXJZOnMsaW1hZ2VEYXRhOmEsem9vbWVkV2lkdGg6cix6b29tZWRIZWlnaHQ6bCxkcmF3V2lkdGg6aCxkcmF3SGVpZ2h0OmR9KTttLmRyYXdJbWFnZShuLGcsdSxyLGwsaSxjLGgsZCl9ZWxzZSBtLmRyYXdJbWFnZShuLGksYyxoLGQpfX0pKCk7Cg==", tn = (e) => Uint8Array.from(atob(e), (t) => t.charCodeAt(0)), fe = typeof self < "u" && self.Blob && new Blob([tn(Se)], { type: "text/javascript;charset=utf-8" });
+function en(e) {
+  let t;
+  try {
+    if (t = fe && (self.URL || self.webkitURL).createObjectURL(fe), !t) throw "";
+    const i = new Worker(t, {
+      name: e == null ? void 0 : e.name
+    });
+    return i.addEventListener("error", () => {
+      (self.URL || self.webkitURL).revokeObjectURL(t);
+    }), i;
+  } catch {
+    return new Worker(
+      "data:text/javascript;base64," + Se,
+      {
+        name: e == null ? void 0 : e.name
+      }
+    );
+  } finally {
+    t && (self.URL || self.webkitURL).revokeObjectURL(t);
+  }
+}
+const nn = (e) => e === "x" ? A.X : A.Y, on = (e, t, i) => e.filter(
+  (n) => nn(n.orientation) === i && t in n.positions
+), sn = (e) => {
+  const t = document.createElement("span");
+  return t.id = e, t.className = "cloudimage-360-hotspot", t.dataset.hotspotId = e, t;
+}, rn = (e) => {
+  const t = Object.entries(e).sort(([s], [a]) => Number(s) - Number(a));
+  let i = null, n = null;
+  const o = {};
+  for (const [s, a] of t)
+    if (!a)
+      o[s] = { x: i, y: n };
+    else {
+      const { x: r, y: c } = a;
+      r != null && (i = r), c != null && (n = c), o[s] = {
+        x: r || i,
+        y: c || n
+      };
+    }
+  return o;
+}, an = (e) => [
+  {
+    name: "offset",
+    options: {
+      offset: [0, 10]
+    }
+  },
+  {
+    name: "preventOverflow",
+    options: {
+      boundary: e
+    }
+  }
+], cn = (e, t) => {
+  const i = document.createElement("div");
+  return i.className = "cloudimage-360-popper", i.id = `cloudimage-360-popper-${t}`, i.dataset.popperId = t, typeof e == "string" && /<\/?[a-z][\s\S]*>/i.test(e) ? i.innerHTML = e : i.textContent = e, document.body.appendChild(i), i;
+}, ln = (e) => {
+  const t = [...e];
+  return t.forEach((i, n) => {
+    const o = { ...rn(i.positions) };
+    t[n].initialPositions = o, t[n].positions = o;
+  }), t;
+}, hn = ({
+  newWidth: e,
+  newHeight: t,
+  initialContainerSize: i,
+  imageAspectRatio: n,
+  hotspotsConfig: o
+}) => {
+  const [s, a] = i;
+  let r = e, c = t, l = 0, h = 0;
+  const u = e / t;
+  n > u ? (c = e / n, h = (t - c) / 2) : (r = t * n, l = (e - r) / 2);
+  const d = r / s, y = c / a;
+  return o.map((g) => {
+    const v = {};
+    return Object.entries(g.initialPositions).forEach(([x, C]) => {
+      v[x] = {
+        x: C.x * d + l,
+        y: C.y * y + h
+      };
+    }), { ...g, positions: v };
+  });
+};
+var k = "top", N = "bottom", $ = "right", M = "left", Zt = "auto", It = [k, N, $, M], ct = "start", wt = "end", dn = "clippingParents", Ye = "viewport", vt = "popper", un = "reference", me = /* @__PURE__ */ It.reduce(function(e, t) {
+  return e.concat([t + "-" + ct, t + "-" + wt]);
+}, []), Re = /* @__PURE__ */ [].concat(It, [Zt]).reduce(function(e, t) {
+  return e.concat([t, t + "-" + ct, t + "-" + wt]);
+}, []), pn = "beforeRead", fn = "read", mn = "afterRead", vn = "beforeMain", gn = "main", yn = "afterMain", bn = "beforeWrite", wn = "write", xn = "afterWrite", In = [pn, fn, mn, vn, gn, yn, bn, wn, xn];
+function z(e) {
+  return e ? (e.nodeName || "").toLowerCase() : null;
+}
+function Z(e) {
+  if (e == null)
+    return window;
+  if (e.toString() !== "[object Window]") {
+    var t = e.ownerDocument;
+    return t && t.defaultView || window;
+  }
+  return e;
+}
+function st(e) {
+  var t = Z(e).Element;
+  return e instanceof t || e instanceof Element;
+}
+function D(e) {
+  var t = Z(e).HTMLElement;
+  return e instanceof t || e instanceof HTMLElement;
+}
+function Dt(e) {
+  if (typeof ShadowRoot > "u")
+    return !1;
+  var t = Z(e).ShadowRoot;
+  return e instanceof t || e instanceof ShadowRoot;
+}
+function Cn(e) {
+  var t = e.state;
+  Object.keys(t.elements).forEach(function(i) {
+    var n = t.styles[i] || {}, o = t.attributes[i] || {}, s = t.elements[i];
+    !D(s) || !z(s) || (Object.assign(s.style, n), Object.keys(o).forEach(function(a) {
+      var r = o[a];
+      r === !1 ? s.removeAttribute(a) : s.setAttribute(a, r === !0 ? "" : r);
+    }));
+  });
+}
+function On(e) {
+  var t = e.state, i = {
+    popper: {
+      position: t.options.strategy,
+      left: "0",
+      top: "0",
+      margin: "0"
+    },
+    arrow: {
+      position: "absolute"
+    },
+    reference: {}
+  };
+  return Object.assign(t.elements.popper.style, i.popper), t.styles = i, t.elements.arrow && Object.assign(t.elements.arrow.style, i.arrow), function() {
+    Object.keys(t.elements).forEach(function(n) {
+      var o = t.elements[n], s = t.attributes[n] || {}, a = Object.keys(t.styles.hasOwnProperty(n) ? t.styles[n] : i[n]), r = a.reduce(function(c, l) {
+        return c[l] = "", c;
+      }, {});
+      !D(o) || !z(o) || (Object.assign(o.style, r), Object.keys(s).forEach(function(c) {
+        o.removeAttribute(c);
+      }));
+    });
+  };
+}
+const En = {
+  name: "applyStyles",
+  enabled: !0,
+  phase: "write",
+  fn: Cn,
+  effect: On,
+  requires: ["computeStyles"]
+};
+function G(e) {
+  return e.split("-")[0];
+}
+var ot = Math.max, Xt = Math.min, lt = Math.round;
+function Ht() {
+  var e = navigator.userAgentData;
+  return e != null && e.brands && Array.isArray(e.brands) ? e.brands.map(function(t) {
+    return t.brand + "/" + t.version;
+  }).join(" ") : navigator.userAgent;
+}
+function Xe() {
+  return !/^((?!chrome|android).)*safari/i.test(Ht());
+}
+function ht(e, t, i) {
+  t === void 0 && (t = !1), i === void 0 && (i = !1);
+  var n = e.getBoundingClientRect(), o = 1, s = 1;
+  t && D(e) && (o = e.offsetWidth > 0 && lt(n.width) / e.offsetWidth || 1, s = e.offsetHeight > 0 && lt(n.height) / e.offsetHeight || 1);
+  var a = st(e) ? Z(e) : window, r = a.visualViewport, c = !Xe() && i, l = (n.left + (c && r ? r.offsetLeft : 0)) / o, h = (n.top + (c && r ? r.offsetTop : 0)) / s, u = n.width / o, f = n.height / s;
+  return {
+    width: u,
+    height: f,
+    top: h,
+    right: l + u,
+    bottom: h + f,
+    left: l,
+    x: l,
+    y: h
+  };
+}
+function Nt(e) {
+  var t = ht(e), i = e.offsetWidth, n = e.offsetHeight;
+  return Math.abs(t.width - i) <= 1 && (i = t.width), Math.abs(t.height - n) <= 1 && (n = t.height), {
+    x: e.offsetLeft,
+    y: e.offsetTop,
+    width: i,
+    height: n
+  };
+}
+function Le(e, t) {
+  var i = t.getRootNode && t.getRootNode();
+  if (e.contains(t))
+    return !0;
+  if (i && Dt(i)) {
+    var n = t;
+    do {
+      if (n && e.isSameNode(n))
+        return !0;
+      n = n.parentNode || n.host;
+    } while (n);
+  }
+  return !1;
+}
+function J(e) {
+  return Z(e).getComputedStyle(e);
+}
+function Sn(e) {
+  return ["table", "td", "th"].indexOf(z(e)) >= 0;
+}
+function et(e) {
+  return ((st(e) ? e.ownerDocument : (
+    // $FlowFixMe[prop-missing]
+    e.document
+  )) || window.document).documentElement;
+}
+function Pt(e) {
+  return z(e) === "html" ? e : (
+    // this is a quicker (but less type safe) way to save quite some bytes from the bundle
+    // $FlowFixMe[incompatible-return]
+    // $FlowFixMe[prop-missing]
+    e.assignedSlot || // step into the shadow DOM of the parent of a slotted node
+    e.parentNode || // DOM Element detected
+    (Dt(e) ? e.host : null) || // ShadowRoot detected
+    // $FlowFixMe[incompatible-call]: HTMLElement is a Node
+    et(e)
+  );
+}
+function ve(e) {
+  return !D(e) || // https://github.com/popperjs/popper-core/issues/837
+  J(e).position === "fixed" ? null : e.offsetParent;
+}
+function Yn(e) {
+  var t = /firefox/i.test(Ht()), i = /Trident/i.test(Ht());
+  if (i && D(e)) {
+    var n = J(e);
+    if (n.position === "fixed")
+      return null;
+  }
+  var o = Pt(e);
+  for (Dt(o) && (o = o.host); D(o) && ["html", "body"].indexOf(z(o)) < 0; ) {
+    var s = J(o);
+    if (s.transform !== "none" || s.perspective !== "none" || s.contain === "paint" || ["transform", "perspective"].indexOf(s.willChange) !== -1 || t && s.willChange === "filter" || t && s.filter && s.filter !== "none")
+      return o;
+    o = o.parentNode;
+  }
+  return null;
+}
+function Ct(e) {
+  for (var t = Z(e), i = ve(e); i && Sn(i) && J(i).position === "static"; )
+    i = ve(i);
+  return i && (z(i) === "html" || z(i) === "body" && J(i).position === "static") ? t : i || Yn(e) || t;
+}
+function $t(e) {
+  return ["top", "bottom"].indexOf(e) >= 0 ? "x" : "y";
+}
+function yt(e, t, i) {
+  return ot(e, Xt(t, i));
+}
+function Rn(e, t, i) {
+  var n = yt(e, t, i);
+  return n > i ? i : n;
+}
+function Pe() {
+  return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  };
+}
+function Te(e) {
+  return Object.assign({}, Pe(), e);
+}
+function Ae(e, t) {
+  return t.reduce(function(i, n) {
+    return i[n] = e, i;
+  }, {});
+}
+var Xn = function(t, i) {
+  return t = typeof t == "function" ? t(Object.assign({}, i.rects, {
+    placement: i.placement
+  })) : t, Te(typeof t != "number" ? t : Ae(t, It));
+};
+function Ln(e) {
+  var t, i = e.state, n = e.name, o = e.options, s = i.elements.arrow, a = i.modifiersData.popperOffsets, r = G(i.placement), c = $t(r), l = [M, $].indexOf(r) >= 0, h = l ? "height" : "width";
+  if (!(!s || !a)) {
+    var u = Xn(o.padding, i), f = Nt(s), d = c === "y" ? k : M, y = c === "y" ? N : $, g = i.rects.reference[h] + i.rects.reference[c] - a[c] - i.rects.popper[h], v = a[c] - i.rects.reference[c], x = Ct(s), C = x ? c === "y" ? x.clientHeight || 0 : x.clientWidth || 0 : 0, O = g / 2 - v / 2, b = u[d], w = C - f[h] - u[y], m = C / 2 - f[h] / 2 + O, I = yt(b, m, w), E = c;
+    i.modifiersData[n] = (t = {}, t[E] = I, t.centerOffset = I - m, t);
+  }
+}
+function Pn(e) {
+  var t = e.state, i = e.options, n = i.element, o = n === void 0 ? "[data-popper-arrow]" : n;
+  o != null && (typeof o == "string" && (o = t.elements.popper.querySelector(o), !o) || Le(t.elements.popper, o) && (t.elements.arrow = o));
+}
+const Tn = {
+  name: "arrow",
+  enabled: !0,
+  phase: "main",
+  fn: Ln,
+  effect: Pn,
+  requires: ["popperOffsets"],
+  requiresIfExists: ["preventOverflow"]
+};
+function dt(e) {
+  return e.split("-")[1];
+}
+var An = {
+  top: "auto",
+  right: "auto",
+  bottom: "auto",
+  left: "auto"
+};
+function kn(e, t) {
+  var i = e.x, n = e.y, o = t.devicePixelRatio || 1;
+  return {
+    x: lt(i * o) / o || 0,
+    y: lt(n * o) / o || 0
+  };
+}
+function ge(e) {
+  var t, i = e.popper, n = e.popperRect, o = e.placement, s = e.variation, a = e.offsets, r = e.position, c = e.gpuAcceleration, l = e.adaptive, h = e.roundOffsets, u = e.isFixed, f = a.x, d = f === void 0 ? 0 : f, y = a.y, g = y === void 0 ? 0 : y, v = typeof h == "function" ? h({
+    x: d,
+    y: g
+  }) : {
+    x: d,
+    y: g
+  };
+  d = v.x, g = v.y;
+  var x = a.hasOwnProperty("x"), C = a.hasOwnProperty("y"), O = M, b = k, w = window;
+  if (l) {
+    var m = Ct(i), I = "clientHeight", E = "clientWidth";
+    if (m === Z(i) && (m = et(i), J(m).position !== "static" && r === "absolute" && (I = "scrollHeight", E = "scrollWidth")), m = m, o === k || (o === M || o === $) && s === wt) {
+      b = N;
+      var S = u && m === w && w.visualViewport ? w.visualViewport.height : (
+        // $FlowFixMe[prop-missing]
+        m[I]
+      );
+      g -= S - n.height, g *= c ? 1 : -1;
+    }
+    if (o === M || (o === k || o === N) && s === wt) {
+      O = $;
+      var Y = u && m === w && w.visualViewport ? w.visualViewport.width : (
+        // $FlowFixMe[prop-missing]
+        m[E]
+      );
+      d -= Y - n.width, d *= c ? 1 : -1;
+    }
+  }
+  var X = Object.assign({
+    position: r
+  }, l && An), W = h === !0 ? kn({
+    x: d,
+    y: g
+  }, Z(i)) : {
+    x: d,
+    y: g
+  };
+  if (d = W.x, g = W.y, c) {
+    var L;
+    return Object.assign({}, X, (L = {}, L[b] = C ? "0" : "", L[O] = x ? "0" : "", L.transform = (w.devicePixelRatio || 1) <= 1 ? "translate(" + d + "px, " + g + "px)" : "translate3d(" + d + "px, " + g + "px, 0)", L));
+  }
+  return Object.assign({}, X, (t = {}, t[b] = C ? g + "px" : "", t[O] = x ? d + "px" : "", t.transform = "", t));
+}
+function Mn(e) {
+  var t = e.state, i = e.options, n = i.gpuAcceleration, o = n === void 0 ? !0 : n, s = i.adaptive, a = s === void 0 ? !0 : s, r = i.roundOffsets, c = r === void 0 ? !0 : r, l = {
+    placement: G(t.placement),
+    variation: dt(t.placement),
+    popper: t.elements.popper,
+    popperRect: t.rects.popper,
+    gpuAcceleration: o,
+    isFixed: t.options.strategy === "fixed"
+  };
+  t.modifiersData.popperOffsets != null && (t.styles.popper = Object.assign({}, t.styles.popper, ge(Object.assign({}, l, {
+    offsets: t.modifiersData.popperOffsets,
+    position: t.options.strategy,
+    adaptive: a,
+    roundOffsets: c
+  })))), t.modifiersData.arrow != null && (t.styles.arrow = Object.assign({}, t.styles.arrow, ge(Object.assign({}, l, {
+    offsets: t.modifiersData.arrow,
+    position: "absolute",
+    adaptive: !1,
+    roundOffsets: c
+  })))), t.attributes.popper = Object.assign({}, t.attributes.popper, {
+    "data-popper-placement": t.placement
+  });
+}
+const Wn = {
+  name: "computeStyles",
+  enabled: !0,
+  phase: "beforeWrite",
+  fn: Mn,
+  data: {}
+};
+var St = {
+  passive: !0
+};
+function Hn(e) {
+  var t = e.state, i = e.instance, n = e.options, o = n.scroll, s = o === void 0 ? !0 : o, a = n.resize, r = a === void 0 ? !0 : a, c = Z(t.elements.popper), l = [].concat(t.scrollParents.reference, t.scrollParents.popper);
+  return s && l.forEach(function(h) {
+    h.addEventListener("scroll", i.update, St);
+  }), r && c.addEventListener("resize", i.update, St), function() {
+    s && l.forEach(function(h) {
+      h.removeEventListener("scroll", i.update, St);
+    }), r && c.removeEventListener("resize", i.update, St);
+  };
+}
+const Bn = {
+  name: "eventListeners",
+  enabled: !0,
+  phase: "write",
+  fn: function() {
+  },
+  effect: Hn,
+  data: {}
+};
+var Zn = {
+  left: "right",
+  right: "left",
+  bottom: "top",
+  top: "bottom"
+};
+function Yt(e) {
+  return e.replace(/left|right|bottom|top/g, function(t) {
+    return Zn[t];
+  });
+}
+var Dn = {
+  start: "end",
+  end: "start"
+};
+function ye(e) {
+  return e.replace(/start|end/g, function(t) {
+    return Dn[t];
+  });
+}
+function Vt(e) {
+  var t = Z(e), i = t.pageXOffset, n = t.pageYOffset;
+  return {
+    scrollLeft: i,
+    scrollTop: n
+  };
+}
+function jt(e) {
+  return ht(et(e)).left + Vt(e).scrollLeft;
+}
+function Nn(e, t) {
+  var i = Z(e), n = et(e), o = i.visualViewport, s = n.clientWidth, a = n.clientHeight, r = 0, c = 0;
+  if (o) {
+    s = o.width, a = o.height;
+    var l = Xe();
+    (l || !l && t === "fixed") && (r = o.offsetLeft, c = o.offsetTop);
+  }
+  return {
+    width: s,
+    height: a,
+    x: r + jt(e),
+    y: c
+  };
+}
+function $n(e) {
+  var t, i = et(e), n = Vt(e), o = (t = e.ownerDocument) == null ? void 0 : t.body, s = ot(i.scrollWidth, i.clientWidth, o ? o.scrollWidth : 0, o ? o.clientWidth : 0), a = ot(i.scrollHeight, i.clientHeight, o ? o.scrollHeight : 0, o ? o.clientHeight : 0), r = -n.scrollLeft + jt(e), c = -n.scrollTop;
+  return J(o || i).direction === "rtl" && (r += ot(i.clientWidth, o ? o.clientWidth : 0) - s), {
+    width: s,
+    height: a,
+    x: r,
+    y: c
+  };
+}
+function Ft(e) {
+  var t = J(e), i = t.overflow, n = t.overflowX, o = t.overflowY;
+  return /auto|scroll|overlay|hidden/.test(i + o + n);
+}
+function ke(e) {
+  return ["html", "body", "#document"].indexOf(z(e)) >= 0 ? e.ownerDocument.body : D(e) && Ft(e) ? e : ke(Pt(e));
+}
+function bt(e, t) {
+  var i;
+  t === void 0 && (t = []);
+  var n = ke(e), o = n === ((i = e.ownerDocument) == null ? void 0 : i.body), s = Z(n), a = o ? [s].concat(s.visualViewport || [], Ft(n) ? n : []) : n, r = t.concat(a);
+  return o ? r : (
+    // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
+    r.concat(bt(Pt(a)))
+  );
+}
+function Bt(e) {
+  return Object.assign({}, e, {
+    left: e.x,
+    top: e.y,
+    right: e.x + e.width,
+    bottom: e.y + e.height
+  });
+}
+function Vn(e, t) {
+  var i = ht(e, !1, t === "fixed");
+  return i.top = i.top + e.clientTop, i.left = i.left + e.clientLeft, i.bottom = i.top + e.clientHeight, i.right = i.left + e.clientWidth, i.width = e.clientWidth, i.height = e.clientHeight, i.x = i.left, i.y = i.top, i;
+}
+function be(e, t, i) {
+  return t === Ye ? Bt(Nn(e, i)) : st(t) ? Vn(t, i) : Bt($n(et(e)));
+}
+function jn(e) {
+  var t = bt(Pt(e)), i = ["absolute", "fixed"].indexOf(J(e).position) >= 0, n = i && D(e) ? Ct(e) : e;
+  return st(n) ? t.filter(function(o) {
+    return st(o) && Le(o, n) && z(o) !== "body";
+  }) : [];
+}
+function Fn(e, t, i, n) {
+  var o = t === "clippingParents" ? jn(e) : [].concat(t), s = [].concat(o, [i]), a = s[0], r = s.reduce(function(c, l) {
+    var h = be(e, l, n);
+    return c.top = ot(h.top, c.top), c.right = Xt(h.right, c.right), c.bottom = Xt(h.bottom, c.bottom), c.left = ot(h.left, c.left), c;
+  }, be(e, a, n));
+  return r.width = r.right - r.left, r.height = r.bottom - r.top, r.x = r.left, r.y = r.top, r;
+}
+function Me(e) {
+  var t = e.reference, i = e.element, n = e.placement, o = n ? G(n) : null, s = n ? dt(n) : null, a = t.x + t.width / 2 - i.width / 2, r = t.y + t.height / 2 - i.height / 2, c;
+  switch (o) {
+    case k:
+      c = {
+        x: a,
+        y: t.y - i.height
+      };
+      break;
+    case N:
+      c = {
+        x: a,
+        y: t.y + t.height
+      };
+      break;
+    case $:
+      c = {
+        x: t.x + t.width,
+        y: r
+      };
+      break;
+    case M:
+      c = {
+        x: t.x - i.width,
+        y: r
+      };
+      break;
+    default:
+      c = {
+        x: t.x,
+        y: t.y
+      };
+  }
+  var l = o ? $t(o) : null;
+  if (l != null) {
+    var h = l === "y" ? "height" : "width";
+    switch (s) {
+      case ct:
+        c[l] = c[l] - (t[h] / 2 - i[h] / 2);
+        break;
+      case wt:
+        c[l] = c[l] + (t[h] / 2 - i[h] / 2);
+        break;
+    }
+  }
+  return c;
+}
+function xt(e, t) {
+  t === void 0 && (t = {});
+  var i = t, n = i.placement, o = n === void 0 ? e.placement : n, s = i.strategy, a = s === void 0 ? e.strategy : s, r = i.boundary, c = r === void 0 ? dn : r, l = i.rootBoundary, h = l === void 0 ? Ye : l, u = i.elementContext, f = u === void 0 ? vt : u, d = i.altBoundary, y = d === void 0 ? !1 : d, g = i.padding, v = g === void 0 ? 0 : g, x = Te(typeof v != "number" ? v : Ae(v, It)), C = f === vt ? un : vt, O = e.rects.popper, b = e.elements[y ? C : f], w = Fn(st(b) ? b : b.contextElement || et(e.elements.popper), c, h, a), m = ht(e.elements.reference), I = Me({
+    reference: m,
+    element: O,
+    strategy: "absolute",
+    placement: o
+  }), E = Bt(Object.assign({}, O, I)), S = f === vt ? E : m, Y = {
+    top: w.top - S.top + x.top,
+    bottom: S.bottom - w.bottom + x.bottom,
+    left: w.left - S.left + x.left,
+    right: S.right - w.right + x.right
+  }, X = e.modifiersData.offset;
+  if (f === vt && X) {
+    var W = X[o];
+    Object.keys(Y).forEach(function(L) {
+      var U = [$, N].indexOf(L) >= 0 ? 1 : -1, K = [k, N].indexOf(L) >= 0 ? "y" : "x";
+      Y[L] += W[K] * U;
+    });
+  }
+  return Y;
+}
+function Gn(e, t) {
+  t === void 0 && (t = {});
+  var i = t, n = i.placement, o = i.boundary, s = i.rootBoundary, a = i.padding, r = i.flipVariations, c = i.allowedAutoPlacements, l = c === void 0 ? Re : c, h = dt(n), u = h ? r ? me : me.filter(function(y) {
+    return dt(y) === h;
+  }) : It, f = u.filter(function(y) {
+    return l.indexOf(y) >= 0;
+  });
+  f.length === 0 && (f = u);
+  var d = f.reduce(function(y, g) {
+    return y[g] = xt(e, {
+      placement: g,
+      boundary: o,
+      rootBoundary: s,
+      padding: a
+    })[G(g)], y;
+  }, {});
+  return Object.keys(d).sort(function(y, g) {
+    return d[y] - d[g];
+  });
+}
+function zn(e) {
+  if (G(e) === Zt)
+    return [];
+  var t = Yt(e);
+  return [ye(e), t, ye(t)];
+}
+function Un(e) {
+  var t = e.state, i = e.options, n = e.name;
+  if (!t.modifiersData[n]._skip) {
+    for (var o = i.mainAxis, s = o === void 0 ? !0 : o, a = i.altAxis, r = a === void 0 ? !0 : a, c = i.fallbackPlacements, l = i.padding, h = i.boundary, u = i.rootBoundary, f = i.altBoundary, d = i.flipVariations, y = d === void 0 ? !0 : d, g = i.allowedAutoPlacements, v = t.options.placement, x = G(v), C = x === v, O = c || (C || !y ? [Yt(v)] : zn(v)), b = [v].concat(O).reduce(function(j, V) {
+      return j.concat(G(V) === Zt ? Gn(t, {
+        placement: V,
+        boundary: h,
+        rootBoundary: u,
+        padding: l,
+        flipVariations: y,
+        allowedAutoPlacements: g
+      }) : V);
+    }, []), w = t.rects.reference, m = t.rects.popper, I = /* @__PURE__ */ new Map(), E = !0, S = b[0], Y = 0; Y < b.length; Y++) {
+      var X = b[Y], W = G(X), L = dt(X) === ct, U = [k, N].indexOf(W) >= 0, K = U ? "width" : "height", P = xt(t, {
+        placement: X,
+        boundary: h,
+        rootBoundary: u,
+        altBoundary: f,
+        padding: l
+      }), H = U ? L ? $ : M : L ? N : k;
+      w[K] > m[K] && (H = Yt(H));
+      var rt = Yt(H), q = [];
+      if (s && q.push(P[W] <= 0), r && q.push(P[H] <= 0, P[rt] <= 0), q.every(function(j) {
+        return j;
+      })) {
+        S = X, E = !1;
+        break;
+      }
+      I.set(X, q);
+    }
+    if (E)
+      for (var at = y ? 3 : 1, ut = function(V) {
+        var tt = b.find(function(it) {
+          var F = I.get(it);
+          if (F)
+            return F.slice(0, V).every(function(pt) {
+              return pt;
+            });
+        });
+        if (tt)
+          return S = tt, "break";
+      }, Q = at; Q > 0; Q--) {
+        var _ = ut(Q);
+        if (_ === "break") break;
+      }
+    t.placement !== S && (t.modifiersData[n]._skip = !0, t.placement = S, t.reset = !0);
+  }
+}
+const Kn = {
+  name: "flip",
+  enabled: !0,
+  phase: "main",
+  fn: Un,
+  requiresIfExists: ["offset"],
+  data: {
+    _skip: !1
+  }
+};
+function we(e, t, i) {
+  return i === void 0 && (i = {
+    x: 0,
+    y: 0
+  }), {
+    top: e.top - t.height - i.y,
+    right: e.right - t.width + i.x,
+    bottom: e.bottom - t.height + i.y,
+    left: e.left - t.width - i.x
+  };
+}
+function xe(e) {
+  return [k, $, N, M].some(function(t) {
+    return e[t] >= 0;
+  });
+}
+function qn(e) {
+  var t = e.state, i = e.name, n = t.rects.reference, o = t.rects.popper, s = t.modifiersData.preventOverflow, a = xt(t, {
+    elementContext: "reference"
+  }), r = xt(t, {
+    altBoundary: !0
+  }), c = we(a, n), l = we(r, o, s), h = xe(c), u = xe(l);
+  t.modifiersData[i] = {
+    referenceClippingOffsets: c,
+    popperEscapeOffsets: l,
+    isReferenceHidden: h,
+    hasPopperEscaped: u
+  }, t.attributes.popper = Object.assign({}, t.attributes.popper, {
+    "data-popper-reference-hidden": h,
+    "data-popper-escaped": u
+  });
+}
+const Jn = {
+  name: "hide",
+  enabled: !0,
+  phase: "main",
+  requiresIfExists: ["preventOverflow"],
+  fn: qn
+};
+function Qn(e, t, i) {
+  var n = G(e), o = [M, k].indexOf(n) >= 0 ? -1 : 1, s = typeof i == "function" ? i(Object.assign({}, t, {
+    placement: e
+  })) : i, a = s[0], r = s[1];
+  return a = a || 0, r = (r || 0) * o, [M, $].indexOf(n) >= 0 ? {
+    x: r,
+    y: a
+  } : {
+    x: a,
+    y: r
+  };
+}
+function _n(e) {
+  var t = e.state, i = e.options, n = e.name, o = i.offset, s = o === void 0 ? [0, 0] : o, a = Re.reduce(function(h, u) {
+    return h[u] = Qn(u, t.rects, s), h;
+  }, {}), r = a[t.placement], c = r.x, l = r.y;
+  t.modifiersData.popperOffsets != null && (t.modifiersData.popperOffsets.x += c, t.modifiersData.popperOffsets.y += l), t.modifiersData[n] = a;
+}
+const to = {
+  name: "offset",
+  enabled: !0,
+  phase: "main",
+  requires: ["popperOffsets"],
+  fn: _n
+};
+function eo(e) {
+  var t = e.state, i = e.name;
+  t.modifiersData[i] = Me({
+    reference: t.rects.reference,
+    element: t.rects.popper,
+    strategy: "absolute",
+    placement: t.placement
+  });
+}
+const io = {
+  name: "popperOffsets",
+  enabled: !0,
+  phase: "read",
+  fn: eo,
+  data: {}
+};
+function no(e) {
+  return e === "x" ? "y" : "x";
+}
+function oo(e) {
+  var t = e.state, i = e.options, n = e.name, o = i.mainAxis, s = o === void 0 ? !0 : o, a = i.altAxis, r = a === void 0 ? !1 : a, c = i.boundary, l = i.rootBoundary, h = i.altBoundary, u = i.padding, f = i.tether, d = f === void 0 ? !0 : f, y = i.tetherOffset, g = y === void 0 ? 0 : y, v = xt(t, {
+    boundary: c,
+    rootBoundary: l,
+    padding: u,
+    altBoundary: h
+  }), x = G(t.placement), C = dt(t.placement), O = !C, b = $t(x), w = no(b), m = t.modifiersData.popperOffsets, I = t.rects.reference, E = t.rects.popper, S = typeof g == "function" ? g(Object.assign({}, t.rects, {
+    placement: t.placement
+  })) : g, Y = typeof S == "number" ? {
+    mainAxis: S,
+    altAxis: S
+  } : Object.assign({
+    mainAxis: 0,
+    altAxis: 0
+  }, S), X = t.modifiersData.offset ? t.modifiersData.offset[t.placement] : null, W = {
+    x: 0,
+    y: 0
+  };
+  if (m) {
+    if (s) {
+      var L, U = b === "y" ? k : M, K = b === "y" ? N : $, P = b === "y" ? "height" : "width", H = m[b], rt = H + v[U], q = H - v[K], at = d ? -E[P] / 2 : 0, ut = C === ct ? I[P] : E[P], Q = C === ct ? -E[P] : -I[P], _ = t.elements.arrow, j = d && _ ? Nt(_) : {
+        width: 0,
+        height: 0
+      }, V = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : Pe(), tt = V[U], it = V[K], F = yt(0, I[P], j[P]), pt = O ? I[P] / 2 - at - F - tt - Y.mainAxis : ut - F - tt - Y.mainAxis, ft = O ? -I[P] / 2 + at + F + it + Y.mainAxis : Q + F + it + Y.mainAxis, mt = t.elements.arrow && Ct(t.elements.arrow), Tt = mt ? b === "y" ? mt.clientTop || 0 : mt.clientLeft || 0 : 0, Gt = (L = X == null ? void 0 : X[b]) != null ? L : 0, We = H + pt - Gt - Tt, He = H + ft - Gt, zt = yt(d ? Xt(rt, We) : rt, H, d ? ot(q, He) : q);
+      m[b] = zt, W[b] = zt - H;
+    }
+    if (r) {
+      var Ut, Be = b === "x" ? k : M, Ze = b === "x" ? N : $, nt = m[w], Ot = w === "y" ? "height" : "width", Kt = nt + v[Be], qt = nt - v[Ze], At = [k, M].indexOf(x) !== -1, Jt = (Ut = X == null ? void 0 : X[w]) != null ? Ut : 0, Qt = At ? Kt : nt - I[Ot] - E[Ot] - Jt + Y.altAxis, _t = At ? nt + I[Ot] + E[Ot] - Jt - Y.altAxis : qt, te = d && At ? Rn(Qt, nt, _t) : yt(d ? Qt : Kt, nt, d ? _t : qt);
+      m[w] = te, W[w] = te - nt;
+    }
+    t.modifiersData[n] = W;
+  }
+}
+const so = {
+  name: "preventOverflow",
+  enabled: !0,
+  phase: "main",
+  fn: oo,
+  requiresIfExists: ["offset"]
+};
+function ro(e) {
+  return {
+    scrollLeft: e.scrollLeft,
+    scrollTop: e.scrollTop
+  };
+}
+function ao(e) {
+  return e === Z(e) || !D(e) ? Vt(e) : ro(e);
+}
+function co(e) {
+  var t = e.getBoundingClientRect(), i = lt(t.width) / e.offsetWidth || 1, n = lt(t.height) / e.offsetHeight || 1;
+  return i !== 1 || n !== 1;
+}
+function lo(e, t, i) {
+  i === void 0 && (i = !1);
+  var n = D(t), o = D(t) && co(t), s = et(t), a = ht(e, o, i), r = {
+    scrollLeft: 0,
+    scrollTop: 0
+  }, c = {
+    x: 0,
+    y: 0
+  };
+  return (n || !n && !i) && ((z(t) !== "body" || // https://github.com/popperjs/popper-core/issues/1078
+  Ft(s)) && (r = ao(t)), D(t) ? (c = ht(t, !0), c.x += t.clientLeft, c.y += t.clientTop) : s && (c.x = jt(s))), {
+    x: a.left + r.scrollLeft - c.x,
+    y: a.top + r.scrollTop - c.y,
+    width: a.width,
+    height: a.height
+  };
+}
+function ho(e) {
+  var t = /* @__PURE__ */ new Map(), i = /* @__PURE__ */ new Set(), n = [];
+  e.forEach(function(s) {
+    t.set(s.name, s);
+  });
+  function o(s) {
+    i.add(s.name);
+    var a = [].concat(s.requires || [], s.requiresIfExists || []);
+    a.forEach(function(r) {
+      if (!i.has(r)) {
+        var c = t.get(r);
+        c && o(c);
+      }
+    }), n.push(s);
+  }
+  return e.forEach(function(s) {
+    i.has(s.name) || o(s);
+  }), n;
+}
+function uo(e) {
+  var t = ho(e);
+  return In.reduce(function(i, n) {
+    return i.concat(t.filter(function(o) {
+      return o.phase === n;
+    }));
+  }, []);
+}
+function po(e) {
+  var t;
+  return function() {
+    return t || (t = new Promise(function(i) {
+      Promise.resolve().then(function() {
+        t = void 0, i(e());
+      });
+    })), t;
+  };
+}
+function fo(e) {
+  var t = e.reduce(function(i, n) {
+    var o = i[n.name];
+    return i[n.name] = o ? Object.assign({}, o, n, {
+      options: Object.assign({}, o.options, n.options),
+      data: Object.assign({}, o.data, n.data)
+    }) : n, i;
+  }, {});
+  return Object.keys(t).map(function(i) {
+    return t[i];
+  });
+}
+var Ie = {
+  placement: "bottom",
+  modifiers: [],
+  strategy: "absolute"
+};
+function Ce() {
+  for (var e = arguments.length, t = new Array(e), i = 0; i < e; i++)
+    t[i] = arguments[i];
+  return !t.some(function(n) {
+    return !(n && typeof n.getBoundingClientRect == "function");
+  });
+}
+function mo(e) {
+  e === void 0 && (e = {});
+  var t = e, i = t.defaultModifiers, n = i === void 0 ? [] : i, o = t.defaultOptions, s = o === void 0 ? Ie : o;
+  return function(r, c, l) {
+    l === void 0 && (l = s);
+    var h = {
+      placement: "bottom",
+      orderedModifiers: [],
+      options: Object.assign({}, Ie, s),
+      modifiersData: {},
+      elements: {
+        reference: r,
+        popper: c
+      },
+      attributes: {},
+      styles: {}
+    }, u = [], f = !1, d = {
+      state: h,
+      setOptions: function(x) {
+        var C = typeof x == "function" ? x(h.options) : x;
+        g(), h.options = Object.assign({}, s, h.options, C), h.scrollParents = {
+          reference: st(r) ? bt(r) : r.contextElement ? bt(r.contextElement) : [],
+          popper: bt(c)
+        };
+        var O = uo(fo([].concat(n, h.options.modifiers)));
+        return h.orderedModifiers = O.filter(function(b) {
+          return b.enabled;
+        }), y(), d.update();
+      },
+      // Sync update – it will always be executed, even if not necessary. This
+      // is useful for low frequency updates where sync behavior simplifies the
+      // logic.
+      // For high frequency updates (e.g. `resize` and `scroll` events), always
+      // prefer the async Popper#update method
+      forceUpdate: function() {
+        if (!f) {
+          var x = h.elements, C = x.reference, O = x.popper;
+          if (Ce(C, O)) {
+            h.rects = {
+              reference: lo(C, Ct(O), h.options.strategy === "fixed"),
+              popper: Nt(O)
+            }, h.reset = !1, h.placement = h.options.placement, h.orderedModifiers.forEach(function(Y) {
+              return h.modifiersData[Y.name] = Object.assign({}, Y.data);
+            });
+            for (var b = 0; b < h.orderedModifiers.length; b++) {
+              if (h.reset === !0) {
+                h.reset = !1, b = -1;
+                continue;
+              }
+              var w = h.orderedModifiers[b], m = w.fn, I = w.options, E = I === void 0 ? {} : I, S = w.name;
+              typeof m == "function" && (h = m({
+                state: h,
+                options: E,
+                name: S,
+                instance: d
+              }) || h);
+            }
+          }
+        }
+      },
+      // Async and optimistically optimized update – it will not be executed if
+      // not necessary (debounced to run at most once-per-tick)
+      update: po(function() {
+        return new Promise(function(v) {
+          d.forceUpdate(), v(h);
+        });
+      }),
+      destroy: function() {
+        g(), f = !0;
+      }
+    };
+    if (!Ce(r, c))
+      return d;
+    d.setOptions(l).then(function(v) {
+      !f && l.onFirstUpdate && l.onFirstUpdate(v);
+    });
+    function y() {
+      h.orderedModifiers.forEach(function(v) {
+        var x = v.name, C = v.options, O = C === void 0 ? {} : C, b = v.effect;
+        if (typeof b == "function") {
+          var w = b({
+            state: h,
+            name: x,
+            instance: d,
+            options: O
+          }), m = function() {
+          };
+          u.push(w || m);
+        }
+      });
+    }
+    function g() {
+      u.forEach(function(v) {
+        return v();
+      }), u = [];
+    }
+    return d;
+  };
+}
+var vo = [Bn, io, Wn, En, to, Kn, so, Tn, Jn], go = /* @__PURE__ */ mo({
+  defaultModifiers: vo
+});
+class yo {
+  constructor(t, i, n) {
+    ee(this, "updateHotspotPosition", (t, i) => {
+      this.currentActiveIndex = t, this.currentOrientation = i;
+      const n = on(this.hotspotsConfig, t, i);
+      this.hideHotspots(), n.forEach((o) => this.updateAndShowHotspot(o, t));
+    });
+    this.container = i, this.popper = null, this.popperInstance = null, this.hotspotsContainer = Mi(this.container), this.hotspotsConfig = ln(t), this.shouldHidePopper = !0, this.hidePopper = this.hidePopper.bind(this), this.imageAspectRatio = n;
+    const { containerSize: o } = t[0];
+    this.initialContainerSize = o || [i.offsetWidth, i.offsetHeight], this.initHotspots(), this.observeContainerResize();
+  }
+  observeContainerResize() {
+    this.resizeObserver = new ResizeObserver(() => {
+      const t = this.container.offsetWidth, i = this.container.offsetHeight;
+      this.updateHotspotsForResize(t, i);
+    }), this.resizeObserver.observe(this.container);
+  }
+  updateHotspotsForResize(t, i) {
+    this.hotspotsConfig = hn({
+      newWidth: t,
+      newHeight: i,
+      initialContainerSize: this.initialContainerSize,
+      imageAspectRatio: this.imageAspectRatio,
+      hotspotsConfig: this.hotspotsConfig
+    }), this.updateHotspotPosition(this.currentActiveIndex, this.currentOrientation);
+  }
+  showPopper({ hotspotElement: t, content: i, id: n, keepOpen: o }) {
+    this.popperInstance && this.popperInstance.instanceId !== n && this.hidePopper();
+    const s = {
+      placement: "top",
+      modifiers: an(this.container)
+    };
+    this.popper = cn(i, n), this.popper.setAttribute("data-show", ""), this.popper.addEventListener("mouseenter", () => {
+      this.shouldHidePopper = !1;
+    }), this.popper.addEventListener("mouseleave", () => {
+      this.shouldHidePopper = !0, this.checkAndHidePopper();
+    }), t.addEventListener("mouseleave", () => {
+      this.shouldHidePopper = !0, this.checkAndHidePopper();
+    }), t.addEventListener("mouseenter", () => {
+      this.shouldHidePopper = !1, this.hidePopperTimeout && clearTimeout(this.hidePopperTimeout);
+    }), this.popperInstance = {
+      ...go(t, this.popper, s),
+      keepOpen: o,
+      instanceId: n
+    };
+  }
+  checkAndHidePopper() {
+    var t;
+    this.shouldHidePopper && !((t = this.popperInstance) != null && t.keepOpen) && (this.hidePopperTimeout = setTimeout(() => {
+      this.shouldHidePopper && this.hidePopper();
+    }, 150));
+  }
+  hidePopper() {
+    this.popperInstance && (this.popperInstance.destroy(), this.popperInstance = null), this.popper && (this.popper.removeAttribute("data-show"), setTimeout(() => {
+      this.popper && this.popper.remove(), this.popper = null;
+    }, 200));
+  }
+  createHotspot(t) {
+    const { id: i, content: n, keepOpen: o, onClick: s } = t, a = sn(i);
+    s && (a.style.cursor = "pointer"), a.onclick = (r) => {
+      r.stopPropagation(), s == null || s(r, this.popperInstance, i);
+    }, n && a.addEventListener(
+      "mouseenter",
+      () => this.showPopper({ hotspotElement: a, content: n, id: i, keepOpen: o })
+    ), this.hotspotsContainer.appendChild(a);
+  }
+  hideHotspots() {
+    this.hotspotsContainer.querySelectorAll(".cloudimage-360-hotspot").forEach((t) => {
+      t.style.opacity = 0, t.style.pointerEvents = "none";
+    });
+  }
+  updateAndShowHotspot(t, i) {
+    const { positions: n, id: o } = t, { x: s, y: a } = n[i] ?? {}, r = this.hotspotsContainer.querySelector(`[data-hotspot-id="${o}"]`);
+    r && (r.style.translate = `${s}px ${a}px`, r.style.opacity = 1, r.style.pointerEvents = "all");
+  }
+  createAllHotspots() {
+    this.hotspotsConfig.forEach((t) => this.createHotspot(t));
+  }
+  initHotspots() {
+    this.createAllHotspots();
+  }
+  destroy() {
+    this.resizeObserver.disconnect(), this.hidePopper(), this.hotspotsContainer.innerHTML = "";
+  }
+}
+class Lt {
+  constructor(t, i, n) {
+    this.container = t, this.isClicked = !1, this.fullscreenView = !!n, this.imagesX = [], this.imagesY = [], this.devicePixelRatio = Math.round(window.devicePixelRatio || 1), this.id = t.id, this.movementStart = { x: 0, y: 0 }, this.draggingDirection = null, this.isReady = !1, this.currentZoomScale = 1, this.touchDevice = Qi(), this.canvasWorker = new en(), this.onMoveHandler = this.onMoveHandler.bind(this), this.destroy = this.destroy.bind(this), this.init(this.container, i);
+  }
+  mouseDown(t) {
+    if (!this.isReady || this.glass) return;
+    const { pageX: i, pageY: n } = t;
+    (this.autoplay || this.loopTimeoutId) && (this.stopAutoplay(), this.autoplay = !1), this.movementStart = { x: i, y: n }, this.isClicked = !0, this.isDragging = !1;
+  }
+  mouseUp() {
+    this.isReady && (this.isZoomed || this.showAllIcons(), this.movementStart = { x: 0, y: 0 }, this.isClicked = !1, this.innerBox.style.cursor = "grab");
+  }
+  drag(t, i) {
+    if (!this.isReady || !this.isClicked) return;
+    const n = t - this.movementStart.x, o = i - this.movementStart.y;
+    this.draggingDirection = Ji({
+      deltaX: n,
+      deltaY: o,
+      reversed: this.dragReverse,
+      allowSpinX: this.allowSpinX,
+      allowSpinY: this.allowSpinY
+    }) || this.draggingDirection;
+    const s = this.fullscreenView ? document.body : this.container, a = this.dragSpeed / 50, r = a * (this.amountX / s.offsetWidth), c = a * (this.amountY / s.offsetHeight), l = this.allowSpinX ? Math.abs(Math.round(n * r)) : 0, h = this.allowSpinY ? Math.abs(Math.round(o * c)) : 0;
+    (this.allowSpinX && l !== 0 || this.allowSpinY && h !== 0) && (this.hideHotspotPopper(), this.onMoveHandler(this.draggingDirection, l, h), this.movementStart = { x: t, y: i }, setTimeout(() => {
+      this.isDragging = !0;
+    }, 150));
+  }
+  mouseMove(t) {
+    !this.isReady || !this.isClicked && !this.isZoomed || this.glass || (this.hideAllIcons(), this.drag(t.pageX, t.pageY), this.isZoomed && this.applyZoom(t));
+  }
+  mouseClick(t) {
+    if (!(!this.isReady || this.isDragging)) {
+      if (this.glass && this.magnified) {
+        this.removeGlass();
+        return;
+      }
+      this.pointerZoom && !this.glass && !this.touchDevice && this.toggleZoom(t);
+    }
+  }
+  loadHigherQualityImages(t, i) {
+    const n = gt(this.srcXConfig, t), o = this.allowSpinY ? gt(this.srcYConfig, t) : null;
+    ae({
+      cdnPathX: n,
+      cdnPathY: o,
+      configX: this.srcXConfig,
+      configY: this.srcYConfig,
+      onAllImagesLoad: (s, a) => {
+        this.imagesX = s, this.imagesY = a, i();
+      }
+    });
+  }
+  hideHotspots() {
+    this.hotspotsInstance && this.hotspotsInstance.hideHotspots();
+  }
+  hideHotspotPopper() {
+    this.hotspotsInstance && this.hotspotsInstance.hidePopper();
+  }
+  toggleZoom(t) {
+    if (this.isZoomed)
+      this.showTransitionOverlay(), setTimeout(() => {
+        this.removeZoom();
+      }, 800);
+    else {
+      let i = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
+      this.hideHotspots(), this.showLoadingSpinner(), this.loadHigherQualityImages(i, () => {
+        this.showTransitionOverlay(), setTimeout(() => {
+          this.applyZoom(t);
+        }, 800);
+      });
+    }
+  }
+  removeZoom() {
+    this.isZoomed = !1, this.updateView(), this.showAllIcons(), this.hideTransitionOverlay();
+  }
+  applyZoom(t) {
+    const { offsetX: i, offsetY: n } = Fi(t, this.canvas, this.devicePixelRatio);
+    this.isZoomed = !0, this.hideAllIcons(), this.hideLoadingSpinner(), this.hideTransitionOverlay(), this.updateView(this.pointerZoom, i, n);
+  }
+  touchOutside(t) {
+    if (!this.glass) return;
+    !this.canvas.contains(t.target) && this.removeGlass();
+  }
+  touchStart(t) {
+    if (!this.isReady || t.touches.length > 1 || this.glass) return;
+    const { pageX: i, pageY: n } = t.touches[0];
+    (this.autoplay || this.loopTimeoutId) && (this.stopAutoplay(), this.autoplay = !1), this.hideAllIcons(), this.movementStart = { x: i, y: n }, this.isClicked = !0;
+  }
+  touchEnd() {
+    this.isReady && (this.showAllIcons(), this.movementStart = { x: 0, y: 0 }, this.isClicked = !1);
+  }
+  touchMove(t) {
+    if (!this.isReady || !this.isClicked || this.glass) return;
+    const { pageX: i, pageY: n } = t.touches[0];
+    t.preventDefault(), this.drag(i, n);
+  }
+  keyDown(t) {
+    if (!this.isReady) return;
+    const { keyCode: i } = t, n = this.keysReverse;
+    switch (pe(i, this.allowSpinY) && this.hideAllIcons(), i) {
+      case 37:
+        n ? this.moveLeft() : this.moveRight();
+        break;
+      case 39:
+        n ? this.moveRight() : this.moveLeft();
+        break;
+      case 38:
+        this.allowSpinY && (t.preventDefault(), n ? this.moveTop() : this.moveBottom());
+        break;
+      case 40:
+        this.allowSpinY && (t.preventDefault(), n ? this.moveBottom() : this.moveTop());
+        break;
+    }
+  }
+  keyUp(t) {
+    const { keyCode: i } = t;
+    pe(i, this.allowSpinY) && this.showAllIcons();
+  }
+  moveActiveXIndexUp(t) {
+    this.orientation = A.X, this.activeImageX = (this.activeImageX + t) % this.amountX;
+  }
+  moveActiveXIndexDown(t) {
+    this.orientation = A.X, this.activeImageX = (this.activeImageX - t + this.amountX) % this.amountX;
+  }
+  moveActiveYIndexUp(t) {
+    this.orientation = A.Y, this.activeImageY = (this.activeImageY + t) % this.amountY;
+  }
+  moveActiveYIndexDown(t) {
+    this.orientation = A.Y, this.activeImageY = (this.activeImageY - t + this.amountY) % this.amountY;
+  }
+  moveRight(t, i = 1) {
+    t && this.activeImageX >= this.imagesX.length - 1 || (this.moveActiveXIndexUp(i), this.isZoomed || this.updateView());
+  }
+  moveLeft(t, i = 1) {
+    t && this.activeImageX <= 0 || (this.moveActiveXIndexDown(i), this.isZoomed || this.updateView());
+  }
+  moveTop(t, i = 1) {
+    t && this.activeImageY >= this.imagesY.length - 1 || (this.moveActiveYIndexUp(i), this.isZoomed || this.updateView());
+  }
+  moveBottom(t, i = 1) {
+    t && this.activeImageY <= 0 || (this.moveActiveYIndexDown(i), this.isZoomed || this.updateView());
+  }
+  onMoveHandler(t, i = 1, n = 1) {
+    t === "right" ? this.moveRight(this.stopAtEdges, i) : t === "left" ? this.moveLeft(this.stopAtEdges, i) : t === "up" ? this.moveTop(this.stopAtEdges, n) : t === "down" && this.moveBottom(this.stopAtEdges, n);
+  }
+  updateView(t, i, n) {
+    const o = this.orientation === A.X ? this.activeImageX : this.activeImageY, s = this.orientation === A.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
+    this.hotspotsInstance && !this.isZoomed && !this.autoplay && this.hotspotsInstance.updateHotspotPosition(o, this.orientation), this.drawImageOnCanvas(s, t, i, n);
+  }
+  updatePercentageInLoader(t = 0) {
+    this.loader && (this.loader.innerText = t + "%");
+  }
+  adaptCanvasSize(t) {
+    const { naturalWidth: i, naturalHeight: n } = t;
+    this.imageAspectRatio = i / n;
+    const o = this.fullscreenView ? window.innerWidth : this.canvas.clientWidth, s = this.fullscreenView ? window.innerHeight : this.canvas.clientHeight;
+    this.canvasWorker.postMessage({
+      action: "adaptCanvasSize",
+      devicePixelRatio: this.devicePixelRatio,
+      imageAspectRatio: this.imageAspectRatio,
+      containerWidth: o,
+      containerHeight: s
+    });
+  }
+  drawImageOnCanvas(t, i = 1, n = 0, o = 0) {
+    this.canvasWorker.postMessage({
+      action: "drawImageOnCanvas",
+      imageData: t,
+      zoomScale: i,
+      pointerX: n,
+      pointerY: o
+    });
+  }
+  pushImageToSet(t, i, n) {
+    n === A.X ? this.imagesX[i] = t : this.imagesY[i] = t;
+  }
+  calculatePercentage() {
+    const t = this.amountX + this.amountY, i = this.imagesX.length + this.imagesY.length;
+    return Math.round(i / t * 100);
+  }
+  onImageLoad(t, i, n) {
+    this.pushImageToSet(t, i, n), this.updatePercentageInLoader(this.calculatePercentage());
+  }
+  onFirstImageLoaded(t, i) {
+    this.createContainers(t), this.adaptCanvasSize(i), this.drawImageOnCanvas(i);
+  }
+  onAllImagesLoaded() {
+    this.addAllIcons(), this.hotspots && (this.hotspotsInstance = new yo(this.hotspots, this.innerBox, this.imageAspectRatio)), this.isReady = !0, this.amountX = this.imagesX.length, this.amountY = this.imagesY.length, this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0, this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0, this.autoplay && (this.hideAllIcons(), _i(this.play.bind(this))());
+  }
+  magnify(t) {
+    t.stopPropagation();
+    const { src: i } = this.orientation === A.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX], o = (this.fullscreenView ? document.body : this.container).offsetWidth * this.magnifier, s = yi(i, o);
+    this.showLoadingSpinner(), this.createGlass(), $i(s, (r) => {
+      this.hideLoadingSpinner(), this.magnified = !0, ji(t, this.innerBox, this.offset, r, this.glass, this.magnifier);
+    });
+  }
+  openFullscreenModal(t) {
+    t.stopPropagation();
+    const i = Ti(this.container);
+    new Lt(i, this.viewerConfig, !0);
+  }
+  closeFullscreenModal(t) {
+    t.stopPropagation(), document.body.removeChild(this.container.parentNode), window.document.body.style.overflow = "visible";
+  }
+  play() {
+    if (this.isClicked) return;
+    this.hide360ViewCircleIcon();
+    const t = this.speed * 36 / (this.amountX + this.amountY), i = {
+      left: this.moveLeft.bind(this),
+      right: this.moveRight.bind(this),
+      top: this.moveTop.bind(this),
+      bottom: this.moveBottom.bind(this)
+    };
+    this.loopTimeoutId = window.setInterval(() => {
+      if (this.playOnce && zi({
+        autoplayBehavior: this.autoplayBehavior,
+        activeImageX: this.activeImageX,
+        activeImageY: this.activeImageY,
+        amountX: this.amountX,
+        amountY: this.amountY,
+        autoplayReverse: this.autoplayReverse
+      })) {
+        this.stopAutoplay();
+        return;
+      }
+      Ui({
+        autoplayBehavior: this.autoplayBehavior,
+        activeImageX: this.activeImageX,
+        activeImageY: this.activeImageY,
+        amountX: this.amountX,
+        amountY: this.amountY,
+        autoplayReverse: this.autoplayReverse,
+        spinDirection: this.spinDirection
+      }) && (this.spinDirection = qi(this.spinDirection));
+      const s = this.spinDirection === "y";
+      Gi({
+        autoplayBehavior: this.autoplayBehavior,
+        spinY: s,
+        reversed: this.autoplayReverse,
+        loopTriggers: i
+      });
+    }, t);
+  }
+  stopAutoplay() {
+    this.showAllIcons(), this.autoplay = !1, window.clearTimeout(this.loopTimeoutId);
+  }
+  destroy() {
+    this.stopAutoplay(), this.hotspotsInstance && this.hotspotsInstance.destroy();
+    const t = this.container, i = t.cloneNode(!0), n = i.querySelector(".cloudimage-360-inner-box");
+    i.removeChild(n), t.parentNode.replaceChild(i, t);
+  }
+  addInitialIcon() {
+    this.initialIcon || (this.initialIcon = Ii(), this.innerBox.appendChild(this.initialIcon));
+  }
+  showInitialIcon() {
+    this.initialIcon && (this.initialIcon.style.opacity = 1);
+  }
+  hideInitialIcon() {
+    this.initialIcon && (this.initialIcon.style.opacity = 0);
+  }
+  createGlass() {
+    this.hideAllIcons(), this.glass = document.createElement("div"), this.innerBox.appendChild(this.glass), this.innerBox.style.cursor = "default";
+  }
+  removeGlass() {
+    this.showAllIcons(), this.innerBox.removeChild(this.glass), this.glass = null, this.magnified = !1;
+  }
+  addMagnifierIcon() {
+    this.magnifier && (this.magnifierIcon = Li(), this.magnifierIcon.onclick = this.magnify.bind(this), this.iconsContainer.appendChild(this.magnifierIcon));
+  }
+  showMagnifierIcon() {
+    this.magnifierIcon && (this.magnifierIcon.style.visibility = "visible", this.magnifierIcon.style.opacity = 1);
+  }
+  hideMagnifierIcon() {
+    this.magnifierIcon && (this.magnifierIcon.style.visibility = "hidden", this.magnifierIcon.style.opacity = 0);
+  }
+  addFullscreenIcon() {
+    this.fullscreen && (this.fullscreenIcon = Yi(), this.fullscreenIcon.onclick = this.openFullscreenModal.bind(this), this.iconsContainer.appendChild(this.fullscreenIcon));
+  }
+  addCloseFullscreenIcon() {
+    this.fullscreenCloseIcon = Ei(), this.fullscreenCloseIcon.onclick = this.closeFullscreenModal.bind(this), this.iconsContainer.appendChild(this.fullscreenCloseIcon);
+  }
+  showFullscreenIcon() {
+    this.fullscreenIcon && (this.fullscreenIcon.style.opacity = 1);
+  }
+  hideFullscreenIcon() {
+    this.fullscreenIcon && (this.fullscreenIcon.style.opacity = 0);
+  }
+  add360ViewCircleIcon() {
+    this.view360CircleIcon || (this.view360CircleIcon = xi(this.bottomCircleOffset), this.innerBox.appendChild(this.view360CircleIcon));
+  }
+  show360ViewCircleIcon() {
+    this.view360CircleIcon && (this.view360CircleIcon.style.opacity = 1);
+  }
+  hide360ViewCircleIcon() {
+    this.view360CircleIcon && (this.view360CircleIcon.style.opacity = 0);
+  }
+  addLoadingSpinner() {
+    this.loadingSpinner = Ai(), this.innerBox.appendChild(this.loadingSpinner);
+  }
+  showLoadingSpinner() {
+    this.loadingSpinner && (this.hideAllIcons(), this.loadingSpinner.style.opacity = 1);
+  }
+  createTransitionOverlay() {
+    this.transitionOverlay = ki(), this.innerBox.appendChild(this.transitionOverlay);
+  }
+  showTransitionOverlay() {
+    this.transitionOverlay && (this.hideAllIcons(), this.transitionOverlay.style.opacity = 1);
+  }
+  hideTransitionOverlay() {
+    this.transitionOverlay && (this.transitionOverlay.style.opacity = 0);
+  }
+  hideLoadingSpinner() {
+    this.loadingSpinner && (this.loadingSpinner.style.opacity = 0);
+  }
+  remove360ViewCircleIcon() {
+    this.view360CircleIcon && (this.innerBox.removeChild(this.view360CircleIcon), this.view360CircleIcon = null);
+  }
+  addAllIcons() {
+    this.removeLoader(), this.innerBox.style.cursor = "grab", this.pointerZoom && (this.createTransitionOverlay(), this.addLoadingSpinner()), !this.fullscreenView && !this.touchDevice && this.addMagnifierIcon(), this.fullscreenView || this.addFullscreenIcon(), this.initialIconShown && this.addInitialIcon(), this.bottomCircle || this.add360ViewCircleIcon();
+  }
+  showAllIcons() {
+    this.showInitialIcon(), this.show360ViewCircleIcon(), this.showMagnifierIcon(), this.showFullscreenIcon();
+  }
+  hideAllIcons() {
+    this.hideInitialIcon(), this.hide360ViewCircleIcon(), this.hideMagnifierIcon(), this.hideFullscreenIcon();
+  }
+  removeLoader() {
+    this.loader && (this.innerBox.removeChild(this.loader), this.loader = null);
+  }
+  attachEvents(t, i, n) {
+    t && this.addMouseEvents(), i && this.addTouchEvents(), n && this.addKeyboardEvents();
+  }
+  removeEvents() {
+    this.removeMouseEvents(), this.removeTouchEvents(), this.removeKeyboardEvents();
+  }
+  addMouseEvents() {
+    this.boundMouseClick = this.mouseClick.bind(this), this.boundMouseDown = this.mouseDown.bind(this), this.boundMouseMove = oe(this.mouseMove.bind(this), se), this.boundMouseUp = this.mouseUp.bind(this), this.innerBox.addEventListener("click", this.boundMouseClick), this.innerBox.addEventListener("mousedown", this.boundMouseDown), document.addEventListener("mousemove", this.boundMouseMove), document.addEventListener("mouseup", this.boundMouseUp);
+  }
+  addTouchEvents() {
+    this.boundTouchOutside = this.touchOutside.bind(this), this.boundTouchStart = this.touchStart.bind(this), this.boundTouchEnd = this.touchEnd.bind(this), this.boundTouchMove = oe(this.touchMove.bind(this), se), document.addEventListener("touchstart", this.boundTouchOutside), this.container.addEventListener("touchstart", this.boundTouchStart), this.container.addEventListener("touchend", this.boundTouchEnd), this.container.addEventListener("touchmove", this.boundTouchMove);
+  }
+  addKeyboardEvents() {
+    this.boundKeyDown = this.keyDown.bind(this), this.boundKeyUp = this.keyUp.bind(this), document.addEventListener("keydown", this.boundKeyDown), document.addEventListener("keyup", this.boundKeyUp);
+  }
+  removeMouseEvents() {
+    this.innerBox.removeEventListener("click", this.boundMouseClick), this.innerBox.removeEventListener("mousedown", this.boundMouseDown), document.removeEventListener("mousemove", this.boundMouseMove), document.removeEventListener("mouseup", this.boundMouseUp);
+  }
+  removeTouchEvents() {
+    document.removeEventListener("touchstart", this.boundTouchOutside), this.container.removeEventListener("touchstart", this.boundTouchStart), this.container.removeEventListener("touchend", this.boundTouchEnd), this.container.removeEventListener("touchmove", this.boundTouchMove);
+  }
+  removeKeyboardEvents() {
+    document.removeEventListener("keydown", this.boundKeyDown), document.removeEventListener("keyup", this.boundKeyUp);
+  }
+  createContainers(t) {
+    this.iconsContainer = ce(this.innerBox), this.canvas = Ci(this.innerBox, t), this.loader = Pi(this.innerBox);
+    const i = this.canvas.transferControlToOffscreen();
+    this.canvasWorker.postMessage(
+      {
+        action: "initCanvas",
+        offscreen: i,
+        devicePixelRatio: this.devicePixelRatio
+      },
+      [i]
+    ), this.fullscreenView && this.addCloseFullscreenIcon(), Wt(this.innerBox, ".cloudimage-360-placeholder");
+  }
+  update(t) {
+    this.isReady && (this.stopAutoplay(), Wt(this.innerBox, ".cloudimage-360-icons-container"), this.init(this.container, t, !0), this.iconsContainer = ce(this.innerBox), this.onAllImagesLoaded());
+  }
+  init(t, i, n) {
+    const o = i ? ui(i) : di(t), {
+      folder: s,
+      apiVersion: a,
+      filenameX: r,
+      filenameY: c,
+      imageListX: l,
+      imageListY: h,
+      indexZeroBase: u,
+      amountX: f,
+      amountY: d,
+      draggable: y = !0,
+      swipeable: g = !0,
+      keys: v,
+      keysReverse: x,
+      bottomCircleOffset: C,
+      autoplay: O,
+      autoplayBehavior: b,
+      playOnce: w,
+      speed: m,
+      autoplayReverse: I,
+      fullscreen: E,
+      magnifier: S,
+      ciToken: Y,
+      ciFilters: X,
+      ciTransformation: W,
+      lazyload: L,
+      dragSpeed: U,
+      stopAtEdges: K,
+      pointerZoom: P,
+      imageInfo: H = "black",
+      initialIconShown: rt,
+      bottomCircle: q,
+      hotspots: at,
+      dragReverse: ut
+    } = o, Q = { ciToken: Y, ciFilters: X, ciTransformation: W }, _ = l ? JSON.parse(l) : [], j = h ? JSON.parse(h) : [];
+    if (this.viewerConfig = o, this.amountX = _.length || f, this.amountY = j.length || d, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = I ? this.amountX - 1 : 0, this.activeImageY = I ? this.amountY - 1 : 0, this.bottomCircleOffset = C, this.autoplay = O, this.autoplayBehavior = b, this.playOnce = w, this.speed = m, this.autoplayReverse = I, this.fullscreen = E, this.magnifier = S > 1 ? Math.min(S, 5) : 0, this.dragSpeed = Math.max(U, 50), this.stopAtEdges = K, this.ciParams = Q, this.apiVersion = a, this.pointerZoom = P > 1 ? Math.min(P, 5) : null, this.keysReverse = x, this.info = H, this.keys = v, this.innerBox = this.innerBox ?? Ri(this.container), this.initialIconShown = rt, this.bottomCircle = q, this.spinDirection = Ki(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = ut, this.hotspots = at, this.srcXConfig = {
+      folder: s,
+      filename: r,
+      imageList: _,
+      container: t,
+      innerBox: this.innerBox,
+      apiVersion: a,
+      ciParams: Q,
+      lazyload: L,
+      amount: this.amountX,
+      indexZeroBase: u,
+      autoplayReverse: I
+    }, this.srcYConfig = {
+      ...this.srcXConfig,
+      filename: c,
+      imageList: j,
+      orientation: A.Y,
+      amount: this.amountY
+    }, n && this.removeEvents(), this.attachEvents(y, g, v), n) return;
+    const V = (this.fullscreenView ? document.body : this.container).offsetWidth, tt = this.allowSpinX && !_.length ? gt(this.srcXConfig, V) : null, it = this.allowSpinY && !j.length ? gt(this.srcYConfig, V) : null, F = (pt) => {
+      ae({
+        cdnPathX: tt,
+        cdnPathY: it,
+        configX: this.srcXConfig,
+        configY: this.srcYConfig,
+        onImageLoad: (ft, mt, Tt) => this.onImageLoad(ft, mt, Tt),
+        onFirstImageLoad: (ft) => this.onFirstImageLoaded(pt, ft),
+        onAllImagesLoad: this.onAllImagesLoaded.bind(this)
+      });
+    };
+    this.allowSpinX ? he(tt, this.srcXConfig, F) : this.allowSpinY && he(it, this.srcYConfig, F);
+  }
+}
+class bo {
+  constructor() {
+    this.views = /* @__PURE__ */ new Map(), this.initAll = this.initAll.bind(this), this.getViews = this.getViews.bind(this);
+  }
+  generateId() {
+    return `ci360-${Math.random().toString(36).slice(2, 11)}`;
+  }
+  init(t, i, n) {
+    if (!t) return;
+    const o = t.id || this.generateId();
+    t.id || (t.id = o);
+    const s = new Lt(t, i, n);
+    return this.views.set(o, s), s;
+  }
+  initAll(t = "cloudimage-360") {
+    [...document.querySelectorAll(`.${t}`)].filter(Boolean).forEach((n) => {
+      const o = n.id || this.generateId();
+      n.id || (n.id = o);
+      const s = new Lt(n);
+      this.views.set(o, s);
+    });
+  }
+  destroy(t) {
+    const i = this.getViewById(t);
+    i && (i.destroy(), this.views.delete(t));
+  }
+  destroyAll() {
+    this.views.forEach((t) => {
+      t.destroy();
+    }), this.views.clear();
+  }
+  getViewById(t) {
+    return this.views.get(t);
+  }
+  getViews() {
+    return Array.from(this.views.values());
+  }
+  updateView(t, i) {
+    const n = this.getViewById(t), o = { ...n.viewerConfig, ...i };
+    if (pi(n.viewerConfig, i)) {
+      n.destroy();
+      const a = document.getElementById(t);
+      this.init(a, o);
+    } else
+      n.update(o);
+    return n;
+  }
+}
+window.CI360 = bo;
+export {
+  bo as default
+};
