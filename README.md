@@ -88,13 +88,17 @@ The js-cloudimage-360-view project revolutionizes interactive 360-degree image v
 
 You can install `js-cloudimage-360-view` using one of the following methods:
 
- ### Option 1: Add via CDN
+### Option 1: Add via CDN
 
-Include the CDN link to the `js-cloudimage-360-view` library at the end of your `<body>` tag:
+Include the CDN link to the `js-cloudimage-360-view` library at the end of your `<body>` tag. Additionally, make sure to include the corresponding CSS file for proper styling:
 
-```code
+```html
+<link rel="stylesheet" href="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/latest/js-cloudimage-360-view.min.css">
 <script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/latest/js-cloudimage-360-view.min.js?func=proxy"></script>
 ```
+
+### Note:
+To ensure the `js-cloudimage-360-view` functionality works correctly, **you must also include the CSS file**. This is crucial for proper styling and display of the plugin.
 
 This is the quickest way to get started without additional setup.
  #### Option 2: Install with Package Manager

@@ -1,5 +1,5 @@
 import './controllers.css';
-import CI360 from '../../src';
+import CI360 from '../src';
 
 import {
   EARBUDS_PLUGIN,

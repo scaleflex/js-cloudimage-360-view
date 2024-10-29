@@ -1,8 +1,43 @@
 # .npmignore
-src
-examples
-config
-build
-.babelrc
-.gitignore
-.idea
+
+# Ignore source files
+/src
+/demo
+
+# Ignore configuration files and build artifacts
+/config
+/bin
+/build
+/.babelrc
+/.gitignore
+/eslint.config.mjs
+/vite-demo.config.js
+/vite.config.js
+
+# Ignore local environment files
+/.env
+/.env.local
+/.env.development
+/.env.production
+
+# Ignore test files and directories
+/tests
+/test-results
+/coverage
+
+# Ignore documentation
+/docs
+/*.md
+
+# Ignore IDE-specific files
+/.idea
+/.vscode
+
+# Ignore npm-debug and other log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore any other files you don't want to publish
+.DS_Store
+Thumbs.db

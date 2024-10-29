@@ -1,6 +1,6 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "4.0.0",
+  "version": "4.0.0-beta.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "",
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/scaleflex/js-cloudimage-360-view"
   },
-  "homepage": "#readme",
+  "homepage": "https://scaleflex.github.io/js-cloudimage-360-view/",
   "keywords": [
     "image",
     "images",
@@ -23,21 +23,19 @@
     "360 product view"
   ],
   "scripts": {
-    "dev": "vite serve examples/src",
-    "clean:build": "rm -rf build",
-    "build:bundle": "vite build",
+    "dev": "vite serve demo",
+    "clean:build": "rm -rf dist",
+    "build:bundle": "npm run clean:build && vite build",
     "deploy:bundle": "npm run build:bundle && node bin/deploy-bundle",
     "clean:dist": "rm -rf dist",
     "dist": "npm run clean:dist && babel src -d dist --copy-files",
-    "clean:demo": "rm -rf examples/dist",
-    "build:demo": "npm run clean:demo && webpack --mode production  --config config/webpack-demo.config.js",
-    "deploy:demo": "gh-pages -d examples/dist",
-    "publish:demo": "npm run build:demo && npm run deploy:demo"
+    "clean:demo": "rm -rf demo/dist",
+    "build:demo": "npm run clean:demo && vite --config vite-demo.config.js build",
+    "deploy:demo": "gh-pages -d dist",
+    "publish": "npm run build:demo && npm run deploy:demo"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.0",
     "@popperjs/core": "^2.11.2",
-    "core-js": "^3.0.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1"
   },
@@ -69,6 +67,8 @@
     "style-loader": "^3.3.2",
     "svg-inline-loader": "^0.8.2",
     "vite": "^5.4.10",
+    "vite-plugin-dts": "^4.3.0",
+    "vite-plugin-html": "^3.2.2",
     "vite-plugin-lib-inject-css": "^2.1.1",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.0.1",

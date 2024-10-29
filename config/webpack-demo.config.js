@@ -2,13 +2,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
-  template: path.join(__dirname, '../examples/src/index.html'),
+  template: path.join(__dirname, '../demo/index.html'),
   filename: './index.html',
 });
 module.exports = {
-  entry: path.join(__dirname, '../examples/src/index.js'),
+  entry: path.join(__dirname, '../demo/index.js'),
   output: {
-    path: path.join(__dirname, '../examples/dist'),
+    path: path.join(__dirname, '../demo/dist'),
     filename: 'bundle[hash].js',
   },
   module: {
