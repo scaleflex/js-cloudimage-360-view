@@ -9,7 +9,7 @@
       }
     ]
   ],
-  "plugins": ["array-includes", "@babel/plugin-transform-runtime"],
+  "plugins": ["array-includes"],
   "env": {
     "production": {
       "presets": ["minify"]
