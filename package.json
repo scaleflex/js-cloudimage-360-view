@@ -1,8 +1,15 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "4.0.0-beta.2",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "4.0.0-beta.10",
+  "main": "dist/js-cloudimage-360-view.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/js-cloudimage-360-view.min.js",
+      "require": "./dist/js-cloudimage-360-view.min.js"
+    }
+  },
+  "style": "dist/js-cloudimage-360-view.min.css",
+  "module": "dist/js-cloudimage-360-view.es.js",
   "description": "",
   "author": "scaleflex",
   "license": "MIT",
@@ -28,8 +35,8 @@
     "build:bundle": "npm run clean:build && vite build",
     "deploy:bundle": "npm run build:bundle && node bin/deploy-bundle",
     "clean:dist": "rm -rf dist",
-    "dist": "npm run clean:dist && babel src -d dist --copy-files",
     "clean:demo": "rm -rf demo/dist",
+    "build:npm": "npm run clean:demo && vite --config vite-npm.config.js build",
     "build:demo": "npm run clean:demo && vite --config vite-demo.config.js build",
     "deploy:demo": "gh-pages -d dist",
     "publish": "npm run build:demo && npm run deploy:demo"
@@ -55,17 +62,12 @@
     "dotenv": "^16.0.3",
     "eslint": "^9.12.0",
     "form-data": "^4.0.0",
-    "fs": "^0.0.1-security",
     "gh-pages": "^2.0.1",
-    "globals": "^15.11.0",
     "highlight.js": "^10.4.1",
-    "html-webpack-plugin": "^5.5.1",
-    "isomorphic-fetch": "^3.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "mobile-detect": "^1.4.3",
     "prettier": "3.3.3",
     "style-loader": "^3.3.2",
-    "svg-inline-loader": "^0.8.2",
     "vite": "^5.4.10",
     "vite-plugin-dts": "^4.3.0",
     "vite-plugin-html": "^3.2.2",

@@ -13,7 +13,7 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        dir: 'build',
+        dir: 'dist',
         assetFileNames: 'js-cloudimage-360-view.min[extname]',
         entryFileNames: 'js-cloudimage-360-view.min.js',
       },
