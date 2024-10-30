@@ -257,9 +257,9 @@ class CI360Viewer {
     const { keyCode } = event;
     const isReverse = this.keysReverse;
 
-    if (isSpinKeysPressed(keyCode, this.allowSpinY)) {
-      this.hideAllIcons();
-    }
+    if (this.autoplay) this.stopAutoplay();
+
+    if (isSpinKeysPressed(keyCode, this.allowSpinY)) this.hideAllIcons();
 
     switch (keyCode) {
       case 37: // left arrow

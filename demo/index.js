@@ -34,6 +34,7 @@ function changeSpinDirectionHandler(event) {
 
   imageXAmountSelector.value = isYDirection ? 35 : 233;
   imageYSelector.style.display = isYDirection ? 'block' : 'none';
+  imageXAmountSelector.disabled = isYDirection;
 
   updateCodeBlock(updatedView.viewerConfig);
 }
