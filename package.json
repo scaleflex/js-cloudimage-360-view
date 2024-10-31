@@ -1,6 +1,6 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "4.0.0-beta.10",
+  "version": "4.0.0",
   "main": "dist/js-cloudimage-360-view.min.js",
   "exports": {
     ".": {
@@ -64,6 +64,7 @@
     "form-data": "^4.0.0",
     "gh-pages": "^2.0.1",
     "highlight.js": "^10.4.1",
+    "isomorphic-fetch": "^3.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "mobile-detect": "^1.4.3",
     "prettier": "3.3.3",
