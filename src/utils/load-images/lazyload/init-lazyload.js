@@ -1,4 +1,5 @@
 import { removeElementFromContainer } from '../../container-elements';
+import { safeJsonParse } from '../../safe-json-parse';
 import generateLowPreviewCdnUrl from '../../image-src/generate-low-preview-cdn-url';
 import lazyLoadImages from './lazyload-image';
 import getFirstCdnImage from './prepare-first-image/get-first-cdn-image';
@@ -8,11 +9,9 @@ const getFirstImageSrc = (imagesSrc, srcConfig) => {
   const { imageList, indexZeroBase } = srcConfig;
 
   if (imageList.length) {
-    try {
-      const images = JSON.parse(imageList);
+    const images = safeJsonParse(imageList, null);
+    if (images) {
       return getFirstCdnImageFromList(images, srcConfig);
-    } catch (error) {
-      console.error(`Wrong format in image-list attribute: ${error.message}`);
     }
   }
 

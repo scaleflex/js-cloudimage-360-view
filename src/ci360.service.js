@@ -29,12 +29,19 @@ import {
   switchSpinDirection,
   ORIENTATIONS,
   THROTTLE_TIME,
+  DRAG_START_DELAY,
+  ZOOM_TRANSITION_DELAY,
+  DRAG_SPEED_DIVISOR,
+  MIN_DRAG_SPEED,
+  MAX_MAGNIFIER_LEVEL,
+  MAX_POINTER_ZOOM,
   getDefaultSpinDirection,
   isSpinKeysPressed,
   calculateOffsetFromEvent,
   createLoadingSpinner,
   createTransitionOverlay,
   isTouchDevice,
+  safeJsonParse,
 } from './utils';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
@@ -52,6 +59,7 @@ class CI360Viewer {
     this.movementStart = { x: 0, y: 0 };
     this.draggingDirection = null;
     this.isReady = false;
+    this.hasInteracted = false;
     this.currentZoomScale = 1;
     this.touchDevice = isTouchDevice();
     this.canvasWorker = new CanvasWorker();
@@ -101,7 +109,7 @@ class CI360Viewer {
       }) || this.draggingDirection;
 
     const container = this.fullscreenView ? document.body : this.container;
-    const dragFactor = this.dragSpeed / 50;
+    const dragFactor = this.dragSpeed / DRAG_SPEED_DIVISOR;
 
     const speedFactorX = dragFactor * (this.amountX / container.offsetWidth);
     const speedFactorY = dragFactor * (this.amountY / container.offsetHeight);
@@ -111,13 +119,14 @@ class CI360Viewer {
     const shouldMove = (this.allowSpinX && itemsSkippedX !== 0) || (this.allowSpinY && itemsSkippedY !== 0);
 
     if (shouldMove) {
+      this.hasInteracted = true;
       this.hideHotspotPopper();
       this.onMoveHandler(this.draggingDirection, itemsSkippedX, itemsSkippedY);
       this.movementStart = { x: pageX, y: pageY };
 
       setTimeout(() => {
         this.isDragging = true;
-      }, 150);
+      }, DRAG_START_DELAY);
     }
   }
 
@@ -176,7 +185,7 @@ class CI360Viewer {
 
       setTimeout(() => {
         this.removeZoom();
-      }, 800);
+      }, ZOOM_TRANSITION_DELAY);
     } else {
       let width = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
 
@@ -187,7 +196,7 @@ class CI360Viewer {
 
         setTimeout(() => {
           this.applyZoom(event);
-        }, 800);
+        }, ZOOM_TRANSITION_DELAY);
       });
     }
   }
@@ -197,6 +206,12 @@ class CI360Viewer {
     this.updateView();
     this.showAllIcons();
     this.hideTransitionOverlay();
+  }
+
+  mouseLeave() {
+    if (this.isZoomed) {
+      this.removeZoom();
+    }
   }
 
   applyZoom(event) {
@@ -259,7 +274,10 @@ class CI360Viewer {
 
     if (this.autoplay) this.stopAutoplay();
 
-    if (isSpinKeysPressed(keyCode, this.allowSpinY)) this.hideAllIcons();
+    if (isSpinKeysPressed(keyCode, this.allowSpinY)) {
+      this.hasInteracted = true;
+      this.hideAllIcons();
+    }
 
     switch (keyCode) {
       case 37: // left arrow
@@ -560,7 +578,7 @@ class CI360Viewer {
   }
 
   showInitialIcon() {
-    if (!this.initialIcon) return;
+    if (!this.initialIcon || this.hasInteracted) return;
 
     this.initialIcon.style.opacity = 1;
   }
@@ -710,7 +728,7 @@ class CI360Viewer {
     if (!this.fullscreenView && !this.touchDevice) this.addMagnifierIcon();
     if (!this.fullscreenView) this.addFullscreenIcon();
     if (this.initialIconShown) this.addInitialIcon();
-    if (!this.bottomCircle) this.add360ViewCircleIcon();
+    if (this.bottomCircle) this.add360ViewCircleIcon();
   }
 
   showAllIcons() {
@@ -758,9 +776,11 @@ class CI360Viewer {
     this.boundMouseDown = this.mouseDown.bind(this);
     this.boundMouseMove = throttle(this.mouseMove.bind(this), THROTTLE_TIME);
     this.boundMouseUp = this.mouseUp.bind(this);
+    this.boundMouseLeave = this.mouseLeave.bind(this);
 
     this.innerBox.addEventListener('click', this.boundMouseClick);
     this.innerBox.addEventListener('mousedown', this.boundMouseDown);
+    this.innerBox.addEventListener('mouseleave', this.boundMouseLeave);
     document.addEventListener('mousemove', this.boundMouseMove);
     document.addEventListener('mouseup', this.boundMouseUp);
   }
@@ -788,6 +808,7 @@ class CI360Viewer {
   removeMouseEvents() {
     this.innerBox.removeEventListener('click', this.boundMouseClick);
     this.innerBox.removeEventListener('mousedown', this.boundMouseDown);
+    this.innerBox.removeEventListener('mouseleave', this.boundMouseLeave);
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
   }
@@ -876,8 +897,8 @@ class CI360Viewer {
     } = adaptedConfig;
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
-    const parsedImagesListX = imageListX ? JSON.parse(imageListX) : [];
-    const parsedImagesListY = imageListY ? JSON.parse(imageListY) : [];
+    const parsedImagesListX = safeJsonParse(imageListX, []);
+    const parsedImagesListY = safeJsonParse(imageListY, []);
 
     this.viewerConfig = adaptedConfig;
     this.amountX = parsedImagesListX.length || amountX;
@@ -893,12 +914,12 @@ class CI360Viewer {
     this.speed = speed;
     this.autoplayReverse = autoplayReverse;
     this.fullscreen = fullscreen;
-    this.magnifier = magnifier > 1 ? Math.min(magnifier, 5) : 0;
-    this.dragSpeed = Math.max(dragSpeed, 50);
+    this.magnifier = magnifier > 1 ? Math.min(magnifier, MAX_MAGNIFIER_LEVEL) : 0;
+    this.dragSpeed = Math.max(dragSpeed, MIN_DRAG_SPEED);
     this.stopAtEdges = stopAtEdges;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
-    this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, 5) : null;
+    this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, MAX_POINTER_ZOOM) : null;
     this.keysReverse = keysReverse;
     this.info = imageInfo;
     this.keys = keys;
@@ -923,6 +944,7 @@ class CI360Viewer {
       amount: this.amountX,
       indexZeroBase,
       autoplayReverse,
+      orientation: ORIENTATIONS.X,
     };
 
     this.srcYConfig = {

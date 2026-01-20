@@ -1,4 +1,4 @@
-import { createHotspotsContainer } from './utils';
+import { createHotspotsContainer, POPPER_HIDE_DELAY, POPPER_REMOVE_DELAY } from './utils';
 import {
   adaptHotspotConfig,
   calculateHotspotPositions,
@@ -19,6 +19,8 @@ class Hotspot {
     this.shouldHidePopper = true;
     this.hidePopper = this.hidePopper.bind(this);
     this.imageAspectRatio = imageAspectRatio;
+    this.hotspotElements = new Map();
+    this.popperListeners = [];
 
     const { containerSize } = hotspotsConfig[0];
     this.initialContainerSize = containerSize || [container.offsetWidth, container.offsetHeight];
@@ -48,6 +50,13 @@ class Hotspot {
     this.updateHotspotPosition(this.currentActiveIndex, this.currentOrientation);
   }
 
+  cleanupPopperListeners() {
+    this.popperListeners.forEach(({ element, event, handler }) => {
+      element.removeEventListener(event, handler);
+    });
+    this.popperListeners = [];
+  }
+
   showPopper({ hotspotElement, content, id, keepOpen }) {
     if (this.popperInstance && this.popperInstance.instanceId !== id) {
       this.hidePopper();
@@ -61,23 +70,33 @@ class Hotspot {
     this.popper = createPopperElement(content, id);
     this.popper.setAttribute('data-show', '');
 
-    this.popper.addEventListener('mouseenter', () => {
+    const popperEnterHandler = () => {
       this.shouldHidePopper = false;
-    });
-    this.popper.addEventListener('mouseleave', () => {
+    };
+    const popperLeaveHandler = () => {
       this.shouldHidePopper = true;
       this.checkAndHidePopper();
-    });
-
-    hotspotElement.addEventListener('mouseleave', () => {
+    };
+    const hotspotLeaveHandler = () => {
       this.shouldHidePopper = true;
       this.checkAndHidePopper();
-    });
-
-    hotspotElement.addEventListener('mouseenter', () => {
+    };
+    const hotspotEnterHandler = () => {
       this.shouldHidePopper = false;
       if (this.hidePopperTimeout) clearTimeout(this.hidePopperTimeout);
-    });
+    };
+
+    this.popper.addEventListener('mouseenter', popperEnterHandler);
+    this.popper.addEventListener('mouseleave', popperLeaveHandler);
+    hotspotElement.addEventListener('mouseleave', hotspotLeaveHandler);
+    hotspotElement.addEventListener('mouseenter', hotspotEnterHandler);
+
+    this.popperListeners.push(
+      { element: this.popper, event: 'mouseenter', handler: popperEnterHandler },
+      { element: this.popper, event: 'mouseleave', handler: popperLeaveHandler },
+      { element: hotspotElement, event: 'mouseleave', handler: hotspotLeaveHandler },
+      { element: hotspotElement, event: 'mouseenter', handler: hotspotEnterHandler }
+    );
 
     this.popperInstance = {
       ...createPopper(hotspotElement, this.popper, popperOptions),
@@ -90,11 +109,13 @@ class Hotspot {
     if (this.shouldHidePopper && !this.popperInstance?.keepOpen) {
       this.hidePopperTimeout = setTimeout(() => {
         if (this.shouldHidePopper) this.hidePopper();
-      }, 150);
+      }, POPPER_HIDE_DELAY);
     }
   }
 
   hidePopper() {
+    this.cleanupPopperListeners();
+
     if (this.popperInstance) {
       this.popperInstance.destroy();
       this.popperInstance = null;
@@ -102,10 +123,11 @@ class Hotspot {
 
     if (this.popper) {
       this.popper.removeAttribute('data-show');
+      const popperToRemove = this.popper;
+      this.popper = null;
       setTimeout(() => {
-        if (this.popper) this.popper.remove();
-        this.popper = null;
-      }, 200);
+        popperToRemove.remove();
+      }, POPPER_REMOVE_DELAY);
     }
   }
 
@@ -169,9 +191,13 @@ class Hotspot {
   }
 
   destroy() {
+    if (this.hidePopperTimeout) {
+      clearTimeout(this.hidePopperTimeout);
+    }
+
     this.resizeObserver.disconnect();
     this.hidePopper();
-
+    this.hotspotElements.clear();
     this.hotspotsContainer.innerHTML = '';
   }
 }

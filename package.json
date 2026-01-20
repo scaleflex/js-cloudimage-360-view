@@ -2,8 +2,10 @@
   "name": "js-cloudimage-360-view",
   "version": "4.0.0",
   "main": "dist/js-cloudimage-360-view.min.js",
+  "types": "src/types/ci360.d.ts",
   "exports": {
     ".": {
+      "types": "./src/types/ci360.d.ts",
       "import": "./dist/js-cloudimage-360-view.min.js",
       "require": "./dist/js-cloudimage-360-view.min.js"
     }
@@ -43,7 +45,6 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.2",
-    "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {

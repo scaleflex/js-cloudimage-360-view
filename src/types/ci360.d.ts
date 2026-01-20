@@ -30,8 +30,11 @@ declare module CI360 {
     pointerZoom?: number; // Default: 0
     imageInfo?: boolean; // Changed from string to boolean; Default: false
     initialIconShown?: boolean; // Default: true
-    bottomCircleHidden?: boolean; // Added to reflect your requirements; Default: true
+    bottomCircle?: boolean; // Default: true
     hotspots?: any; // Default: null (type adjusted as needed)
+    dragReverse?: boolean; // Default: false
+    hide360Logo?: boolean; // Default: false (not documented)
+    logoSrc?: string; // Default: Scaleflex 360 logo URL
   }
 
   // Define the CI360Viewer class with the config type and constructor

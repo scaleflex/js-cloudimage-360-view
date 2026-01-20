@@ -67,17 +67,19 @@ class CI360 {
 
   updateView(id, config) {
     const view = this.getViewById(id);
+
+    if (!view) return null;
+
     const updatedConfig = { ...view.viewerConfig, ...config };
     const requireReload = hasConfigChanged(view.viewerConfig, config);
 
     if (requireReload) {
       view.destroy();
       const container = document.getElementById(id);
-      this.init(container, updatedConfig);
-    } else {
-      view.update(updatedConfig);
+      return this.init(container, updatedConfig);
     }
 
+    view.update(updatedConfig);
     return view;
   }
 }

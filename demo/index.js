@@ -158,6 +158,7 @@ const config = {
   fullscreen: true,
   magnifier: 3,
   playOnce: true,
+  bottomCircle: false,
   hotspots: GURKHA_SUV_HOTSPOTS_CONFIG,
 };
 

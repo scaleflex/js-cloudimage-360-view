@@ -62,9 +62,9 @@ const getConfigFromImage = (image) => ({
   autoplayBehavior: getAttr(image, 'autoplay-behavior', DEFAULTS_VALUES.autoplayBehavior),
   playOnce: isTrue(image, 'play-once', DEFAULTS_VALUES.playOnce),
   autoplayReverse: isTrue(image, 'autoplay-reverse', DEFAULTS_VALUES.autoplayReverse),
-  pointerZoom: parseFloat(getAttr(image, 'pointer-zoom', DEFAULTS_VALUES.pointerZoom), 10),
+  pointerZoom: parseFloat(getAttr(image, 'pointer-zoom', DEFAULTS_VALUES.pointerZoom)),
   fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen', DEFAULTS_VALUES.fullscreen),
-  magnifier: parseFloat(getAttr(image, 'magnifier', DEFAULTS_VALUES.magnifier), 10),
+  magnifier: parseFloat(getAttr(image, 'magnifier', DEFAULTS_VALUES.magnifier)),
   bottomCircleOffset: parseInt(
     getAttr(image, 'bottom-circle-offset', DEFAULTS_VALUES.bottomCircleOffset),
     10
@@ -102,9 +102,9 @@ const adaptConfig = (config) => ({
   autoplayBehavior: config.autoplayBehavior || DEFAULTS_VALUES.autoplayBehavior,
   playOnce: config.playOnce ?? DEFAULTS_VALUES.playOnce,
   autoplayReverse: config.autoplayReverse ?? DEFAULTS_VALUES.autoplayReverse,
-  pointerZoom: parseFloat(config.pointerZoom ?? DEFAULTS_VALUES.pointerZoom, 10),
+  pointerZoom: parseFloat(config.pointerZoom ?? DEFAULTS_VALUES.pointerZoom),
   fullscreen: config.fullscreen ?? DEFAULTS_VALUES.fullscreen,
-  magnifier: parseFloat(config.magnifier ?? DEFAULTS_VALUES.magnifier, 10),
+  magnifier: parseFloat(config.magnifier ?? DEFAULTS_VALUES.magnifier),
   bottomCircleOffset: parseInt(config.bottomCircleOffset ?? DEFAULTS_VALUES.bottomCircleOffset, 10),
   ciToken: config.ciToken || DEFAULTS_VALUES.ciToken,
   ciFilters: config.ciFilters || DEFAULTS_VALUES.ciFilters,
@@ -127,7 +127,10 @@ const getAttr = (element, attribute, defaultValue) =>
 const isTrue = (image, type, defaultValue) => {
   const hasAttribute = image.hasAttribute(type) || image.hasAttribute(`data-${type}`);
 
-  return hasAttribute || defaultValue;
+  if (!hasAttribute) return defaultValue;
+
+  const value = getAttr(image, type, null);
+  return value !== 'false' && value !== '0';
 };
 
 const isFalse = (image, type) => {

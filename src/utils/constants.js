@@ -30,3 +30,17 @@ export const LEFT_RIGHT_KEYS = [37, 39];
 export const UP_DOWN_KEYS = [38, 40];
 
 export const THROTTLE_TIME = 10;
+
+// Timing constants
+export const DRAG_START_DELAY = 150;
+export const ZOOM_TRANSITION_DELAY = 800;
+export const POPPER_HIDE_DELAY = 150;
+export const POPPER_REMOVE_DELAY = 200;
+
+// Drag calculation constants
+export const DRAG_SPEED_DIVISOR = 50;
+export const MIN_DRAG_SPEED = 50;
+
+// Zoom constraints
+export const MAX_MAGNIFIER_LEVEL = 5;
+export const MAX_POINTER_ZOOM = 5;
