@@ -1,10 +1,13 @@
 import FullscreenIcon from '../../static/css/icons/fullscreen.svg';
 
 export const createFullscreenIcon = () => {
-  const fullscreenIcon = document.createElement('div');
-  fullscreenIcon.className = 'cloudimage-360-button cloudimage-360-fullscreen-button';
+  const fullscreenIcon = document.createElement('button');
 
-  fullscreenIcon.innerHTML = `<img alt="fullscreen icon" src=${FullscreenIcon}>`;
+  fullscreenIcon.className = 'cloudimage-360-button cloudimage-360-fullscreen-button';
+  fullscreenIcon.setAttribute('aria-label', 'View fullscreen');
+  fullscreenIcon.setAttribute('type', 'button');
+
+  fullscreenIcon.innerHTML = `<img alt="" src=${FullscreenIcon} aria-hidden="true">`;
 
   return fullscreenIcon;
 };

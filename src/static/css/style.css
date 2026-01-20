@@ -53,6 +53,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  border: none;
   background-color: #f0f0f0;
   color: #4a4a4a;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
