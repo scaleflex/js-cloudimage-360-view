@@ -77,12 +77,12 @@
 .cloudimage-360-button svg {
   width: 24px;
   height: 24px;
-  fill: #4a4a4a;
-  transition: fill 150ms ease-out;
+  stroke: #4a4a4a;
+  transition: stroke 150ms ease-out;
 }
 
 .cloudimage-360-button:hover svg {
-  fill: #2c2c2c;
+  stroke: #2c2c2c;
 }
 
 .cloudimage-initial-icon {
