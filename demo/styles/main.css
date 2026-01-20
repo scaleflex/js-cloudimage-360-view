@@ -487,6 +487,9 @@ body {
   background-repeat: no-repeat;
   background-position-x: calc(100% - 20px);
   background-position-y: 17.12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .demo-usage-wrapper .demo-usage-content .customize {
