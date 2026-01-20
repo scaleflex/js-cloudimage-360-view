@@ -281,25 +281,119 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
 ```
 In the example above, the keys (0, 1, 2, 3, 4, ...) represent image indexes. If the `y` value is `null`, it inherits the `y` coordinate from the previous defined position. This allows for easier configuration and reduces redundancy.
 
-### 🎨 Styling
-The following class names are used for styling various elements within the 360-degree viewer and hotspot functionality. Each class serves a specific purpose in controlling the appearance and behavior of the component.
-| Class Name                             | Description                                                                                              |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `cloudimage-360-transition-overlay`        | Applies styling for the overlay that appears during transitions.                                        |
-| `cloudimage-360-button`                | Styles the main button for interacting with the 360 view.                                               |
-| `cloudimage-360-magnifier-button`     | Styles the button that activates the magnifier feature within the 360 view.                             |
-| `cloudimage-loading-spinner`           | Styles the loading spinner displayed while the images are being loaded.                                 |
-| `cloudimage-initial-icon`              | Styles the initial icon displayed before the 360 view is fully loaded.                                  |
-| `cloudimage-360-icons-container`       | Styles the container for all icons associated with the 360 view (e.g., buttons, overlays).              |
-| `cloudimage-360-hotspot-container`     | Styles the container that holds the hotspots or markers in the 360 view.                                |
-| `cloudimage-360-fullscreen-modal`     | Styles the modal that appears when the 360 view is in fullscreen mode.                                  |
-| `cloudimage-360-fullscreen-button`    | Styles the button that toggles the fullscreen mode of the 360 view.                                     |
-| `cloudimage-360-close-icon`           | Styles the close icon used to exit the fullscreen view.                                                |
-| `cloudimage-360-view-360-circle`      | Styles the circular view area of the 360 images.                                                       |
-| `cloudimage-360-popper`                | Styles the popper element for displaying tooltips or additional information on hover or click.          |
-| `cloudimage-360-hotspot`               | Styles individual hotspots within the 360 view, allowing for customizable appearance and behavior.       |
+### 🎨 Styling & CSS Customization
 
-Customize these class names in your CSS files to match your application's design requirements.
+The viewer can be fully customized via CSS. Below is a comprehensive list of all CSS classes and their customizable properties.
+
+#### Container Classes
+
+| Class Name | Description | Key CSS Properties |
+| ---------- | ----------- | ------------------ |
+| `.cloudimage-360` | Main container wrapper | `width`, `position` |
+| `.cloudimage-360-inner-box` | Inner container holding the canvas | `width`, `height`, `position` |
+| `.cloudimage-360-icons-container` | Container for control buttons | `top`, `right`, `gap`, `flex-direction`, `z-index` |
+
+#### Button Classes
+
+| Class Name | Description | Key CSS Properties |
+| ---------- | ----------- | ------------------ |
+| `.cloudimage-360-button` | Base style for all control buttons | `width`, `height`, `border-radius`, `background-color`, `box-shadow` |
+| `.cloudimage-360-button svg` | Icon inside buttons | `width`, `height`, `stroke` (icon color) |
+| `.cloudimage-360-button:hover` | Button hover state | `transform`, `background-color` |
+| `.cloudimage-360-button:focus-visible` | Keyboard focus state | `outline`, `outline-offset` |
+| `.cloudimage-360-fullscreen-button` | Fullscreen toggle button | Inherits from `.cloudimage-360-button` |
+| `.cloudimage-360-magnifier-button` | Magnifier toggle button | Inherits from `.cloudimage-360-button` |
+| `.cloudimage-360-close-icon` | Close button (fullscreen mode) | Inherits from `.cloudimage-360-button` |
+
+#### UI Element Classes
+
+| Class Name | Description | Key CSS Properties |
+| ---------- | ----------- | ------------------ |
+| `.cloudimage-initial-icon` | 360° indicator icon shown on load | `width`, `height`, `background-color`, `border-radius`, `box-shadow` |
+| `.cloudimage-loading-spinner` | Loading spinner animation | `width`, `height`, `border`, `border-bottom-color`, `animation` |
+| `.cloudimage-360-view-360-circle` | Bottom circle navigation indicator | `bottom`, `width`, `transition`, `z-index` |
+| `.cloudimage-360-transition-overlay` | Overlay during image transitions | `background-color`, `opacity`, `transition` |
+| `.cloudimage-360-fullscreen-modal` | Fullscreen mode container | `z-index`, `background-color` |
+| `.cloudimage-360-img-magnifier-glass` | Magnifier glass element | `width`, `height`, `border`, `border-radius`, `box-shadow`, `background-image` |
+
+#### Hotspot Classes
+
+| Class Name | Description | Key CSS Properties |
+| ---------- | ----------- | ------------------ |
+| `.cloudimage-360-hotspot-container` | Container for all hotspots | `z-index` |
+| `.cloudimage-360-hotspot` | Individual hotspot marker | `width`, `height`, `background`, `border`, `border-radius`, `box-shadow`, `animation` |
+| `.cloudimage-360-hotspot.visible` | Visible hotspot state | `opacity` |
+| `.cloudimage-360-hotspot:hover` | Hotspot hover state | `transform`, `box-shadow` |
+| `.cloudimage-360-popper` | Tooltip/popper for hotspots | `background-color`, `color`, `padding`, `border-radius`, `box-shadow`, `font-size`, `max-width` |
+| `.cloudimage-360-popper[data-show]` | Visible popper state | `opacity`, `translate` |
+
+#### CSS Customization Examples
+
+**Change button colors:**
+```css
+.cloudimage-360-button {
+  background-color: #1a1a2e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cloudimage-360-button:hover {
+  background-color: #16213e;
+}
+
+.cloudimage-360-button svg {
+  stroke: #ffffff;
+}
+```
+
+**Change hotspot appearance:**
+```css
+.cloudimage-360-hotspot {
+  background: #ff6b6b;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #fff;
+}
+```
+
+**Change initial icon:**
+```css
+.cloudimage-initial-icon {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+}
+```
+
+**Change magnifier glass:**
+```css
+.cloudimage-360-img-magnifier-glass {
+  width: 300px;
+  height: 300px;
+  border: 3px solid #333;
+}
+```
+
+**Dark theme example:**
+```css
+.cloudimage-360-fullscreen-modal {
+  background-color: #1a1a1a;
+}
+
+.cloudimage-360-button {
+  background-color: #2d2d2d;
+}
+
+.cloudimage-360-button svg {
+  stroke: #e0e0e0;
+}
+
+.cloudimage-360-button:hover {
+  background-color: #3d3d3d;
+}
+
+.cloudimage-360-button:hover svg {
+  stroke: #ffffff;
+}
+```
 
 
 ## Methods

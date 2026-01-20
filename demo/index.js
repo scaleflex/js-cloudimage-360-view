@@ -16,7 +16,7 @@ const codeBlock = document.getElementById('code-block');
 const codeWrapper = document.getElementById('code-wrapper');
 const pointerZoomSelector = document.getElementById('pointer-zoom-selector');
 
-const copyButton = document.querySelector('.copy-button');
+const copyButton = document.querySelector('.code-section .copy-button');
 const outputCode = document.querySelector('.output-code');
 const pointerZoomCheckbox = document.getElementById('pointer-checkbox');
 const pluginCheckboxOptions = document.querySelectorAll('.plugin-option');
@@ -24,19 +24,105 @@ const imageXAmountSelector = document.getElementById('x-images-selector');
 const imageYSelector = document.getElementById('images-y');
 const autoplaySpeed = document.getElementById('spin-speed');
 const dragSpeed = document.getElementById('drag-speed');
+
+const customStylingCheckbox = document.getElementById('custom-styling-checkbox');
+const customStylingWrapper = document.getElementById('custom-styling-wrapper');
+const customStylingTextarea = document.getElementById('custom-styling-textarea');
+
+const folderPathOption = document.getElementById('folder-path-option');
+const folderPathInput = document.getElementById('folder-path');
+const filenamePatternInput = document.getElementById('filename-pattern');
+const customImagesInput = document.getElementById('custom-images-input');
+const nikeXImagesSelector = document.getElementById('nike-x-images');
+
 const instance = new CI360();
 
 function changeSpinDirectionHandler(event) {
   const spinDirection = event.target.value;
   const isYDirection = spinDirection === 'Y';
-  const config = isYDirection ? NIKE_PLUGIN : EARBUDS_PLUGIN;
-  const updatedView = instance.updateView('demo-generator', config);
+  const isCustom = spinDirection === 'custom';
 
-  imageXAmountSelector.value = isYDirection ? 35 : 233;
+  // Show/hide custom fields
+  folderPathOption.style.display = isCustom ? 'block' : 'none';
+  filenamePatternInput.disabled = !isCustom;
+
+  // Show/hide appropriate image amount inputs
+  imageXAmountSelector.style.display = (!isYDirection && !isCustom) ? 'block' : 'none';
+  nikeXImagesSelector.style.display = isYDirection ? 'block' : 'none';
+  customImagesInput.style.display = isCustom ? 'block' : 'none';
+
+  // Show/hide Y-axis selector
   imageYSelector.style.display = isYDirection ? 'block' : 'none';
-  imageXAmountSelector.disabled = isYDirection;
 
-  updateCodeBlock(updatedView.viewerConfig);
+  if (isCustom) {
+    // For custom, use current input values or defaults
+    const folder = folderPathInput.value || '';
+    const filename = filenamePatternInput.value || '{index}.jpg';
+    const amountX = parseInt(customImagesInput.value, 10) || 36;
+
+    if (folder) {
+      const updatedView = instance.updateView('demo-generator', {
+        folder,
+        filenameX: filename,
+        amountX,
+        amountY: 0,
+        filenameY: null,
+      });
+      updateCodeBlock(updatedView.viewerConfig);
+    }
+  } else {
+    // Preset datasets
+    const config = isYDirection ? NIKE_PLUGIN : EARBUDS_PLUGIN;
+    const updatedView = instance.updateView('demo-generator', config);
+
+    // Set the selector values
+    if (isYDirection) {
+      nikeXImagesSelector.value = 35;
+    } else {
+      imageXAmountSelector.value = 233;
+    }
+
+    // Update filename pattern display
+    filenamePatternInput.value = isYDirection ? '{index}.jpg' : '{index}.jpg';
+
+    updateCodeBlock(updatedView.viewerConfig);
+  }
+}
+
+function changeCustomFolder(event) {
+  const folder = event.target.value;
+  const filename = filenamePatternInput.value || '{index}.jpg';
+  const amountX = parseInt(customImagesInput.value, 10) || 36;
+
+  if (folder) {
+    const updatedView = instance.updateView('demo-generator', {
+      folder,
+      filenameX: filename,
+      amountX,
+    });
+    updateCodeBlock(updatedView.viewerConfig);
+  }
+}
+
+function changeFilenamePattern(event) {
+  const filename = event.target.value;
+  const folder = folderPathInput.value;
+
+  if (folder && filename) {
+    const updatedView = instance.updateView('demo-generator', {
+      filenameX: filename,
+    });
+    updateCodeBlock(updatedView.viewerConfig);
+  }
+}
+
+function changeCustomImageAmount(event) {
+  const amountX = parseInt(event.target.value, 10);
+
+  if (amountX > 0) {
+    const updatedView = instance.updateView('demo-generator', { amountX });
+    updateCodeBlock(updatedView.viewerConfig);
+  }
 }
 
 function changeDragSpeed(event) {
@@ -140,6 +226,10 @@ imageXAmountSelector.addEventListener('change', changeImageXAmount);
 pointerZoomSelector.addEventListener('change', changePointerZoomSelector);
 spinDirections.addEventListener('change', changeSpinDirectionHandler);
 copyButton.addEventListener('click', copyCodeHandler);
+folderPathInput.addEventListener('change', changeCustomFolder);
+filenamePatternInput.addEventListener('change', changeFilenamePattern);
+customImagesInput.addEventListener('change', changeCustomImageAmount);
+nikeXImagesSelector.addEventListener('change', changeImageXAmount);
 pluginCheckboxOptions.forEach((option) => {
   option.addEventListener('change', pluginCheckboxOptionsHandler);
 });
@@ -168,3 +258,76 @@ instance.initAll();
 const demoGeneratorInstance = instance.getViewById('demo-generator');
 
 updateCodeBlock(demoGeneratorInstance.viewerConfig);
+
+// Custom styling functionality
+let customStyleElement = null;
+let cssDebounceTimer = null;
+
+function toggleCustomStyling(event) {
+  const isChecked = event.target.checked;
+  customStylingWrapper.style.display = isChecked ? 'block' : 'none';
+
+  if (isChecked) {
+    // Apply CSS when enabling
+    applyCustomCss();
+  } else if (customStyleElement) {
+    customStyleElement.remove();
+    customStyleElement = null;
+  }
+}
+
+function scopeCssToInstance(css, instanceId) {
+  // Parse CSS and prefix each selector with the instance ID
+  return css.replace(
+    /([^\{\}]+)\{/g,
+    (match, selectors) => {
+      const scopedSelectors = selectors
+        .split(',')
+        .map((selector) => {
+          const trimmed = selector.trim();
+          if (!trimmed) return trimmed;
+          // Handle selectors that already start with the instance
+          if (trimmed.startsWith(`#${instanceId}`)) {
+            return trimmed;
+          }
+          // Scope the selector to the instance
+          return `#${instanceId} ${trimmed}`;
+        })
+        .join(', ');
+      return `${scopedSelectors} {`;
+    }
+  );
+}
+
+function applyCustomCss() {
+  const css = customStylingTextarea.value.trim();
+
+  // Remove existing custom style if present
+  if (customStyleElement) {
+    customStyleElement.remove();
+    customStyleElement = null;
+  }
+
+  if (!css) return;
+
+  // Create scoped CSS
+  const scopedCss = scopeCssToInstance(css, 'demo-generator');
+
+  // Create and inject style element
+  customStyleElement = document.createElement('style');
+  customStyleElement.id = 'demo-generator-custom-styles';
+  customStyleElement.textContent = scopedCss;
+  document.head.appendChild(customStyleElement);
+}
+
+function handleCssInput() {
+  // Only apply if custom styling is enabled
+  if (!customStylingCheckbox.checked) return;
+
+  // Debounce to avoid too frequent updates while typing
+  clearTimeout(cssDebounceTimer);
+  cssDebounceTimer = setTimeout(applyCustomCss, 150);
+}
+
+customStylingCheckbox.addEventListener('change', toggleCustomStyling);
+customStylingTextarea.addEventListener('input', handleCssInput);

@@ -74,7 +74,9 @@ const drawImageOnCanvas = (imageData = {}, zoomScale = 1, pointerX = 0, pointerY
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (zoomScale !== 1) {
-    const { zoomedWidth, zoomedHeight } = calculateZoomedDimensions(drawWidth, drawHeight, zoomScale);
+    const { naturalWidth, naturalHeight } = imageData;
+    // Calculate zoomed dimensions using natural image dimensions, not display dimensions
+    const { zoomedWidth, zoomedHeight } = calculateZoomedDimensions(naturalWidth, naturalHeight, zoomScale);
 
     const { zoomOffsetX, zoomOffsetY } = calculateZoomOffsets({
       pointerX,

@@ -73,9 +73,12 @@ class CI360Viewer {
 
     const { pageX, pageY } = event;
 
+    // Track if we just stopped autoplay - don't zoom on this click
+    this.autoplayJustStopped = false;
     if (this.autoplay || this.loopTimeoutId) {
       this.stopAutoplay();
       this.autoplay = false;
+      this.autoplayJustStopped = true;
     }
 
     this.movementStart = { x: pageX, y: pageY };
@@ -141,6 +144,12 @@ class CI360Viewer {
 
   mouseClick(event) {
     if (!this.isReady || this.isDragging) return;
+
+    // If autoplay was just stopped by this click, don't trigger zoom
+    if (this.autoplayJustStopped) {
+      this.autoplayJustStopped = false;
+      return;
+    }
 
     if (this.glass && this.magnified) {
       this.removeGlass();

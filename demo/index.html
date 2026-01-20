@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="images work in 360 dimensions with several options" />
+    <meta name="description" content="Interactive 360° product viewer - create stunning rotating views with zoom, autoplay, hotspots, and fullscreen support" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
       rel="stylesheet"
@@ -63,8 +63,8 @@
       <div class="content">
         <h1>Display <span>every detail</span> from any angle, on any device</h1>
         <h2 class="content-text">
-          Enhance your customer's experience with stunning 360° views of your products. 
-          Create an immersive product experience, every time.
+          Enhance your customer's experience with stunning 360° views of your products.
+          Interactive, responsive, and easy to integrate.
         </h2>
         <div class="github-sandbox-buttons-wrapper">
             <a
@@ -79,7 +79,7 @@
             href="https://codesandbox.io/s/js-cloudimage-360-view-examples-npne18"
             target="_blank"
             >
-              Edit to CodeSandbox
+              Edit on CodeSandbox
             </a>
         </div>
         <div class="car-image container-fluid">
@@ -98,11 +98,6 @@
             data-bottom-circle="false"
             data-responsive="scaleflex"
           ></div>
-          <p class="content-text">
-            Featuring 36 images, autoplay*, bottom 360° view circle, arrow keys support*,
-            magnifier*, inner box shadow and more!<br/>
-            (*) available only on desktops
-          </p>
           <div class="cyan-blur-circle hide-in-mobile"></div>
           <div class="blue-blur-circle hide-in-mobile"></div>
         </div>
@@ -153,7 +148,7 @@
             data-bottom-circle
             data-responsive="scaleflex"
           ></div>
-          <p>Toyota</p>
+          <p>Jawa</p>
         </div>
         <div class="vivo-mobile">
           <div
@@ -187,180 +182,165 @@
       <div class="usage-title">
         <h2>Create 360° views, your way</h2>
         <p>
-          Try out our simple, interactive resource to customize an interactive virtual tour of your product.
+          Build your perfect 360° viewer in just a few steps. Configure the options below and copy the generated code.
         </p>
       </div>
 
       <div class="demo-usage-wrapper container-fluid">
-        <div class="demo-usage-content">
-          <div class="earbuds">
-            <div
-              id="demo-generator"
-              class="cloudimage-360"
-              data-folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-              data-filename-x="{index}.jpg"
-              data-amount-x="233"
-              data-autoplay
-              data-speed="100"
-              data-pointer-zoom="1.5"
-              data-drag-speed="100"
-              data-bottom-circle="false"
-              data-responsive="scaleflex"
-              data-lazyload
-            >
-              <button class="-left control-buttons"></button>
-              <button class="-right control-buttons"></button>
-              <button
-                id="control-up-button"
-                class="-top control-buttons"
-              ></button>
-              <button
-                id="control-down-button"
-                class="-bottom control-buttons"
-              ></button>
-            </div>
-            <div class="copy-button-wrapper">
-              <div class="copy-button">
-                <img src="https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/copy-icon.svg" alt="copy icon">
-                <p id="copy-text">Copy</p>
+        <!-- Step 1 & 2: Preview and Image Source -->
+        <div class="config-row config-row-two-cols">
+          <div class="config-section preview-section">
+            <div class="config-header">
+              <span class="step-number">1</span>
+              <div>
+                <h3>Preview</h3>
+                <p class="config-description">See your 360° viewer in action</p>
               </div>
             </div>
-            <div class="output-code-wrapper" id="code-wrapper">
-              <div class="output-code">
-                &lt;div
-                <div class="code" id="code-block"></div>
-                >&lt;/div&gt;
+            <div class="preview-container">
+              <div
+                id="demo-generator"
+                class="cloudimage-360"
+                data-folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
+                data-filename-x="{index}.jpg"
+                data-amount-x="233"
+                data-autoplay
+                data-speed="100"
+                data-pointer-zoom="1.5"
+                data-drag-speed="100"
+                data-bottom-circle="false"
+                data-fullscreen
+                data-keys
+                data-responsive="scaleflex"
+                data-lazyload
+              >
+                <button class="-left control-buttons"></button>
+                <button class="-right control-buttons"></button>
+                <button id="control-up-button" class="-top control-buttons"></button>
+                <button id="control-down-button" class="-bottom control-buttons"></button>
               </div>
             </div>
           </div>
-        <div class="plugin-options-wrapper">
-          <div class="image-source">
-            <div class="image-source-options">
-              <h3>Images source</h3>
-              <select
-                class="plugin-options plugin-selector"
-                id="spin-directions"
-              >
-                <option value="X">spin x demo</option>
-                <option value="Y">spin y demo</option>
-              </select>
-            </div>
-            <div class="image-name-option">
-              <p class="input-title">Images name x</p>
-              <input
-                class="plugin-options"
-                type="text"
-                placeholder="airbuds_{index}.jpg"
-                disabled
-              />
-            </div>
-            <div class="x-amount-option">
-              <p class="input-title">Select amount-x</p>
-              <select
-                class="plugin-options plugin-selector"
-                id="x-images-selector"
-              >
-                <option value="233">233</option>
-                <option value="72">72</option>
-                <option value="35">35</option>
-              </select>
-              <select
-                class="plugin-options plugin-selector"
-                data-plugin-property="data-amount-x"
-                plugin-input
-                id="nike-x-images"
-              >
-                <option value="35">35 images</option>
-                <option value="25">25 images</option>
-                <option value="15">15 images</option>
-              </select>
-            </div>
-            <div id="images-y">
-              <p class="input-title">Select amount-y</p>
-              <select
-                class="plugin-options plugin-selector"
-                data-plugin-property="data-amount-y"
-                plugin-input
-                disabled
-              >
-                <option value="36">36 images</option>
-              </select>
-            </div>
-          </div>
-          <div class="customize">
-            <h3>Customize</h3>
-            <div class="customize-wrapper">
-              <div class="customize-options">
-                <div class="pointer-checkbox">
-                  <label class="checkbox-container">
-                    Pointer zoom
-                    <input
-                    class="customize-inputs"
-                    data-plugin-property="pointerZoom"
-                    type="checkbox"
-                    checked
-                    id="pointer-checkbox"
-                    />
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div class="customize-selectors-wrappers">
-                  <p class="selectors-wrappers-text">zoom scale</p>
-                  <select
-                    class="customize-selectors plugin-selector"
-                    data-plugin-property="data-pointer-zoom"
-                    id="pointer-zoom-selector"
-                    plugin-input
-                  >
-                    <option selected value="1.5">1.5</option>
-                    <option value="2">2</option>
-                    <option value="2.5">2.5</option>
-                    <option value="3.5">3.5</option>
-                    <option value="4">4</option>
-                  </select>
-                </div>
+
+          <div class="config-section source-section">
+            <div class="config-header">
+              <span class="step-number">2</span>
+              <div>
+                <h3>Image Source</h3>
+                <p class="config-description">Select your image set and quantity</p>
               </div>
-              <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Auto play behavior</p>
+            </div>
+            <div class="source-options">
+              <div class="source-option">
+                <label class="input-title" for="spin-directions">Demo dataset</label>
+                <select class="plugin-options plugin-selector" id="spin-directions">
+                  <option value="X">Earbuds (spin x)</option>
+                  <option value="Y">Sneakers (spin y)</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              <div id="folder-path-option" class="source-option" style="display: none;">
+                <label class="input-title" for="folder-path">Folder path</label>
+                <input
+                  id="folder-path"
+                  class="plugin-options"
+                  type="text"
+                  placeholder="https://example.com/images/"
+                />
+              </div>
+              <div class="source-option">
+                <label class="input-title" for="filename-pattern">Filename pattern</label>
+                <input
+                  id="filename-pattern"
+                  class="plugin-options"
+                  type="text"
+                  placeholder="{index}.jpg"
+                  value="{index}.jpg"
+                  disabled
+                />
+              </div>
+              <div class="source-option">
+                <label class="input-title" for="x-images-selector">Number of images (X-axis)</label>
+                <select class="plugin-options plugin-selector" id="x-images-selector">
+                  <option value="233">233 images</option>
+                  <option value="72">72 images</option>
+                  <option value="35">35 images</option>
+                </select>
                 <select
-                  class="customize-selectors plugin-selector"
-                  id="auto-play-behavior"
-                  data-plugin-property="data-autoplay-behavior"
+                  class="plugin-options plugin-selector"
+                  data-plugin-property="data-amount-x"
+                  plugin-input
+                  id="nike-x-images"
+                  style="display: none;"
+                >
+                  <option value="35">35 images</option>
+                  <option value="25">25 images</option>
+                  <option value="15">15 images</option>
+                </select>
+                <input
+                  id="custom-images-input"
+                  class="plugin-options"
+                  type="number"
+                  min="1"
+                  value="36"
+                  style="display: none;"
+                />
+              </div>
+              <div id="images-y" class="source-option">
+                <label class="input-title">Number of images (Y-axis)</label>
+                <select
+                  class="plugin-options plugin-selector"
+                  data-plugin-property="data-amount-y"
                   plugin-input
                   disabled
                 >
-                  <option value="spin-xy">spin-xy</option>
-                  <option value="spin-x">spin-x</option>
-                  <option value="spin-y">spin-y</option>
-                  <option value="spin-yx">spin-yx</option>
+                  <option value="36">36 images</option>
                 </select>
               </div>
-              <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Auto play speed(milliseconds)</p>
-                <input
-                  id="spin-speed"
-                  class="customize-selectors"
-                  data-plugin-property="data-speed"
-                  plugin-input
-                  type="number"
-                  value="100"
-                  placeholder="e.g. 100"
-                />
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Customize -->
+        <div class="config-row">
+          <div class="config-section customize-section">
+            <div class="config-header">
+              <span class="step-number">3</span>
+              <div>
+                <h3>Customize Behavior</h3>
+                <p class="config-description">Fine-tune interactions, animations, and controls</p>
               </div>
-              <div class="customize-selectors-wrappers">
-                <p class="selectors-wrappers-text">Drag speed(milliseconds)</p>
-                <input
-                  id="drag-speed"
-                  class="customize-selectors"
-                  data-plugin-property="data-drag-speed"
-                  plugin-input
-                  type="number"
-                  value="120"
-                  placeholder="e.g. 120"
-                />
-              </div>
-              <div class="checkbox-group">
-                <div>
+            </div>
+            <div class="customize-grid">
+              <div class="customize-column">
+                <h4 class="customize-group-title">Zoom</h4>
+                <div class="customize-group">
+                  <label class="checkbox-container">
+                    Pointer zoom
+                    <input
+                      class="customize-inputs"
+                      data-plugin-property="pointerZoom"
+                      type="checkbox"
+                      checked
+                      id="pointer-checkbox"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                  <div class="customize-selectors-wrappers">
+                    <label class="selectors-wrappers-text" for="pointer-zoom-selector">Zoom scale</label>
+                    <select
+                      class="customize-selectors plugin-selector"
+                      data-plugin-property="data-pointer-zoom"
+                      id="pointer-zoom-selector"
+                      plugin-input
+                    >
+                      <option selected value="1.5">1.5x</option>
+                      <option value="2">2x</option>
+                      <option value="2.5">2.5x</option>
+                      <option value="3.5">3.5x</option>
+                      <option value="4">4x</option>
+                    </select>
+                  </div>
                   <label class="checkbox-container">
                     Magnifier
                     <input
@@ -372,8 +352,22 @@
                     />
                     <span class="checkmark"></span>
                   </label>
+                  <label class="checkbox-container">
+                    Fullscreen
+                    <input
+                      data-plugin-property="fullscreen"
+                      class="plugin-option"
+                      type="checkbox"
+                      checked
+                    />
+                    <span class="checkmark"></span>
+                  </label>
                 </div>
-                <div>
+              </div>
+
+              <div class="customize-column">
+                <h4 class="customize-group-title">Autoplay</h4>
+                <div class="customize-group">
                   <label class="checkbox-container">
                     Auto play
                     <input
@@ -384,10 +378,8 @@
                     />
                     <span class="checkmark"></span>
                   </label>
-                </div>
-                <div>
                   <label class="checkbox-container">
-                    Auto play once
+                    Play once
                     <input
                       data-plugin-property="playOnce"
                       class="plugin-option"
@@ -395,10 +387,8 @@
                     />
                     <span class="checkmark"></span>
                   </label>
-                </div>
-                <div>
                   <label class="checkbox-container">
-                    Auto play reverse
+                    Reverse direction
                     <input
                       data-plugin-property="autoplayReverse"
                       class="plugin-option"
@@ -406,19 +396,39 @@
                     />
                     <span class="checkmark"></span>
                   </label>
-                </div>
-                <div>
-                  <label class="checkbox-container">
-                    Fullscreen
+                  <div class="customize-selectors-wrappers">
+                    <label class="selectors-wrappers-text" for="auto-play-behavior">Behavior</label>
+                    <select
+                      class="customize-selectors plugin-selector"
+                      id="auto-play-behavior"
+                      data-plugin-property="data-autoplay-behavior"
+                      plugin-input
+                      disabled
+                    >
+                      <option value="spin-xy">spin-xy</option>
+                      <option value="spin-x">spin-x</option>
+                      <option value="spin-y">spin-y</option>
+                      <option value="spin-yx">spin-yx</option>
+                    </select>
+                  </div>
+                  <div class="customize-selectors-wrappers">
+                    <label class="selectors-wrappers-text" for="spin-speed">Speed (ms)</label>
                     <input
-                      data-plugin-property="fullscreen"
-                      class="plugin-option"
-                      type="checkbox"
+                      id="spin-speed"
+                      class="customize-selectors"
+                      data-plugin-property="data-speed"
+                      plugin-input
+                      type="number"
+                      value="100"
+                      placeholder="e.g. 100"
                     />
-                    <span class="checkmark"></span>
-                  </label>
+                  </div>
                 </div>
-                <div>
+              </div>
+
+              <div class="customize-column">
+                <h4 class="customize-group-title">Drag & Touch</h4>
+                <div class="customize-group">
                   <label class="checkbox-container">
                     Draggable
                     <input
@@ -429,10 +439,8 @@
                     />
                     <span class="checkmark"></span>
                   </label>
-                </div>
-                <div>
                   <label class="checkbox-container">
-                    Drag reverse
+                    Reverse drag
                     <input
                       data-plugin-property="dragReverse"
                       class="plugin-option"
@@ -440,21 +448,45 @@
                     />
                     <span class="checkmark"></span>
                   </label>
-                </div>
-                <div>
                   <label class="checkbox-container">
-                    Control by keyboard
+                    Stop at edges
                     <input
-                      data-plugin-property="keys"
+                      data-plugin-property="stopAtEdges"
                       class="plugin-option"
                       type="checkbox"
                     />
                     <span class="checkmark"></span>
                   </label>
+                  <div class="customize-selectors-wrappers">
+                    <label class="selectors-wrappers-text" for="drag-speed">Drag speed (ms)</label>
+                    <input
+                      id="drag-speed"
+                      class="customize-selectors"
+                      data-plugin-property="data-drag-speed"
+                      plugin-input
+                      type="number"
+                      value="120"
+                      placeholder="e.g. 120"
+                    />
+                  </div>
                 </div>
-                <div>
+              </div>
+
+              <div class="customize-column">
+                <h4 class="customize-group-title">Keyboard</h4>
+                <div class="customize-group">
                   <label class="checkbox-container">
-                    Control by keyboard reverse
+                    Enable keyboard
+                    <input
+                      data-plugin-property="keys"
+                      class="plugin-option"
+                      type="checkbox"
+                      checked
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="checkbox-container">
+                    Reverse keys
                     <input
                       data-plugin-property="keysReverse"
                       class="plugin-option"
@@ -463,11 +495,15 @@
                     <span class="checkmark"></span>
                   </label>
                 </div>
-                <div>
+              </div>
+
+              <div class="customize-column">
+                <h4 class="customize-group-title">Display</h4>
+                <div class="customize-group">
                   <label class="checkbox-container">
-                    Stop at edges
+                    Bottom circle
                     <input
-                      data-plugin-property="stopAtEdges"
+                      data-plugin-property="bottomCircle"
                       class="plugin-option"
                       type="checkbox"
                     />
@@ -478,6 +514,74 @@
             </div>
           </div>
         </div>
+
+        <!-- Step 4: Custom CSS (conditional) -->
+        <div class="config-row">
+          <div class="config-section styling-section">
+            <div class="config-header">
+              <span class="step-number">4</span>
+              <div>
+                <h3>Custom Styling</h3>
+                <p class="config-description">Override default styles with your own CSS</p>
+              </div>
+              <label class="switch-container">
+                <input id="custom-styling-checkbox" type="checkbox" />
+                <span class="switch-slider"></span>
+                <span class="switch-label">Enable</span>
+              </label>
+            </div>
+            <div id="custom-styling-wrapper" class="custom-styling-wrapper" style="display: none;">
+              <textarea
+                id="custom-styling-textarea"
+                class="custom-styling-textarea"
+                aria-label="Custom CSS code"
+              >/* Dark theme example */
+.cloudimage-360-button {
+  background-color: #1a1a2e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cloudimage-360-button:hover {
+  background-color: #16213e;
+}
+
+.cloudimage-360-button svg {
+  stroke: #ffffff;
+}
+
+.cloudimage-360-button:hover svg {
+  stroke: #e0e0e0;
+}
+
+.cloudimage-initial-icon {
+  background-color: rgba(26, 26, 46, 0.9);
+  color: #ffffff;
+}
+
+.cloudimage-initial-icon svg {
+  stroke: #ffffff;
+}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Generated Code -->
+        <div class="config-row">
+          <div class="config-section code-section">
+            <div class="config-header">
+              <span class="step-number">5</span>
+              <div>
+                <h3>Generated Code</h3>
+                <p class="config-description">Copy this code to your HTML file</p>
+              </div>
+              <div class="copy-button">
+                <img src="https://scaleflex.cloudimg.io/v7/demo/360-assets/icons/copy-icon.svg" alt="copy icon">
+                <span id="copy-text">Copy</span>
+              </div>
+            </div>
+            <div class="output-code-wrapper" id="code-wrapper">
+              <div class="output-code">&lt;div<div class="code" id="code-block"></div>&gt;&lt;/div&gt;</div>
+            </div>
           </div>
         </div>
       </div>
