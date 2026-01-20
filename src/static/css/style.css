@@ -43,8 +43,8 @@
 }
 
 .cloudimage-360-button {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   transition:
     transform 150ms ease-out,
@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 6px;
   border: none;
   background-color: #f0f0f0;
   color: #4a4a4a;
@@ -75,8 +75,8 @@
 }
 
 .cloudimage-360-button svg {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   fill: #4a4a4a;
   transition: fill 150ms ease-out;
 }
