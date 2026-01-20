@@ -763,12 +763,15 @@ class CI360Viewer {
     if (keys) {
       this.addKeyboardEvents();
     }
+
+    this.addEscKeyHandler();
   }
 
   removeEvents() {
     this.removeMouseEvents();
     this.removeTouchEvents();
     this.removeKeyboardEvents();
+    this.removeEscKeyHandler();
   }
 
   addMouseEvents() {
@@ -803,6 +806,26 @@ class CI360Viewer {
 
     document.addEventListener('keydown', this.boundKeyDown);
     document.addEventListener('keyup', this.boundKeyUp);
+  }
+
+  addEscKeyHandler() {
+    this.boundEscHandler = (event) => {
+      if (event.keyCode !== 27) return;
+
+      if (this.fullscreenView) {
+        this.closeFullscreenModal(event);
+      } else if (this.isZoomed) {
+        this.removeZoom();
+      } else if (this.glass) {
+        this.removeGlass();
+      }
+    };
+
+    document.addEventListener('keydown', this.boundEscHandler);
+  }
+
+  removeEscKeyHandler() {
+    document.removeEventListener('keydown', this.boundEscHandler);
   }
 
   removeMouseEvents() {
