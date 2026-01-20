@@ -65,6 +65,15 @@
   background-color: #e7e6e6;
 }
 
+.cloudimage-360-button:focus {
+  outline: none;
+}
+
+.cloudimage-360-button:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
 .cloudimage-360-button svg {
   width: 18px;
   height: 18px;
