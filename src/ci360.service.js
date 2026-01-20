@@ -553,9 +553,9 @@ class CI360Viewer {
   }
 
   addInitialIcon() {
-    if (this.initialIcon) return;
+    if (this.initialIcon || this.hide360Logo) return;
 
-    this.initialIcon = createInitialIcon();
+    this.initialIcon = createInitialIcon(this.logoSrc);
     this.innerBox.appendChild(this.initialIcon);
   }
 
@@ -871,6 +871,8 @@ class CI360Viewer {
       bottomCircle,
       hotspots,
       dragReverse,
+      hide360Logo,
+      logoSrc,
     } = adaptedConfig;
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -906,6 +908,8 @@ class CI360Viewer {
     this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior, this.allowSpinX, this.allowSpinY);
     this.dragReverse = dragReverse;
     this.hotspots = hotspots;
+    this.hide360Logo = hide360Logo;
+    this.logoSrc = logoSrc;
 
     this.srcXConfig = {
       folder,

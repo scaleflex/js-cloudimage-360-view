@@ -1,5 +1,8 @@
 import { AUTOPLAY_BEHAVIOR } from './utils/constants';
 
+// Logo URL for 360 view branding
+const LOGO_SRC = 'https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg';
+
 // Default values object
 const DEFAULTS_VALUES = {
   folder: '/',
@@ -35,6 +38,8 @@ const DEFAULTS_VALUES = {
   imageInfo: false,
   initialIconShown: true,
   hotspots: null,
+  hide360Logo: false,
+  logoSrc: LOGO_SRC,
 };
 
 const getConfigFromImage = (image) => ({
@@ -73,6 +78,8 @@ const getConfigFromImage = (image) => ({
   imageInfo: isTrue(image, 'info', DEFAULTS_VALUES.imageInfo),
   initialIconShown: !isFalse(image, 'initial-icon'),
   bottomCircle: !isFalse(image, 'bottom-circle'),
+  hide360Logo: isTrue(image, 'hide-360-logo', DEFAULTS_VALUES.hide360Logo),
+  logoSrc: getAttr(image, 'logo-src', DEFAULTS_VALUES.logoSrc),
 });
 
 const adaptConfig = (config) => ({
@@ -109,6 +116,8 @@ const adaptConfig = (config) => ({
   initialIconShown: config.initialIconShown ?? DEFAULTS_VALUES.initialIconShown,
   bottomCircle: config.bottomCircle ?? DEFAULTS_VALUES.bottomCircle,
   hotspots: config.hotspots ?? DEFAULTS_VALUES.hotspots,
+  hide360Logo: config.hide360Logo ?? DEFAULTS_VALUES.hide360Logo,
+  logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
 });
 
 // Helper functions
