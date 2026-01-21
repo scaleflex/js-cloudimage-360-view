@@ -1,4 +1,5 @@
 import { ORIENTATIONS } from './constants';
+import { sanitizeHtml } from './sanitize-html';
 
 const adaptOrientation = (orientation) => (orientation === 'x' ? ORIENTATIONS.X : ORIENTATIONS.Y);
 
@@ -78,7 +79,8 @@ export const createPopperElement = (content, id) => {
   popper.setAttribute('aria-hidden', 'false');
 
   if (typeof content === 'string' && /<\/?[a-z][\s\S]*>/i.test(content)) {
-    popper.innerHTML = content;
+    // Sanitize HTML content to prevent XSS attacks
+    popper.innerHTML = sanitizeHtml(content);
   } else {
     popper.textContent = content;
   }
