@@ -384,3 +384,6 @@ function handleCssInput() {
 
 customStylingCheckbox.addEventListener('change', toggleCustomStyling);
 customStylingTextarea.addEventListener('input', handleCssInput);
+
+// Initialize all gallery examples with cloudimage-360 class
+instance.initAll();
