@@ -51,6 +51,7 @@
 - [Methods](#methods)
 - [Cloudimage Integration](#cloudimage-integration)
 - [Browser Support](#browser-support)
+- [Migration Guide (v3 → v4)](#migration-guide-v3--v4)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -622,6 +623,186 @@ const config = {
 | Android Chrome | 69+ |
 
 > **Note:** This library uses OffscreenCanvas for optimal performance, which requires the browser versions listed above.
+
+---
+
+## Migration Guide (v3 → v4)
+
+Version 4 introduces significant improvements in performance, customization, and developer experience. This guide helps you upgrade from v3.
+
+### Breaking Changes
+
+#### 1. CSS File Required
+
+v4 requires importing the CSS file separately:
+
+```html
+<!-- v3: Only JS needed -->
+<script src=".../js-cloudimage-360-view.min.js"></script>
+
+<!-- v4: Both CSS and JS required -->
+<link rel="stylesheet" href=".../js-cloudimage-360-view.min.css">
+<script src=".../js-cloudimage-360-view.min.js"></script>
+```
+
+For npm users:
+
+```javascript
+// v4
+import CI360 from 'js-cloudimage-360-view';
+import 'js-cloudimage-360-view/css';
+```
+
+#### 2. Initialization API Changed
+
+```javascript
+// v3
+window.CI360.init();
+window.CI360.add('my-viewer');
+window.CI360.update('my-viewer', true);
+window.CI360.destroy();
+
+// v4
+const viewer = new CI360();
+viewer.initAll();                           // Initialize all
+viewer.init(container, config);             // Initialize specific container
+viewer.updateView('my-viewer', newConfig);  // Update with new config
+viewer.getViewById('my-viewer').destroy();  // Destroy specific viewer
+```
+
+#### 3. Browser Requirements Changed
+
+v4 uses OffscreenCanvas for performance, requiring newer browsers:
+
+| Browser | v3 | v4 |
+|---------|-----|-----|
+| Safari | 12+ | **16.4+** |
+| iOS Safari | 12+ | **16.4+** |
+| Firefox | 55+ | **105+** |
+| Chrome | 60+ | 69+ |
+
+### Deprecated Configuration Options
+
+The following options have been removed in v4:
+
+| v3 Option | v4 Alternative |
+|-----------|----------------|
+| `data-box-shadow` | Use CSS: `.cloudimage-360 { box-shadow: ... }` |
+| `data-ratio` | Container automatically maintains aspect ratio |
+| `data-lazy-selector` | Use `data-lazyload` (boolean) |
+| `data-hide-360-logo` | Use `data-initial-icon` (boolean, inverted) |
+| `data-logo-src` | Custom logos not supported; use CSS to hide |
+| `data-image-info` | Removed |
+| `data-request-responsive-images` | Removed |
+| `data-disable-drag` | Use `data-draggable` (inverted: `draggable="false"`) |
+| `data-spin-reverse` | Use `data-drag-reverse` and `data-autoplay-reverse` |
+
+### Hotspot Configuration Changes
+
+Hotspot properties have been simplified:
+
+```javascript
+// v3 - Multiple specific properties
+const hotspot = {
+  id: 'feature-1',
+  title: 'Feature Title',
+  description: 'Description text',
+  url: 'https://example.com',
+  newTab: true,
+  moreDetailsUrl: 'https://example.com/details',
+  moreDetailsTitle: 'Learn More',
+  popupSelector: '#custom-popup',
+  arrow: true,
+  placement: 'top',
+  offset: [0, 10],
+  positions: { 0: { x: 100, y: 200 } },
+};
+
+// v4 - Flexible HTML content
+const hotspot = {
+  id: 'feature-1',
+  orientation: 'x',
+  containerSize: [1200, 800],
+  positions: { 0: { x: 100, y: 200 } },
+  content: `
+    <div class="my-tooltip">
+      <h3>Feature Title</h3>
+      <p>Description text</p>
+      <a href="https://example.com" target="_blank">Learn More</a>
+    </div>
+  `,
+  onClick: () => console.log('Clicked!'),
+};
+```
+
+| v3 Property | v4 Alternative |
+|-------------|----------------|
+| `title`, `description` | Use `content` with HTML |
+| `url`, `newTab` | Include `<a>` tag in `content` |
+| `moreDetailsUrl`, `moreDetailsTitle` | Include in `content` HTML |
+| `popupSelector` | Use `content` with your HTML |
+| `arrow`, `placement`, `offset` | Popper.js handles positioning automatically |
+| `open` | Removed; hotspots open on click/hover |
+
+### New Features in v4
+
+Take advantage of these new capabilities:
+
+#### CSS Variables for Theming
+
+```css
+:root {
+  --ci360-button-bg: #f0f0f0;
+  --ci360-icon-color: #333;
+  --ci360-hotspot-color: #00aaff;
+}
+```
+
+#### Built-in Themes
+
+```html
+<div class="cloudimage-360 ci360-theme-dark" ...></div>
+```
+
+#### Event Callbacks
+
+```javascript
+const config = {
+  onReady: (e) => console.log('Ready'),
+  onSpin: (e) => console.log(`Frame: ${e.activeImageX}`),
+  onFullscreenOpen: () => console.log('Fullscreen'),
+};
+```
+
+#### Interaction Hints
+
+```javascript
+const config = {
+  hints: true,  // Auto-detect hints
+  // or
+  hints: ['drag', 'click', 'keys'],  // Custom hints
+};
+```
+
+#### Pinch-to-Zoom (Mobile)
+
+```javascript
+const config = {
+  pinchZoom: true,  // Enabled by default
+};
+```
+
+### Quick Migration Checklist
+
+- [ ] Add CSS file import alongside JS
+- [ ] Update initialization code to use `new CI360()`
+- [ ] Replace `data-disable-drag` with `data-draggable="false"`
+- [ ] Replace `data-spin-reverse` with `data-drag-reverse`
+- [ ] Replace `data-hide-360-logo` with `data-initial-icon="false"`
+- [ ] Update hotspot configs to use `content` instead of individual properties
+- [ ] Test on Safari 16.4+ (older versions not supported)
+- [ ] Consider adding CSS variables for customization
+- [ ] Consider adding event callbacks for analytics/tracking
 
 ---
 
