@@ -59,6 +59,12 @@ class CI360Viewer {
     this.movementStart = { x: 0, y: 0 };
     this.draggingDirection = null;
     this.isReady = false;
+    this.velocityX = 0;
+    this.velocityY = 0;
+    this.lastDragTime = 0;
+    this.lastDragX = 0;
+    this.lastDragY = 0;
+    this.inertiaAnimationId = null;
     this.hasInteracted = false;
     this.currentZoomScale = 1;
     this.touchDevice = isTouchDevice();
@@ -73,6 +79,12 @@ class CI360Viewer {
 
     const { pageX, pageY } = event;
 
+    // Cancel any running inertia animation
+    if (this.inertiaAnimationId) {
+      cancelAnimationFrame(this.inertiaAnimationId);
+      this.inertiaAnimationId = null;
+    }
+
     // Track if we just stopped autoplay - don't zoom on this click
     this.autoplayJustStopped = false;
     if (this.autoplay || this.loopTimeoutId) {
@@ -84,16 +96,78 @@ class CI360Viewer {
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
     this.isDragging = false;
+
+    // Initialize velocity tracking for inertia
+    if (this.inertia) {
+      this.velocityX = 0;
+      this.velocityY = 0;
+      this.lastDragTime = performance.now();
+      this.lastDragX = pageX;
+      this.lastDragY = pageY;
+    }
   }
 
   mouseUp() {
     if (!this.isReady) return;
 
-    if (!this.isZoomed) this.showAllIcons();
+    // Don't show icons if autoplay was just stopped by this interaction
+    if (!this.isZoomed && !this.autoplayJustStopped) this.showAllIcons();
+
+    // Start inertia animation if enabled and has velocity
+    if (this.inertia && this.isDragging && (Math.abs(this.velocityX) > 0.1 || Math.abs(this.velocityY) > 0.1)) {
+      this.startInertia();
+    }
 
     this.movementStart = { x: 0, y: 0 };
     this.isClicked = false;
+    this.isDragging = false;
     this.innerBox.style.cursor = 'grab';
+  }
+
+  startInertia() {
+    const friction = 0.95;
+    const minVelocity = 0.01;
+    const container = this.fullscreenView ? document.body : this.container;
+    const dragFactor = this.dragSpeed / DRAG_SPEED_DIVISOR;
+    const speedFactorX = dragFactor * (this.amountX / container.offsetWidth);
+    const speedFactorY = dragFactor * (this.amountY / container.offsetHeight);
+
+    const animate = () => {
+      // Apply friction
+      this.velocityX *= friction;
+      this.velocityY *= friction;
+
+      // Check if we should stop
+      if (Math.abs(this.velocityX) < minVelocity && Math.abs(this.velocityY) < minVelocity) {
+        this.inertiaAnimationId = null;
+        return;
+      }
+
+      // Calculate movement
+      const deltaX = this.velocityX * 16; // ~16ms per frame
+      const deltaY = this.velocityY * 16;
+
+      const direction = getMovingDirection({
+        deltaX,
+        deltaY,
+        reversed: this.dragReverse,
+        allowSpinX: this.allowSpinX,
+        allowSpinY: this.allowSpinY,
+      });
+
+      if (direction) {
+        const itemsSkippedX = this.allowSpinX ? Math.max(1, Math.abs(Math.round(deltaX * speedFactorX))) : 0;
+        const itemsSkippedY = this.allowSpinY ? Math.max(1, Math.abs(Math.round(deltaY * speedFactorY))) : 0;
+
+        if (itemsSkippedX > 0 || itemsSkippedY > 0) {
+          this.onMoveHandler(direction, itemsSkippedX, itemsSkippedY);
+        }
+      }
+
+      this.inertiaAnimationId = requestAnimationFrame(animate);
+    };
+
+    this.inertiaAnimationId = requestAnimationFrame(animate);
   }
 
   drag(pageX, pageY) {
@@ -101,6 +175,19 @@ class CI360Viewer {
 
     const deltaX = pageX - this.movementStart.x;
     const deltaY = pageY - this.movementStart.y;
+
+    // Track velocity for inertia (always track, not just on movement)
+    if (this.inertia) {
+      const now = performance.now();
+      const timeDelta = now - this.lastDragTime;
+      if (timeDelta > 0 && timeDelta < 100) { // Ignore if too much time passed (stale)
+        this.velocityX = (pageX - this.lastDragX) / timeDelta;
+        this.velocityY = (pageY - this.lastDragY) / timeDelta;
+      }
+      this.lastDragTime = now;
+      this.lastDragX = pageX;
+      this.lastDragY = pageY;
+    }
 
     this.draggingDirection =
       getMovingDirection({
@@ -249,6 +336,12 @@ class CI360Viewer {
 
     const { pageX, pageY } = event.touches[0];
 
+    // Cancel any running inertia animation
+    if (this.inertiaAnimationId) {
+      cancelAnimationFrame(this.inertiaAnimationId);
+      this.inertiaAnimationId = null;
+    }
+
     if (this.autoplay || this.loopTimeoutId) {
       this.stopAutoplay();
       this.autoplay = false;
@@ -257,12 +350,28 @@ class CI360Viewer {
     this.hideAllIcons();
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
+    this.isDragging = false;
+
+    // Initialize velocity tracking for inertia
+    if (this.inertia) {
+      this.velocityX = 0;
+      this.velocityY = 0;
+      this.lastDragTime = performance.now();
+      this.lastDragX = pageX;
+      this.lastDragY = pageY;
+    }
   }
 
   touchEnd() {
     if (!this.isReady) return;
 
     this.showAllIcons();
+
+    // Start inertia animation if enabled and has velocity
+    if (this.inertia && this.isDragging && (Math.abs(this.velocityX) > 0.1 || Math.abs(this.velocityY) > 0.1)) {
+      this.startInertia();
+    }
+
     this.movementStart = { x: 0, y: 0 };
     this.isClicked = false;
   }
@@ -565,6 +674,7 @@ class CI360Viewer {
     this.autoplay = false;
 
     window.clearTimeout(this.loopTimeoutId);
+    this.loopTimeoutId = null;
   }
 
   destroy() {
@@ -926,6 +1036,7 @@ class CI360Viewer {
       dragReverse,
       hide360Logo,
       logoSrc,
+      inertia,
     } = adaptedConfig;
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -963,6 +1074,7 @@ class CI360Viewer {
     this.hotspots = hotspots;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
+    this.inertia = inertia;
 
     this.srcXConfig = {
       folder,

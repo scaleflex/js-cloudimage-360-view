@@ -40,6 +40,7 @@ const DEFAULTS_VALUES = {
   hotspots: null,
   hide360Logo: false,
   logoSrc: LOGO_SRC,
+  inertia: false,
 };
 
 const getConfigFromImage = (image) => ({
@@ -80,6 +81,7 @@ const getConfigFromImage = (image) => ({
   bottomCircle: !isFalse(image, 'bottom-circle'),
   hide360Logo: isTrue(image, 'hide-360-logo', DEFAULTS_VALUES.hide360Logo),
   logoSrc: getAttr(image, 'logo-src', DEFAULTS_VALUES.logoSrc),
+  inertia: isTrue(image, 'inertia', DEFAULTS_VALUES.inertia),
 });
 
 const validateConfig = (config) => {
@@ -166,6 +168,7 @@ const adaptConfig = (config) => {
     hotspots: config.hotspots ?? DEFAULTS_VALUES.hotspots,
     hide360Logo: config.hide360Logo ?? DEFAULTS_VALUES.hide360Logo,
     logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
+    inertia: config.inertia ?? DEFAULTS_VALUES.inertia,
   };
 };
 

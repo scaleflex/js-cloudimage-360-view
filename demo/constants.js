@@ -43,6 +43,10 @@ const PLUGIN_PROPS = {
   draggable: { label: 'data-draggable', isRequired: false },
   swipeable: { label: 'data-swipeable', isRequired: false },
   fullscreen: { label: 'data-fullscreen', isRequired: false },
+  dragReverse: { label: 'data-drag-reverse', isRequired: false },
+  stopAtEdges: { label: 'data-stop-at-edges', isRequired: false },
+  bottomCircle: { label: 'data-bottom-circle', isRequired: false },
+  inertia: { label: 'data-inertia', isRequired: false },
 };
 
 const PROPERTIES_COLORS = {

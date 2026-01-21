@@ -250,6 +250,7 @@ const config = {
   playOnce: true,
   bottomCircle: false,
   hotspots: GURKHA_SUV_HOTSPOTS_CONFIG,
+  inertia: true,
 };
 
 instance.init(suvCarContainer, config);
