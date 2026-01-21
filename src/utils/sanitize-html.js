@@ -10,9 +10,9 @@ const SAFE_TAGS = new Set([
   'strong', 'em', 'b', 'i', 'u', 's',
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
   'ul', 'ol', 'li',
-  'a', 'img',
+  'a', 'img', 'button',
   'table', 'thead', 'tbody', 'tr', 'th', 'td',
-  'blockquote', 'pre', 'code',
+  'blockquote', 'pre', 'code', 'label', 'input', 'select', 'option', 'textarea',
   // SVG elements
   'svg', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon',
   'ellipse', 'g', 'text', 'tspan', 'defs', 'use', 'symbol',
@@ -23,6 +23,12 @@ const SAFE_TAGS = new Set([
 const SAFE_ATTRIBUTES = {
   a: ['href', 'title', 'target', 'rel'],
   img: ['src', 'alt', 'title', 'width', 'height'],
+  button: ['type', 'disabled', 'name', 'value'],
+  input: ['type', 'name', 'value', 'placeholder', 'disabled', 'readonly', 'checked', 'min', 'max', 'step'],
+  select: ['name', 'disabled', 'multiple'],
+  option: ['value', 'disabled', 'selected'],
+  textarea: ['name', 'placeholder', 'disabled', 'readonly', 'rows', 'cols'],
+  label: ['for'],
   // SVG attributes
   svg: ['viewbox', 'width', 'height', 'fill', 'stroke', 'xmlns', 'preserveaspectratio'],
   path: ['d', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'transform'],

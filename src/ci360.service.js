@@ -106,8 +106,9 @@ class CI360Viewer {
 
     const { pageX, pageY } = event;
 
-    // Hide hints on first interaction
+    // Hide hints and hotspot poppers on first interaction
     this.hideHints();
+    this.hideHotspotPopper();
 
     // Cancel any running inertia animation
     if (this.inertiaAnimationId) {
@@ -441,6 +442,7 @@ class CI360Viewer {
     }
 
     this.hideAllIcons();
+    this.hideHotspotPopper();
     this.movementStart = { x: pageX, y: pageY };
     this.isClicked = true;
     this.isDragging = false;
