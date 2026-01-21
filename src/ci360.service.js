@@ -803,6 +803,7 @@ class CI360Viewer {
   openFullscreenModal(event) {
     event.stopPropagation();
 
+    window.document.body.style.overflow = 'hidden';
     const fullscreenContainer = createFullscreenModal(this.container);
 
     new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
