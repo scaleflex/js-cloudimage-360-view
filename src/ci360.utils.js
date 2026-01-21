@@ -42,6 +42,8 @@ const DEFAULTS_VALUES = {
   logoSrc: LOGO_SRC,
   inertia: false,
   pinchZoom: true,
+  hints: true,
+  theme: null,
   // Event callbacks
   onReady: null,
   onLoad: null,
@@ -96,6 +98,8 @@ const getConfigFromImage = (image) => ({
   logoSrc: getAttr(image, 'logo-src', DEFAULTS_VALUES.logoSrc),
   inertia: isTrue(image, 'inertia', DEFAULTS_VALUES.inertia),
   pinchZoom: isTrue(image, 'pinch-zoom', DEFAULTS_VALUES.pinchZoom),
+  hints: !isFalse(image, 'hints'),
+  theme: getAttr(image, 'theme', DEFAULTS_VALUES.theme),
 });
 
 const validateConfig = (config) => {
@@ -184,6 +188,8 @@ const adaptConfig = (config) => {
     logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
     inertia: config.inertia ?? DEFAULTS_VALUES.inertia,
     pinchZoom: config.pinchZoom ?? DEFAULTS_VALUES.pinchZoom,
+    hints: config.hints ?? DEFAULTS_VALUES.hints,
+    theme: config.theme || DEFAULTS_VALUES.theme,
     // Event callbacks
     onReady: config.onReady ?? DEFAULTS_VALUES.onReady,
     onLoad: config.onLoad ?? DEFAULTS_VALUES.onLoad,

@@ -24,6 +24,8 @@ export const PROPS_REQUIRE_RELOAD = [
   'indexZeroBase',
   'amountX',
   'amountY',
+  'hints',
+  'theme',
 ];
 
 export const LEFT_RIGHT_KEYS = [37, 39];

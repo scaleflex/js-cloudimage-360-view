@@ -13,3 +13,9 @@ export { createLoadingSpinner } from './create-loading-spinner';
 export { createTransitionOverlay } from './create-transition-overlay';
 export { createHotspotsContainer } from './create-hotspots-container';
 export { createAriaLiveRegion, announceToScreenReader } from './create-aria-live-region';
+export {
+  createHintsOverlay,
+  getHintsForConfig,
+  showHintsOverlay,
+  hideHintsOverlay,
+} from './create-hints-overlay';

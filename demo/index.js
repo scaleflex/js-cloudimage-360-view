@@ -29,6 +29,9 @@ const customStylingCheckbox = document.getElementById('custom-styling-checkbox')
 const customStylingWrapper = document.getElementById('custom-styling-wrapper');
 const customStylingTextarea = document.getElementById('custom-styling-textarea');
 
+const themeSelector = document.getElementById('theme-selector');
+const hintOptions = document.querySelectorAll('.hint-option');
+
 const folderPathOption = document.getElementById('folder-path-option');
 const folderPathInput = document.getElementById('folder-path');
 const filenamePatternInput = document.getElementById('filename-pattern');
@@ -251,6 +254,7 @@ const config = {
   bottomCircle: false,
   hotspots: GURKHA_SUV_HOTSPOTS_CONFIG,
   inertia: true,
+  hints: ['drag', 'click'],
 };
 
 instance.init(suvCarContainer, config);
@@ -270,6 +274,7 @@ const demoGeneratorConfig = {
   keys: true,
   responsive: 'scaleflex',
   lazyload: true,
+  hints: ['drag', 'click'],
   // Event callbacks
   onReady: (event) => {
     console.log('onReady:', event.viewerId);
@@ -330,24 +335,34 @@ function toggleCustomStyling(event) {
 }
 
 function scopeCssToInstance(css, instanceId) {
+  // Strip comments for selector parsing but keep them in output
+  const stripComments = (str) => str.replace(/\/\*[\s\S]*?\*\//g, '').trim();
+
   // Parse CSS and prefix each selector with the instance ID
   return css.replace(
-    /([^\{\}]+)\{/g,
-    (match, selectors) => {
+    /(\/\*[\s\S]*?\*\/\s*)?([^\{\}]+)\{/g,
+    (match, comment, selectors) => {
+      const prefix = comment || '';
       const scopedSelectors = selectors
         .split(',')
         .map((selector) => {
-          const trimmed = selector.trim();
-          if (!trimmed) return trimmed;
+          // Remove any inline comments from selector
+          const trimmed = stripComments(selector);
+          if (!trimmed) return '';
           // Handle selectors that already start with the instance
           if (trimmed.startsWith(`#${instanceId}`)) {
             return trimmed;
           }
+          // Handle .cloudimage-360 - apply directly to container (no space)
+          if (trimmed === '.cloudimage-360') {
+            return `#${instanceId}`;
+          }
           // Scope the selector to the instance
           return `#${instanceId} ${trimmed}`;
         })
+        .filter(Boolean)
         .join(', ');
-      return `${scopedSelectors} {`;
+      return `${prefix}${scopedSelectors} {`;
     }
   );
 }
@@ -384,6 +399,36 @@ function handleCssInput() {
 
 customStylingCheckbox.addEventListener('change', toggleCustomStyling);
 customStylingTextarea.addEventListener('input', handleCssInput);
+
+// Theme handler
+function changeTheme(event) {
+  const { value } = event.target;
+  const updatedView = instance.updateView('demo-generator', { theme: value });
+  updateCodeBlock(updatedView.viewerConfig);
+}
+
+themeSelector.addEventListener('change', changeTheme);
+
+// Hints selection handler
+function getSelectedHints() {
+  const selectedHints = [];
+  hintOptions.forEach((option) => {
+    if (option.checked) {
+      selectedHints.push(option.getAttribute('data-hint'));
+    }
+  });
+  return selectedHints.length > 0 ? selectedHints : false;
+}
+
+function changeHints() {
+  const hints = getSelectedHints();
+  const updatedView = instance.updateView('demo-generator', { hints });
+  updateCodeBlock(updatedView.viewerConfig);
+}
+
+hintOptions.forEach((option) => {
+  option.addEventListener('change', changeHints);
+});
 
 // Initialize all gallery examples with cloudimage-360 class
 instance.initAll();

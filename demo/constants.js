@@ -47,6 +47,8 @@ const PLUGIN_PROPS = {
   stopAtEdges: { label: 'data-stop-at-edges', isRequired: false },
   bottomCircle: { label: 'data-bottom-circle', isRequired: false },
   inertia: { label: 'data-inertia', isRequired: false },
+  hints: { label: 'data-hints', isRequired: false },
+  theme: { label: 'data-theme', isRequired: false },
 };
 
 const PROPERTIES_COLORS = {

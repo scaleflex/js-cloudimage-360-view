@@ -46,6 +46,7 @@
 - [Configuration Options](#configuration-options)
 - [Event Callbacks](#event-callbacks)
 - [Hotspots](#hotspots)
+- [Interaction Hints](#interaction-hints)
 - [Styling & Theming](#styling--theming)
 - [Methods](#methods)
 - [Cloudimage Integration](#cloudimage-integration)
@@ -269,6 +270,8 @@ All options can be set via JavaScript config or HTML data attributes.
 | `bottomCircleOffset` | `data-bottom-circle-offset` | `5` | Progress indicator offset (px) |
 | `initialIconShown` | `data-initial-icon` | `true` | Show 360° icon on load |
 | `lazyload` | `data-lazyload` | `true` | Enable lazy loading |
+| `hints` | `data-hints` | `true` | Show interaction hints on load |
+| `theme` | `data-theme` | `null` | Color theme: `'light'` or `'dark'` |
 
 ### Cloudimage CDN Options
 
@@ -372,7 +375,53 @@ const config = {
 
 ---
 
+## Interaction Hints
+
+The viewer displays helpful hints at the bottom showing users how to interact with the 360° view. Hints are automatically generated based on enabled features and hide after the first interaction.
+
+### Configuration
+
+```javascript
+const config = {
+  // Auto-detect hints based on enabled features (default)
+  hints: true,
+
+  // Disable hints
+  hints: false,
+
+  // Custom hints array
+  hints: ['drag', 'click', 'keys'],
+};
+```
+
+### Available Hint Types
+
+| Type | Desktop | Mobile | Description |
+|------|---------|--------|-------------|
+| `drag` | ✓ | - | "Drag to rotate" |
+| `swipe` | - | ✓ | "Swipe to rotate" |
+| `click` | ✓ | - | "Click to zoom" (when pointerZoom enabled) |
+| `pinch` | - | ✓ | "Pinch to zoom" (when pinchZoom enabled) |
+| `keys` | ✓ | - | "Use arrow keys" (when keys enabled) |
+
+---
+
 ## Styling & Theming
+
+### Built-in Themes
+
+Apply a theme by setting the `theme` option or using the `ci360-theme-dark` class:
+
+```javascript
+// Via config
+const config = {
+  theme: 'dark', // or 'light'
+  // ...other options
+};
+
+// Or via HTML
+<div class="cloudimage-360 ci360-theme-dark" ...></div>
+```
 
 ### CSS Variables (Recommended)
 
@@ -393,9 +442,10 @@ The easiest way to customize the viewer appearance:
   --ci360-icon-size: 20px;
 
   /* 360° Indicator */
-  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.8);
-  --ci360-initial-icon-color: rgb(80, 80, 80);
-  --ci360-initial-icon-size: 100px;
+  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.9);
+  --ci360-initial-icon-color: #505050;
+  --ci360-initial-icon-size: 80px;
+  --ci360-initial-icon-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 
   /* Loading Spinner */
   --ci360-spinner-color: #fff;
@@ -421,26 +471,43 @@ The easiest way to customize the viewer appearance:
   --ci360-popper-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   --ci360-popper-border-radius: 6px;
 
+  /* Hints Overlay */
+  --ci360-hints-bg: rgba(0, 0, 0, 0.75);
+  --ci360-hints-color: #ffffff;
+  --ci360-hints-font-size: 14px;
+  --ci360-hints-border-radius: 12px;
+
+  /* Bottom Circle Indicator */
+  --ci360-circle-color-start: rgba(0, 0, 0, 0.05);
+  --ci360-circle-color-mid: rgba(0, 0, 0, 0.3);
+  --ci360-circle-color-end: rgba(0, 0, 0, 0.05);
+  --ci360-circle-dot-color: rgba(0, 0, 0, 0.4);
+
   /* Other */
   --ci360-focus-color: #0066cc;
   --ci360-overlay-bg: rgba(255, 255, 255, 1);
 }
 ```
 
-### Dark Theme Example
+### Custom Dark Theme Example
+
+If you prefer to customize beyond the built-in dark theme:
 
 ```css
-:root {
-  --ci360-button-bg: #2d2d2d;
-  --ci360-button-bg-hover: #3d3d3d;
+.my-dark-viewer {
+  --ci360-button-bg: rgba(30, 30, 35, 0.9);
+  --ci360-button-bg-hover: rgba(45, 45, 50, 0.95);
   --ci360-icon-color: #e0e0e0;
   --ci360-icon-color-hover: #ffffff;
-  --ci360-fullscreen-bg: #1a1a1a;
-  --ci360-initial-icon-bg: rgba(45, 45, 45, 0.9);
+  --ci360-fullscreen-bg: #1a1a1f;
+  --ci360-initial-icon-bg: rgba(30, 30, 35, 0.9);
   --ci360-initial-icon-color: #e0e0e0;
-  --ci360-popper-bg: rgba(45, 45, 45, 0.95);
+  --ci360-popper-bg: rgba(40, 40, 45, 0.95);
   --ci360-popper-color: #e0e0e0;
-  --ci360-overlay-bg: rgba(26, 26, 26, 1);
+  --ci360-hints-bg: rgba(255, 255, 255, 0.12);
+  --ci360-circle-color-mid: rgba(255, 255, 255, 0.25);
+  --ci360-circle-dot-color: rgba(255, 255, 255, 0.4);
+  --ci360-overlay-bg: rgba(26, 26, 31, 1);
 }
 ```
 
@@ -462,12 +529,16 @@ The easiest way to customize the viewer appearance:
 | `.cloudimage-360-inner-box` | Inner container |
 | `.cloudimage-360-button` | Control buttons |
 | `.cloudimage-360-icons-container` | Button container |
-| `.cloudimage-initial-icon` | 360° indicator |
+| `.cloudimage-initial-icon` | 360° indicator icon |
+| `.cloudimage-360-view-360-circle` | Bottom progress indicator |
 | `.cloudimage-loading-spinner` | Loading spinner |
 | `.cloudimage-360-fullscreen-modal` | Fullscreen container |
 | `.cloudimage-360-img-magnifier-glass` | Magnifier element |
 | `.cloudimage-360-hotspot` | Hotspot marker |
 | `.cloudimage-360-popper` | Hotspot tooltip |
+| `.cloudimage-360-hints-overlay` | Hints overlay container |
+| `.cloudimage-360-hints-container` | Hints content box |
+| `.ci360-theme-dark` | Dark theme class |
 
 ---
 

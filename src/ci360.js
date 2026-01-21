@@ -71,16 +71,11 @@ class CI360 {
     if (!view) return null;
 
     const updatedConfig = { ...view.viewerConfig, ...config };
-    const requireReload = hasConfigChanged(view.viewerConfig, config);
 
-    if (requireReload) {
-      view.destroy();
-      const container = document.getElementById(id);
-      return this.init(container, updatedConfig);
-    }
-
-    view.update(updatedConfig);
-    return view;
+    // Always do a full restart to ensure clean state
+    view.destroy();
+    const container = document.getElementById(id);
+    return this.init(container, updatedConfig);
   }
 }
 

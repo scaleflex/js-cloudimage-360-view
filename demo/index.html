@@ -148,6 +148,7 @@
             data-magnifier="3"
             data-bottom-circle
             data-responsive="scaleflex"
+            data-hints="false"
           ></div>
           <p>Jawa</p>
         </div>
@@ -161,6 +162,7 @@
             data-lazyload
             data-bottom-circle="false"
             data-responsive="scaleflex"
+            data-hints="false"
           ></div>
           <p>Vivo</p>
         </div>
@@ -173,6 +175,7 @@
             data-bottom-circle
             data-lazyload
             data-responsive="scaleflex"
+            data-hints="false"
           ></div>
           <p>Geely</p>
         </div>
@@ -505,6 +508,34 @@
                     />
                     <span class="checkmark"></span>
                   </label>
+                  <div class="hints-selection">
+                    <span class="hints-label">Hints:</span>
+                    <label class="checkbox-container checkbox-inline">
+                      Drag
+                      <input id="hint-drag" class="hint-option" data-hint="drag" type="checkbox" checked />
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container checkbox-inline">
+                      Click
+                      <input id="hint-click" class="hint-option" data-hint="click" type="checkbox" checked />
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container checkbox-inline">
+                      Keys
+                      <input id="hint-keys" class="hint-option" data-hint="keys" type="checkbox" />
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="customize-selectors-wrappers">
+                    <label class="selectors-wrappers-text" for="theme-selector">Theme</label>
+                    <select
+                      class="customize-selectors plugin-selector"
+                      id="theme-selector"
+                    >
+                      <option value="light" selected>Light</option>
+                      <option value="dark">Dark</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -531,31 +562,46 @@
                 id="custom-styling-textarea"
                 class="custom-styling-textarea"
                 aria-label="Custom CSS code"
-              >/* Dark theme example */
-.cloudimage-360-button {
-  background-color: #1a1a2e;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
+              >/* Green theme with smaller elements */
+.cloudimage-360 {
+  /* Button styling */
+  --ci360-button-bg: rgba(16, 185, 129, 0.9);
+  --ci360-button-bg-hover: rgba(5, 150, 105, 1);
+  --ci360-button-size: 32px;
+  --ci360-button-border-radius: 50%;
+  --ci360-button-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 
-.cloudimage-360-button:hover {
-  background-color: #16213e;
-}
+  /* Icon styling */
+  --ci360-icon-color: #ffffff;
+  --ci360-icon-color-hover: #f0fdf4;
+  --ci360-icon-size: 16px;
 
-.cloudimage-360-button svg {
-  stroke: #ffffff;
-}
+  /* Initial 360 icon (center) - use light bg for dark icon */
+  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.95);
+  --ci360-initial-icon-size: 60px;
+  --ci360-initial-icon-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
 
-.cloudimage-360-button:hover svg {
-  stroke: #e0e0e0;
-}
+  /* Loading spinner */
+  --ci360-spinner-color: rgba(16, 185, 129, 0.3);
+  --ci360-spinner-accent: #10b981;
+  --ci360-spinner-size: 24px;
 
-.cloudimage-initial-icon {
-  background-color: rgba(26, 26, 46, 0.9);
-  color: #ffffff;
-}
+  /* Hints overlay */
+  --ci360-hints-bg: rgba(16, 185, 129, 0.9);
+  --ci360-hints-color: #ffffff;
+  --ci360-hints-font-size: 11px;
+  --ci360-hints-border-radius: 16px;
 
-.cloudimage-initial-icon svg {
-  stroke: #ffffff;
+  /* Hotspots */
+  --ci360-hotspot-color: #10b981;
+  --ci360-hotspot-size: 14px;
+
+  /* Tooltips */
+  --ci360-popper-bg: rgba(16, 185, 129, 0.95);
+  --ci360-popper-color: #ffffff;
+
+  /* Bottom 360 circle */
+  --ci360-circle-color: #10b981;
 }</textarea>
             </div>
           </div>

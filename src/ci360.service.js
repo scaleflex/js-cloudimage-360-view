@@ -44,6 +44,10 @@ import {
   safeJsonParse,
   createAriaLiveRegion,
   announceToScreenReader,
+  createHintsOverlay,
+  getHintsForConfig,
+  showHintsOverlay,
+  hideHintsOverlay,
 } from './utils';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
@@ -101,6 +105,9 @@ class CI360Viewer {
     if (!this.isReady || this.glass) return;
 
     const { pageX, pageY } = event;
+
+    // Hide hints on first interaction
+    this.hideHints();
 
     // Cancel any running inertia animation
     if (this.inertiaAnimationId) {
@@ -382,6 +389,9 @@ class CI360Viewer {
     const target = event.target;
     if (target && target.closest && target.closest('.cloudimage-360-button')) return;
 
+    // Hide hints on first interaction
+    this.hideHints();
+
     // Handle pinch-to-zoom with two fingers
     // Don't enter pinch mode if already dragging (prevents accidental activation)
     if (event.touches.length === 2 && this.pinchZoom && !this.isDragging) {
@@ -593,6 +603,7 @@ class CI360Viewer {
     if (isSpinKeysPressed(keyCode, this.allowSpinY)) {
       this.hasInteracted = true;
       this.hideAllIcons();
+      this.hideHints();
     }
 
     switch (keyCode) {
@@ -782,6 +793,18 @@ class CI360Viewer {
     this.emit('onReady');
     this.announce('360 degree view loaded. Use mouse drag or arrow keys to rotate.');
 
+    // Create and show hints overlay if enabled and not autoplaying
+    if (this.hints !== false && !this.autoplay) {
+      const hintsToShow = this.hints === true || this.hints === undefined
+        ? getHintsForConfig(this.viewerConfig, this.touchDevice)
+        : this.hints;
+
+      if (hintsToShow && hintsToShow.length > 0) {
+        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow);
+        showHintsOverlay(this.hintsOverlay);
+      }
+    }
+
     if (this.autoplay) {
       this.hideAllIcons();
       const delayedPlay = delay(this.play.bind(this));
@@ -903,17 +926,35 @@ class CI360Viewer {
     window.clearTimeout(this.loopTimeoutId);
     this.loopTimeoutId = null;
     this.emit('onAutoplayStop');
+
+    // Show hints after autoplay stops (if hints are enabled and not created yet)
+    if (this.hints !== false && !this.hintsOverlay && !this.hintsHidden) {
+      const hintsToShow = this.hints === true
+        ? getHintsForConfig(this.viewerConfig, this.touchDevice)
+        : this.hints;
+
+      if (hintsToShow && hintsToShow.length > 0) {
+        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow);
+        showHintsOverlay(this.hintsOverlay);
+      }
+    }
   }
 
   destroy() {
     this.stopAutoplay();
     if (this.hotspotsInstance) this.hotspotsInstance.destroy();
 
-    const oldElement = this.container;
-    const newElement = oldElement.cloneNode(true);
-    const innerBox = newElement.querySelector('.cloudimage-360-inner-box');
+    // Remove hints overlay if exists
+    if (this.hintsOverlay && this.hintsOverlay.parentNode) {
+      this.hintsOverlay.parentNode.removeChild(this.hintsOverlay);
+      this.hintsOverlay = null;
+    }
 
-    newElement.removeChild(innerBox);
+    // Remove theme class
+    this.container.classList.remove('ci360-theme-dark');
+
+    const oldElement = this.container;
+    const newElement = oldElement.cloneNode(false); // shallow clone - don't copy children
     oldElement.parentNode.replaceChild(newElement, oldElement);
   }
 
@@ -1054,6 +1095,13 @@ class CI360Viewer {
     if (!this.loadingSpinner) return;
 
     this.loadingSpinner.style.opacity = 0;
+  }
+
+  hideHints() {
+    if (!this.hintsOverlay || this.hintsHidden) return;
+
+    this.hintsHidden = true;
+    hideHintsOverlay(this.hintsOverlay);
   }
 
   remove360ViewCircleIcon() {
@@ -1267,6 +1315,8 @@ class CI360Viewer {
       logoSrc,
       inertia,
       pinchZoom,
+      hints,
+      theme,
       // Event callbacks
       onReady,
       onLoad,
@@ -1319,6 +1369,15 @@ class CI360Viewer {
     this.logoSrc = logoSrc;
     this.inertia = inertia;
     this.pinchZoom = pinchZoom;
+    this.hints = hints;
+
+    // Apply theme class to container
+    if (theme === 'dark') {
+      this.container.classList.add('ci360-theme-dark');
+    } else if (theme === 'light') {
+      this.container.classList.remove('ci360-theme-dark');
+    }
+
     // Event callbacks
     this.onReady = onReady;
     this.onLoad = onLoad;

@@ -740,6 +740,38 @@ body {
   background-repeat: no-repeat;
 }
 
+/* Hints selection inline layout */
+.hints-selection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hints-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #203254;
+}
+
+.checkbox-container.checkbox-inline {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 26px;
+  font-size: 13px;
+}
+
+.checkbox-container.checkbox-inline .checkmark {
+  height: 18px;
+  width: 18px;
+}
+
+.checkbox-container.checkbox-inline .checkmark:after {
+  width: 16px;
+  height: 11px;
+  background-size: contain;
+}
+
 .questions {
   position: relative;
   padding: 60px 25px;
