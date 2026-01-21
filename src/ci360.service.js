@@ -942,6 +942,23 @@ class CI360Viewer {
 
   destroy() {
     this.stopAutoplay();
+
+    // Cancel any pending inertia animation
+    if (this.inertiaAnimationId) {
+      cancelAnimationFrame(this.inertiaAnimationId);
+      this.inertiaAnimationId = null;
+    }
+
+    // Remove all event listeners
+    this.removeEvents();
+
+    // Terminate the canvas worker
+    if (this.canvasWorker) {
+      this.canvasWorker.terminate();
+      this.canvasWorker = null;
+    }
+
+    // Destroy hotspots
     if (this.hotspotsInstance) this.hotspotsInstance.destroy();
 
     // Remove hints overlay if exists

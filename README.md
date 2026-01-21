@@ -614,12 +614,14 @@ const config = {
 
 | Browser | Version |
 |---------|---------|
-| Chrome | 60+ |
-| Firefox | 55+ |
-| Safari | 12+ |
+| Chrome | 69+ |
+| Firefox | 105+ |
+| Safari | 16.4+ |
 | Edge | 79+ |
-| iOS Safari | 12+ |
-| Android Chrome | 60+ |
+| iOS Safari | 16.4+ |
+| Android Chrome | 69+ |
+
+> **Note:** This library uses OffscreenCanvas for optimal performance, which requires the browser versions listed above.
 
 ---
 
