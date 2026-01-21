@@ -1,4 +1,5 @@
 const GURKHA_SUV_HOTSPOTS_CONFIG = [
+  // Modal Style 1: Link with icon - compact and clickable
   {
     id: 'hotspot-1',
     orientation: 'x',
@@ -22,8 +23,23 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
       64: { x: 773, y: null },
       63: { x: 787, y: null },
     },
-    content: '<div class="tooltip">Info about Hotspot 1</div>',
+    content: `
+      <div class="hotspot-modal hotspot-modal--link">
+        <a href="https://scaleflex.com" target="_blank" class="hotspot-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          <span>View Full Specifications</span>
+          <svg class="hotspot-link__arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+      </div>
+    `,
   },
+  // Modal Style 2: Title and description - clean card
   {
     id: 'hotspot-2',
     orientation: 'x',
@@ -42,8 +58,27 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
       64: { x: 336, y: null },
       63: { x: 347, y: 474 },
     },
-    content: '<div class="tooltip">Info about Hotspot 2</div>',
+    content: `
+      <div class="hotspot-modal hotspot-modal--info">
+        <div class="hotspot-info__badge">Premium</div>
+        <h3 class="hotspot-info__title">All-Terrain Wheels</h3>
+        <p class="hotspot-info__description">
+          18-inch alloy wheels with reinforced sidewalls, designed for both on-road comfort and off-road durability.
+        </p>
+        <div class="hotspot-info__specs">
+          <div class="hotspot-info__spec">
+            <span class="hotspot-info__spec-label">Size</span>
+            <span class="hotspot-info__spec-value">18"</span>
+          </div>
+          <div class="hotspot-info__spec">
+            <span class="hotspot-info__spec-label">Type</span>
+            <span class="hotspot-info__spec-value">Alloy</span>
+          </div>
+        </div>
+      </div>
+    `,
   },
+  // Modal Style 3: Gallery with images, title, description, and action buttons
   {
     id: 'hotspot-3',
     orientation: 'x',
@@ -72,8 +107,31 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
       31: { x: 570, y: 176 },
       32: { x: 560, y: 173 },
     },
-    content: '<div class="tooltip">Info about Hotspot 3</div>',
+    content: `
+      <div class="hotspot-modal hotspot-modal--gallery">
+        <div class="hotspot-gallery__images">
+          <img src="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/orange-11.jpg?w=80&h=60&func=cover" alt="Roof rack angle 1" />
+          <img src="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/orange-20.jpg?w=80&h=60&func=cover" alt="Roof rack angle 2" />
+          <img src="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/orange-30.jpg?w=80&h=60&func=cover" alt="Roof rack angle 3" />
+        </div>
+        <div class="hotspot-gallery__content">
+          <h3 class="hotspot-gallery__title">Adventure Roof Rack</h3>
+          <p class="hotspot-gallery__description">
+            Heavy-duty roof rack system with 150kg capacity. Perfect for camping gear, kayaks, or extra luggage.
+          </p>
+          <div class="hotspot-gallery__actions">
+            <a href="https://scaleflex.com" target="_blank" class="hotspot-btn hotspot-btn--primary">
+              Configure
+            </a>
+            <button class="hotspot-btn hotspot-btn--secondary">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    `,
   },
+  // Modal Style 2 variant: Another info card for the fourth hotspot
   {
     id: 'hotspot-4',
     orientation: 'x',
@@ -85,7 +143,24 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
       9: { x: 637, y: null },
       10: { x: 642, y: null },
     },
-    content: '<div class="tooltip">Info about Hotspot 4</div>',
+    content: `
+      <div class="hotspot-modal hotspot-modal--info">
+        <h3 class="hotspot-info__title">LED Headlights</h3>
+        <p class="hotspot-info__description">
+          Adaptive LED headlights with automatic high beam and cornering light technology for superior night visibility.
+        </p>
+        <div class="hotspot-info__specs">
+          <div class="hotspot-info__spec">
+            <span class="hotspot-info__spec-label">Type</span>
+            <span class="hotspot-info__spec-value">LED</span>
+          </div>
+          <div class="hotspot-info__spec">
+            <span class="hotspot-info__spec-label">Lumens</span>
+            <span class="hotspot-info__spec-value">3000</span>
+          </div>
+        </div>
+      </div>
+    `,
   },
 ];
 

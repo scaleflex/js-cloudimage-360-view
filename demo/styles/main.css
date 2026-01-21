@@ -1271,3 +1271,221 @@ body {
     display: none;
   }
 }
+
+/* ===== Hotspot Modal Styles ===== */
+
+/* Base modal styles */
+.hotspot-modal {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Style 1: Link Modal */
+.hotspot-modal--link {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(61, 171, 164, 0.1);
+}
+
+.hotspot-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #3daba4 0%, #2d8a84 100%);
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.hotspot-link:hover {
+  background: linear-gradient(135deg, #35918a 0%, #267772 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(61, 171, 164, 0.3);
+}
+
+.hotspot-link svg {
+  flex-shrink: 0;
+}
+
+.hotspot-link__arrow {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.hotspot-link:hover .hotspot-link__arrow {
+  transform: translateX(3px);
+}
+
+/* Style 2: Info Card Modal */
+.hotspot-modal--info {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  min-width: 240px;
+  max-width: 280px;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.hotspot-info__badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.hotspot-info__title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.hotspot-info__description {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.hotspot-info__specs {
+  display: flex;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.hotspot-info__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hotspot-info__spec-label {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+}
+
+.hotspot-info__spec-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Style 3: Gallery Modal with images and actions */
+.hotspot-modal--gallery {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  min-width: 280px;
+  max-width: 320px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.hotspot-gallery__images {
+  display: flex;
+  gap: 2px;
+  background: #f1f5f9;
+  padding: 2px;
+}
+
+.hotspot-gallery__images img {
+  flex: 1;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.hotspot-gallery__images img:hover {
+  flex: 1.5;
+  opacity: 0.9;
+}
+
+.hotspot-gallery__content {
+  padding: 16px 20px 20px;
+}
+
+.hotspot-gallery__title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.hotspot-gallery__description {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.hotspot-gallery__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.hotspot-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: inherit;
+}
+
+.hotspot-btn--primary {
+  background: linear-gradient(135deg, #3daba4 0%, #2d8a84 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(61, 171, 164, 0.3);
+}
+
+.hotspot-btn--primary:hover {
+  background: linear-gradient(135deg, #35918a 0%, #267772 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(61, 171, 164, 0.4);
+}
+
+.hotspot-btn--secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.hotspot-btn--secondary:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Adjust popper styles for custom modals */
+.cloudimage-360-popper:has(.hotspot-modal) {
+  background-color: transparent;
+  padding: 0;
+  box-shadow: none;
+  max-width: none;
+}
