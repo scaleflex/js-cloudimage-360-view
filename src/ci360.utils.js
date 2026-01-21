@@ -41,6 +41,18 @@ const DEFAULTS_VALUES = {
   hide360Logo: false,
   logoSrc: LOGO_SRC,
   inertia: false,
+  // Event callbacks
+  onReady: null,
+  onLoad: null,
+  onSpin: null,
+  onAutoplayStart: null,
+  onAutoplayStop: null,
+  onFullscreenOpen: null,
+  onFullscreenClose: null,
+  onZoomIn: null,
+  onZoomOut: null,
+  onDragStart: null,
+  onDragEnd: null,
 };
 
 const getConfigFromImage = (image) => ({
@@ -169,6 +181,18 @@ const adaptConfig = (config) => {
     hide360Logo: config.hide360Logo ?? DEFAULTS_VALUES.hide360Logo,
     logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
     inertia: config.inertia ?? DEFAULTS_VALUES.inertia,
+    // Event callbacks
+    onReady: config.onReady ?? DEFAULTS_VALUES.onReady,
+    onLoad: config.onLoad ?? DEFAULTS_VALUES.onLoad,
+    onSpin: config.onSpin ?? DEFAULTS_VALUES.onSpin,
+    onAutoplayStart: config.onAutoplayStart ?? DEFAULTS_VALUES.onAutoplayStart,
+    onAutoplayStop: config.onAutoplayStop ?? DEFAULTS_VALUES.onAutoplayStop,
+    onFullscreenOpen: config.onFullscreenOpen ?? DEFAULTS_VALUES.onFullscreenOpen,
+    onFullscreenClose: config.onFullscreenClose ?? DEFAULTS_VALUES.onFullscreenClose,
+    onZoomIn: config.onZoomIn ?? DEFAULTS_VALUES.onZoomIn,
+    onZoomOut: config.onZoomOut ?? DEFAULTS_VALUES.onZoomOut,
+    onDragStart: config.onDragStart ?? DEFAULTS_VALUES.onDragStart,
+    onDragEnd: config.onDragEnd ?? DEFAULTS_VALUES.onDragEnd,
   };
 };
 

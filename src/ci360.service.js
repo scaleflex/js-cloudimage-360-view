@@ -74,6 +74,13 @@ class CI360Viewer {
     this.init(this.container, config);
   }
 
+  emit(eventName, data = {}) {
+    const callback = this[eventName];
+    if (typeof callback === 'function') {
+      callback({ ...data, viewerId: this.id });
+    }
+  }
+
   mouseDown(event) {
     if (!this.isReady || this.glass) return;
 
@@ -116,6 +123,11 @@ class CI360Viewer {
     // Start inertia animation if enabled and has velocity
     if (this.inertia && this.isDragging && (Math.abs(this.velocityX) > 0.1 || Math.abs(this.velocityY) > 0.1)) {
       this.startInertia();
+    }
+
+    // Emit drag end event if we were dragging
+    if (this.isDragging) {
+      this.emit('onDragEnd');
     }
 
     this.movementStart = { x: 0, y: 0 };
@@ -215,7 +227,10 @@ class CI360Viewer {
       this.movementStart = { x: pageX, y: pageY };
 
       setTimeout(() => {
-        this.isDragging = true;
+        if (!this.isDragging) {
+          this.isDragging = true;
+          this.emit('onDragStart');
+        }
       }, DRAG_START_DELAY);
     }
   }
@@ -302,6 +317,7 @@ class CI360Viewer {
     this.updateView();
     this.showAllIcons();
     this.hideTransitionOverlay();
+    this.emit('onZoomOut');
   }
 
   mouseLeave() {
@@ -319,6 +335,7 @@ class CI360Viewer {
     this.hideTransitionOverlay();
 
     this.updateView(this.pointerZoom, offsetX, offsetY);
+    this.emit('onZoomIn', { zoomLevel: this.pointerZoom });
   }
 
   touchOutside(event) {
@@ -487,6 +504,14 @@ class CI360Viewer {
     } else if (movingDirection === 'down') {
       this.moveBottom(this.stopAtEdges, itemsSkippedY);
     }
+
+    this.emit('onSpin', {
+      direction: movingDirection,
+      activeImageX: this.activeImageX,
+      activeImageY: this.activeImageY,
+      amountX: this.amountX,
+      amountY: this.amountY,
+    });
   }
 
   updateView(zoomScale, offsetX, offsetY) {
@@ -572,6 +597,9 @@ class CI360Viewer {
     this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0;
     this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0;
 
+    this.emit('onLoad', { imagesX: this.imagesX.length, imagesY: this.imagesY.length });
+    this.emit('onReady');
+
     if (this.autoplay) {
       this.hideAllIcons();
       const delayedPlay = delay(this.play.bind(this));
@@ -606,6 +634,7 @@ class CI360Viewer {
     const fullscreenContainer = createFullscreenModal(this.container);
 
     new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
+    this.emit('onFullscreenOpen');
   }
 
   closeFullscreenModal(event) {
@@ -613,11 +642,13 @@ class CI360Viewer {
 
     document.body.removeChild(this.container.parentNode);
     window.document.body.style.overflow = 'visible';
+    this.emit('onFullscreenClose');
   }
 
   play() {
     if (this.isClicked) return;
     this.hide360ViewCircleIcon();
+    this.emit('onAutoplayStart');
 
     const autoplaySpeed = (this.speed * 36) / (this.amountX + this.amountY);
     const loopTriggers = {
@@ -675,6 +706,7 @@ class CI360Viewer {
 
     window.clearTimeout(this.loopTimeoutId);
     this.loopTimeoutId = null;
+    this.emit('onAutoplayStop');
   }
 
   destroy() {
@@ -1037,6 +1069,18 @@ class CI360Viewer {
       hide360Logo,
       logoSrc,
       inertia,
+      // Event callbacks
+      onReady,
+      onLoad,
+      onSpin,
+      onAutoplayStart,
+      onAutoplayStop,
+      onFullscreenOpen,
+      onFullscreenClose,
+      onZoomIn,
+      onZoomOut,
+      onDragStart,
+      onDragEnd,
     } = adaptedConfig;
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1075,6 +1119,18 @@ class CI360Viewer {
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
     this.inertia = inertia;
+    // Event callbacks
+    this.onReady = onReady;
+    this.onLoad = onLoad;
+    this.onSpin = onSpin;
+    this.onAutoplayStart = onAutoplayStart;
+    this.onAutoplayStop = onAutoplayStop;
+    this.onFullscreenOpen = onFullscreenOpen;
+    this.onFullscreenClose = onFullscreenClose;
+    this.onZoomIn = onZoomIn;
+    this.onZoomOut = onZoomOut;
+    this.onDragStart = onDragStart;
+    this.onDragEnd = onDragEnd;
 
     this.srcXConfig = {
       folder,

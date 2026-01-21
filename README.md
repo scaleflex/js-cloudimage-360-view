@@ -52,6 +52,7 @@
   - [⚙️ Configuration Options](#configuration-options)
     - [Method 1: Initialization via JavaScript Code](#method-1-initialization-via-javascript-code)
     - [Method 2: Initialization via Data Attributes](#method-2-initialization-via-data-attributes)
+  - [Event Callbacks](#event-callbacks)
 - [🗺️ Hotspots or Markers Configuration](#-hotspots-or-markers-configuration)
 - [🗺️ Cloudimage responsive integration](#-cloudimage-responsive-integration)
 - [🔧 Methods](#-methods)
@@ -221,9 +222,68 @@ For example:
 | `stopAtEdges`       | `data-stop-at-edges`      | No       | `false`                                       | Stops the rotation at the edges.                  |
 | `imageInfo`         | `data-info`               | No       | `false`                                       | Displays image information.                        |
 | `initialIconShown`  | `data-initial-icon`       | No       | `true`                                        | Shows the initial icon on load.                   |
+| `inertia`           | `data-inertia`            | No       | `false`                                       | Enables momentum/inertia after drag release.      |
 
 
 The library will automatically read these attributes to configure the instance.
+
+### Event Callbacks
+
+Event callbacks allow you to respond to viewer events. These are only available when initializing via JavaScript (not data attributes).
+
+| Callback            | Description                                                    | Event Data                                              |
+| ------------------- | -------------------------------------------------------------- | ------------------------------------------------------- |
+| `onReady`           | Fired when the viewer is fully initialized and ready           | `{ viewerId }`                                          |
+| `onLoad`            | Fired when all images are loaded                               | `{ viewerId, imagesX, imagesY }`                        |
+| `onSpin`            | Fired on each rotation/spin                                    | `{ viewerId, direction, activeImageX, activeImageY, amountX, amountY }` |
+| `onAutoplayStart`   | Fired when autoplay begins                                     | `{ viewerId }`                                          |
+| `onAutoplayStop`    | Fired when autoplay stops                                      | `{ viewerId }`                                          |
+| `onFullscreenOpen`  | Fired when fullscreen mode is opened                           | `{ viewerId }`                                          |
+| `onFullscreenClose` | Fired when fullscreen mode is closed                           | `{ viewerId }`                                          |
+| `onZoomIn`          | Fired when pointer zoom is activated                           | `{ viewerId, zoomLevel }`                               |
+| `onZoomOut`         | Fired when pointer zoom is deactivated                         | `{ viewerId }`                                          |
+| `onDragStart`       | Fired when user starts dragging                                | `{ viewerId }`                                          |
+| `onDragEnd`         | Fired when user stops dragging                                 | `{ viewerId }`                                          |
+
+#### Example Usage
+
+```javascript
+const cloudimage360 = new CloudImage360();
+
+const config = {
+  folder: 'https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/',
+  filenameX: 'orange-{index}.jpg',
+  amountX: 73,
+
+  // Event callbacks
+  onReady: (event) => {
+    console.log('Viewer ready:', event.viewerId);
+  },
+  onSpin: (event) => {
+    console.log(`Frame ${event.activeImageX + 1}/${event.amountX}`, event.direction);
+  },
+  onAutoplayStart: () => {
+    console.log('Autoplay started');
+  },
+  onAutoplayStop: () => {
+    console.log('Autoplay stopped');
+  },
+  onFullscreenOpen: () => {
+    console.log('Entered fullscreen');
+  },
+  onZoomIn: (event) => {
+    console.log('Zoomed in at level:', event.zoomLevel);
+  },
+  onDragStart: () => {
+    console.log('User started dragging');
+  },
+  onDragEnd: () => {
+    console.log('User stopped dragging');
+  },
+};
+
+cloudimage360.init(document.getElementById('my-viewer'), config);
+```
 
 ### 🗺️ Hotspots or Markers Configuration
 

@@ -254,7 +254,59 @@ const config = {
 };
 
 instance.init(suvCarContainer, config);
-instance.initAll();
+
+// Initialize demo-generator with event callbacks
+const demoGeneratorContainer = document.getElementById('demo-generator');
+const demoGeneratorConfig = {
+  folder: 'https://scaleflex.cloudimg.io/v7/demo/earbuds/',
+  filenameX: '{index}.jpg',
+  amountX: 233,
+  autoplay: true,
+  speed: 100,
+  pointerZoom: 1.5,
+  dragSpeed: 100,
+  bottomCircle: false,
+  fullscreen: true,
+  keys: true,
+  responsive: 'scaleflex',
+  lazyload: true,
+  // Event callbacks
+  onReady: (event) => {
+    console.log('onReady:', event.viewerId);
+  },
+  onLoad: (event) => {
+    console.log('onLoad:', `${event.imagesX} images loaded`);
+  },
+  onSpin: (event) => {
+    console.log('onSpin:', `Frame ${event.activeImageX + 1}/${event.amountX}`, event.direction);
+  },
+  onAutoplayStart: (event) => {
+    console.log('onAutoplayStart:', event.viewerId);
+  },
+  onAutoplayStop: (event) => {
+    console.log('onAutoplayStop:', event.viewerId);
+  },
+  onFullscreenOpen: (event) => {
+    console.log('onFullscreenOpen:', event.viewerId);
+  },
+  onFullscreenClose: (event) => {
+    console.log('onFullscreenClose:', event.viewerId);
+  },
+  onZoomIn: (event) => {
+    console.log('onZoomIn:', `zoom level ${event.zoomLevel}`);
+  },
+  onZoomOut: (event) => {
+    console.log('onZoomOut:', event.viewerId);
+  },
+  onDragStart: (event) => {
+    console.log('onDragStart:', event.viewerId);
+  },
+  onDragEnd: (event) => {
+    console.log('onDragEnd:', event.viewerId);
+  },
+};
+
+instance.init(demoGeneratorContainer, demoGeneratorConfig);
 
 const demoGeneratorInstance = instance.getViewById('demo-generator');
 
