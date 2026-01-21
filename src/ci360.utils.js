@@ -41,6 +41,7 @@ const DEFAULTS_VALUES = {
   hide360Logo: false,
   logoSrc: LOGO_SRC,
   inertia: false,
+  pinchZoom: true,
   // Event callbacks
   onReady: null,
   onLoad: null,
@@ -94,6 +95,7 @@ const getConfigFromImage = (image) => ({
   hide360Logo: isTrue(image, 'hide-360-logo', DEFAULTS_VALUES.hide360Logo),
   logoSrc: getAttr(image, 'logo-src', DEFAULTS_VALUES.logoSrc),
   inertia: isTrue(image, 'inertia', DEFAULTS_VALUES.inertia),
+  pinchZoom: isTrue(image, 'pinch-zoom', DEFAULTS_VALUES.pinchZoom),
 });
 
 const validateConfig = (config) => {
@@ -181,6 +183,7 @@ const adaptConfig = (config) => {
     hide360Logo: config.hide360Logo ?? DEFAULTS_VALUES.hide360Logo,
     logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
     inertia: config.inertia ?? DEFAULTS_VALUES.inertia,
+    pinchZoom: config.pinchZoom ?? DEFAULTS_VALUES.pinchZoom,
     // Event callbacks
     onReady: config.onReady ?? DEFAULTS_VALUES.onReady,
     onLoad: config.onLoad ?? DEFAULTS_VALUES.onLoad,

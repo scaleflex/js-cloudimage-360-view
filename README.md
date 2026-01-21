@@ -75,6 +75,7 @@ JS Cloudimage 360 View enables you to create stunning, interactive 360-degree pr
 |---------|-------------|
 | **360° Rotation** | Smooth horizontal and vertical rotation with customizable speed |
 | **Touch & Drag** | Intuitive mouse and touch controls with inertia/momentum |
+| **Pinch-to-Zoom** | Natural pinch gesture zooming on mobile devices |
 | **Autoplay** | Automatic rotation with configurable behavior and direction |
 | **Zoom** | Pointer zoom and magnifier glass for detailed views |
 | **Fullscreen** | Immersive fullscreen mode with ESC key support |
@@ -255,6 +256,7 @@ All options can be set via JavaScript config or HTML data attributes.
 | `keys` | `data-keys` | `false` | Enable keyboard arrow navigation |
 | `keysReverse` | `data-keys-reverse` | `false` | Reverse keyboard direction |
 | `stopAtEdges` | `data-stop-at-edges` | `false` | Stop rotation at first/last frame |
+| `pinchZoom` | `data-pinch-zoom` | `true` | Enable pinch-to-zoom on touch devices |
 
 ### Display Options
 

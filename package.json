@@ -32,7 +32,7 @@
     "360 product view"
   ],
   "scripts": {
-    "dev": "vite serve demo",
+    "dev": "vite serve demo --host",
     "clean:build": "rm -rf dist",
     "build:bundle": "npm run clean:build && vite build",
     "deploy:bundle": "npm run build:bundle && node bin/deploy-bundle",
