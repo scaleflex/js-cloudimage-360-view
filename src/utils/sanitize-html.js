@@ -5,6 +5,7 @@
 
 // Safe tags that are allowed in hotspot content
 const SAFE_TAGS = new Set([
+  // Basic HTML
   'p', 'span', 'div', 'br', 'hr',
   'strong', 'em', 'b', 'i', 'u', 's',
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -12,12 +13,34 @@ const SAFE_TAGS = new Set([
   'a', 'img',
   'table', 'thead', 'tbody', 'tr', 'th', 'td',
   'blockquote', 'pre', 'code',
+  // SVG elements
+  'svg', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon',
+  'ellipse', 'g', 'text', 'tspan', 'defs', 'use', 'symbol',
+  'clippath', 'mask', 'lineargradient', 'radialgradient', 'stop',
 ]);
 
 // Safe attributes for specific tags
 const SAFE_ATTRIBUTES = {
   a: ['href', 'title', 'target', 'rel'],
   img: ['src', 'alt', 'title', 'width', 'height'],
+  // SVG attributes
+  svg: ['viewbox', 'width', 'height', 'fill', 'stroke', 'xmlns', 'preserveaspectratio'],
+  path: ['d', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'transform'],
+  circle: ['cx', 'cy', 'r', 'fill', 'stroke', 'stroke-width'],
+  rect: ['x', 'y', 'width', 'height', 'rx', 'ry', 'fill', 'stroke', 'stroke-width'],
+  line: ['x1', 'y1', 'x2', 'y2', 'stroke', 'stroke-width'],
+  polyline: ['points', 'fill', 'stroke', 'stroke-width'],
+  polygon: ['points', 'fill', 'stroke', 'stroke-width'],
+  ellipse: ['cx', 'cy', 'rx', 'ry', 'fill', 'stroke', 'stroke-width'],
+  g: ['transform', 'fill', 'stroke'],
+  text: ['x', 'y', 'dx', 'dy', 'text-anchor', 'fill', 'font-size', 'font-family', 'font-weight'],
+  tspan: ['x', 'y', 'dx', 'dy'],
+  use: ['href', 'xlink:href', 'x', 'y', 'width', 'height'],
+  lineargradient: ['id', 'x1', 'y1', 'x2', 'y2', 'gradientunits'],
+  radialgradient: ['id', 'cx', 'cy', 'r', 'fx', 'fy', 'gradientunits'],
+  stop: ['offset', 'stop-color', 'stop-opacity'],
+  clippath: ['id'],
+  mask: ['id'],
   '*': ['class', 'id', 'style'],
 };
 
