@@ -54,6 +54,8 @@
     - [Method 2: Initialization via Data Attributes](#method-2-initialization-via-data-attributes)
   - [Event Callbacks](#event-callbacks)
 - [🗺️ Hotspots or Markers Configuration](#-hotspots-or-markers-configuration)
+- [🎨 Styling & CSS Customization](#-styling--css-customization)
+  - [CSS Variables for Theming](#css-variables-for-theming)
 - [🗺️ Cloudimage responsive integration](#-cloudimage-responsive-integration)
 - [🔧 Methods](#-methods)
   - [getViewById](#getviewbyidid)
@@ -343,7 +345,89 @@ In the example above, the keys (0, 1, 2, 3, 4, ...) represent image indexes. If 
 
 ### 🎨 Styling & CSS Customization
 
-The viewer can be fully customized via CSS. Below is a comprehensive list of all CSS classes and their customizable properties.
+The viewer can be fully customized via CSS. The easiest way to customize is using CSS variables, which allow you to change colors, sizes, and other properties without writing complex selectors.
+
+#### CSS Variables for Theming
+
+Override these CSS variables in your stylesheet to customize the viewer appearance:
+
+```css
+:root {
+  /* Button styling */
+  --ci360-button-bg: #f0f0f0;
+  --ci360-button-bg-hover: #e7e6e6;
+  --ci360-button-size: 40px;
+  --ci360-button-border-radius: 6px;
+  --ci360-button-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Icon styling */
+  --ci360-icon-color: #37414b;
+  --ci360-icon-color-hover: #1a1f24;
+  --ci360-icon-size: 20px;
+
+  /* Initial 360 icon */
+  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.8);
+  --ci360-initial-icon-color: rgb(80, 80, 80);
+  --ci360-initial-icon-size: 100px;
+
+  /* Loading spinner */
+  --ci360-spinner-color: #fff;
+  --ci360-spinner-accent: #a3a3a3;
+  --ci360-spinner-size: 30px;
+
+  /* Fullscreen */
+  --ci360-fullscreen-bg: #fff;
+
+  /* Magnifier */
+  --ci360-magnifier-size: 250px;
+  --ci360-magnifier-border: 2px solid rgba(0, 0, 0, 0.3);
+  --ci360-magnifier-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  /* Focus */
+  --ci360-focus-color: #0066cc;
+
+  /* Transition overlay */
+  --ci360-overlay-bg: rgba(255, 255, 255, 1);
+
+  /* Hotspots */
+  --ci360-hotspot-color: #00aaff;
+  --ci360-hotspot-border: 1px solid #fff;
+  --ci360-hotspot-size: 18px;
+
+  /* Popper/Tooltip */
+  --ci360-popper-bg: rgba(255, 255, 255, 0.9);
+  --ci360-popper-color: #333;
+  --ci360-popper-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+  --ci360-popper-border-radius: 6px;
+}
+```
+
+**Dark theme example using CSS variables:**
+```css
+:root {
+  --ci360-button-bg: #2d2d2d;
+  --ci360-button-bg-hover: #3d3d3d;
+  --ci360-icon-color: #e0e0e0;
+  --ci360-icon-color-hover: #ffffff;
+  --ci360-fullscreen-bg: #1a1a1a;
+  --ci360-initial-icon-bg: rgba(45, 45, 45, 0.9);
+  --ci360-initial-icon-color: #e0e0e0;
+  --ci360-popper-bg: rgba(45, 45, 45, 0.95);
+  --ci360-popper-color: #e0e0e0;
+  --ci360-overlay-bg: rgba(26, 26, 26, 1);
+}
+```
+
+**Scope variables to a specific viewer:**
+```css
+#my-viewer {
+  --ci360-button-bg: #4a90d9;
+  --ci360-icon-color: #ffffff;
+  --ci360-hotspot-color: #ff6b6b;
+}
+```
+
+Below is a comprehensive list of all CSS classes for more advanced customization.
 
 #### Container Classes
 

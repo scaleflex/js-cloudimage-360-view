@@ -1,3 +1,53 @@
+/* CSS Variables for theming */
+:root {
+  /* Button styling */
+  --ci360-button-bg: #f0f0f0;
+  --ci360-button-bg-hover: #e7e6e6;
+  --ci360-button-size: 40px;
+  --ci360-button-border-radius: 6px;
+  --ci360-button-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Icon styling */
+  --ci360-icon-color: #37414b;
+  --ci360-icon-color-hover: #1a1f24;
+  --ci360-icon-size: 20px;
+
+  /* Initial 360 icon */
+  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.8);
+  --ci360-initial-icon-color: rgb(80, 80, 80);
+  --ci360-initial-icon-size: 100px;
+
+  /* Loading spinner */
+  --ci360-spinner-color: #fff;
+  --ci360-spinner-accent: #a3a3a3;
+  --ci360-spinner-size: 30px;
+
+  /* Fullscreen */
+  --ci360-fullscreen-bg: #fff;
+
+  /* Magnifier */
+  --ci360-magnifier-size: 250px;
+  --ci360-magnifier-border: 2px solid rgba(0, 0, 0, 0.3);
+  --ci360-magnifier-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  /* Focus */
+  --ci360-focus-color: #0066cc;
+
+  /* Transition overlay */
+  --ci360-overlay-bg: rgba(255, 255, 255, 1);
+
+  /* Hotspots */
+  --ci360-hotspot-color: #00aaff;
+  --ci360-hotspot-border: 1px solid #fff;
+  --ci360-hotspot-size: 18px;
+
+  /* Popper/Tooltip */
+  --ci360-popper-bg: rgba(255, 255, 255, 0.9);
+  --ci360-popper-color: #333;
+  --ci360-popper-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+  --ci360-popper-border-radius: 6px;
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
@@ -36,15 +86,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--ci360-overlay-bg);
   opacity: 0;
   transition: all 1s ease-out;
   z-index: 10;
 }
 
 .cloudimage-360-button {
-  width: 40px;
-  height: 40px;
+  width: var(--ci360-button-size);
+  height: var(--ci360-button-size);
   cursor: pointer;
   transition:
     transform 150ms ease-out,
@@ -52,17 +102,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--ci360-button-border-radius);
   border: none;
-  background-color: #f0f0f0;
-  color: #4a4a4a;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--ci360-button-bg);
+  box-shadow: var(--ci360-button-shadow);
   padding: 6px;
 }
 
 .cloudimage-360-button:hover {
   transform: scale(1.05);
-  background-color: #e7e6e6;
+  background-color: var(--ci360-button-bg-hover);
 }
 
 .cloudimage-360-button:focus {
@@ -70,19 +119,19 @@
 }
 
 .cloudimage-360-button:focus-visible {
-  outline: 2px solid #0066cc;
+  outline: 2px solid var(--ci360-focus-color);
   outline-offset: 2px;
 }
 
 .cloudimage-360-button svg {
-  width: 20px;
-  height: 20px;
-  stroke: #37414b;
+  width: var(--ci360-icon-size);
+  height: var(--ci360-icon-size);
+  stroke: var(--ci360-icon-color);
   transition: stroke 150ms ease-out;
 }
 
 .cloudimage-360-button:hover svg {
-  stroke: #1a1f24;
+  stroke: var(--ci360-icon-color-hover);
 }
 
 .cloudimage-initial-icon {
@@ -91,33 +140,33 @@
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100px;
-  height: 100px;
+  width: var(--ci360-initial-icon-size);
+  height: var(--ci360-initial-icon-size);
   margin: auto;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--ci360-initial-icon-bg);
   box-shadow: rgba(255, 255, 255, 0.5) 0px 0px 4px;
   transition: 0.5s all;
-  color: rgb(80, 80, 80);
+  color: var(--ci360-initial-icon-color);
   text-align: center;
   z-index: 2;
-  line-height: 100px;
+  line-height: var(--ci360-initial-icon-size);
   user-select: none;
 }
 
 .cloudimage-initial-icon:hover {
-  background-color: rgba(200, 200, 200, 0.2); /* Brighten on hover */
+  background-color: rgba(200, 200, 200, 0.2);
 }
 
 .cloudimage-loading-spinner {
-  width: 30px;
-  height: 30px;
+  width: var(--ci360-spinner-size);
+  height: var(--ci360-spinner-size);
   transform: translate(-50%, -50%);
-  border: 3px solid #fff;
+  border: 3px solid var(--ci360-spinner-color);
   position: absolute;
   top: 15px;
   left: 15px;
-  border-bottom-color: #a3a3a3;
+  border-bottom-color: var(--ci360-spinner-accent);
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
@@ -147,7 +196,7 @@
   width: 100%;
   height: 100%;
   z-index: 999;
-  background-color: #fff;
+  background-color: var(--ci360-fullscreen-bg);
 }
 
 .cloudimage-360-img-magnifier-glass {
@@ -155,18 +204,16 @@
   background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.9));
   background-repeat: no-repeat;
   position: absolute;
-  border: 2px solid rgba(0, 0, 0, 0.3);
+  border: var(--ci360-magnifier-border);
   border-radius: 50%;
   line-height: 200px;
   text-align: center;
   z-index: 1000;
-  width: 250px;
-  height: 250px;
+  width: var(--ci360-magnifier-size);
+  height: var(--ci360-magnifier-size);
   top: -75px;
   right: -85px;
-  box-shadow:
-    0 8px 16px rgba(0, 0, 0, 0.4),
-    0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--ci360-magnifier-shadow);
   transition: box-shadow 200ms ease;
   overflow: hidden;
   pointer-events: none;
