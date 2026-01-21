@@ -3,11 +3,38 @@ export const loadImages = ({
   onFirstImageLoad,
   onImageLoad,
   onAllImagesLoad,
+  onError,
   autoplayReverse,
 }) => {
   let loadedCount = 0;
+  let errorCount = 0;
   const totalImages = imagesUrls.length;
   const loadedImages = [];
+  const errors = [];
+
+  const handleError = (url, index, isFirstImage = false) => {
+    const error = {
+      message: `Failed to load image: ${url}`,
+      url,
+      index,
+      isFirstImage,
+    };
+    errors.push(error);
+    errorCount++;
+
+    onError?.({
+      error,
+      errorCount,
+      totalImages,
+      errors,
+    });
+  };
+
+  const checkAllLoaded = () => {
+    if (loadedCount === totalImages) {
+      onAllImagesLoad?.(loadedImages, { errorCount, errors });
+    }
+  };
 
   const loadImage = (url, index) => {
     const img = new Image();
@@ -15,67 +42,94 @@ export const loadImages = ({
     img.src = url;
 
     img.onload = async () => {
-      const bitmapImage = await createImageBitmap(img);
+      try {
+        const bitmapImage = await createImageBitmap(img);
+
+        const imageData = {
+          src: url,
+          bitmapImage,
+          naturalWidth: img.naturalWidth,
+          naturalHeight: img.naturalHeight,
+        };
+
+        loadedCount++;
+        loadedImages[index] = imageData;
+
+        onImageLoad?.(imageData, index);
+        checkAllLoaded();
+      } catch (err) {
+        loadedCount++;
+        handleError(url, index);
+        checkAllLoaded();
+      }
+    };
+
+    img.onerror = () => {
+      loadedCount++;
+      handleError(url, index);
+      checkAllLoaded();
+    };
+  };
+
+  const firstImg = new Image();
+  const firstIndex = autoplayReverse ? imagesUrls.length - 1 : 0;
+  const src = imagesUrls[firstIndex];
+  firstImg.crossOrigin = 'anonymous';
+  firstImg.src = src;
+
+  firstImg.onload = async () => {
+    try {
+      const bitmapImage = await createImageBitmap(firstImg);
 
       const imageData = {
-        src: url,
+        src,
         bitmapImage,
         naturalWidth: firstImg.naturalWidth,
         naturalHeight: firstImg.naturalHeight,
       };
 
-      loadedCount++;
-      loadedImages[index] = imageData;
-
-      onImageLoad?.(imageData, index);
-
-      if (loadedCount === totalImages) {
-        onAllImagesLoad?.(loadedImages);
-      }
-    };
-
-    img.onerror = () => {
-      console.error(`Failed to load image: ${url}`);
+      loadedImages[firstIndex] = imageData;
       loadedCount++;
 
-      if (loadedCount === totalImages) {
-        onAllImagesLoad?.(loadedImages);
+      onFirstImageLoad?.(imageData);
+      onImageLoad?.(imageData, firstIndex);
+
+      // Load remaining images
+      for (let i = 0; i < imagesUrls.length; i++) {
+        if (i !== firstIndex) {
+          loadImage(imagesUrls[i], i);
+        }
       }
-    };
-  };
 
-  const firstImg = new Image();
-  const src = imagesUrls[autoplayReverse ? imagesUrls.length - 1 : 0];
-  firstImg.crossOrigin = 'anonymous';
-  firstImg.src = src;
-  firstImg.onload = async () => {
-    const bitmapImage = await createImageBitmap(firstImg);
+      // Check if this was the only image
+      checkAllLoaded();
+    } catch (err) {
+      loadedCount++;
+      handleError(src, firstIndex, true);
 
-    const imageData = {
-      src,
-      bitmapImage,
-      naturalWidth: firstImg.naturalWidth,
-      naturalHeight: firstImg.naturalHeight,
-    };
+      // Still try to load other images
+      for (let i = 0; i < imagesUrls.length; i++) {
+        if (i !== firstIndex) {
+          loadImage(imagesUrls[i], i);
+        }
+      }
 
-    loadedImages[0] = imageData;
-    loadedCount++;
-
-    onFirstImageLoad?.(imageData);
-    onImageLoad?.(imageData, 0);
-
-    for (let i = 1; i < imagesUrls.length; i++) {
-      loadImage(imagesUrls[i], i);
+      checkAllLoaded();
     }
   };
 
   firstImg.onerror = () => {
-    console.error(`Failed to load first image: ${imagesUrls[0]}`);
     loadedCount++;
+    handleError(src, firstIndex, true);
 
-    for (let i = 1; i < imagesUrls.length; i++) {
-      loadImage(imagesUrls[i], i);
+    // Still try to load other images
+    for (let i = 0; i < imagesUrls.length; i++) {
+      if (i !== firstIndex) {
+        loadImage(imagesUrls[i], i);
+      }
     }
+
+    checkAllLoaded();
   };
 };
 

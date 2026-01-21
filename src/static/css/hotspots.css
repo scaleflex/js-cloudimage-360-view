@@ -29,6 +29,17 @@
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
+  /* Reset button styles */
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  outline: none;
+}
+
+.cloudimage-360-hotspot:focus-visible {
+  outline: 2px solid var(--ci360-focus-color, #0066cc);
+  outline-offset: 2px;
+  animation: none;
 }
 
 .cloudimage-360-hotspot.visible {

@@ -69,6 +69,9 @@ class Hotspot {
 
     this.popper = createPopperElement(content, id);
     this.popper.setAttribute('data-show', '');
+    this.currentHotspotElement = hotspotElement;
+    hotspotElement.setAttribute('aria-expanded', 'true');
+    hotspotElement.setAttribute('aria-describedby', `cloudimage-360-popper-${id}`);
 
     const popperEnterHandler = () => {
       this.shouldHidePopper = false;
@@ -116,6 +119,12 @@ class Hotspot {
   hidePopper() {
     this.cleanupPopperListeners();
 
+    if (this.currentHotspotElement) {
+      this.currentHotspotElement.setAttribute('aria-expanded', 'false');
+      this.currentHotspotElement.removeAttribute('aria-describedby');
+      this.currentHotspotElement = null;
+    }
+
     if (this.popperInstance) {
       this.popperInstance.destroy();
       this.popperInstance = null;
@@ -123,6 +132,7 @@ class Hotspot {
 
     if (this.popper) {
       this.popper.removeAttribute('data-show');
+      this.popper.setAttribute('aria-hidden', 'true');
       const popperToRemove = this.popper;
       this.popper = null;
       setTimeout(() => {
@@ -132,8 +142,8 @@ class Hotspot {
   }
 
   createHotspot(hotspot) {
-    const { id, content, keepOpen, onClick } = hotspot;
-    const hotspotElement = createHotspotElement(id);
+    const { id, content, keepOpen, onClick, label } = hotspot;
+    const hotspotElement = createHotspotElement(id, label);
 
     if (onClick) {
       hotspotElement.style.cursor = 'pointer';
@@ -148,6 +158,13 @@ class Hotspot {
       hotspotElement.addEventListener('mouseenter', () =>
         this.showPopper({ hotspotElement, content, id, keepOpen })
       );
+      hotspotElement.addEventListener('focus', () =>
+        this.showPopper({ hotspotElement, content, id, keepOpen })
+      );
+      hotspotElement.addEventListener('blur', () => {
+        this.shouldHidePopper = true;
+        this.checkAndHidePopper();
+      });
     }
 
     this.hotspotsContainer.appendChild(hotspotElement);

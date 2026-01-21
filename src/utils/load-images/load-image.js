@@ -1,4 +1,4 @@
-export const loadImage = (url, callback) => {
+export const loadImage = (url, callback, onError) => {
   const image = new Image();
 
   image.src = url;
@@ -15,5 +15,15 @@ export const loadImage = (url, callback) => {
     }
   };
 
-  image.onerror = function () {};
+  image.onerror = (event) => {
+    const error = new Error(`Failed to load image: ${url}`);
+    error.url = url;
+    error.event = event;
+
+    if (onError) {
+      onError(error);
+    } else {
+      console.error(error.message);
+    }
+  };
 };

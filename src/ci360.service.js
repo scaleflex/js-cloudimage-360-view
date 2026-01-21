@@ -42,6 +42,8 @@ import {
   createTransitionOverlay,
   isTouchDevice,
   safeJsonParse,
+  createAriaLiveRegion,
+  announceToScreenReader,
 } from './utils';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
@@ -89,6 +91,10 @@ class CI360Viewer {
     if (typeof callback === 'function') {
       callback({ ...data, viewerId: this.id });
     }
+  }
+
+  announce(message) {
+    announceToScreenReader(this.ariaLiveRegion, message);
   }
 
   mouseDown(event) {
@@ -293,6 +299,7 @@ class CI360Viewer {
         this.imagesY = loadedImagesY;
         onLoad();
       },
+      onError: (errorInfo) => this.emit('onError', errorInfo),
     });
   }
 
@@ -336,6 +343,7 @@ class CI360Viewer {
     this.showAllIcons();
     this.hideTransitionOverlay();
     this.emit('onZoomOut');
+    this.announce('Zoomed out');
   }
 
   mouseLeave() {
@@ -354,6 +362,7 @@ class CI360Viewer {
 
     this.updateView(this.pointerZoom, offsetX, offsetY);
     this.emit('onZoomIn', { zoomLevel: this.pointerZoom });
+    this.announce('Zoomed in. Move mouse to pan. Click to zoom out.');
   }
 
   touchOutside(event) {
@@ -771,6 +780,7 @@ class CI360Viewer {
 
     this.emit('onLoad', { imagesX: this.imagesX.length, imagesY: this.imagesY.length });
     this.emit('onReady');
+    this.announce('360 degree view loaded. Use mouse drag or arrow keys to rotate.');
 
     if (this.autoplay) {
       this.hideAllIcons();
@@ -797,7 +807,18 @@ class CI360Viewer {
       magnify(event, this.innerBox, this.offset, image, this.glass, this.magnifier);
     };
 
-    loadImage(highPreviewCdnUrl, onLoadImage);
+    const onErrorImage = (error) => {
+      this.hideLoadingSpinner();
+      this.removeGlass();
+      this.emit('onError', {
+        error: { message: error.message, url: error.url },
+        errorCount: 1,
+        totalImages: 1,
+        errors: [{ message: error.message, url: error.url }],
+      });
+    };
+
+    loadImage(highPreviewCdnUrl, onLoadImage, onErrorImage);
   }
 
   openFullscreenModal(event) {
@@ -808,6 +829,7 @@ class CI360Viewer {
 
     new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
     this.emit('onFullscreenOpen');
+    this.announce('Opened fullscreen mode. Press Escape to exit.');
   }
 
   closeFullscreenModal(event) {
@@ -816,6 +838,7 @@ class CI360Viewer {
     document.body.removeChild(this.container.parentNode);
     window.document.body.style.overflow = 'visible';
     this.emit('onFullscreenClose');
+    this.announce('Exited fullscreen mode');
   }
 
   play() {
@@ -1176,6 +1199,7 @@ class CI360Viewer {
     this.iconsContainer = createIconsContainer(this.innerBox);
     this.canvas = createCanvas(this.innerBox, event);
     this.loader = createLoader(this.innerBox);
+    this.ariaLiveRegion = createAriaLiveRegion(this.innerBox);
 
     const offscreenCanvas = this.canvas.transferControlToOffscreen();
     this.canvasWorker.postMessage(
@@ -1255,6 +1279,7 @@ class CI360Viewer {
       onZoomOut,
       onDragStart,
       onDragEnd,
+      onError,
     } = adaptedConfig;
 
     const ciParams = { ciToken, ciFilters, ciTransformation };
@@ -1306,6 +1331,7 @@ class CI360Viewer {
     this.onZoomOut = onZoomOut;
     this.onDragStart = onDragStart;
     this.onDragEnd = onDragEnd;
+    this.onError = onError;
 
     this.srcXConfig = {
       folder,
@@ -1350,6 +1376,7 @@ class CI360Viewer {
         onImageLoad: (image, index, orientation) => this.onImageLoad(image, index, orientation),
         onFirstImageLoad: (imageData) => this.onFirstImageLoaded(event, imageData),
         onAllImagesLoad: this.onAllImagesLoaded.bind(this),
+        onError: (errorInfo) => this.emit('onError', errorInfo),
       });
     };
 

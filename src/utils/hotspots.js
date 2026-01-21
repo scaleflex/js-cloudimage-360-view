@@ -8,11 +8,16 @@ export const findHotspotsForFrame = (hotspots, currentFrame, orientation) => {
   );
 };
 
-export const createHotspotElement = (id) => {
-  const hotspotElement = document.createElement('span');
+export const createHotspotElement = (id, label) => {
+  const hotspotElement = document.createElement('button');
   hotspotElement.id = id;
   hotspotElement.className = 'cloudimage-360-hotspot';
   hotspotElement.dataset.hotspotId = id;
+  hotspotElement.setAttribute('type', 'button');
+  hotspotElement.setAttribute('aria-label', label || `Hotspot ${id}`);
+  hotspotElement.setAttribute('aria-haspopup', 'true');
+  hotspotElement.setAttribute('aria-expanded', 'false');
+  // aria-describedby is added dynamically when popper is shown
 
   return hotspotElement;
 };
@@ -69,6 +74,8 @@ export const createPopperElement = (content, id) => {
   popper.className = 'cloudimage-360-popper';
   popper.id = `cloudimage-360-popper-${id}`;
   popper.dataset.popperId = id;
+  popper.setAttribute('role', 'tooltip');
+  popper.setAttribute('aria-hidden', 'false');
 
   if (typeof content === 'string' && /<\/?[a-z][\s\S]*>/i.test(content)) {
     popper.innerHTML = content;

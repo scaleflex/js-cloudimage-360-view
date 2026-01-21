@@ -41,7 +41,10 @@
     "build:npm": "npm run clean:demo && vite --config vite-npm.config.js build",
     "build:demo": "npm run clean:demo && vite --config vite-demo.config.js build",
     "deploy:demo": "gh-pages -d dist",
-    "publish": "npm run build:demo && npm run deploy:demo"
+    "publish": "npm run build:demo && npm run deploy:demo",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.2",
@@ -53,6 +56,7 @@
     "@babel/plugin-transform-runtime": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "@eslint/js": "^9.12.0",
+    "@vitest/coverage-v8": "^4.0.17",
     "babel-loader": "^8.2.3",
     "babel-plugin-array-includes": "^2.0.3",
     "babel-preset-env": "^1.7.0",
@@ -66,6 +70,7 @@
     "gh-pages": "^2.0.1",
     "highlight.js": "^10.4.1",
     "isomorphic-fetch": "^3.0.0",
+    "jsdom": "^27.4.0",
     "mini-css-extract-plugin": "^0.9.0",
     "mobile-detect": "^1.4.3",
     "prettier": "3.3.3",
@@ -74,6 +79,7 @@
     "vite-plugin-dts": "^4.3.0",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-lib-inject-css": "^2.1.1",
+    "vitest": "^4.0.17",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.13.3"
