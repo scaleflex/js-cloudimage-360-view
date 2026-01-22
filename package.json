@@ -44,7 +44,7 @@
     "360 product view"
   ],
   "scripts": {
-    "dev": "vite serve demo --host",
+    "dev": "vite serve demo --host --port 5175",
     "dev:react": "npm --prefix demo/react-demo run dev",
     "clean:build": "rm -rf dist",
     "build:bundle": "npm run clean:build && vite build",

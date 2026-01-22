@@ -1484,6 +1484,7 @@ class CI360Viewer {
       hints,
       theme,
       hotspotTimelineOnClick = true,
+      aspectRatio,
       // Event callbacks
       onReady,
       onLoad,
@@ -1527,6 +1528,12 @@ class CI360Viewer {
     this.info = imageInfo;
     this.keys = keys;
     this.innerBox = this.innerBox ?? createInnerBox(this.container);
+
+    // Apply aspect ratio to container if specified
+    if (aspectRatio) {
+      this.container.style.aspectRatio = aspectRatio;
+    }
+
     this.initialIconShown = initialIconShown;
     this.bottomCircle = bottomCircle;
     this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior, this.allowSpinX, this.allowSpinY);

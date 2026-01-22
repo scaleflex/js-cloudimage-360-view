@@ -151,6 +151,10 @@ export interface CI360Config {
   hotspots?: Hotspot[] | null;
   hotspotTimelineOnClick?: boolean;
 
+  // Container
+  /** Aspect ratio for the container (e.g., "16/9", "4/3", "1/1") */
+  aspectRatio?: string | null;
+
   // Event callbacks
   onReady?: (data: BaseEventData) => void;
   onLoad?: (data: LoadEventData) => void;

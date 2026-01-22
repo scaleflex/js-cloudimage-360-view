@@ -11,11 +11,12 @@ function BasicExample() {
         folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
         filenameX="orange-{index}.jpg"
         amountX={73}
+        aspectRatio="16/9"
         autoplay
         fullscreen
         bottomCircle
         hints
-        style={{ width: '100%', height: 400 }}
+        style={{ width: '100%' }}
       />
       <div className="features">
         <span className="feature-tag">Autoplay</span>
@@ -39,10 +40,11 @@ function RefControlExample() {
         folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
         filenameX="orange-{index}.jpg"
         amountX={73}
+        aspectRatio="16/9"
         fullscreen
         inertia
         onSpin={(data) => setCurrentFrame(data.activeImageX)}
-        style={{ width: '100%', height: 400 }}
+        style={{ width: '100%' }}
       />
       <div className="frame-indicator">Current Frame: {currentFrame + 1} / 73</div>
       <div className="controls">
@@ -68,17 +70,17 @@ function ZoomExample() {
     <div className="example">
       <h2>Zoom & Magnifier</h2>
       <CI360Viewer
-        folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-        filenameX="earbuds-{index}.jpg"
-        amountX={233}
+        folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+        filenameX="product-{index}.jpg"
+        amountX={60}
+        aspectRatio="4/3"
         pointerZoom={3}
         fullscreen
-        speed={50}
-        style={{ width: '100%', height: 400 }}
+        style={{ width: '100%' }}
       />
       <div className="features">
         <span className="feature-tag">Pointer Zoom (3x)</span>
-        <span className="feature-tag">233 Frames</span>
+        <span className="feature-tag">60 Frames</span>
         <span className="feature-tag">Click to zoom</span>
       </div>
     </div>
@@ -109,7 +111,8 @@ function EventsExample() {
         onDragEnd={() => addEvent('onDragEnd')}
         onZoomIn={() => addEvent('onZoomIn')}
         onZoomOut={() => addEvent('onZoomOut')}
-        style={{ width: '100%', height: 400 }}
+        aspectRatio="16/9"
+        style={{ width: '100%' }}
       />
       <div className="event-log">
         <strong>Events:</strong> {events.length > 0 ? events.join(' → ') : 'Interact to see events'}
@@ -137,7 +140,8 @@ function ThemeExample() {
         amountX={73}
         fullscreen
         theme={theme}
-        style={{ width: '100%', height: 400 }}
+        aspectRatio="16/9"
+        style={{ width: '100%' }}
       />
       <div className="controls">
         <button
@@ -167,7 +171,7 @@ export default function App() {
     <div className="app">
       <header>
         <h1>CloudImage 360 View - React</h1>
-        <p>Interactive 360-degree product viewer - Version 4.1.0</p>
+        <p>Interactive 360-degree product viewer - Version 4.1.2</p>
       </header>
 
       <main>

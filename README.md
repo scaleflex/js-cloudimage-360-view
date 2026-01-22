@@ -243,7 +243,8 @@ function ProductView() {
       amountX={36}
       autoplay
       fullscreen
-      style={{ width: '100%', maxWidth: 600, height: 400 }}
+      aspectRatio="16/9"
+      style={{ width: '100%', maxWidth: 800 }}
     />
   );
 }
@@ -364,7 +365,7 @@ function CustomViewer() {
 
   return (
     <div>
-      <div ref={containerRef} style={{ width: 600, height: 400 }} />
+      <div ref={containerRef} style={{ width: '100%', maxWidth: 800, aspectRatio: '16/9' }} />
       {isReady && <p>Viewer is ready!</p>}
     </div>
   );
@@ -432,6 +433,7 @@ All options can be set via JavaScript config or HTML data attributes.
 
 | Option | Data Attribute | Default | Description |
 |--------|----------------|---------|-------------|
+| `aspectRatio` | `data-aspect-ratio` | `null` | Aspect ratio for the container (e.g., `"16/9"`, `"4/3"`, `"1/1"`) |
 | `fullscreen` | `data-fullscreen` | `false` | Show fullscreen button |
 | `magnifier` | `data-magnifier` | `null` | Magnifier zoom level (1-5) |
 | `pointerZoom` | `data-pointer-zoom` | `0` | Pointer zoom level on click (1-5) |

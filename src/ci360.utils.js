@@ -45,6 +45,7 @@ const DEFAULTS_VALUES = {
   hints: true,
   theme: null,
   hotspotTimelineOnClick: true,
+  aspectRatio: null,
   // Event callbacks
   onReady: null,
   onLoad: null,
@@ -102,6 +103,7 @@ const getConfigFromImage = (image) => ({
   hints: !isFalse(image, 'hints'),
   theme: getAttr(image, 'theme', DEFAULTS_VALUES.theme),
   hotspotTimelineOnClick: !isFalse(image, 'hotspot-timeline-on-click'),
+  aspectRatio: getAttr(image, 'aspect-ratio', DEFAULTS_VALUES.aspectRatio),
 });
 
 const validateConfig = (config) => {
@@ -193,6 +195,7 @@ const adaptConfig = (config) => {
     hints: config.hints ?? DEFAULTS_VALUES.hints,
     theme: config.theme || DEFAULTS_VALUES.theme,
     hotspotTimelineOnClick: config.hotspotTimelineOnClick ?? DEFAULTS_VALUES.hotspotTimelineOnClick,
+    aspectRatio: config.aspectRatio || DEFAULTS_VALUES.aspectRatio,
     // Event callbacks
     onReady: config.onReady ?? DEFAULTS_VALUES.onReady,
     onLoad: config.onLoad ?? DEFAULTS_VALUES.onLoad,

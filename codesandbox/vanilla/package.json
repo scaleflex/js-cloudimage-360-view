@@ -4,7 +4,7 @@
   "description": "CloudImage 360 View - Vanilla JavaScript Example",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve ."
+    "start": "npx serve . -l 5175"
   },
   "keywords": ["360-view", "product-viewer", "cloudimage"],
   "license": "MIT"

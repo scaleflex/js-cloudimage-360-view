@@ -9,13 +9,14 @@ function BasicExample() {
       <h2>Basic Usage</h2>
       <p>Simple 360 viewer with autoplay and fullscreen support.</p>
       <CI360Viewer
-        folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-        filenameX="{index}.jpg"
-        amountX={233}
+        folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+        filenameX="product-{index}.jpg"
+        amountX={60}
         autoplay
         speed={150}
         fullscreen
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="1/1"
+        style={{ width: '100%', maxWidth: 400 }}
       />
     </div>
   );
@@ -39,7 +40,8 @@ function RefControlExample() {
         filenameX="nike-{index}.jpg"
         amountX={35}
         onSpin={handleSpin}
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="16/9"
+        style={{ width: '100%', maxWidth: 800 }}
       />
       <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <button onClick={() => viewerRef.current?.play()}>Play</button>
@@ -67,7 +69,8 @@ function TwoAxisExample() {
         autoplayBehavior="spin-xy"
         keys
         fullscreen
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="16/9"
+        style={{ width: '100%', maxWidth: 800 }}
       />
     </div>
   );
@@ -79,12 +82,13 @@ function ZoomExample() {
       <h2>Pointer Zoom</h2>
       <p>Click to zoom in and move mouse to pan. Click again to zoom out.</p>
       <CI360Viewer
-        folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-        filenameX="{index}.jpg"
-        amountX={233}
+        folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+        filenameX="product-{index}.jpg"
+        amountX={60}
         pointerZoom={3}
         fullscreen
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="1/1"
+        style={{ width: '100%', maxWidth: 400 }}
       />
     </div>
   );
@@ -96,13 +100,14 @@ function InertiaExample() {
       <h2>Inertia & Pinch Zoom</h2>
       <p>Drag and release to see momentum effect. On touch devices, use pinch to zoom.</p>
       <CI360Viewer
-        folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-        filenameX="{index}.jpg"
-        amountX={233}
+        folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+        filenameX="product-{index}.jpg"
+        amountX={60}
         inertia
         pinchZoom
         fullscreen
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="1/1"
+        style={{ width: '100%', maxWidth: 400 }}
       />
     </div>
   );
@@ -120,9 +125,9 @@ function EventsExample() {
       <h2>Events</h2>
       <p>All events are logged below the viewer.</p>
       <CI360Viewer
-        folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-        filenameX="{index}.jpg"
-        amountX={100}
+        folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+        filenameX="product-{index}.jpg"
+        amountX={60}
         autoplay
         playOnce
         fullscreen
@@ -135,7 +140,8 @@ function EventsExample() {
         onZoomIn={(data) => addEvent(`onZoomIn (level: ${data.zoomLevel})`)}
         onZoomOut={() => addEvent('onZoomOut')}
         pointerZoom={2}
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="1/1"
+        style={{ width: '100%', maxWidth: 400 }}
       />
       <div
         style={{
@@ -176,13 +182,14 @@ function ThemeExample() {
       </div>
       <CI360Viewer
         key={theme}
-        folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
-        filenameX="{index}.jpg"
-        amountX={100}
+        folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
+        filenameX="product-{index}.jpg"
+        amountX={60}
         theme={theme}
         hints
         fullscreen
-        style={{ width: '100%', maxWidth: 600, height: 400 }}
+        aspectRatio="1/1"
+        style={{ width: '100%', maxWidth: 400 }}
       />
     </div>
   );
