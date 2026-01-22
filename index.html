@@ -15,8 +15,8 @@
       rel="stylesheet"
     />
     <title>JS-Cloudimage-360-view</title>
-    <script type="module" crossorigin src="/js-cloudimage-360-view/assets/index-DLpQooDx.js"></script>
-    <link rel="stylesheet" crossorigin href="/js-cloudimage-360-view/assets/index-DnhhREFS.css">
+    <script type="module" crossorigin src="/js-cloudimage-360-view/assets/index-nRVYRXKh.js"></script>
+    <link rel="stylesheet" crossorigin href="/js-cloudimage-360-view/assets/index-Dl1JIB5k.css">
   </head>
 
   <body>
@@ -186,6 +186,56 @@
             data-hints="false"
           ></div>
           <p>Geely</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="programmatic-control-section container-fluid">
+      <div class="programmatic-title">
+        <h2>Programmatic Control</h2>
+        <p>Control the viewer with JavaScript - play, stop, rotate, and navigate to specific frames.</p>
+      </div>
+      <div class="programmatic-content">
+        <div class="programmatic-viewer">
+          <div
+            id="programmatic-viewer"
+            class="cloudimage-360"
+            data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+            data-filename-x="orange-{index}.jpg"
+            data-amount-x="73"
+            data-responsive="scaleflex"
+            data-fullscreen
+            data-hints="false"
+            data-bottom-circle
+          ></div>
+        </div>
+        <div class="programmatic-controls">
+          <div class="control-group">
+            <h4>Playback</h4>
+            <div class="control-buttons-row">
+              <button id="btn-play" class="control-btn">Play</button>
+              <button id="btn-stop" class="control-btn">Stop</button>
+            </div>
+          </div>
+          <div class="control-group">
+            <h4>Rotation</h4>
+            <div class="control-buttons-row">
+              <button id="btn-left" class="control-btn">Rotate Left</button>
+              <button id="btn-right" class="control-btn">Rotate Right</button>
+            </div>
+          </div>
+          <div class="control-group">
+            <h4>Navigation</h4>
+            <div class="control-buttons-row">
+              <button id="btn-frame-0" class="control-btn">Frame 1</button>
+              <button id="btn-frame-36" class="control-btn">Frame 37</button>
+              <button id="btn-frame-72" class="control-btn">Frame 73</button>
+            </div>
+          </div>
+          <div class="control-group">
+            <h4>Current Frame</h4>
+            <div class="frame-display" id="frame-display">Frame: 1 / 73</div>
+          </div>
         </div>
       </div>
     </section>
