@@ -2358,12 +2358,12 @@ class Nt {
     });
   }
   openFullscreenModal(t) {
-    t.stopPropagation(), window.document.body.style.overflow = "hidden";
+    t.stopPropagation(), this.releaseMemory(), window.document.body.style.overflow = "hidden";
     const i = Ji(this.container);
-    new Nt(i, this.viewerConfig, !0), this.emit("onFullscreenOpen"), this.announce("Opened fullscreen mode. Press Escape to exit.");
+    this.fullscreenInstance = new Nt(i, this.viewerConfig, !0), this.emit("onFullscreenOpen"), this.announce("Opened fullscreen mode. Press Escape to exit.");
   }
   closeFullscreenModal(t) {
-    t.stopPropagation(), document.body.removeChild(this.container.parentNode), window.document.body.style.overflow = "visible", this.emit("onFullscreenClose"), this.announce("Exited fullscreen mode");
+    t.stopPropagation(), this.fullscreenInstance && (this.fullscreenInstance.destroy(), this.fullscreenInstance = null), document.body.removeChild(this.container.parentNode), window.document.body.style.overflow = "visible", this.reloadImages(), this.emit("onFullscreenClose"), this.announce("Exited fullscreen mode");
   }
   play() {
     if (this.isClicked) return;
@@ -2784,4 +2784,4 @@ class qo {
 export {
   qo as default
 };
-//# sourceMappingURL=ci360-CvrOJnzb.mjs.map
+//# sourceMappingURL=ci360-CX3-2b14.mjs.map
