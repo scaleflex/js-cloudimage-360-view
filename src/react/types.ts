@@ -289,6 +289,12 @@ export interface UseCI360Return {
    * Whether the viewer is ready
    */
   isReady: boolean;
+
+  /**
+   * Getter function to always get the current viewer instance.
+   * Use this in callbacks to avoid stale closure issues.
+   */
+  getViewer: () => CI360ViewerInstance | null;
 }
 
 /**

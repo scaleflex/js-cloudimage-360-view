@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useId, type RefObject } from 'react';
+import { useEffect, useRef, useState, useId, useCallback, type RefObject } from 'react';
 import type {
   CI360Config,
   CI360ViewerInstance,
@@ -111,9 +111,13 @@ export function useCI360(
     uniqueId,
   ]);
 
+  // Stable getter to always return current viewer (avoids stale closures)
+  const getViewer = useCallback(() => viewerRef.current, []);
+
   return {
     viewer: viewerRef.current,
     isReady,
+    getViewer,
   };
 }
 

@@ -171,7 +171,7 @@ export default function App() {
     <div className="app">
       <header>
         <h1>CloudImage 360 View - React</h1>
-        <p>Interactive 360-degree product viewer - Version 4.1.2</p>
+        <p>Interactive 360-degree product viewer - Version 4.1.3</p>
       </header>
 
       <main>
@@ -184,7 +184,7 @@ export default function App() {
 
       <footer>
         <a
-          href="https://github.com/niceplayer/js-cloudimage-360-view"
+          href="https://github.com/scaleflex/js-cloudimage-360-view"
           target="_blank"
           rel="noopener noreferrer"
         >

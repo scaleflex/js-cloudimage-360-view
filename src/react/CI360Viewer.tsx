@@ -287,25 +287,27 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
     ]
   );
 
-  const { viewer } = useCI360(containerRef, config);
+  const { getViewer } = useCI360(containerRef, config);
 
   // Expose imperative methods via ref
+  // Use getViewer() inside methods to always get the current viewer instance,
+  // avoiding stale closure issues when the viewer initializes after first render
   useImperativeHandle(
     ref,
     () => ({
-      moveLeft: (steps = 1) => viewer?.moveLeft(false, steps),
-      moveRight: (steps = 1) => viewer?.moveRight(false, steps),
-      moveTop: (steps = 1) => viewer?.moveTop(false, steps),
-      moveBottom: (steps = 1) => viewer?.moveBottom(false, steps),
-      play: () => viewer?.play(),
-      stop: () => viewer?.stopAutoplay(),
-      zoomIn: () => viewer?.toggleZoom(),
-      zoomOut: () => viewer?.removeZoom(),
+      moveLeft: (steps = 1) => getViewer()?.moveLeft(false, steps),
+      moveRight: (steps = 1) => getViewer()?.moveRight(false, steps),
+      moveTop: (steps = 1) => getViewer()?.moveTop(false, steps),
+      moveBottom: (steps = 1) => getViewer()?.moveBottom(false, steps),
+      play: () => getViewer()?.play(),
+      stop: () => getViewer()?.stopAutoplay(),
+      zoomIn: () => getViewer()?.toggleZoom(),
+      zoomOut: () => getViewer()?.removeZoom(),
       goToFrame: (frame: number, hotspotId?: string) =>
-        viewer?.animateToFrame(frame, hotspotId),
-      getViewer: () => viewer,
+        getViewer()?.animateToFrame(frame, hotspotId),
+      getViewer: () => getViewer(),
     }),
-    [viewer]
+    [getViewer]
   );
 
   return (

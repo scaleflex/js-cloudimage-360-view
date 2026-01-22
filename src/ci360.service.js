@@ -1192,6 +1192,11 @@ class CI360Viewer {
    * @param {string} [hotspotId] - Optional hotspot ID to show popup for after animation
    */
   animateToFrame(targetFrame, hotspotId) {
+    // Close any existing hotspot popup before navigating
+    if (this.hotspotsInstance) {
+      this.hotspotsInstance.hidePopper();
+    }
+
     if (this.isAnimatingToFrame || targetFrame === this.activeImageX) {
       // If already at the target frame, just show the hotspot if requested
       if (targetFrame === this.activeImageX && hotspotId && this.hotspotsInstance && this.hotspotTimelineOnClick) {
