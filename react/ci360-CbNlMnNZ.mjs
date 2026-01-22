@@ -1,11 +1,11 @@
-import './js-cloudimage-360-view.min.css';var qe = Object.defineProperty;
-var ti = (e, t, i) => t in e ? qe(e, t, { enumerable: !0, configurable: !0, writable: !0, value: i }) : e[t] = i;
+var Qe = Object.defineProperty;
+var ti = (e, t, i) => t in e ? Qe(e, t, { enumerable: !0, configurable: !0, writable: !0, value: i }) : e[t] = i;
 var le = (e, t, i) => ti(e, typeof t != "symbol" ? t + "" : t, i);
 var Mt = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
 function ei(e) {
   return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
 }
-var Ze = "Expected a function", ce = NaN, ii = "[object Symbol]", ni = /^\s+|\s+$/g, oi = /^[-+]0x[0-9a-f]+$/i, si = /^0b[01]+$/i, ri = /^0o[0-7]+$/i, ai = parseInt, li = typeof Mt == "object" && Mt && Mt.Object === Object && Mt, ci = typeof self == "object" && self && self.Object === Object && self, hi = li || ci || Function("return this")(), di = Object.prototype, ui = di.toString, pi = Math.max, fi = Math.min, _t = function() {
+var Ze = "Expected a function", ce = NaN, ii = "[object Symbol]", ni = /^\s+|\s+$/g, oi = /^[-+]0x[0-9a-f]+$/i, si = /^0b[01]+$/i, ri = /^0o[0-7]+$/i, ai = parseInt, li = typeof Mt == "object" && Mt && Mt.Object === Object && Mt, ci = typeof self == "object" && self && self.Object === Object && self, hi = li || ci || Function("return this")(), di = Object.prototype, ui = di.toString, pi = Math.max, fi = Math.min, Kt = function() {
   return hi.Date.now();
 };
 function mi(e, t, i) {
@@ -29,7 +29,7 @@ function mi(e, t, i) {
     return a === void 0 || O >= t || O < 0 || p && S >= s;
   }
   function m() {
-    var y = _t();
+    var y = Kt();
     if (v(y))
       return b(y);
     r = setTimeout(m, g(y));
@@ -41,10 +41,10 @@ function mi(e, t, i) {
     r !== void 0 && clearTimeout(r), c = 0, n = a = o = r = void 0;
   }
   function w() {
-    return r === void 0 ? l : b(_t());
+    return r === void 0 ? l : b(Kt());
   }
   function C() {
-    var y = _t(), O = v(y);
+    var y = Kt(), O = v(y);
     if (n = arguments, o = this, a = y, O) {
       if (r === void 0)
         return I(a);
@@ -439,10 +439,10 @@ const de = /* @__PURE__ */ ei(bi), M = {
 }, ge = (e) => {
   const t = document.createElement("div");
   return t.className = "cloudimage-360-icons-container", e.appendChild(t), t;
-}, Gi = (e) => {
+}, zi = (e) => {
   const t = document.createElement("div");
   return t.className = "cloudimage-360-inner-box", t.setAttribute("role", "img"), t.setAttribute("aria-label", "360 degree product view. Use mouse drag or arrow keys to rotate."), e.appendChild(t), t;
-}, zi = () => {
+}, Gi = () => {
   const e = document.createElement("button");
   return e.className = "cloudimage-360-button cloudimage-360-magnifier-button", e.setAttribute("aria-label", "Magnify image"), e.setAttribute("type", "button"), e.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>', e;
 }, Ui = (e) => {
@@ -450,7 +450,7 @@ const de = /* @__PURE__ */ ei(bi), M = {
   t.className = "cloudimage-initial-icon";
   const i = document.createElement("span");
   return i.className = "percentage", i.innerText = "0%", t.appendChild(i), e.appendChild(t), t;
-}, _i = (e) => {
+}, Ki = (e) => {
   const t = document.createElement("div");
   t.className = "cloudimage-360-fullscreen-modal";
   const i = e.cloneNode();
@@ -458,16 +458,16 @@ const de = /* @__PURE__ */ ei(bi), M = {
 }, Jt = (e, t) => {
   const i = e.querySelector(t);
   i && i.parentNode.removeChild(i);
-}, Ki = () => {
+}, _i = () => {
   const e = document.createElement("div");
   return e.className = "cloudimage-loading-spinner", e;
 }, Ji = () => {
   const e = document.createElement("div");
   return e.className = "cloudimage-360-transition-overlay", e;
-}, Qi = (e) => {
+}, qi = (e) => {
   const t = document.createElement("div");
   return t.className = "cloudimage-360-hotspot-container", e.appendChild(t), t;
-}, qi = (e) => {
+}, Qi = (e) => {
   const t = document.createElement("div");
   return t.className = "cloudimage-360-sr-only", t.setAttribute("role", "status"), t.setAttribute("aria-live", "polite"), t.setAttribute("aria-atomic", "true"), e.appendChild(t), t;
 }, tn = (e, t) => {
@@ -567,7 +567,7 @@ const de = /* @__PURE__ */ ei(bi), M = {
   e && e.classList.add("visible");
 }, un = (e) => {
   e && e.classList.remove("visible");
-}, Qt = (e, t = []) => {
+}, qt = (e, t = []) => {
   if (!e) return t;
   try {
     return JSON.parse(e);
@@ -609,7 +609,7 @@ const de = /* @__PURE__ */ ei(bi), M = {
 }, yn = (e, t) => {
   const { imageList: i, indexZeroBase: n } = t;
   if (i.length) {
-    const o = Qt(i, null);
+    const o = qt(i, null);
     if (o)
       return gn(o, t);
   }
@@ -658,7 +658,7 @@ const de = /* @__PURE__ */ ei(bi), M = {
     x: n - i.left,
     y: o - i.top
   };
-}, Kt = (e, t, i) => {
+}, _t = (e, t, i) => {
   const { container: n, w: o, h: s, zoom: l, bw: r, offsetX: a, offsetY: c } = t, h = wn(e, n);
   let p = h.x, f = h.y;
   p = Math.max(o / l, Math.min(p, n.offsetWidth - o / l)), f = Math.max(s / l, Math.min(f, n.offsetHeight - s / l)), i.style.left = `${p - o}px`, i.style.top = `${f - s}px`;
@@ -677,11 +677,11 @@ const de = /* @__PURE__ */ ei(bi), M = {
     offsetX: l,
     offsetY: r
   };
-  Kt(e, u, o);
+  _t(e, u, o);
   const I = (v) => {
-    Kt(v, u, o);
+    _t(v, u, o);
   }, g = (v) => {
-    v.preventDefault(), Kt(v, u, o);
+    v.preventDefault(), _t(v, u, o);
   };
   o.addEventListener("mousemove", I), t.addEventListener("mousemove", I), t.addEventListener("touchmove", g);
 }, xn = (e, t, i) => {
@@ -763,7 +763,7 @@ const de = /* @__PURE__ */ ei(bi), M = {
       e.apply(this, n);
     }, t);
   };
-}, Fe = "KGZ1bmN0aW9uKCl7InVzZSBzdHJpY3QiO2NvbnN0IHY9KHQsYSxlKT0+e2NvbnN0IHM9dC9lLG49YS9lO3JldHVybnt6b29tZWRXaWR0aDpzLHpvb21lZEhlaWdodDpufX0sej0oe3BvaW50ZXJYOnQscG9pbnRlclk6YSxpbWFnZURhdGE6ZSx6b29tZWRXaWR0aDpzLHpvb21lZEhlaWdodDpuLGRyYXdXaWR0aDppLGRyYXdIZWlnaHQ6Y30pPT57Y29uc3R7bmF0dXJhbFdpZHRoOmcsbmF0dXJhbEhlaWdodDp1fT1lO2xldCBmPXQvaSpnLXMvMixtPWEvYyp1LW4vMjtjb25zdCB4PU1hdGgubWF4KDAsZy1zKSxPPU1hdGgubWF4KDAsdS1uKTtyZXR1cm4gZj1NYXRoLm1heCgwLE1hdGgubWluKGYseCkpLG09TWF0aC5tYXgoMCxNYXRoLm1pbihtLE8pKSx7em9vbU9mZnNldFg6Zix6b29tT2Zmc2V0WTptfX07bGV0IG8saCxyLGQsbCx3O3NlbGYub25tZXNzYWdlPWFzeW5jIHQ9Pntjb25zdHthY3Rpb246YSxvZmZzY3JlZW46ZSxkZXZpY2VQaXhlbFJhdGlvOnMsaW1hZ2VEYXRhOm4sem9vbVNjYWxlOmkscG9pbnRlclg6Yyxwb2ludGVyWTpnLGltYWdlQXNwZWN0UmF0aW86dSxjb250YWluZXJXaWR0aDpmLGNvbnRhaW5lckhlaWdodDptfT10LmRhdGE7c3dpdGNoKGEpe2Nhc2UiaW5pdENhbnZhcyI6QyhlLHMpO2JyZWFrO2Nhc2UiYWRhcHRDYW52YXNTaXplIjpwKHUsZixtKTticmVhaztjYXNlImRyYXdJbWFnZU9uQ2FudmFzIjpJKG4saSxjLGcpO2JyZWFrfX07Y29uc3QgQz0odCxhKT0+e289dCxoPW8uZ2V0Q29udGV4dCgiMmQiKSxyPWF9LHA9KHQsYSxlKT0+e2NvbnN0IHM9YS9lO3c9dD5zLG8ud2lkdGg9YSpyLG8uaGVpZ2h0PWUqcixoLnNjYWxlKHIsciksdz8oZD1hLGw9YS90KToobD1lLGQ9ZSp0KSxoLmltYWdlU21vb3RoaW5nRW5hYmxlZD0hMCxoLmltYWdlU21vb3RoaW5nUXVhbGl0eT0iaGlnaCJ9LEk9KHQ9e30sYT0xLGU9MCxzPTApPT57Y29uc3R7Yml0bWFwSW1hZ2U6bn09dDtpZighb3x8IW4pcmV0dXJuO2xldCBpLGM7aWYodz8oaT0wLGM9KG8uaGVpZ2h0L3ItbCkvMik6KGk9KG8ud2lkdGgvci1kKS8yLGM9MCksaC5jbGVhclJlY3QoMCwwLG8ud2lkdGgsby5oZWlnaHQpLGEhPT0xKXtjb25zdHtuYXR1cmFsV2lkdGg6ZyxuYXR1cmFsSGVpZ2h0OnV9PXQse3pvb21lZFdpZHRoOmYsem9vbWVkSGVpZ2h0Om19PXYoZyx1LGEpLHt6b29tT2Zmc2V0WDp4LHpvb21PZmZzZXRZOk99PXooe3BvaW50ZXJYOmUscG9pbnRlclk6cyxpbWFnZURhdGE6dCx6b29tZWRXaWR0aDpmLHpvb21lZEhlaWdodDptLGRyYXdXaWR0aDpkLGRyYXdIZWlnaHQ6bH0pO2guZHJhd0ltYWdlKG4seCxPLGYsbSxpLGMsZCxsKX1lbHNlIGguZHJhd0ltYWdlKG4saSxjLGQsbCl9fSkoKTsK", Tn = (e) => Uint8Array.from(atob(e), (t) => t.charCodeAt(0)), Ae = typeof self < "u" && self.Blob && new Blob([Tn(Fe)], { type: "text/javascript;charset=utf-8" });
+}, Fe = "KGZ1bmN0aW9uKCl7InVzZSBzdHJpY3QiO2NvbnN0IHY9KHQsYSxlKT0+e2NvbnN0IHM9dC9lLG49YS9lO3JldHVybnt6b29tZWRXaWR0aDpzLHpvb21lZEhlaWdodDpufX0sej0oe3BvaW50ZXJYOnQscG9pbnRlclk6YSxpbWFnZURhdGE6ZSx6b29tZWRXaWR0aDpzLHpvb21lZEhlaWdodDpuLGRyYXdXaWR0aDppLGRyYXdIZWlnaHQ6Y30pPT57Y29uc3R7bmF0dXJhbFdpZHRoOmcsbmF0dXJhbEhlaWdodDp1fT1lO2xldCBmPXQvaSpnLXMvMixtPWEvYyp1LW4vMjtjb25zdCB4PU1hdGgubWF4KDAsZy1zKSxPPU1hdGgubWF4KDAsdS1uKTtyZXR1cm4gZj1NYXRoLm1heCgwLE1hdGgubWluKGYseCkpLG09TWF0aC5tYXgoMCxNYXRoLm1pbihtLE8pKSx7em9vbU9mZnNldFg6Zix6b29tT2Zmc2V0WTptfX07bGV0IG8saCxyLGQsbCx3O3NlbGYub25tZXNzYWdlPWFzeW5jIHQ9Pntjb25zdHthY3Rpb246YSxvZmZzY3JlZW46ZSxkZXZpY2VQaXhlbFJhdGlvOnMsaW1hZ2VEYXRhOm4sem9vbVNjYWxlOmkscG9pbnRlclg6Yyxwb2ludGVyWTpnLGltYWdlQXNwZWN0UmF0aW86dSxjb250YWluZXJXaWR0aDpmLGNvbnRhaW5lckhlaWdodDptfT10LmRhdGE7c3dpdGNoKGEpe2Nhc2UiaW5pdENhbnZhcyI6QyhlLHMpO2JyZWFrO2Nhc2UiYWRhcHRDYW52YXNTaXplIjpwKHUsZixtKTticmVhaztjYXNlImRyYXdJbWFnZU9uQ2FudmFzIjpJKG4saSxjLGcpO2JyZWFrfX07Y29uc3QgQz0odCxhKT0+e289dCxoPW8uZ2V0Q29udGV4dCgiMmQiKSxyPWF9LHA9KHQsYSxlKT0+e2NvbnN0IHM9YS9lO3c9dD5zLG8ud2lkdGg9YSpyLG8uaGVpZ2h0PWUqcixoLnNjYWxlKHIsciksdz8oZD1hLGw9YS90KToobD1lLGQ9ZSp0KSxoLmltYWdlU21vb3RoaW5nRW5hYmxlZD0hMCxoLmltYWdlU21vb3RoaW5nUXVhbGl0eT0iaGlnaCJ9LEk9KHQ9e30sYT0xLGU9MCxzPTApPT57Y29uc3R7Yml0bWFwSW1hZ2U6bn09dDtpZighb3x8IW4pcmV0dXJuO2xldCBpLGM7aWYodz8oaT0wLGM9KG8uaGVpZ2h0L3ItbCkvMik6KGk9KG8ud2lkdGgvci1kKS8yLGM9MCksaC5jbGVhclJlY3QoMCwwLG8ud2lkdGgsby5oZWlnaHQpLGEhPT0xKXtjb25zdHtuYXR1cmFsV2lkdGg6ZyxuYXR1cmFsSGVpZ2h0OnV9PXQse3pvb21lZFdpZHRoOmYsem9vbWVkSGVpZ2h0Om19PXYoZyx1LGEpLHt6b29tT2Zmc2V0WDp4LHpvb21PZmZzZXRZOk99PXooe3BvaW50ZXJYOmUscG9pbnRlclk6cyxpbWFnZURhdGE6dCx6b29tZWRXaWR0aDpmLHpvb21lZEhlaWdodDptLGRyYXdXaWR0aDpkLGRyYXdIZWlnaHQ6bH0pO2guZHJhd0ltYWdlKG4seCxPLGYsbSxpLGMsZCxsKX1lbHNlIGguZHJhd0ltYWdlKG4saSxjLGQsbCl9fSkoKTsKLy8jIHNvdXJjZU1hcHBpbmdVUkw9Y2FudmFzLndvcmtlci1DZzBma3BEMS5qcy5tYXAK", Tn = (e) => Uint8Array.from(atob(e), (t) => t.charCodeAt(0)), Ae = typeof self < "u" && self.Blob && new Blob([Tn(Fe)], { type: "text/javascript;charset=utf-8" });
 function Yn(e) {
   let t;
   try {
@@ -991,7 +991,7 @@ var H = "top", F = "bottom", N = "right", D = "left", ee = "auto", kt = [H, F, N
   return e.concat([t + "-" + ut, t + "-" + At]);
 }, []), Ve = /* @__PURE__ */ [].concat(kt, [ee]).reduce(function(e, t) {
   return e.concat([t, t + "-" + ut, t + "-" + At]);
-}, []), $n = "beforeRead", Gn = "read", zn = "afterRead", Un = "beforeMain", _n = "main", Kn = "afterMain", Jn = "beforeWrite", Qn = "write", qn = "afterWrite", to = [$n, Gn, zn, Un, _n, Kn, Jn, Qn, qn];
+}, []), $n = "beforeRead", zn = "read", Gn = "afterRead", Un = "beforeMain", Kn = "main", _n = "afterMain", Jn = "beforeWrite", qn = "write", Qn = "afterWrite", to = [$n, zn, Gn, Un, Kn, _n, Jn, qn, Qn];
 function $(e) {
   return e ? (e.nodeName || "").toLowerCase() : null;
 }
@@ -1064,14 +1064,14 @@ function j(e) {
   return e.split("-")[0];
 }
 var ot = Math.max, Wt = Math.min, pt = Math.round;
-function qt() {
+function Qt() {
   var e = navigator.userAgentData;
   return e != null && e.brands && Array.isArray(e.brands) ? e.brands.map(function(t) {
     return t.brand + "/" + t.version;
   }).join(" ") : navigator.userAgent;
 }
 function je() {
-  return !/^((?!chrome|android).)*safari/i.test(qt());
+  return !/^((?!chrome|android).)*safari/i.test(Qt());
 }
 function ft(e, t, i) {
   t === void 0 && (t = !1), i === void 0 && (i = !1);
@@ -1118,7 +1118,7 @@ function J(e) {
 function oo(e) {
   return ["table", "td", "th"].indexOf($(e)) >= 0;
 }
-function q(e) {
+function Q(e) {
   return ((st(e) ? e.ownerDocument : (
     // $FlowFixMe[prop-missing]
     e.document
@@ -1133,7 +1133,7 @@ function Nt(e) {
     e.parentNode || // DOM Element detected
     (ie(e) ? e.host : null) || // ShadowRoot detected
     // $FlowFixMe[incompatible-call]: HTMLElement is a Node
-    q(e)
+    Q(e)
   );
 }
 function Te(e) {
@@ -1141,7 +1141,7 @@ function Te(e) {
   J(e).position === "fixed" ? null : e.offsetParent;
 }
 function so(e) {
-  var t = /firefox/i.test(qt()), i = /Trident/i.test(qt());
+  var t = /firefox/i.test(Qt()), i = /Trident/i.test(Qt());
   if (i && W(e)) {
     var n = J(e);
     if (n.position === "fixed")
@@ -1171,7 +1171,7 @@ function ro(e, t, i) {
   var n = Et(e, t, i);
   return n > i ? i : n;
 }
-function Ge() {
+function ze() {
   return {
     top: 0,
     right: 0,
@@ -1179,8 +1179,8 @@ function Ge() {
     left: 0
   };
 }
-function ze(e) {
-  return Object.assign({}, Ge(), e);
+function Ge(e) {
+  return Object.assign({}, ze(), e);
 }
 function Ue(e, t) {
   return t.reduce(function(i, n) {
@@ -1190,7 +1190,7 @@ function Ue(e, t) {
 var ao = function(t, i) {
   return t = typeof t == "function" ? t(Object.assign({}, i.rects, {
     placement: i.placement
-  })) : t, ze(typeof t != "number" ? t : Ue(t, kt));
+  })) : t, Ge(typeof t != "number" ? t : Ue(t, kt));
 };
 function lo(e) {
   var t, i = e.state, n = e.name, o = e.options, s = i.elements.arrow, l = i.modifiersData.popperOffsets, r = j(i.placement), a = oe(r), c = [D, N].indexOf(r) >= 0, h = c ? "height" : "width";
@@ -1240,7 +1240,7 @@ function Ye(e) {
   var m = l.hasOwnProperty("x"), b = l.hasOwnProperty("y"), x = D, w = H, C = window;
   if (c) {
     var y = Tt(i), O = "clientHeight", S = "clientWidth";
-    if (y === B(i) && (y = q(i), J(y).position !== "static" && r === "absolute" && (O = "scrollHeight", S = "scrollWidth")), y = y, o === H || (o === D || o === N) && s === At) {
+    if (y === B(i) && (y = Q(i), J(y).position !== "static" && r === "absolute" && (O = "scrollHeight", S = "scrollWidth")), y = y, o === H || (o === D || o === N) && s === At) {
       w = F;
       var E = p && y === C && C.visualViewport ? C.visualViewport.height : (
         // $FlowFixMe[prop-missing]
@@ -1352,10 +1352,10 @@ function se(e) {
   };
 }
 function re(e) {
-  return ft(q(e)).left + se(e).scrollLeft;
+  return ft(Q(e)).left + se(e).scrollLeft;
 }
 function wo(e, t) {
-  var i = B(e), n = q(e), o = i.visualViewport, s = n.clientWidth, l = n.clientHeight, r = 0, a = 0;
+  var i = B(e), n = Q(e), o = i.visualViewport, s = n.clientWidth, l = n.clientHeight, r = 0, a = 0;
   if (o) {
     s = o.width, l = o.height;
     var c = je();
@@ -1369,7 +1369,7 @@ function wo(e, t) {
   };
 }
 function Io(e) {
-  var t, i = q(e), n = se(e), o = (t = e.ownerDocument) == null ? void 0 : t.body, s = ot(i.scrollWidth, i.clientWidth, o ? o.scrollWidth : 0, o ? o.clientWidth : 0), l = ot(i.scrollHeight, i.clientHeight, o ? o.scrollHeight : 0, o ? o.clientHeight : 0), r = -n.scrollLeft + re(e), a = -n.scrollTop;
+  var t, i = Q(e), n = se(e), o = (t = e.ownerDocument) == null ? void 0 : t.body, s = ot(i.scrollWidth, i.clientWidth, o ? o.scrollWidth : 0, o ? o.clientWidth : 0), l = ot(i.scrollHeight, i.clientHeight, o ? o.scrollHeight : 0, o ? o.clientHeight : 0), r = -n.scrollLeft + re(e), a = -n.scrollTop;
   return J(o || i).direction === "rtl" && (r += ot(i.clientWidth, o ? o.clientWidth : 0) - s), {
     width: s,
     height: l,
@@ -1381,13 +1381,13 @@ function ae(e) {
   var t = J(e), i = t.overflow, n = t.overflowX, o = t.overflowY;
   return /auto|scroll|overlay|hidden/.test(i + o + n);
 }
-function _e(e) {
-  return ["html", "body", "#document"].indexOf($(e)) >= 0 ? e.ownerDocument.body : W(e) && ae(e) ? e : _e(Nt(e));
+function Ke(e) {
+  return ["html", "body", "#document"].indexOf($(e)) >= 0 ? e.ownerDocument.body : W(e) && ae(e) ? e : Ke(Nt(e));
 }
 function St(e, t) {
   var i;
   t === void 0 && (t = []);
-  var n = _e(e), o = n === ((i = e.ownerDocument) == null ? void 0 : i.body), s = B(n), l = o ? [s].concat(s.visualViewport || [], ae(n) ? n : []) : n, r = t.concat(l);
+  var n = Ke(e), o = n === ((i = e.ownerDocument) == null ? void 0 : i.body), s = B(n), l = o ? [s].concat(s.visualViewport || [], ae(n) ? n : []) : n, r = t.concat(l);
   return o ? r : (
     // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
     r.concat(St(Nt(l)))
@@ -1406,7 +1406,7 @@ function xo(e, t) {
   return i.top = i.top + e.clientTop, i.left = i.left + e.clientLeft, i.bottom = i.top + e.clientHeight, i.right = i.left + e.clientWidth, i.width = e.clientWidth, i.height = e.clientHeight, i.x = i.left, i.y = i.top, i;
 }
 function Pe(e, t, i) {
-  return t === Ne ? te(wo(e, i)) : st(t) ? xo(t, i) : te(Io(q(e)));
+  return t === Ne ? te(wo(e, i)) : st(t) ? xo(t, i) : te(Io(Q(e)));
 }
 function Co(e) {
   var t = St(Nt(e)), i = ["absolute", "fixed"].indexOf(J(e).position) >= 0, n = i && W(e) ? Tt(e) : e;
@@ -1421,7 +1421,7 @@ function Oo(e, t, i, n) {
   }, Pe(e, l, n));
   return r.width = r.right - r.left, r.height = r.bottom - r.top, r.x = r.left, r.y = r.top, r;
 }
-function Ke(e) {
+function _e(e) {
   var t = e.reference, i = e.element, n = e.placement, o = n ? j(n) : null, s = n ? mt(n) : null, l = t.x + t.width / 2 - i.width / 2, r = t.y + t.height / 2 - i.height / 2, a;
   switch (o) {
     case H:
@@ -1470,7 +1470,7 @@ function Ke(e) {
 }
 function Lt(e, t) {
   t === void 0 && (t = {});
-  var i = t, n = i.placement, o = n === void 0 ? e.placement : n, s = i.strategy, l = s === void 0 ? e.strategy : s, r = i.boundary, a = r === void 0 ? Vn : r, c = i.rootBoundary, h = c === void 0 ? Ne : c, p = i.elementContext, f = p === void 0 ? Ct : p, u = i.altBoundary, I = u === void 0 ? !1 : u, g = i.padding, v = g === void 0 ? 0 : g, m = ze(typeof v != "number" ? v : Ue(v, kt)), b = f === Ct ? jn : Ct, x = e.rects.popper, w = e.elements[I ? b : f], C = Oo(st(w) ? w : w.contextElement || q(e.elements.popper), a, h, l), y = ft(e.elements.reference), O = Ke({
+  var i = t, n = i.placement, o = n === void 0 ? e.placement : n, s = i.strategy, l = s === void 0 ? e.strategy : s, r = i.boundary, a = r === void 0 ? Vn : r, c = i.rootBoundary, h = c === void 0 ? Ne : c, p = i.elementContext, f = p === void 0 ? Ct : p, u = i.altBoundary, I = u === void 0 ? !1 : u, g = i.padding, v = g === void 0 ? 0 : g, m = Ge(typeof v != "number" ? v : Ue(v, kt)), b = f === Ct ? jn : Ct, x = e.rects.popper, w = e.elements[I ? b : f], C = Oo(st(w) ? w : w.contextElement || Q(e.elements.popper), a, h, l), y = ft(e.elements.reference), O = _e({
     reference: y,
     element: x,
     placement: o
@@ -1483,8 +1483,8 @@ function Lt(e, t) {
   if (f === Ct && L) {
     var R = L[o];
     Object.keys(A).forEach(function(T) {
-      var G = [N, F].indexOf(T) >= 0 ? 1 : -1, z = [H, F].indexOf(T) >= 0 ? "y" : "x";
-      A[T] += R[z] * G;
+      var z = [N, F].indexOf(T) >= 0 ? 1 : -1, G = [H, F].indexOf(T) >= 0 ? "y" : "x";
+      A[T] += R[G] * z;
     });
   }
   return A;
@@ -1518,8 +1518,8 @@ function So(e) {
 function Ao(e) {
   var t = e.state, i = e.options, n = e.name;
   if (!t.modifiersData[n]._skip) {
-    for (var o = i.mainAxis, s = o === void 0 ? !0 : o, l = i.altAxis, r = l === void 0 ? !0 : l, a = i.fallbackPlacements, c = i.padding, h = i.boundary, p = i.rootBoundary, f = i.altBoundary, u = i.flipVariations, I = u === void 0 ? !0 : u, g = i.allowedAutoPlacements, v = t.options.placement, m = j(v), b = m === v, x = a || (b || !I ? [Zt(v)] : So(v)), w = [v].concat(x).reduce(function(Q, V) {
-      return Q.concat(j(V) === ee ? Eo(t, {
+    for (var o = i.mainAxis, s = o === void 0 ? !0 : o, l = i.altAxis, r = l === void 0 ? !0 : l, a = i.fallbackPlacements, c = i.padding, h = i.boundary, p = i.rootBoundary, f = i.altBoundary, u = i.flipVariations, I = u === void 0 ? !0 : u, g = i.allowedAutoPlacements, v = t.options.placement, m = j(v), b = m === v, x = a || (b || !I ? [Zt(v)] : So(v)), w = [v].concat(x).reduce(function(q, V) {
+      return q.concat(j(V) === ee ? Eo(t, {
         placement: V,
         boundary: h,
         rootBoundary: p,
@@ -1528,17 +1528,17 @@ function Ao(e) {
         allowedAutoPlacements: g
       }) : V);
     }, []), C = t.rects.reference, y = t.rects.popper, O = /* @__PURE__ */ new Map(), S = !0, E = w[0], A = 0; A < w.length; A++) {
-      var L = w[A], R = j(L), T = mt(L) === ut, G = [H, F].indexOf(R) >= 0, z = G ? "width" : "height", Y = Lt(t, {
+      var L = w[A], R = j(L), T = mt(L) === ut, z = [H, F].indexOf(R) >= 0, G = z ? "width" : "height", Y = Lt(t, {
         placement: L,
         boundary: h,
         rootBoundary: p,
         altBoundary: f,
         padding: c
-      }), Z = G ? T ? N : D : T ? F : H;
-      C[z] > y[z] && (Z = Zt(Z));
+      }), Z = z ? T ? N : D : T ? F : H;
+      C[G] > y[G] && (Z = Zt(Z));
       var rt = Zt(Z), U = [];
-      if (s && U.push(Y[R] <= 0), r && U.push(Y[Z] <= 0, Y[rt] <= 0), U.every(function(Q) {
-        return Q;
+      if (s && U.push(Y[R] <= 0), r && U.push(Y[Z] <= 0, Y[rt] <= 0), U.every(function(q) {
+        return q;
       })) {
         E = L, S = !1;
         break;
@@ -1548,9 +1548,9 @@ function Ao(e) {
     if (S)
       for (var at = I ? 3 : 1, vt = function(V) {
         var et = w.find(function(it) {
-          var _ = O.get(it);
-          if (_)
-            return _.slice(0, V).every(function(gt) {
+          var K = O.get(it);
+          if (K)
+            return K.slice(0, V).every(function(gt) {
               return gt;
             });
         });
@@ -1639,7 +1639,7 @@ const Po = {
 };
 function Ro(e) {
   var t = e.state, i = e.name;
-  t.modifiersData[i] = Ke({
+  t.modifiersData[i] = _e({
     reference: t.rects.reference,
     element: t.rects.popper,
     placement: t.placement
@@ -1675,15 +1675,15 @@ function Do(e) {
   };
   if (y) {
     if (s) {
-      var T, G = w === "y" ? H : D, z = w === "y" ? F : N, Y = w === "y" ? "height" : "width", Z = y[w], rt = Z + v[G], U = Z - v[z], at = u ? -S[Y] / 2 : 0, vt = b === ut ? O[Y] : S[Y], tt = b === ut ? -S[Y] : -O[Y], lt = t.elements.arrow, Q = u && lt ? ne(lt) : {
+      var T, z = w === "y" ? H : D, G = w === "y" ? F : N, Y = w === "y" ? "height" : "width", Z = y[w], rt = Z + v[z], U = Z - v[G], at = u ? -S[Y] / 2 : 0, vt = b === ut ? O[Y] : S[Y], tt = b === ut ? -S[Y] : -O[Y], lt = t.elements.arrow, q = u && lt ? ne(lt) : {
         width: 0,
         height: 0
-      }, V = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : Ge(), et = V[G], it = V[z], _ = Et(0, O[Y], Q[Y]), gt = x ? O[Y] / 2 - at - _ - et - A.mainAxis : vt - _ - et - A.mainAxis, Vt = x ? -O[Y] / 2 + at + _ + it + A.mainAxis : tt + _ + it + A.mainAxis, yt = t.elements.arrow && Tt(t.elements.arrow), jt = yt ? w === "y" ? yt.clientTop || 0 : yt.clientLeft || 0 : 0, Yt = (T = L == null ? void 0 : L[w]) != null ? T : 0, $t = Z + gt - Yt - jt, Gt = Z + Vt - Yt, Xt = Et(u ? Wt(rt, $t) : rt, Z, u ? ot(U, Gt) : U);
+      }, V = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : ze(), et = V[z], it = V[G], K = Et(0, O[Y], q[Y]), gt = x ? O[Y] / 2 - at - K - et - A.mainAxis : vt - K - et - A.mainAxis, Vt = x ? -O[Y] / 2 + at + K + it + A.mainAxis : tt + K + it + A.mainAxis, yt = t.elements.arrow && Tt(t.elements.arrow), jt = yt ? w === "y" ? yt.clientTop || 0 : yt.clientLeft || 0 : 0, Yt = (T = L == null ? void 0 : L[w]) != null ? T : 0, $t = Z + gt - Yt - jt, zt = Z + Vt - Yt, Xt = Et(u ? Wt(rt, $t) : rt, Z, u ? ot(U, zt) : U);
       y[w] = Xt, R[w] = Xt - Z;
     }
     if (r) {
-      var Pt, zt = w === "x" ? H : D, Ut = w === "x" ? F : N, K = y[C], nt = C === "y" ? "height" : "width", ct = K + v[zt], ht = K - v[Ut], dt = [H, D].indexOf(m) !== -1, bt = (Pt = L == null ? void 0 : L[C]) != null ? Pt : 0, wt = dt ? ct : K - O[nt] - S[nt] - bt + A.altAxis, It = dt ? K + O[nt] + S[nt] - bt - A.altAxis : ht, Rt = u && dt ? ro(wt, K, It) : Et(u ? wt : ct, K, u ? It : ht);
-      y[C] = Rt, R[C] = Rt - K;
+      var Pt, Gt = w === "x" ? H : D, Ut = w === "x" ? F : N, _ = y[C], nt = C === "y" ? "height" : "width", ct = _ + v[Gt], ht = _ - v[Ut], dt = [H, D].indexOf(m) !== -1, bt = (Pt = L == null ? void 0 : L[C]) != null ? Pt : 0, wt = dt ? ct : _ - O[nt] - S[nt] - bt + A.altAxis, It = dt ? _ + O[nt] + S[nt] - bt - A.altAxis : ht, Rt = u && dt ? ro(wt, _, It) : Et(u ? wt : ct, _, u ? It : ht);
+      y[C] = Rt, R[C] = Rt - _;
     }
     t.modifiersData[n] = R;
   }
@@ -1710,7 +1710,7 @@ function Fo(e) {
 }
 function No(e, t, i) {
   i === void 0 && (i = !1);
-  var n = W(t), o = W(t) && Fo(t), s = q(t), l = ft(e, o, i), r = {
+  var n = W(t), o = W(t) && Fo(t), s = Q(t), l = ft(e, o, i), r = {
     scrollLeft: 0,
     scrollTop: 0
   }, a = {
@@ -1762,7 +1762,7 @@ function $o(e) {
     })), t;
   };
 }
-function Go(e) {
+function zo(e) {
   var t = e.reduce(function(i, n) {
     var o = i[n.name];
     return i[n.name] = o ? Object.assign({}, o, n, {
@@ -1786,7 +1786,7 @@ function De() {
     return !(n && typeof n.getBoundingClientRect == "function");
   });
 }
-function zo(e) {
+function Go(e) {
   e === void 0 && (e = {});
   var t = e, i = t.defaultModifiers, n = i === void 0 ? [] : i, o = t.defaultOptions, s = o === void 0 ? He : o;
   return function(r, a, c) {
@@ -1810,7 +1810,7 @@ function zo(e) {
           reference: st(r) ? St(r) : r.contextElement ? St(r.contextElement) : [],
           popper: St(a)
         };
-        var x = jo(Go([].concat(n, h.options.modifiers)));
+        var x = jo(zo([].concat(n, h.options.modifiers)));
         return h.orderedModifiers = x.filter(function(w) {
           return w.enabled;
         }), I(), u.update();
@@ -1885,17 +1885,17 @@ function zo(e) {
     return u;
   };
 }
-var Uo = [go, Mo, mo, no, Po, Lo, Zo, ho, To], _o = /* @__PURE__ */ zo({
+var Uo = [go, Mo, mo, no, Po, Lo, Zo, ho, To], Ko = /* @__PURE__ */ Go({
   defaultModifiers: Uo
 });
-class Ko {
+class _o {
   constructor(t, i, n) {
     le(this, "updateHotspotPosition", (t, i) => {
       this.currentActiveIndex = t, this.currentOrientation = i;
       const n = Hn(this.hotspotsConfig, t, i);
       this.hideHotspots(), n.forEach((o) => this.updateAndShowHotspot(o, t));
     });
-    this.container = i, this.popper = null, this.popperInstance = null, this.hotspotsContainer = Qi(this.container), this.hotspotsConfig = Fn(t), this.shouldHidePopper = !0, this.hidePopper = this.hidePopper.bind(this), this.imageAspectRatio = n, this.hotspotElements = /* @__PURE__ */ new Map(), this.popperListeners = [];
+    this.container = i, this.popper = null, this.popperInstance = null, this.hotspotsContainer = qi(this.container), this.hotspotsConfig = Fn(t), this.shouldHidePopper = !0, this.hidePopper = this.hidePopper.bind(this), this.imageAspectRatio = n, this.hotspotElements = /* @__PURE__ */ new Map(), this.popperListeners = [];
     const { containerSize: o } = t[0];
     this.initialContainerSize = o || [i.offsetWidth, i.offsetHeight], this.initHotspots(), this.observeContainerResize();
   }
@@ -1941,7 +1941,7 @@ class Ko {
       { element: t, event: "mouseleave", handler: a },
       { element: t, event: "mouseenter", handler: c }
     ), this.popperInstance = {
-      ..._o(t, this.popper, s),
+      ...Ko(t, this.popper, s),
       keepOpen: o,
       instanceId: n
     };
@@ -2301,7 +2301,7 @@ class Ft {
     this.createContainers(t), this.adaptCanvasSize(i), this.drawImageOnCanvas(i);
   }
   onAllImagesLoaded() {
-    if (this.addAllIcons(), this.isReady = !0, this.amountX = this.imagesX.length, this.amountY = this.imagesY.length, this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0, this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0, this.hotspots && (this.hotspotsInstance = new Ko(this.hotspots, this.innerBox, this.imageAspectRatio), this.addHotspotTimeline(), this.showHotspotTimeline()), this.emit("onLoad", { imagesX: this.imagesX.length, imagesY: this.imagesY.length }), this.emit("onReady"), this.announce("360 degree view loaded. Use mouse drag or arrow keys to rotate."), this.hints !== !1 && !this.autoplay) {
+    if (this.addAllIcons(), this.isReady = !0, this.amountX = this.imagesX.length, this.amountY = this.imagesY.length, this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0, this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0, this.hotspots && (this.hotspotsInstance = new _o(this.hotspots, this.innerBox, this.imageAspectRatio), this.addHotspotTimeline(), this.showHotspotTimeline()), this.emit("onLoad", { imagesX: this.imagesX.length, imagesY: this.imagesY.length }), this.emit("onReady"), this.announce("360 degree view loaded. Use mouse drag or arrow keys to rotate."), this.hints !== !1 && !this.autoplay) {
       const t = this.hints === !0 || this.hints === void 0 ? be(this.viewerConfig, this.touchDevice) : this.hints;
       t && t.length > 0 && (this.hintsOverlay = ye(this.innerBox, t), we(this.hintsOverlay));
     }
@@ -2323,7 +2323,7 @@ class Ft {
   }
   openFullscreenModal(t) {
     t.stopPropagation(), window.document.body.style.overflow = "hidden";
-    const i = _i(this.container);
+    const i = Ki(this.container);
     new Ft(i, this.viewerConfig, !0), this.emit("onFullscreenOpen"), this.announce("Opened fullscreen mode. Press Escape to exit.");
   }
   closeFullscreenModal(t) {
@@ -2393,7 +2393,7 @@ class Ft {
     this.showAllIcons(), this.innerBox.removeChild(this.glass), this.glass = null, this.magnified = !1;
   }
   addMagnifierIcon() {
-    this.magnifier && (this.magnifierIcon = zi(), this.magnifierIcon.onclick = this.magnify.bind(this), this.iconsContainer.appendChild(this.magnifierIcon));
+    this.magnifier && (this.magnifierIcon = Gi(), this.magnifierIcon.onclick = this.magnify.bind(this), this.iconsContainer.appendChild(this.magnifierIcon));
   }
   showMagnifierIcon() {
     this.magnifierIcon && (this.magnifierIcon.style.visibility = "visible", this.magnifierIcon.style.opacity = 1);
@@ -2423,7 +2423,7 @@ class Ft {
     this.view360CircleIcon && (this.view360CircleIcon.style.opacity = 0);
   }
   addLoadingSpinner() {
-    this.loadingSpinner = Ki(), this.innerBox.appendChild(this.loadingSpinner);
+    this.loadingSpinner = _i(), this.innerBox.appendChild(this.loadingSpinner);
   }
   showLoadingSpinner() {
     this.loadingSpinner && (this.hideAllIcons(), this.loadingSpinner.style.opacity = 1);
@@ -2543,7 +2543,7 @@ class Ft {
     document.removeEventListener("keydown", this.boundKeyDown), document.removeEventListener("keyup", this.boundKeyUp);
   }
   createContainers(t) {
-    this.iconsContainer = ge(this.innerBox), this.canvas = Vi(this.innerBox, t), this.loader = Ui(this.innerBox), this.ariaLiveRegion = qi(this.innerBox);
+    this.iconsContainer = ge(this.innerBox), this.canvas = Vi(this.innerBox, t), this.loader = Ui(this.innerBox), this.ariaLiveRegion = Qi(this.innerBox);
     const i = this.canvas.transferControlToOffscreen();
     this.canvasWorker.postMessage(
       {
@@ -2584,8 +2584,8 @@ class Ft {
       ciFilters: L,
       ciTransformation: R,
       lazyload: T,
-      dragSpeed: G,
-      stopAtEdges: z,
+      dragSpeed: z,
+      stopAtEdges: G,
       pointerZoom: Y,
       imageInfo: Z = "black",
       initialIconShown: rt,
@@ -2594,11 +2594,11 @@ class Ft {
       dragReverse: vt,
       hide360Logo: tt,
       logoSrc: lt,
-      inertia: Q,
+      inertia: q,
       pinchZoom: V,
       hints: et,
       theme: it,
-      hotspotTimelineOnClick: _ = !0,
+      hotspotTimelineOnClick: K = !0,
       // Event callbacks
       onReady: gt,
       onLoad: Vt,
@@ -2606,14 +2606,14 @@ class Ft {
       onAutoplayStart: jt,
       onAutoplayStop: Yt,
       onFullscreenOpen: $t,
-      onFullscreenClose: Gt,
+      onFullscreenClose: zt,
       onZoomIn: Xt,
       onZoomOut: Pt,
-      onDragStart: zt,
+      onDragStart: Gt,
       onDragEnd: Ut,
-      onError: K
-    } = o, nt = { ciToken: A, ciFilters: L, ciTransformation: R }, ct = Qt(c, []), ht = Qt(h, []);
-    if (this.viewerConfig = o, this.amountX = ct.length || f, this.amountY = ht.length || u, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = O ? this.amountX - 1 : 0, this.activeImageY = O ? this.amountY - 1 : 0, this.bottomCircleOffset = b, this.autoplay = x, this.autoplayBehavior = w, this.playOnce = C, this.speed = y, this.autoplayReverse = O, this.fullscreen = S, this.magnifier = E > 1 ? Math.min(E, Ai) : 0, this.dragSpeed = Math.max(G, Si), this.stopAtEdges = z, this.ciParams = nt, this.apiVersion = l, this.pointerZoom = Y > 1 ? Math.min(Y, me) : null, this.keysReverse = m, this.info = Z, this.keys = v, this.innerBox = this.innerBox ?? Gi(this.container), this.initialIconShown = rt, this.bottomCircle = U, this.spinDirection = Sn(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = vt, this.hotspots = at, this.hide360Logo = tt, this.logoSrc = lt, this.inertia = Q, this.pinchZoom = V, this.hints = et, this.hotspotTimelineOnClick = _, it === "dark" ? this.container.classList.add("ci360-theme-dark") : it === "light" && this.container.classList.remove("ci360-theme-dark"), this.onReady = gt, this.onLoad = Vt, this.onSpin = yt, this.onAutoplayStart = jt, this.onAutoplayStop = Yt, this.onFullscreenOpen = $t, this.onFullscreenClose = Gt, this.onZoomIn = Xt, this.onZoomOut = Pt, this.onDragStart = zt, this.onDragEnd = Ut, this.onError = K, this.srcXConfig = {
+      onError: _
+    } = o, nt = { ciToken: A, ciFilters: L, ciTransformation: R }, ct = qt(c, []), ht = qt(h, []);
+    if (this.viewerConfig = o, this.amountX = ct.length || f, this.amountY = ht.length || u, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = O ? this.amountX - 1 : 0, this.activeImageY = O ? this.amountY - 1 : 0, this.bottomCircleOffset = b, this.autoplay = x, this.autoplayBehavior = w, this.playOnce = C, this.speed = y, this.autoplayReverse = O, this.fullscreen = S, this.magnifier = E > 1 ? Math.min(E, Ai) : 0, this.dragSpeed = Math.max(z, Si), this.stopAtEdges = G, this.ciParams = nt, this.apiVersion = l, this.pointerZoom = Y > 1 ? Math.min(Y, me) : null, this.keysReverse = m, this.info = Z, this.keys = v, this.innerBox = this.innerBox ?? zi(this.container), this.initialIconShown = rt, this.bottomCircle = U, this.spinDirection = Sn(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = vt, this.hotspots = at, this.hide360Logo = tt, this.logoSrc = lt, this.inertia = q, this.pinchZoom = V, this.hints = et, this.hotspotTimelineOnClick = K, it === "dark" ? this.container.classList.add("ci360-theme-dark") : it === "light" && this.container.classList.remove("ci360-theme-dark"), this.onReady = gt, this.onLoad = Vt, this.onSpin = yt, this.onAutoplayStart = jt, this.onAutoplayStop = Yt, this.onFullscreenOpen = $t, this.onFullscreenClose = zt, this.onZoomIn = Xt, this.onZoomOut = Pt, this.onDragStart = Gt, this.onDragEnd = Ut, this.onError = _, this.srcXConfig = {
       folder: s,
       filename: r,
       imageList: ct,
@@ -2639,7 +2639,7 @@ class Ft {
         cdnPathY: wt,
         configX: this.srcXConfig,
         configY: this.srcYConfig,
-        onImageLoad: (xt, Je, Qe) => this.onImageLoad(xt, Je, Qe),
+        onImageLoad: (xt, Je, qe) => this.onImageLoad(xt, Je, qe),
         onFirstImageLoad: (xt) => this.onFirstImageLoaded(Rt, xt),
         onAllImagesLoad: this.onAllImagesLoaded.bind(this),
         onError: (xt) => this.emit("onError", xt)
@@ -2648,7 +2648,7 @@ class Ft {
     this.allowSpinX ? xe(bt, this.srcXConfig, It) : this.allowSpinY && xe(wt, this.srcYConfig, It);
   }
 }
-class Jo {
+class qo {
   constructor() {
     this.views = /* @__PURE__ */ new Map(), this.initAll = this.initAll.bind(this), this.getViews = this.getViews.bind(this);
   }
@@ -2694,7 +2694,7 @@ class Jo {
     return this.init(s, o);
   }
 }
-window.CI360 = Jo;
 export {
-  Jo as default
+  qo as default
 };
+//# sourceMappingURL=ci360-CbNlMnNZ.mjs.map
