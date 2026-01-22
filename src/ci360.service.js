@@ -775,13 +775,26 @@ class CI360Viewer {
   }
 
   drawImageOnCanvas(imageData, zoomScale = 1, pointerX = 0, pointerY = 0) {
-    this.canvasWorker.postMessage({
-      action: 'drawImageOnCanvas',
-      imageData,
-      zoomScale,
-      pointerX,
-      pointerY,
-    });
+    // Throttle draw calls using requestAnimationFrame to prevent flooding
+    // the worker with messages during rapid dragging (especially on mobile)
+    this.pendingDrawData = { imageData, zoomScale, pointerX, pointerY };
+
+    if (!this.drawFrameRequested) {
+      this.drawFrameRequested = true;
+      requestAnimationFrame(() => {
+        this.drawFrameRequested = false;
+        if (this.pendingDrawData) {
+          const { imageData, zoomScale, pointerX, pointerY } = this.pendingDrawData;
+          this.canvasWorker.postMessage({
+            action: 'drawImageOnCanvas',
+            imageData,
+            zoomScale,
+            pointerX,
+            pointerY,
+          });
+        }
+      });
+    }
   }
 
   pushImageToSet(image, index, orientation) {
