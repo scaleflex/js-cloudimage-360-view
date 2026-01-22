@@ -1,0 +1,11 @@
+{
+  "name": "cloudimage-360-vanilla-example",
+  "version": "1.0.0",
+  "description": "CloudImage 360 View - Vanilla JavaScript Example",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["360-view", "product-viewer", "cloudimage"],
+  "license": "MIT"
+}

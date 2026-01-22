@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CloudImage 360 View - Vanilla JS Example</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/4.1.0-beta.0/js-cloudimage-360-view.min.css"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      p {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .examples {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .example {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .example h2 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 18px;
+      }
+
+      .viewer-container {
+        width: 100%;
+        height: 400px;
+        background: #fafafa;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
+
+      .features {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .feature-tag {
+        background: #e9ecef;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CloudImage 360 View</h1>
+    <p>Interactive 360-degree product viewer - Version 4.1.0</p>
+
+    <div class="examples">
+      <!-- Example 1: Basic with Autoplay -->
+      <div class="example">
+        <h2>Basic Example with Autoplay</h2>
+        <div
+          id="basic-viewer"
+          class="cloudimage-360 viewer-container"
+          data-folder="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/"
+          data-filename-x="orange-{index}.jpg"
+          data-amount-x="73"
+          data-autoplay
+          data-fullscreen
+          data-bottom-circle
+          data-hints
+        ></div>
+        <div class="features">
+          <span class="feature-tag">Autoplay</span>
+          <span class="feature-tag">Fullscreen</span>
+          <span class="feature-tag">73 Frames</span>
+        </div>
+      </div>
+
+      <!-- Example 2: With Zoom -->
+      <div class="example">
+        <h2>Zoom & Magnifier Example</h2>
+        <div
+          id="zoom-viewer"
+          class="cloudimage-360 viewer-container"
+          data-folder="https://scaleflex.cloudimg.io/v7/demo/earbuds/"
+          data-filename-x="earbuds-{index}.jpg"
+          data-amount-x="233"
+          data-pointer-zoom="3"
+          data-fullscreen
+          data-speed="50"
+        ></div>
+        <div class="features">
+          <span class="feature-tag">Pointer Zoom (3x)</span>
+          <span class="feature-tag">233 Frames</span>
+          <span class="feature-tag">Click to zoom</span>
+        </div>
+      </div>
+
+      <!-- Example 3: Programmatic Control -->
+      <div class="example">
+        <h2>Programmatic Control</h2>
+        <div id="controlled-viewer" class="viewer-container"></div>
+        <div class="controls">
+          <button onclick="playViewer()">Play</button>
+          <button onclick="stopViewer()">Stop</button>
+          <button onclick="moveLeft()">Rotate Left</button>
+          <button onclick="moveRight()">Rotate Right</button>
+          <button onclick="goToFrame(0)">Go to Start</button>
+          <button onclick="goToFrame(36)">Go to Middle</button>
+        </div>
+        <div class="features">
+          <span class="feature-tag">Programmatic API</span>
+          <span class="feature-tag">Custom Controls</span>
+          <span class="feature-tag">Inertia</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/4.1.0-beta.0/js-cloudimage-360-view.min.js"></script>
+    <script>
+      // Initialize all declarative viewers
+      const ci360 = new CI360();
+      ci360.initAll();
+
+      // Programmatic initialization for the controlled viewer
+      const controlledContainer = document.getElementById("controlled-viewer");
+
+      ci360.init(controlledContainer, {
+        id: "controlled",
+        folder: "https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/",
+        filenameX: "orange-{index}.jpg",
+        amountX: 73,
+        fullscreen: true,
+        inertia: true,
+        dragSpeed: 100,
+        onReady: () => console.log("Controlled viewer ready!"),
+        onSpin: (data) =>
+          console.log(`Frame: ${data.activeImageX}/${data.amountX}`),
+      });
+
+      // Control functions
+      function playViewer() {
+        const viewer = ci360.getViewById("controlled");
+        if (viewer) viewer.play();
+      }
+
+      function stopViewer() {
+        const viewer = ci360.getViewById("controlled");
+        if (viewer) viewer.stop();
+      }
+
+      function moveLeft() {
+        const viewer = ci360.getViewById("controlled");
+        if (viewer) viewer.moveLeft(5);
+      }
+
+      function moveRight() {
+        const viewer = ci360.getViewById("controlled");
+        if (viewer) viewer.moveRight(5);
+      }
+
+      function goToFrame(frame) {
+        const viewer = ci360.getViewById("controlled");
+        if (viewer) viewer.goToFrame(frame);
+      }
+    </script>
+  </body>
+</html>
