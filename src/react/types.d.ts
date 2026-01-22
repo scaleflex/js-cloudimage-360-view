@@ -11,6 +11,11 @@ export type AutoplayBehavior = 'spin-x' | 'spin-y' | 'spin-xy' | 'spin-yx';
 export type Theme = 'light' | 'dark';
 
 /**
+ * Hotspot trigger mode - hover or click
+ */
+export type HotspotTrigger = 'hover' | 'click';
+
+/**
  * Hotspot orientation
  */
 export type HotspotOrientation = 'x' | 'y';
@@ -134,6 +139,7 @@ export interface CI360Config {
   ciTransformation?: string | null;
   lazyload?: boolean;
   hotspots?: Hotspot[] | null;
+  hotspotTrigger?: HotspotTrigger;
   hotspotTimelineOnClick?: boolean;
   onReady?: (data: BaseEventData) => void;
   onLoad?: (data: LoadEventData) => void;

@@ -443,6 +443,7 @@ All options can be set via JavaScript config or HTML data attributes.
 | `lazyload` | `data-lazyload` | `true` | Enable lazy loading |
 | `hints` | `data-hints` | `true` | Show interaction hints on load |
 | `theme` | `data-theme` | `null` | Color theme: `'light'` or `'dark'` |
+| `hotspotTrigger` | `data-hotspot-trigger` | `'hover'` | Hotspot trigger mode: `'hover'` or `'click'` |
 | `hotspotTimelineOnClick` | `data-hotspot-timeline-on-click` | `true` | Show hotspot popup when clicking timeline dot |
 
 ### Cloudimage CDN Options

@@ -32,6 +32,7 @@ declare module CI360 {
     initialIconShown?: boolean; // Default: true
     bottomCircle?: boolean; // Default: true
     hotspots?: any; // Default: null (type adjusted as needed)
+    hotspotTrigger?: 'hover' | 'click'; // Default: 'hover'
     dragReverse?: boolean; // Default: false
     hide360Logo?: boolean; // Default: false (not documented)
     logoSrc?: string; // Default: Scaleflex 360 logo URL

@@ -10,7 +10,14 @@ import {
 import { createPopper } from '@popperjs/core';
 
 class Hotspot {
-  constructor(hotspotsConfig, container, imageAspectRatio) {
+  /**
+   * @param {Array} hotspotsConfig - Hotspot configuration array
+   * @param {HTMLElement} container - Container element
+   * @param {number} imageAspectRatio - Image aspect ratio
+   * @param {Object} options - Additional options
+   * @param {string} options.trigger - 'hover' or 'click' (default: 'hover')
+   */
+  constructor(hotspotsConfig, container, imageAspectRatio, options = {}) {
     this.container = container;
     this.popper = null;
     this.popperInstance = null;
@@ -18,9 +25,11 @@ class Hotspot {
     this.hotspotsConfig = adaptHotspotConfig(hotspotsConfig);
     this.shouldHidePopper = true;
     this.hidePopper = this.hidePopper.bind(this);
+    this.forceHidePopper = this.forceHidePopper.bind(this);
     this.imageAspectRatio = imageAspectRatio;
     this.hotspotElements = new Map();
     this.popperListeners = [];
+    this.trigger = options.trigger || 'hover'; // 'hover' or 'click'
 
     const { containerSize } = hotspotsConfig[0];
     this.initialContainerSize = containerSize || [container.offsetWidth, container.offsetHeight];
@@ -58,7 +67,9 @@ class Hotspot {
   }
 
   showPopper({ hotspotElement, content, id, keepOpen }) {
-    if (this.popperInstance && this.popperInstance.instanceId !== id) {
+    // Always clean up existing popper before creating a new one
+    // This prevents orphaned DOM elements when hovering the same hotspot repeatedly
+    if (this.popperInstance) {
       this.hidePopper();
     }
 
@@ -117,6 +128,12 @@ class Hotspot {
   }
 
   hidePopper() {
+    // Clear any pending hide timeout
+    if (this.hidePopperTimeout) {
+      clearTimeout(this.hidePopperTimeout);
+      this.hidePopperTimeout = null;
+    }
+
     this.cleanupPopperListeners();
 
     if (this.currentHotspotElement) {
@@ -139,25 +156,61 @@ class Hotspot {
         popperToRemove.remove();
       }, POPPER_REMOVE_DELAY);
     }
+
+    // Reset state
+    this.shouldHidePopper = true;
+  }
+
+  /**
+   * Force hide the popper immediately, ignoring keepOpen and shouldHidePopper flags
+   * Use this when the user starts dragging or other interactions that should close the modal
+   */
+  forceHidePopper() {
+    this.shouldHidePopper = true;
+    if (this.popperInstance) {
+      this.popperInstance.keepOpen = false;
+    }
+    this.hidePopper();
   }
 
   createHotspot(hotspot) {
     const { id, content, keepOpen, onClick, label } = hotspot;
     const hotspotElement = createHotspotElement(id, label);
 
-    if (onClick) {
+    if (onClick || (content && this.trigger === 'click')) {
       hotspotElement.style.cursor = 'pointer';
     }
 
     hotspotElement.onclick = (event) => {
       event.stopPropagation();
+
+      // Handle click trigger for showing popper
+      if (content && this.trigger === 'click') {
+        // Toggle popper on click
+        if (this.popperInstance?.instanceId === id) {
+          this.hidePopper();
+        } else {
+          this.showPopper({ hotspotElement, content, id, keepOpen });
+        }
+      }
+
+      // Call custom onClick handler if provided
       onClick?.(event, this.popperInstance, id);
     };
 
     if (content) {
-      hotspotElement.addEventListener('mouseenter', () =>
-        this.showPopper({ hotspotElement, content, id, keepOpen })
-      );
+      // Only add hover listeners if trigger is 'hover'
+      if (this.trigger === 'hover') {
+        hotspotElement.addEventListener('mouseenter', () =>
+          this.showPopper({ hotspotElement, content, id, keepOpen })
+        );
+        hotspotElement.addEventListener('mouseleave', () => {
+          this.shouldHidePopper = true;
+          this.checkAndHidePopper();
+        });
+      }
+
+      // Always support focus for accessibility
       hotspotElement.addEventListener('focus', () =>
         this.showPopper({ hotspotElement, content, id, keepOpen })
       );

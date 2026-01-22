@@ -328,7 +328,8 @@ class CI360Viewer {
   hideHotspotPopper() {
     if (!this.hotspotsInstance) return;
 
-    this.hotspotsInstance.hidePopper();
+    // Use forceHidePopper to ensure the modal is always closed, ignoring keepOpen flag
+    this.hotspotsInstance.forceHidePopper();
   }
 
   toggleZoom(event) {
@@ -801,7 +802,9 @@ class CI360Viewer {
     this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0;
 
     if (this.hotspots) {
-      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio);
+      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio, {
+        trigger: this.hotspotTrigger,
+      });
       this.addHotspotTimeline();
       // Show timeline by default (unless autoplay is active - it will be hidden below)
       this.showHotspotTimeline();
@@ -1481,6 +1484,7 @@ class CI360Viewer {
       initialIconShown,
       bottomCircle,
       hotspots,
+      hotspotTrigger = 'hover',
       dragReverse,
       hide360Logo,
       logoSrc,
@@ -1544,6 +1548,7 @@ class CI360Viewer {
     this.spinDirection = getDefaultSpinDirection(this.autoplayBehavior, this.allowSpinX, this.allowSpinY);
     this.dragReverse = dragReverse;
     this.hotspots = hotspots;
+    this.hotspotTrigger = hotspotTrigger;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
     this.inertia = inertia;

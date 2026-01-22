@@ -38,6 +38,7 @@ const DEFAULTS_VALUES = {
   imageInfo: false,
   initialIconShown: true,
   hotspots: null,
+  hotspotTrigger: 'hover',
   hide360Logo: false,
   logoSrc: LOGO_SRC,
   inertia: false,
@@ -102,6 +103,7 @@ const getConfigFromImage = (image) => ({
   pinchZoom: isTrue(image, 'pinch-zoom', DEFAULTS_VALUES.pinchZoom),
   hints: !isFalse(image, 'hints'),
   theme: getAttr(image, 'theme', DEFAULTS_VALUES.theme),
+  hotspotTrigger: getAttr(image, 'hotspot-trigger', DEFAULTS_VALUES.hotspotTrigger),
   hotspotTimelineOnClick: !isFalse(image, 'hotspot-timeline-on-click'),
   aspectRatio: getAttr(image, 'aspect-ratio', DEFAULTS_VALUES.aspectRatio),
 });
@@ -188,6 +190,7 @@ const adaptConfig = (config) => {
     initialIconShown: config.initialIconShown ?? DEFAULTS_VALUES.initialIconShown,
     bottomCircle: config.bottomCircle ?? DEFAULTS_VALUES.bottomCircle,
     hotspots: config.hotspots ?? DEFAULTS_VALUES.hotspots,
+    hotspotTrigger: config.hotspotTrigger || DEFAULTS_VALUES.hotspotTrigger,
     hide360Logo: config.hide360Logo ?? DEFAULTS_VALUES.hide360Logo,
     logoSrc: config.logoSrc || DEFAULTS_VALUES.logoSrc,
     inertia: config.inertia ?? DEFAULTS_VALUES.inertia,
