@@ -276,10 +276,11 @@ instance.init(suvCarContainer, config);
 
 // Initialize demo-generator with event callbacks
 const demoGeneratorContainer = document.getElementById('demo-generator');
+// Use fewer images on mobile to prevent memory crashes
 const demoGeneratorConfig = {
   folder: 'https://scaleflex.cloudimg.io/v7/demo/earbuds/',
   filenameX: '{index}.jpg',
-  amountX: 233,
+  amountX: isMobileDevice ? 60 : 233, // ~60 images on mobile vs 233 on desktop
   autoplay: true,
   speed: 100,
   pointerZoom: 1.5,
