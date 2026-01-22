@@ -199,6 +199,28 @@ class Hotspot {
     frameHotspots.forEach((hotspot) => this.updateAndShowHotspot(hotspot, activeIndex));
   };
 
+  /**
+   * Shows the popper for a specific hotspot by ID
+   * @param {string} hotspotId - The ID of the hotspot to show
+   */
+  showHotspotById(hotspotId) {
+    const hotspotConfig = this.hotspotsConfig.find((h) => h.id === hotspotId);
+    if (!hotspotConfig || !hotspotConfig.content) return;
+
+    const hotspotElement = this.hotspotsContainer.querySelector(`[data-hotspot-id="${hotspotId}"]`);
+    if (!hotspotElement) return;
+
+    // Only show if the hotspot is currently visible
+    if (hotspotElement.style.opacity !== '1') return;
+
+    this.showPopper({
+      hotspotElement,
+      content: hotspotConfig.content,
+      id: hotspotId,
+      keepOpen: hotspotConfig.keepOpen,
+    });
+  }
+
   createAllHotspots() {
     this.hotspotsConfig.forEach((hotspot) => this.createHotspot(hotspot));
   }

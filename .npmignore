@@ -25,9 +25,10 @@
 /test-results
 /coverage
 
-# Ignore documentation
+# Ignore documentation (keep README.md and LICENSE)
 /docs
-/*.md
+/CONTRIBUTING.md
+/MIGRATION.md
 
 # Ignore IDE-specific files
 /.idea

@@ -60,6 +60,17 @@
 
   /* Bottom 360 circle indicator */
   --ci360-circle-color: #888888;
+
+  /* Hotspot timeline */
+  --ci360-timeline-height: 6px;
+  --ci360-timeline-track-bg: rgba(0, 0, 0, 0.12);
+  --ci360-timeline-dot-size: 18px;
+  --ci360-timeline-dot-color: var(--ci360-hotspot-color);
+  --ci360-timeline-dot-border: 2px solid #fff;
+  --ci360-timeline-indicator-size: 12px;
+  --ci360-timeline-indicator-color: #333333;
+  --ci360-timeline-tooltip-bg: rgba(255, 255, 255, 0.95);
+  --ci360-timeline-tooltip-color: #333333;
 }
 
 /* ============================================
@@ -89,6 +100,11 @@
   --ci360-hints-color: #e0e0e0;
   --ci360-hints-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
   --ci360-circle-color: #b0b0b0;
+  --ci360-timeline-track-bg: rgba(255, 255, 255, 0.15);
+  --ci360-timeline-dot-border: 2px solid rgba(255, 255, 255, 0.9);
+  --ci360-timeline-indicator-color: #e0e0e0;
+  --ci360-timeline-tooltip-bg: rgba(40, 40, 45, 0.95);
+  --ci360-timeline-tooltip-color: #e0e0e0;
 }
 
 /* ============================================
@@ -415,4 +431,121 @@
   transition: box-shadow 200ms ease;
   overflow: hidden;
   pointer-events: none;
+}
+
+/* ============================================
+   Hotspot Timeline Navigation Bar
+   ============================================ */
+
+.cloudimage-360-hotspot-timeline {
+  width: 100%;
+  max-width: 500px;
+  margin: 16px auto 8px;
+  padding: 12px 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cloudimage-360-hotspot-timeline.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cloudimage-360-hotspot-timeline-track {
+  position: relative;
+  width: 100%;
+  height: var(--ci360-timeline-height);
+  background: var(--ci360-timeline-track-bg);
+  border-radius: calc(var(--ci360-timeline-height) / 2);
+}
+
+.cloudimage-360-hotspot-timeline-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--ci360-timeline-indicator-size);
+  height: var(--ci360-timeline-indicator-size);
+  background: var(--ci360-timeline-indicator-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0.1s ease-out;
+  pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cloudimage-360-hotspot-timeline-dot {
+  position: absolute;
+  top: 50%;
+  width: var(--ci360-timeline-dot-size);
+  height: var(--ci360-timeline-dot-size);
+  background: var(--ci360-timeline-dot-color);
+  border: var(--ci360-timeline-dot-border);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  /* Reset button styles */
+  padding: 0;
+  font: inherit;
+  outline: none;
+}
+
+.cloudimage-360-hotspot-timeline-dot:hover {
+  transform: translate(-50%, -50%) scale(1.25);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.cloudimage-360-hotspot-timeline-dot:focus-visible {
+  outline: 2px solid var(--ci360-focus-color);
+  outline-offset: 2px;
+}
+
+.cloudimage-360-hotspot-timeline-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ci360-timeline-tooltip-bg);
+  color: var(--ci360-timeline-tooltip-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.cloudimage-360-hotspot-timeline-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--ci360-timeline-tooltip-bg);
+}
+
+.cloudimage-360-hotspot-timeline-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile adjustments for timeline */
+@media (max-width: 480px) {
+  .cloudimage-360-hotspot-timeline {
+    max-width: none;
+    padding: 10px 16px;
+    margin: 12px auto 6px;
+  }
 }

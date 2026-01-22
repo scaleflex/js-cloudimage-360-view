@@ -43,6 +43,7 @@
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Usage](#usage)
+- [React / Next.js](#react--nextjs)
 - [Configuration Options](#configuration-options)
 - [Event Callbacks](#event-callbacks)
 - [Hotspots](#hotspots)
@@ -219,6 +220,174 @@ const config = {
 
 ---
 
+## React / Next.js
+
+The library provides a React wrapper for seamless integration with React and Next.js applications.
+
+### Installation
+
+```bash
+npm install js-cloudimage-360-view
+```
+
+### Basic Usage
+
+```tsx
+import { CI360Viewer } from 'js-cloudimage-360-view/react';
+import 'js-cloudimage-360-view/css';
+
+function ProductView() {
+  return (
+    <CI360Viewer
+      folder="https://example.com/images/"
+      filenameX="product-{index}.jpg"
+      amountX={36}
+      autoplay
+      fullscreen
+      style={{ width: '100%', maxWidth: 600, height: 400 }}
+    />
+  );
+}
+```
+
+### Imperative Control with Ref
+
+Use a ref to control the viewer programmatically:
+
+```tsx
+import { useRef } from 'react';
+import { CI360Viewer, CI360ViewerRef } from 'js-cloudimage-360-view/react';
+import 'js-cloudimage-360-view/css';
+
+function ProductView() {
+  const viewerRef = useRef<CI360ViewerRef>(null);
+
+  return (
+    <>
+      <CI360Viewer
+        ref={viewerRef}
+        folder="https://example.com/images/"
+        filenameX="{index}.jpg"
+        amountX={36}
+        onSpin={(e) => console.log(`Frame: ${e.activeImageX}`)}
+      />
+      <button onClick={() => viewerRef.current?.play()}>Play</button>
+      <button onClick={() => viewerRef.current?.stop()}>Stop</button>
+      <button onClick={() => viewerRef.current?.goToFrame(17)}>Go to Frame 17</button>
+    </>
+  );
+}
+```
+
+### Available Ref Methods
+
+| Method | Description |
+|--------|-------------|
+| `play()` | Start autoplay |
+| `stop()` | Stop autoplay |
+| `moveLeft(steps?)` | Move left by specified frames (default: 1) |
+| `moveRight(steps?)` | Move right by specified frames (default: 1) |
+| `moveTop(steps?)` | Move up on Y-axis (default: 1) |
+| `moveBottom(steps?)` | Move down on Y-axis (default: 1) |
+| `zoomIn()` | Toggle zoom in |
+| `zoomOut()` | Zoom out |
+| `goToFrame(frame, hotspotId?)` | Animate to specific frame |
+| `getViewer()` | Get underlying viewer instance |
+
+### With Hotspots
+
+```tsx
+import { CI360Viewer, Hotspot } from 'js-cloudimage-360-view/react';
+
+const hotspots: Hotspot[] = [
+  {
+    id: 'feature-1',
+    label: 'Engine',
+    orientation: 'x',
+    containerSize: [1200, 800],
+    positions: { 0: { x: 500, y: 300 } },
+    content: '<div>Engine details</div>',
+  },
+];
+
+function ProductView() {
+  return (
+    <CI360Viewer
+      folder="https://example.com/images/"
+      filenameX="{index}.jpg"
+      amountX={36}
+      hotspots={hotspots}
+    />
+  );
+}
+```
+
+### Next.js (SSR)
+
+For Next.js applications, use dynamic import to disable server-side rendering:
+
+```tsx
+import dynamic from 'next/dynamic';
+import 'js-cloudimage-360-view/css';
+
+const CI360Viewer = dynamic(
+  () => import('js-cloudimage-360-view/react').then(mod => mod.CI360Viewer),
+  { ssr: false }
+);
+
+export default function ProductPage() {
+  return (
+    <CI360Viewer
+      folder="https://example.com/images/"
+      filenameX="{index}.jpg"
+      amountX={36}
+    />
+  );
+}
+```
+
+### useCI360 Hook
+
+For advanced use cases, you can use the `useCI360` hook directly:
+
+```tsx
+import { useRef } from 'react';
+import { useCI360 } from 'js-cloudimage-360-view/react';
+
+function CustomViewer() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { viewer, isReady } = useCI360(containerRef, {
+    folder: 'https://example.com/images/',
+    filenameX: '{index}.jpg',
+    amountX: 36,
+    onReady: () => console.log('Viewer ready!'),
+  });
+
+  return (
+    <div>
+      <div ref={containerRef} style={{ width: 600, height: 400 }} />
+      {isReady && <p>Viewer is ready!</p>}
+    </div>
+  );
+}
+```
+
+### TypeScript Support
+
+The React wrapper is fully typed. Import types as needed:
+
+```tsx
+import type {
+  CI360ViewerProps,
+  CI360ViewerRef,
+  CI360Config,
+  SpinEventData,
+  Hotspot,
+} from 'js-cloudimage-360-view/react';
+```
+
+---
+
 ## Configuration Options
 
 All options can be set via JavaScript config or HTML data attributes.
@@ -273,6 +442,7 @@ All options can be set via JavaScript config or HTML data attributes.
 | `lazyload` | `data-lazyload` | `true` | Enable lazy loading |
 | `hints` | `data-hints` | `true` | Show interaction hints on load |
 | `theme` | `data-theme` | `null` | Color theme: `'light'` or `'dark'` |
+| `hotspotTimelineOnClick` | `data-hotspot-timeline-on-click` | `true` | Show hotspot popup when clicking timeline dot |
 
 ### Cloudimage CDN Options
 
@@ -372,7 +542,102 @@ const config = {
 | `containerSize` | Yes | `[width, height]` reference dimensions |
 | `positions` | Yes | Object mapping frame index to `{ x, y }` coordinates |
 | `content` | Yes | HTML content for the tooltip |
+| `label` | No | Short label for the hotspot (used in timeline tooltips) |
 | `onClick` | No | Click handler function |
+
+### Hotspot Timeline
+
+When hotspots are configured, a timeline navigation bar automatically appears below the viewer. This timeline shows:
+
+- **Position indicator** - Shows current rotation position
+- **Hotspot dots** - One dot per hotspot at its center frame position
+- **Hover tooltips** - If a hotspot has a `label`, hovering over its dot shows a tooltip
+
+Clicking a dot animates the viewer to that hotspot's position and optionally shows its popup.
+
+#### Timeline Tooltips
+
+Tooltips display the hotspot's `label` property when hovering over a timeline dot:
+
+```javascript
+const hotspots = [
+  {
+    id: 'engine',
+    label: 'Engine Bay',  // This text appears in the tooltip
+    orientation: 'x',
+    containerSize: [1200, 800],
+    positions: { 0: { x: 500, y: 300 }, /* ... */ },
+    content: '<div>Full hotspot content here</div>',
+  },
+];
+```
+
+**Tooltip behavior:**
+- Appears after a **400ms hover delay** to prevent accidental triggers
+- Positioned above the dot with an arrow pointer
+- Hidden on mouse leave or click (navigation)
+
+#### Timeline Configuration
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `hotspotTimelineOnClick` | `true` | Show hotspot popup when clicking a timeline dot |
+
+```javascript
+const config = {
+  hotspots: [...],
+  hotspotTimelineOnClick: true,  // Show popup on click (default)
+  // or
+  hotspotTimelineOnClick: false, // Only navigate, don't show popup
+};
+```
+
+#### Timeline CSS Variables
+
+Customize the timeline appearance with CSS variables:
+
+```css
+:root {
+  /* Timeline track */
+  --ci360-timeline-height: 6px;
+  --ci360-timeline-track-bg: rgba(0, 0, 0, 0.12);
+
+  /* Hotspot dots */
+  --ci360-timeline-dot-size: 18px;
+  --ci360-timeline-dot-color: var(--ci360-hotspot-color);
+  --ci360-timeline-dot-border: 2px solid #fff;
+
+  /* Position indicator */
+  --ci360-timeline-indicator-size: 12px;
+  --ci360-timeline-indicator-color: #333333;
+
+  /* Tooltip styling (matches theme) */
+  --ci360-timeline-tooltip-bg: rgba(255, 255, 255, 0.95);
+  --ci360-timeline-tooltip-color: #333333;
+}
+
+/* Dark theme uses dark tooltip */
+.ci360-theme-dark {
+  --ci360-timeline-tooltip-bg: rgba(40, 40, 45, 0.95);
+  --ci360-timeline-tooltip-color: #e0e0e0;
+}
+```
+
+**Custom tooltip styling example:**
+
+```css
+/* Increase tooltip font size */
+.cloudimage-360-hotspot-timeline-tooltip {
+  font-size: 14px;
+  padding: 8px 16px;
+}
+
+/* Brand-colored tooltip */
+.my-viewer {
+  --ci360-timeline-tooltip-bg: #2563eb;
+  --ci360-timeline-tooltip-color: #ffffff;
+}
+```
 
 ---
 
@@ -539,6 +804,11 @@ If you prefer to customize beyond the built-in dark theme:
 | `.cloudimage-360-popper` | Hotspot tooltip |
 | `.cloudimage-360-hints-overlay` | Hints overlay container |
 | `.cloudimage-360-hints-container` | Hints content box |
+| `.cloudimage-360-hotspot-timeline` | Hotspot timeline container |
+| `.cloudimage-360-hotspot-timeline-track` | Timeline track |
+| `.cloudimage-360-hotspot-timeline-dot` | Timeline hotspot dot |
+| `.cloudimage-360-hotspot-timeline-indicator` | Timeline position indicator |
+| `.cloudimage-360-hotspot-timeline-tooltip` | Timeline dot tooltip (appears on hover) |
 | `.ci360-theme-dark` | Dark theme class |
 
 ---

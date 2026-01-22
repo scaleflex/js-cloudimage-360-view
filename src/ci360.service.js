@@ -48,6 +48,10 @@ import {
   getHintsForConfig,
   showHintsOverlay,
   hideHintsOverlay,
+  createHotspotTimeline,
+  updateTimelineIndicator,
+  showHotspotTimeline,
+  hideHotspotTimeline,
 } from './utils';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
@@ -85,6 +89,10 @@ class CI360Viewer {
     this.panOffsetX = 0;
     this.panOffsetY = 0;
     this.canvasWorker = new CanvasWorker();
+    // Hotspot timeline state
+    this.hotspotTimeline = null;
+    this.hotspotTimelineIndicator = null;
+    this.isAnimatingToFrame = false;
     this.onMoveHandler = this.onMoveHandler.bind(this);
     this.destroy = this.destroy.bind(this);
     this.init(this.container, config);
@@ -718,6 +726,11 @@ class CI360Viewer {
       this.hotspotsInstance.updateHotspotPosition(activeIndex, this.orientation);
     }
 
+    // Update timeline indicator position
+    if (this.hotspotTimelineIndicator && this.orientation === ORIENTATIONS.X) {
+      this.updateHotspotTimelinePosition();
+    }
+
     this.drawImageOnCanvas(imageData, zoomScale, offsetX, offsetY);
   }
 
@@ -781,15 +794,18 @@ class CI360Viewer {
   onAllImagesLoaded() {
     this.addAllIcons();
 
-    if (this.hotspots) {
-      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio);
-    }
-
     this.isReady = true;
     this.amountX = this.imagesX.length;
     this.amountY = this.imagesY.length;
     this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0;
     this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0;
+
+    if (this.hotspots) {
+      this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio);
+      this.addHotspotTimeline();
+      // Show timeline by default (unless autoplay is active - it will be hidden below)
+      this.showHotspotTimeline();
+    }
 
     this.emit('onLoad', { imagesX: this.imagesX.length, imagesY: this.imagesY.length });
     this.emit('onReady');
@@ -969,12 +985,20 @@ class CI360Viewer {
       this.hintsOverlay = null;
     }
 
-    // Remove theme class
-    this.container.classList.remove('ci360-theme-dark');
+    // Remove hotspot timeline if exists
+    if (this.hotspotTimeline && this.hotspotTimeline.parentNode) {
+      this.hotspotTimeline.parentNode.removeChild(this.hotspotTimeline);
+      this.hotspotTimeline = null;
+      this.hotspotTimelineIndicator = null;
+    }
 
-    const oldElement = this.container;
-    const newElement = oldElement.cloneNode(false); // shallow clone - don't copy children
-    oldElement.parentNode.replaceChild(newElement, oldElement);
+    // Remove theme class and clear container contents
+    if (this.container) {
+      this.container.classList.remove('ci360-theme-dark');
+      // Clear the container contents instead of replacing the element
+      // This preserves React refs and other framework bindings
+      this.container.innerHTML = '';
+    }
   }
 
   addInitialIcon() {
@@ -1123,6 +1147,127 @@ class CI360Viewer {
     hideHintsOverlay(this.hintsOverlay);
   }
 
+  addHotspotTimeline() {
+    if (!this.hotspots || this.hotspotTimeline) return;
+
+    // Append to main container (not innerBox) so it appears below the image
+    const timelineData = createHotspotTimeline(this.container, this.amountX, this.hotspots);
+    if (!timelineData) return;
+
+    this.hotspotTimeline = timelineData.element;
+    this.hotspotTimelineIndicator = timelineData.indicator;
+
+    // Add click handlers to dots
+    const dots = this.hotspotTimeline.querySelectorAll('.cloudimage-360-hotspot-timeline-dot');
+    dots.forEach((dot) => {
+      dot.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const targetFrame = parseInt(dot.getAttribute('data-frame'), 10);
+        const hotspotId = dot.getAttribute('data-hotspot-id');
+        if (!isNaN(targetFrame)) {
+          this.animateToFrame(targetFrame, hotspotId);
+        }
+      });
+    });
+
+    // Update initial indicator position
+    this.updateHotspotTimelinePosition();
+  }
+
+  showHotspotTimeline() {
+    showHotspotTimeline(this.hotspotTimeline);
+  }
+
+  hideHotspotTimeline() {
+    hideHotspotTimeline(this.hotspotTimeline);
+  }
+
+  updateHotspotTimelinePosition() {
+    updateTimelineIndicator(this.hotspotTimelineIndicator, this.activeImageX, this.amountX);
+  }
+
+  /**
+   * Animates the viewer to a target frame, optionally showing a hotspot popup on arrival
+   * @param {number} targetFrame - The frame to animate to
+   * @param {string} [hotspotId] - Optional hotspot ID to show popup for after animation
+   */
+  animateToFrame(targetFrame, hotspotId) {
+    if (this.isAnimatingToFrame || targetFrame === this.activeImageX) {
+      // If already at the target frame, just show the hotspot if requested
+      if (targetFrame === this.activeImageX && hotspotId && this.hotspotsInstance && this.hotspotTimelineOnClick) {
+        this.hotspotsInstance.showHotspotById(hotspotId);
+      }
+      return;
+    }
+
+    this.isAnimatingToFrame = true;
+    this.hasInteracted = true;
+
+    // Stop autoplay if running
+    if (this.autoplay || this.loopTimeoutId) {
+      this.stopAutoplay();
+      this.autoplay = false;
+    }
+
+    // Cancel any running inertia
+    if (this.inertiaAnimationId) {
+      cancelAnimationFrame(this.inertiaAnimationId);
+      this.inertiaAnimationId = null;
+    }
+
+    // Calculate shortest path (forward vs backward with wrap)
+    const currentFrame = this.activeImageX;
+    const forwardDistance = (targetFrame - currentFrame + this.amountX) % this.amountX;
+    const backwardDistance = (currentFrame - targetFrame + this.amountX) % this.amountX;
+
+    const goForward = forwardDistance <= backwardDistance;
+    const totalSteps = goForward ? forwardDistance : backwardDistance;
+
+    if (totalSteps === 0) {
+      this.isAnimatingToFrame = false;
+      return;
+    }
+
+    const frameDelay = 30; // ~30ms per frame for smooth animation
+    let stepsRemaining = totalSteps;
+
+    const animateStep = () => {
+      if (stepsRemaining <= 0) {
+        this.isAnimatingToFrame = false;
+        // Show hotspot popup after animation completes if configured
+        if (hotspotId && this.hotspotsInstance && this.hotspotTimelineOnClick) {
+          // Small delay to ensure hotspot position is updated
+          setTimeout(() => {
+            this.hotspotsInstance.showHotspotById(hotspotId);
+          }, 50);
+        }
+        return;
+      }
+
+      if (goForward) {
+        this.moveRight();
+      } else {
+        this.moveLeft();
+      }
+
+      stepsRemaining--;
+
+      if (stepsRemaining > 0) {
+        setTimeout(animateStep, frameDelay);
+      } else {
+        this.isAnimatingToFrame = false;
+        // Show hotspot popup after animation completes if configured
+        if (hotspotId && this.hotspotsInstance && this.hotspotTimelineOnClick) {
+          setTimeout(() => {
+            this.hotspotsInstance.showHotspotById(hotspotId);
+          }, 50);
+        }
+      }
+    };
+
+    animateStep();
+  }
+
   remove360ViewCircleIcon() {
     if (!this.view360CircleIcon) return;
 
@@ -1150,6 +1295,7 @@ class CI360Viewer {
     this.show360ViewCircleIcon();
     this.showMagnifierIcon();
     this.showFullscreenIcon();
+    this.showHotspotTimeline();
   }
 
   hideAllIcons() {
@@ -1157,6 +1303,7 @@ class CI360Viewer {
     this.hide360ViewCircleIcon();
     this.hideMagnifierIcon();
     this.hideFullscreenIcon();
+    this.hideHotspotTimeline();
   }
 
   removeLoader() {
@@ -1336,6 +1483,7 @@ class CI360Viewer {
       pinchZoom,
       hints,
       theme,
+      hotspotTimelineOnClick = true,
       // Event callbacks
       onReady,
       onLoad,
@@ -1389,6 +1537,7 @@ class CI360Viewer {
     this.inertia = inertia;
     this.pinchZoom = pinchZoom;
     this.hints = hints;
+    this.hotspotTimelineOnClick = hotspotTimelineOnClick;
 
     // Apply theme class to container
     if (theme === 'dark') {

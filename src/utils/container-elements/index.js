@@ -19,3 +19,9 @@ export {
   showHintsOverlay,
   hideHintsOverlay,
 } from './create-hints-overlay';
+export {
+  createHotspotTimeline,
+  updateTimelineIndicator,
+  showHotspotTimeline,
+  hideHotspotTimeline,
+} from './create-hotspot-timeline';

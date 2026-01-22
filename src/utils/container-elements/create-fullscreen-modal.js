@@ -5,6 +5,9 @@ export const createFullscreenModal = (container) => {
 
   const fullscreenContainer = container.cloneNode();
 
+  // Reset any dimension constraints from the original container
+  fullscreenContainer.style.width = '100%';
+  fullscreenContainer.style.maxWidth = '100%';
   fullscreenContainer.style.height = '100vh';
   fullscreenContainer.style.maxHeight = '100%';
 

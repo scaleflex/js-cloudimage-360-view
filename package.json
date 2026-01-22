@@ -3,11 +3,24 @@
   "version": "4.0.0",
   "main": "dist/js-cloudimage-360-view.min.js",
   "types": "src/types/ci360.d.ts",
+  "files": [
+    "dist/js-cloudimage-360-view.min.js",
+    "dist/js-cloudimage-360-view.min.css",
+    "dist/react",
+    "src/types",
+    "src/react/types.d.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/types/ci360.d.ts",
       "import": "./dist/js-cloudimage-360-view.min.js",
       "require": "./dist/js-cloudimage-360-view.min.js"
+    },
+    "./css": "./dist/js-cloudimage-360-view.min.css",
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs"
     }
   },
   "style": "dist/js-cloudimage-360-view.min.css",
@@ -33,13 +46,16 @@
   ],
   "scripts": {
     "dev": "vite serve demo --host",
+    "dev:react": "npm --prefix demo/react-demo run dev",
     "clean:build": "rm -rf dist",
     "build:bundle": "npm run clean:build && vite build",
+    "build:react": "vite build --config vite-react.config.js && cp src/react/types.d.ts dist/react/index.d.ts",
+    "build": "npm run build:bundle && npm run build:react",
     "deploy:bundle": "npm run build:bundle && node bin/deploy-bundle",
     "clean:dist": "rm -rf dist",
     "clean:demo": "rm -rf demo/dist",
     "build:npm": "npm run clean:demo && vite --config vite-npm.config.js build",
-    "build:demo": "npm run clean:demo && vite --config vite-demo.config.js build",
+    "build:demo": "vite --config vite-demo.config.js build && npm --prefix demo/react-demo run build",
     "deploy:demo": "gh-pages -d dist",
     "publish": "npm run build:demo && npm run deploy:demo",
     "test": "vitest",
@@ -50,8 +66,26 @@
     "@popperjs/core": "^2.11.2",
     "lodash.throttle": "^4.1.1"
   },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@babel/cli": "^7.16.7",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.0",
     "@babel/core": "^7.16.7",
     "@babel/plugin-transform-runtime": "^7.16.5",
     "@babel/preset-env": "^7.16.5",

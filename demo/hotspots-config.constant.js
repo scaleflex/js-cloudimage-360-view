@@ -2,6 +2,7 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   // Modal Style 1: Link with icon - compact and clickable
   {
     id: 'hotspot-1',
+    label: 'Specifications',
     orientation: 'x',
     containerSize: [1170, 663],
     positions: {
@@ -42,6 +43,7 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   // Modal Style 2: Title and description - clean card
   {
     id: 'hotspot-2',
+    label: 'All-Terrain Wheels',
     orientation: 'x',
     containerSize: [1220, 680],
     positions: {
@@ -81,6 +83,7 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   // Modal Style 3: Gallery with images, title, description, and action buttons
   {
     id: 'hotspot-3',
+    label: 'Roof Rack',
     orientation: 'x',
     containerSize: [1220, 680],
     positions: {
@@ -134,6 +137,7 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
   // Modal Style 2 variant: Another info card for the fourth hotspot
   {
     id: 'hotspot-4',
+    label: 'LED Headlights',
     orientation: 'x',
     containerSize: [1220, 680],
     positions: {

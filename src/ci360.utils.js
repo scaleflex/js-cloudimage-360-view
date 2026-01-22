@@ -44,6 +44,7 @@ const DEFAULTS_VALUES = {
   pinchZoom: true,
   hints: true,
   theme: null,
+  hotspotTimelineOnClick: true,
   // Event callbacks
   onReady: null,
   onLoad: null,
@@ -100,6 +101,7 @@ const getConfigFromImage = (image) => ({
   pinchZoom: isTrue(image, 'pinch-zoom', DEFAULTS_VALUES.pinchZoom),
   hints: !isFalse(image, 'hints'),
   theme: getAttr(image, 'theme', DEFAULTS_VALUES.theme),
+  hotspotTimelineOnClick: !isFalse(image, 'hotspot-timeline-on-click'),
 });
 
 const validateConfig = (config) => {
@@ -190,6 +192,7 @@ const adaptConfig = (config) => {
     pinchZoom: config.pinchZoom ?? DEFAULTS_VALUES.pinchZoom,
     hints: config.hints ?? DEFAULTS_VALUES.hints,
     theme: config.theme || DEFAULTS_VALUES.theme,
+    hotspotTimelineOnClick: config.hotspotTimelineOnClick ?? DEFAULTS_VALUES.hotspotTimelineOnClick,
     // Event callbacks
     onReady: config.onReady ?? DEFAULTS_VALUES.onReady,
     onLoad: config.onLoad ?? DEFAULTS_VALUES.onLoad,

@@ -1,19 +1,46 @@
+# Dependencies
 /node_modules
+demo/*/node_modules
+
+# Build outputs
+/dist
 /build
+demo-dist
+
+# Generated TypeScript declaration files (except intentional ones)
+src/**/*.d.ts
+src/**/*.d.ts.map
+!src/types/*.d.ts
+!src/react/types.d.ts
+
+# IDE
+.idea
+/.idea
+.vscode
+
+# OS files
 .DS_Store
+
+# Environment files
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.idea
-/.idea
-dist
-demo-dist
-build
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Lock files (optional - some projects prefer to commit these)
 package-lock.json
+**/package-lock.json
 yarn.lock
+**/yarn.lock
+
+# Deployment
 bin
-.env
+
+# Test coverage
+coverage
