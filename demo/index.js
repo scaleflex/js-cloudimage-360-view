@@ -10,6 +10,21 @@ import {
   URL_PROPERTIES,
 } from './constants';
 
+// Hide heavy demo sections on mobile to prevent memory crashes
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  navigator.userAgent
+);
+
+if (isMobileDevice) {
+  // Hide gallery section (100 images) and programmatic section (73 images)
+  // This reduces total images from ~480 to ~306
+  const gallerySection = document.querySelector('.gallery-section');
+  const programmaticSection = document.querySelector('.programmatic-control-section');
+
+  if (gallerySection) gallerySection.style.display = 'none';
+  if (programmaticSection) programmaticSection.style.display = 'none';
+}
+
 const spinDirections = document.getElementById('spin-directions');
 const copyText = document.getElementById('copy-text');
 const codeBlock = document.getElementById('code-block');
