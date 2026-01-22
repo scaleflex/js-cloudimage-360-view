@@ -96,8 +96,7 @@ JS Cloudimage 360 View enables you to create stunning, interactive 360-degree pr
 Add the library via CDN and create your first 360 viewer in seconds:
 
 ```html
-<!-- Add CSS and JS -->
-<link rel="stylesheet" href="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/latest/js-cloudimage-360-view.min.css">
+<!-- Add the library (CSS is auto-injected) -->
 <script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/latest/js-cloudimage-360-view.min.js"></script>
 
 <!-- Create a container with data attributes -->
@@ -122,11 +121,10 @@ Add the library via CDN and create your first 360 viewer in seconds:
 ### Option 1: CDN (Recommended for Quick Setup)
 
 ```html
-<link rel="stylesheet" href="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/latest/js-cloudimage-360-view.min.css">
 <script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/latest/js-cloudimage-360-view.min.js"></script>
 ```
 
-> **Important:** Both CSS and JS files are required for proper functionality.
+> **Note:** CSS is automatically injected by the script - no separate stylesheet needed.
 
 ### Option 2: Package Manager
 
@@ -902,23 +900,18 @@ Version 4 introduces significant improvements in performance, customization, and
 
 ### Breaking Changes
 
-#### 1. CSS File Required
+#### 1. CSS Handling
 
-v4 requires importing the CSS file separately:
+For CDN users, CSS is now auto-injected (same as v3):
 
 ```html
-<!-- v3: Only JS needed -->
-<script src=".../js-cloudimage-360-view.min.js"></script>
-
-<!-- v4: Both CSS and JS required -->
-<link rel="stylesheet" href=".../js-cloudimage-360-view.min.css">
+<!-- v4: Just include the script -->
 <script src=".../js-cloudimage-360-view.min.js"></script>
 ```
 
-For npm users:
+For npm/bundler users, import CSS separately:
 
 ```javascript
-// v4
 import CI360 from 'js-cloudimage-360-view';
 import 'js-cloudimage-360-view/css';
 ```
