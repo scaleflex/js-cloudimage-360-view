@@ -1,11 +1,11 @@
 var ei = Object.defineProperty;
 var ii = (e, t, i) => t in e ? ei(e, t, { enumerable: !0, configurable: !0, writable: !0, value: i }) : e[t] = i;
 var ce = (e, t, i) => ii(e, typeof t != "symbol" ? t + "" : t, i);
-var Mt = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
+var Ht = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
 function si(e) {
   return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
 }
-var Be = "Expected a function", he = NaN, oi = "[object Symbol]", ni = /^\s+|\s+$/g, ri = /^[-+]0x[0-9a-f]+$/i, ai = /^0b[01]+$/i, li = /^0o[0-7]+$/i, ci = parseInt, hi = typeof Mt == "object" && Mt && Mt.Object === Object && Mt, di = typeof self == "object" && self && self.Object === Object && self, ui = hi || di || Function("return this")(), pi = Object.prototype, fi = pi.toString, mi = Math.max, vi = Math.min, Kt = function() {
+var Be = "Expected a function", he = NaN, oi = "[object Symbol]", ni = /^\s+|\s+$/g, ri = /^[-+]0x[0-9a-f]+$/i, ai = /^0b[01]+$/i, li = /^0o[0-7]+$/i, ci = parseInt, hi = typeof Ht == "object" && Ht && Ht.Object === Object && Ht, di = typeof self == "object" && self && self.Object === Object && self, ui = hi || di || Function("return this")(), pi = Object.prototype, fi = pi.toString, mi = Math.max, vi = Math.min, Kt = function() {
   return ui.Date.now();
 };
 function gi(e, t, i) {
@@ -91,7 +91,7 @@ function de(e) {
   return i || li.test(e) ? ci(e.slice(2), i ? 2 : 8) : ri.test(e) ? he : +e;
 }
 var Ii = yi;
-const ue = /* @__PURE__ */ si(Ii), H = {
+const ue = /* @__PURE__ */ si(Ii), M = {
   SPIN_X: "spin-x",
   SPIN_Y: "spin-y",
   SPIN_XY: "spin-xy",
@@ -116,7 +116,7 @@ const ue = /* @__PURE__ */ si(Ii), H = {
   keys: !1,
   keysReverse: !1,
   autoplay: !1,
-  autoplayBehavior: H.SPIN_X,
+  autoplayBehavior: M.SPIN_X,
   playOnce: !1,
   autoplayReverse: !1,
   pointerZoom: 0,
@@ -268,13 +268,13 @@ const ue = /* @__PURE__ */ si(Ii), H = {
 }, Dt = (e, t) => L(e, t, null) === "false", Ri = (e = 1) => {
   const t = Math.round(window.devicePixelRatio || 1);
   return parseInt(e) * t;
-}, Hi = (e, t, i) => new URL(e).origin.includes("cloudimg") ? e : `https://${t}.cloudimg.io/${i}${e}`, Mi = ({ ciTransformation: e, responsiveWidth: t, ciFilters: i }) => {
+}, Mi = (e, t, i) => new URL(e).origin.includes("cloudimg") ? e : `https://${t}.cloudimg.io/${i}${e}`, Hi = ({ ciTransformation: e, responsiveWidth: t, ciFilters: i }) => {
   const s = `width=${t}`, o = e || s, n = i ? `&f=${i}` : "";
   return `${o}${n}`;
 }, Ot = (e, t) => {
   const { folder: i, apiVersion: s, filename: o = "", ciParams: n } = e, { ciToken: l, ciFilters: r, ciTransformation: a } = n || {}, c = `${i}${o}`;
   if (!l || !t) return c;
-  const h = xi.includes(s) ? null : s, p = h ? `${h}/` : "", f = Ri(t), u = Hi(c, l, p), I = Mi({
+  const h = xi.includes(s) ? null : s, p = h ? `${h}/` : "", f = Ri(t), u = Mi(c, l, p), I = Hi({
     ciTransformation: a,
     responsiveWidth: f,
     ciFilters: r
@@ -464,10 +464,10 @@ const ue = /* @__PURE__ */ si(Ii), H = {
 }, Jt = (e, t) => {
   const i = e.querySelector(t);
   i && i.parentNode.removeChild(i);
-}, qi = () => {
+}, Qi = () => {
   const e = document.createElement("div");
   return e.className = "cloudimage-loading-spinner", e;
-}, Qi = () => {
+}, qi = () => {
   const e = document.createElement("div");
   return e.className = "cloudimage-360-transition-overlay", e;
 }, ts = (e) => {
@@ -573,7 +573,7 @@ const ue = /* @__PURE__ */ si(Ii), H = {
   e && e.classList.add("visible");
 }, ps = (e) => {
   e && e.classList.remove("visible");
-}, qt = (e, t = []) => {
+}, Qt = (e, t = []) => {
   if (!e) return t;
   try {
     return JSON.parse(e);
@@ -615,7 +615,7 @@ const ue = /* @__PURE__ */ si(Ii), H = {
 }, bs = (e, t) => {
   const { imageList: i, indexZeroBase: s } = t;
   if (i.length) {
-    const o = qt(i, null);
+    const o = Qt(i, null);
     if (o)
       return ys(o, t);
   }
@@ -699,14 +699,14 @@ const ue = /* @__PURE__ */ si(Ii), H = {
   e ? t() : i();
 }, Os = ({ autoplayBehavior: e, spinY: t, reversed: i, loopTriggers: s }) => {
   switch (e) {
-    case H.SPIN_XY:
-    case H.SPIN_YX:
+    case M.SPIN_XY:
+    case M.SPIN_YX:
       t ? Oe(i, s) : Ee(i, s);
       break;
-    case H.SPIN_Y:
+    case M.SPIN_Y:
       Oe(i, s);
       break;
-    case H.SPIN_X:
+    case M.SPIN_X:
     default:
       Ee(i, s);
   }
@@ -723,11 +723,11 @@ const ue = /* @__PURE__ */ si(Ii), H = {
     return n ? r === 0 : r === c;
   };
   switch (e) {
-    case H.SPIN_XY:
-    case H.SPIN_Y:
+    case M.SPIN_XY:
+    case M.SPIN_Y:
       return l(i, o);
-    case H.SPIN_X:
-    case H.SPIN_YX:
+    case M.SPIN_X:
+    case M.SPIN_YX:
     default:
       return l(t, s);
   }
@@ -741,18 +741,18 @@ const ue = /* @__PURE__ */ si(Ii), H = {
   spinDirection: l
 }) => {
   const r = t === (n ? 0 : s - 1), a = i === (n ? 0 : o - 1);
-  return e === H.SPIN_XY || e === H.SPIN_YX ? l === "x" && r || l === "y" && a : !1;
+  return e === M.SPIN_XY || e === M.SPIN_YX ? l === "x" && r || l === "y" && a : !1;
 }, Ss = (e, t, i) => {
   if (!i) return "x";
   if (!t) return "y";
   switch (e) {
-    case H.SPIN_XY:
+    case M.SPIN_XY:
       return "x";
-    case H.SPIN_YX:
+    case M.SPIN_YX:
       return "y";
-    case H.SPIN_Y:
+    case M.SPIN_Y:
       return "y";
-    case H.SPIN_X:
+    case M.SPIN_X:
     default:
       return "x";
   }
@@ -883,7 +883,7 @@ const Ps = /* @__PURE__ */ new Set([
   /vbscript:/gi,
   /data:/gi,
   /on\w+\s*=/gi
-], Hs = (e) => {
+], Ms = (e) => {
   if (typeof e != "string")
     return "";
   const t = document.createElement("template");
@@ -929,8 +929,8 @@ const Ps = /* @__PURE__ */ new Set([
     }
   };
   return i(t.content), t.innerHTML;
-}, Ms = (e) => e === "x" ? P.X : P.Y, Ds = (e, t, i) => e.filter(
-  (s) => Ms(s.orientation) === i && t in s.positions
+}, Hs = (e) => e === "x" ? P.X : P.Y, Ds = (e, t, i) => e.filter(
+  (s) => Hs(s.orientation) === i && t in s.positions
 ), Zs = (e, t) => {
   const i = document.createElement("button");
   return i.id = e, i.className = "cloudimage-360-hotspot", i.dataset.hotspotId = e, i.setAttribute("type", "button"), i.setAttribute("aria-label", t || `Hotspot ${e}`), i.setAttribute("aria-haspopup", "true"), i.setAttribute("aria-expanded", "false"), i;
@@ -964,7 +964,7 @@ const Ps = /* @__PURE__ */ new Set([
   }
 ], Fs = (e, t) => {
   const i = document.createElement("div");
-  return i.className = "cloudimage-360-popper", i.id = `cloudimage-360-popper-${t}`, i.dataset.popperId = t, i.setAttribute("role", "tooltip"), i.setAttribute("aria-hidden", "false"), typeof e == "string" && /<\/?[a-z][\s\S]*>/i.test(e) ? i.innerHTML = Hs(e) : i.textContent = e, document.body.appendChild(i), i;
+  return i.className = "cloudimage-360-popper", i.id = `cloudimage-360-popper-${t}`, i.dataset.popperId = t, i.setAttribute("role", "tooltip"), i.setAttribute("aria-hidden", "false"), typeof e == "string" && /<\/?[a-z][\s\S]*>/i.test(e) ? i.innerHTML = Ms(e) : i.textContent = e, document.body.appendChild(i), i;
 }, Ns = (e) => {
   const t = [...e];
   return t.forEach((i, s) => {
@@ -993,11 +993,11 @@ const Ps = /* @__PURE__ */ new Set([
     }), { ...g, positions: v };
   });
 };
-var M = "top", F = "bottom", N = "right", D = "left", ee = "auto", kt = [M, F, N, D], dt = "start", St = "end", js = "clippingParents", Ve = "viewport", Ct = "popper", $s = "reference", Te = /* @__PURE__ */ kt.reduce(function(e, t) {
+var H = "top", F = "bottom", N = "right", D = "left", ee = "auto", kt = [H, F, N, D], dt = "start", St = "end", js = "clippingParents", Ve = "viewport", Ct = "popper", $s = "reference", Te = /* @__PURE__ */ kt.reduce(function(e, t) {
   return e.concat([t + "-" + dt, t + "-" + St]);
 }, []), je = /* @__PURE__ */ [].concat(kt, [ee]).reduce(function(e, t) {
   return e.concat([t, t + "-" + dt, t + "-" + St]);
-}, []), zs = "beforeRead", Gs = "read", Us = "afterRead", Ks = "beforeMain", _s = "main", Js = "afterMain", qs = "beforeWrite", Qs = "write", to = "afterWrite", eo = [zs, Gs, Us, Ks, _s, Js, qs, Qs, to];
+}, []), zs = "beforeRead", Gs = "read", Us = "afterRead", Ks = "beforeMain", _s = "main", Js = "afterMain", Qs = "beforeWrite", qs = "write", to = "afterWrite", eo = [zs, Gs, Us, Ks, _s, Js, Qs, qs, to];
 function z(e) {
   return e ? (e.nodeName || "").toLowerCase() : null;
 }
@@ -1070,14 +1070,14 @@ function $(e) {
   return e.split("-")[0];
 }
 var st = Math.max, Ft = Math.min, ut = Math.round;
-function Qt() {
+function qt() {
   var e = navigator.userAgentData;
   return e != null && e.brands && Array.isArray(e.brands) ? e.brands.map(function(t) {
     return t.brand + "/" + t.version;
   }).join(" ") : navigator.userAgent;
 }
 function $e() {
-  return !/^((?!chrome|android).)*safari/i.test(Qt());
+  return !/^((?!chrome|android).)*safari/i.test(qt());
 }
 function pt(e, t, i) {
   t === void 0 && (t = !1), i === void 0 && (i = !1);
@@ -1124,7 +1124,7 @@ function J(e) {
 function no(e) {
   return ["table", "td", "th"].indexOf(z(e)) >= 0;
 }
-function Q(e) {
+function q(e) {
   return ((ot(e) ? e.ownerDocument : (
     // $FlowFixMe[prop-missing]
     e.document
@@ -1139,7 +1139,7 @@ function Vt(e) {
     e.parentNode || // DOM Element detected
     (ie(e) ? e.host : null) || // ShadowRoot detected
     // $FlowFixMe[incompatible-call]: HTMLElement is a Node
-    Q(e)
+    q(e)
   );
 }
 function Ye(e) {
@@ -1147,7 +1147,7 @@ function Ye(e) {
   J(e).position === "fixed" ? null : e.offsetParent;
 }
 function ro(e) {
-  var t = /firefox/i.test(Qt()), i = /Trident/i.test(Qt());
+  var t = /firefox/i.test(qt()), i = /Trident/i.test(qt());
   if (i && W(e)) {
     var s = J(e);
     if (s.position === "fixed")
@@ -1201,7 +1201,7 @@ var lo = function(t, i) {
 function co(e) {
   var t, i = e.state, s = e.name, o = e.options, n = i.elements.arrow, l = i.modifiersData.popperOffsets, r = $(i.placement), a = oe(r), c = [D, N].indexOf(r) >= 0, h = c ? "height" : "width";
   if (!(!n || !l)) {
-    var p = lo(o.padding, i), f = se(n), u = a === "y" ? M : D, I = a === "y" ? F : N, g = i.rects.reference[h] + i.rects.reference[a] - l[a] - i.rects.popper[h], v = l[a] - i.rects.reference[a], m = Tt(n), b = m ? a === "y" ? m.clientHeight || 0 : m.clientWidth || 0 : 0, x = g / 2 - v / 2, w = p[u], C = b - f[h] - p[I], y = b / 2 - f[h] / 2 + x, O = Et(w, y, C), A = a;
+    var p = lo(o.padding, i), f = se(n), u = a === "y" ? H : D, I = a === "y" ? F : N, g = i.rects.reference[h] + i.rects.reference[a] - l[a] - i.rects.popper[h], v = l[a] - i.rects.reference[a], m = Tt(n), b = m ? a === "y" ? m.clientHeight || 0 : m.clientWidth || 0 : 0, x = g / 2 - v / 2, w = p[u], C = b - f[h] - p[I], y = b / 2 - f[h] / 2 + x, O = Et(w, y, C), A = a;
     i.modifiersData[s] = (t = {}, t[A] = O, t.centerOffset = O - y, t);
   }
 }
@@ -1243,10 +1243,10 @@ function Xe(e) {
     y: g
   };
   u = v.x, g = v.y;
-  var m = l.hasOwnProperty("x"), b = l.hasOwnProperty("y"), x = D, w = M, C = window;
+  var m = l.hasOwnProperty("x"), b = l.hasOwnProperty("y"), x = D, w = H, C = window;
   if (c) {
     var y = Tt(i), O = "clientHeight", A = "clientWidth";
-    if (y === B(i) && (y = Q(i), J(y).position !== "static" && r === "absolute" && (O = "scrollHeight", A = "scrollWidth")), y = y, o === M || (o === D || o === N) && n === St) {
+    if (y === B(i) && (y = q(i), J(y).position !== "static" && r === "absolute" && (O = "scrollHeight", A = "scrollWidth")), y = y, o === H || (o === D || o === N) && n === St) {
       w = F;
       var E = p && y === C && C.visualViewport ? C.visualViewport.height : (
         // $FlowFixMe[prop-missing]
@@ -1254,7 +1254,7 @@ function Xe(e) {
       );
       g -= E - s.height, g *= a ? 1 : -1;
     }
-    if (o === D || (o === M || o === F) && n === St) {
+    if (o === D || (o === H || o === F) && n === St) {
       x = N;
       var S = p && y === C && C.visualViewport ? C.visualViewport.width : (
         // $FlowFixMe[prop-missing]
@@ -1358,10 +1358,10 @@ function ne(e) {
   };
 }
 function re(e) {
-  return pt(Q(e)).left + ne(e).scrollLeft;
+  return pt(q(e)).left + ne(e).scrollLeft;
 }
 function Io(e, t) {
-  var i = B(e), s = Q(e), o = i.visualViewport, n = s.clientWidth, l = s.clientHeight, r = 0, a = 0;
+  var i = B(e), s = q(e), o = i.visualViewport, n = s.clientWidth, l = s.clientHeight, r = 0, a = 0;
   if (o) {
     n = o.width, l = o.height;
     var c = $e();
@@ -1375,7 +1375,7 @@ function Io(e, t) {
   };
 }
 function xo(e) {
-  var t, i = Q(e), s = ne(e), o = (t = e.ownerDocument) == null ? void 0 : t.body, n = st(i.scrollWidth, i.clientWidth, o ? o.scrollWidth : 0, o ? o.clientWidth : 0), l = st(i.scrollHeight, i.clientHeight, o ? o.scrollHeight : 0, o ? o.clientHeight : 0), r = -s.scrollLeft + re(e), a = -s.scrollTop;
+  var t, i = q(e), s = ne(e), o = (t = e.ownerDocument) == null ? void 0 : t.body, n = st(i.scrollWidth, i.clientWidth, o ? o.scrollWidth : 0, o ? o.clientWidth : 0), l = st(i.scrollHeight, i.clientHeight, o ? o.scrollHeight : 0, o ? o.clientHeight : 0), r = -s.scrollLeft + re(e), a = -s.scrollTop;
   return J(o || i).direction === "rtl" && (r += st(i.clientWidth, o ? o.clientWidth : 0) - n), {
     width: n,
     height: l,
@@ -1412,7 +1412,7 @@ function Co(e, t) {
   return i.top = i.top + e.clientTop, i.left = i.left + e.clientLeft, i.bottom = i.top + e.clientHeight, i.right = i.left + e.clientWidth, i.width = e.clientWidth, i.height = e.clientHeight, i.x = i.left, i.y = i.top, i;
 }
 function Re(e, t, i) {
-  return t === Ve ? te(Io(e, i)) : ot(t) ? Co(t, i) : te(xo(Q(e)));
+  return t === Ve ? te(Io(e, i)) : ot(t) ? Co(t, i) : te(xo(q(e)));
 }
 function Oo(e) {
   var t = At(Vt(e)), i = ["absolute", "fixed"].indexOf(J(e).position) >= 0, s = i && W(e) ? Tt(e) : e;
@@ -1430,7 +1430,7 @@ function Eo(e, t, i, s) {
 function Je(e) {
   var t = e.reference, i = e.element, s = e.placement, o = s ? $(s) : null, n = s ? ft(s) : null, l = t.x + t.width / 2 - i.width / 2, r = t.y + t.height / 2 - i.height / 2, a;
   switch (o) {
-    case M:
+    case H:
       a = {
         x: l,
         y: t.y - i.height
@@ -1476,7 +1476,7 @@ function Je(e) {
 }
 function Lt(e, t) {
   t === void 0 && (t = {});
-  var i = t, s = i.placement, o = s === void 0 ? e.placement : s, n = i.strategy, l = n === void 0 ? e.strategy : n, r = i.boundary, a = r === void 0 ? js : r, c = i.rootBoundary, h = c === void 0 ? Ve : c, p = i.elementContext, f = p === void 0 ? Ct : p, u = i.altBoundary, I = u === void 0 ? !1 : u, g = i.padding, v = g === void 0 ? 0 : g, m = Ue(typeof v != "number" ? v : Ke(v, kt)), b = f === Ct ? $s : Ct, x = e.rects.popper, w = e.elements[I ? b : f], C = Eo(ot(w) ? w : w.contextElement || Q(e.elements.popper), a, h, l), y = pt(e.elements.reference), O = Je({
+  var i = t, s = i.placement, o = s === void 0 ? e.placement : s, n = i.strategy, l = n === void 0 ? e.strategy : n, r = i.boundary, a = r === void 0 ? js : r, c = i.rootBoundary, h = c === void 0 ? Ve : c, p = i.elementContext, f = p === void 0 ? Ct : p, u = i.altBoundary, I = u === void 0 ? !1 : u, g = i.padding, v = g === void 0 ? 0 : g, m = Ue(typeof v != "number" ? v : Ke(v, kt)), b = f === Ct ? $s : Ct, x = e.rects.popper, w = e.elements[I ? b : f], C = Eo(ot(w) ? w : w.contextElement || q(e.elements.popper), a, h, l), y = pt(e.elements.reference), O = Je({
     reference: y,
     element: x,
     placement: o
@@ -1489,7 +1489,7 @@ function Lt(e, t) {
   if (f === Ct && k) {
     var R = k[o];
     Object.keys(S).forEach(function(T) {
-      var G = [N, F].indexOf(T) >= 0 ? 1 : -1, U = [M, F].indexOf(T) >= 0 ? "y" : "x";
+      var G = [N, F].indexOf(T) >= 0 ? 1 : -1, U = [H, F].indexOf(T) >= 0 ? "y" : "x";
       S[T] += R[U] * G;
     });
   }
@@ -1524,8 +1524,8 @@ function So(e) {
 function Lo(e) {
   var t = e.state, i = e.options, s = e.name;
   if (!t.modifiersData[s]._skip) {
-    for (var o = i.mainAxis, n = o === void 0 ? !0 : o, l = i.altAxis, r = l === void 0 ? !0 : l, a = i.fallbackPlacements, c = i.padding, h = i.boundary, p = i.rootBoundary, f = i.altBoundary, u = i.flipVariations, I = u === void 0 ? !0 : u, g = i.allowedAutoPlacements, v = t.options.placement, m = $(v), b = m === v, x = a || (b || !I ? [Bt(v)] : So(v)), w = [v].concat(x).reduce(function(q, V) {
-      return q.concat($(V) === ee ? Ao(t, {
+    for (var o = i.mainAxis, n = o === void 0 ? !0 : o, l = i.altAxis, r = l === void 0 ? !0 : l, a = i.fallbackPlacements, c = i.padding, h = i.boundary, p = i.rootBoundary, f = i.altBoundary, u = i.flipVariations, I = u === void 0 ? !0 : u, g = i.allowedAutoPlacements, v = t.options.placement, m = $(v), b = m === v, x = a || (b || !I ? [Bt(v)] : So(v)), w = [v].concat(x).reduce(function(Q, V) {
+      return Q.concat($(V) === ee ? Ao(t, {
         placement: V,
         boundary: h,
         rootBoundary: p,
@@ -1534,17 +1534,17 @@ function Lo(e) {
         allowedAutoPlacements: g
       }) : V);
     }, []), C = t.rects.reference, y = t.rects.popper, O = /* @__PURE__ */ new Map(), A = !0, E = w[0], S = 0; S < w.length; S++) {
-      var k = w[S], R = $(k), T = ft(k) === dt, G = [M, F].indexOf(R) >= 0, U = G ? "width" : "height", Y = Lt(t, {
+      var k = w[S], R = $(k), T = ft(k) === dt, G = [H, F].indexOf(R) >= 0, U = G ? "width" : "height", Y = Lt(t, {
         placement: k,
         boundary: h,
         rootBoundary: p,
         altBoundary: f,
         padding: c
-      }), Z = G ? T ? N : D : T ? F : M;
+      }), Z = G ? T ? N : D : T ? F : H;
       C[U] > y[U] && (Z = Bt(Z));
       var nt = Bt(Z), K = [];
-      if (n && K.push(Y[R] <= 0), r && K.push(Y[Z] <= 0, Y[nt] <= 0), K.every(function(q) {
-        return q;
+      if (n && K.push(Y[R] <= 0), r && K.push(Y[Z] <= 0, Y[nt] <= 0), K.every(function(Q) {
+        return Q;
       })) {
         E = k, A = !1;
         break;
@@ -1579,7 +1579,7 @@ const ko = {
     _skip: !1
   }
 };
-function He(e, t, i) {
+function Me(e, t, i) {
   return i === void 0 && (i = {
     x: 0,
     y: 0
@@ -1590,8 +1590,8 @@ function He(e, t, i) {
     left: e.left - t.width - i.x
   };
 }
-function Me(e) {
-  return [M, N, F, D].some(function(t) {
+function He(e) {
+  return [H, N, F, D].some(function(t) {
     return e[t] >= 0;
   });
 }
@@ -1600,7 +1600,7 @@ function To(e) {
     elementContext: "reference"
   }), r = Lt(t, {
     altBoundary: !0
-  }), a = He(l, s), c = He(r, o, n), h = Me(a), p = Me(c);
+  }), a = Me(l, s), c = Me(r, o, n), h = He(a), p = He(c);
   t.modifiersData[i] = {
     referenceClippingOffsets: a,
     popperEscapeOffsets: c,
@@ -1619,7 +1619,7 @@ const Yo = {
   fn: To
 };
 function Xo(e, t, i) {
-  var s = $(e), o = [D, M].indexOf(s) >= 0 ? -1 : 1, n = typeof i == "function" ? i(Object.assign({}, t, {
+  var s = $(e), o = [D, H].indexOf(s) >= 0 ? -1 : 1, n = typeof i == "function" ? i(Object.assign({}, t, {
     placement: e
   })) : i, l = n[0], r = n[1];
   return l = l || 0, r = (r || 0) * o, [D, N].indexOf(s) >= 0 ? {
@@ -1643,7 +1643,7 @@ const Ro = {
   requires: ["popperOffsets"],
   fn: Po
 };
-function Ho(e) {
+function Mo(e) {
   var t = e.state, i = e.name;
   t.modifiersData[i] = Je({
     reference: t.rects.reference,
@@ -1651,11 +1651,11 @@ function Ho(e) {
     placement: t.placement
   });
 }
-const Mo = {
+const Ho = {
   name: "popperOffsets",
   enabled: !0,
   phase: "read",
-  fn: Ho,
+  fn: Mo,
   data: {}
 };
 function Do(e) {
@@ -1681,14 +1681,14 @@ function Zo(e) {
   };
   if (y) {
     if (n) {
-      var T, G = w === "y" ? M : D, U = w === "y" ? F : N, Y = w === "y" ? "height" : "width", Z = y[w], nt = Z + v[G], K = Z - v[U], rt = u ? -A[Y] / 2 : 0, mt = b === dt ? O[Y] : A[Y], tt = b === dt ? -A[Y] : -O[Y], at = t.elements.arrow, q = u && at ? se(at) : {
+      var T, G = w === "y" ? H : D, U = w === "y" ? F : N, Y = w === "y" ? "height" : "width", Z = y[w], nt = Z + v[G], K = Z - v[U], rt = u ? -A[Y] / 2 : 0, mt = b === dt ? O[Y] : A[Y], tt = b === dt ? -A[Y] : -O[Y], at = t.elements.arrow, Q = u && at ? se(at) : {
         width: 0,
         height: 0
-      }, V = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : Ge(), et = V[G], lt = V[U], j = Et(0, O[Y], q[Y]), vt = x ? O[Y] / 2 - rt - j - et - S.mainAxis : mt - j - et - S.mainAxis, Yt = x ? -O[Y] / 2 + rt + j + lt + S.mainAxis : tt + j + lt + S.mainAxis, gt = t.elements.arrow && Tt(t.elements.arrow), jt = gt ? w === "y" ? gt.clientTop || 0 : gt.clientLeft || 0 : 0, Xt = (T = k == null ? void 0 : k[w]) != null ? T : 0, $t = Z + vt - Xt - jt, zt = Z + Yt - Xt, Pt = Et(u ? Ft(nt, $t) : nt, Z, u ? st(K, zt) : K);
+      }, V = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : Ge(), et = V[G], lt = V[U], j = Et(0, O[Y], Q[Y]), vt = x ? O[Y] / 2 - rt - j - et - S.mainAxis : mt - j - et - S.mainAxis, Yt = x ? -O[Y] / 2 + rt + j + lt + S.mainAxis : tt + j + lt + S.mainAxis, gt = t.elements.arrow && Tt(t.elements.arrow), jt = gt ? w === "y" ? gt.clientTop || 0 : gt.clientLeft || 0 : 0, Xt = (T = k == null ? void 0 : k[w]) != null ? T : 0, $t = Z + vt - Xt - jt, zt = Z + Yt - Xt, Pt = Et(u ? Ft(nt, $t) : nt, Z, u ? st(K, zt) : K);
       y[w] = Pt, R[w] = Pt - Z;
     }
     if (r) {
-      var Rt, Gt = w === "x" ? M : D, Ut = w === "x" ? F : N, _ = y[C], ct = C === "y" ? "height" : "width", Ht = _ + v[Gt], yt = _ - v[Ut], it = [M, D].indexOf(m) !== -1, ht = (Rt = k == null ? void 0 : k[C]) != null ? Rt : 0, bt = it ? Ht : _ - O[ct] - A[ct] - ht + S.altAxis, wt = it ? _ + O[ct] + A[ct] - ht - S.altAxis : yt, It = u && it ? ao(bt, _, wt) : Et(u ? bt : Ht, _, u ? wt : yt);
+      var Rt, Gt = w === "x" ? H : D, Ut = w === "x" ? F : N, _ = y[C], ct = C === "y" ? "height" : "width", Mt = _ + v[Gt], yt = _ - v[Ut], it = [H, D].indexOf(m) !== -1, ht = (Rt = k == null ? void 0 : k[C]) != null ? Rt : 0, bt = it ? Mt : _ - O[ct] - A[ct] - ht + S.altAxis, wt = it ? _ + O[ct] + A[ct] - ht - S.altAxis : yt, It = u && it ? ao(bt, _, wt) : Et(u ? bt : Mt, _, u ? wt : yt);
       y[C] = It, R[C] = It - _;
     }
     t.modifiersData[s] = R;
@@ -1716,7 +1716,7 @@ function No(e) {
 }
 function Vo(e, t, i) {
   i === void 0 && (i = !1);
-  var s = W(t), o = W(t) && No(t), n = Q(t), l = pt(e, o, i), r = {
+  var s = W(t), o = W(t) && No(t), n = q(t), l = pt(e, o, i), r = {
     scrollLeft: 0,
     scrollTop: 0
   }, a = {
@@ -1891,7 +1891,7 @@ function Uo(e) {
     return u;
   };
 }
-var Ko = [yo, Mo, vo, oo, Ro, ko, Bo, uo, Yo], _o = /* @__PURE__ */ Uo({
+var Ko = [yo, Ho, vo, oo, Ro, ko, Bo, uo, Yo], _o = /* @__PURE__ */ Uo({
   defaultModifiers: Ko
 });
 class Jo {
@@ -2413,6 +2413,26 @@ class Nt {
   destroy() {
     this.stopAutoplay(), this.inertiaAnimationId && (cancelAnimationFrame(this.inertiaAnimationId), this.inertiaAnimationId = null), this.removeEvents(), this.closeImageBitmaps(this.imagesX), this.closeImageBitmaps(this.imagesY), this.imagesX = [], this.imagesY = [], this.canvasWorker && (this.canvasWorker.terminate(), this.canvasWorker = null), this.hotspotsInstance && this.hotspotsInstance.destroy(), this.hintsOverlay && this.hintsOverlay.parentNode && (this.hintsOverlay.parentNode.removeChild(this.hintsOverlay), this.hintsOverlay = null), this.hotspotTimeline && this.hotspotTimeline.parentNode && (this.hotspotTimeline.parentNode.removeChild(this.hotspotTimeline), this.hotspotTimeline = null, this.hotspotTimelineIndicator = null), this.container && (this.container.classList.remove("ci360-theme-dark"), this.container.innerHTML = "");
   }
+  /**
+   * Release memory by closing ImageBitmap objects without destroying the viewer.
+   * Useful for freeing memory when the viewer scrolls off-screen on mobile.
+   * Call reloadImages() to restore the images when the viewer becomes visible again.
+   */
+  releaseMemory() {
+    this.stopAutoplay(), this.closeImageBitmaps(this.imagesX), this.closeImageBitmaps(this.imagesY), this.imagesX = [], this.imagesY = [], this.isMemoryReleased = !0;
+  }
+  /**
+   * Reload images after memory was released.
+   * Call this when the viewer becomes visible again after releaseMemory() was called.
+   */
+  reloadImages() {
+    if (!this.isMemoryReleased) return;
+    this.isMemoryReleased = !1;
+    const t = this.container.offsetWidth;
+    this.loadHigherQualityImages(t, () => {
+      this.updateView();
+    });
+  }
   addInitialIcon() {
     this.initialIcon || this.hide360Logo || (this.initialIcon = ji(this.logoSrc), this.innerBox.appendChild(this.initialIcon));
   }
@@ -2459,13 +2479,13 @@ class Nt {
     this.view360CircleIcon && (this.view360CircleIcon.style.opacity = 0);
   }
   addLoadingSpinner() {
-    this.loadingSpinner = qi(), this.innerBox.appendChild(this.loadingSpinner);
+    this.loadingSpinner = Qi(), this.innerBox.appendChild(this.loadingSpinner);
   }
   showLoadingSpinner() {
     this.loadingSpinner && (this.hideAllIcons(), this.loadingSpinner.style.opacity = 1);
   }
   createTransitionOverlay() {
-    this.transitionOverlay = Qi(), this.innerBox.appendChild(this.transitionOverlay);
+    this.transitionOverlay = qi(), this.innerBox.appendChild(this.transitionOverlay);
   }
   showTransitionOverlay() {
     this.transitionOverlay && (this.hideAllIcons(), this.transitionOverlay.style.opacity = 1);
@@ -2630,7 +2650,7 @@ class Nt {
       hotspotTrigger: mt = "hover",
       dragReverse: tt,
       hide360Logo: at,
-      logoSrc: q,
+      logoSrc: Q,
       inertia: V,
       pinchZoom: et,
       hints: lt,
@@ -2649,9 +2669,9 @@ class Nt {
       onZoomOut: Ut,
       onDragStart: _,
       onDragEnd: ct,
-      onError: Ht
-    } = o, yt = { ciToken: S, ciFilters: k, ciTransformation: R }, it = qt(c, []), ht = qt(h, []);
-    if (this.viewerConfig = o, this.amountX = it.length || f, this.amountY = ht.length || u, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = O ? this.amountX - 1 : 0, this.activeImageY = O ? this.amountY - 1 : 0, this.bottomCircleOffset = b, this.autoplay = x, this.autoplayBehavior = w, this.playOnce = C, this.speed = y, this.autoplayReverse = O, this.fullscreen = A, this.magnifier = E > 1 ? Math.min(E, ki) : 0, this.dragSpeed = Math.max(G, Li), this.stopAtEdges = U, this.ciParams = yt, this.apiVersion = l, this.pointerZoom = Y > 1 ? Math.min(Y, ve) : null, this.keysReverse = m, this.info = Z, this.keys = v, this.innerBox = this.innerBox ?? Ui(this.container), Yt && (this.container.style.aspectRatio = Yt), this.initialIconShown = nt, this.bottomCircle = K, this.spinDirection = Ss(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = tt, this.hotspots = rt, this.hotspotTrigger = mt, this.hide360Logo = at, this.logoSrc = q, this.inertia = V, this.pinchZoom = et, this.hints = lt, this.hotspotTimelineOnClick = vt, j === "dark" ? this.container.classList.add("ci360-theme-dark") : j === "light" && this.container.classList.remove("ci360-theme-dark"), this.onReady = gt, this.onLoad = jt, this.onSpin = Xt, this.onAutoplayStart = $t, this.onAutoplayStop = zt, this.onFullscreenOpen = Pt, this.onFullscreenClose = Rt, this.onZoomIn = Gt, this.onZoomOut = Ut, this.onDragStart = _, this.onDragEnd = ct, this.onError = Ht, this.srcXConfig = {
+      onError: Mt
+    } = o, yt = { ciToken: S, ciFilters: k, ciTransformation: R }, it = Qt(c, []), ht = Qt(h, []);
+    if (this.viewerConfig = o, this.amountX = it.length || f, this.amountY = ht.length || u, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = O ? this.amountX - 1 : 0, this.activeImageY = O ? this.amountY - 1 : 0, this.bottomCircleOffset = b, this.autoplay = x, this.autoplayBehavior = w, this.playOnce = C, this.speed = y, this.autoplayReverse = O, this.fullscreen = A, this.magnifier = E > 1 ? Math.min(E, ki) : 0, this.dragSpeed = Math.max(G, Li), this.stopAtEdges = U, this.ciParams = yt, this.apiVersion = l, this.pointerZoom = Y > 1 ? Math.min(Y, ve) : null, this.keysReverse = m, this.info = Z, this.keys = v, this.innerBox = this.innerBox ?? Ui(this.container), Yt && (this.container.style.aspectRatio = Yt), this.initialIconShown = nt, this.bottomCircle = K, this.spinDirection = Ss(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = tt, this.hotspots = rt, this.hotspotTrigger = mt, this.hide360Logo = at, this.logoSrc = Q, this.inertia = V, this.pinchZoom = et, this.hints = lt, this.hotspotTimelineOnClick = vt, j === "dark" ? this.container.classList.add("ci360-theme-dark") : j === "light" && this.container.classList.remove("ci360-theme-dark"), this.onReady = gt, this.onLoad = jt, this.onSpin = Xt, this.onAutoplayStart = $t, this.onAutoplayStop = zt, this.onFullscreenOpen = Pt, this.onFullscreenClose = Rt, this.onZoomIn = Gt, this.onZoomOut = Ut, this.onDragStart = _, this.onDragEnd = ct, this.onError = Mt, this.srcXConfig = {
       folder: n,
       filename: r,
       imageList: it,
@@ -2671,14 +2691,14 @@ class Nt {
       orientation: P.Y,
       amount: this.amountY
     }, s && this.removeEvents(), this.attachEvents(I, g, v), s) return;
-    const bt = (this.fullscreenView ? document.body : this.container).offsetWidth, wt = this.allowSpinX && !it.length ? Ot(this.srcXConfig, bt) : null, It = this.allowSpinY && !ht.length ? Ot(this.srcYConfig, bt) : null, le = (qe) => {
+    const bt = (this.fullscreenView ? document.body : this.container).offsetWidth, wt = this.allowSpinX && !it.length ? Ot(this.srcXConfig, bt) : null, It = this.allowSpinY && !ht.length ? Ot(this.srcYConfig, bt) : null, le = (Qe) => {
       ge({
         cdnPathX: wt,
         cdnPathY: It,
         configX: this.srcXConfig,
         configY: this.srcYConfig,
-        onImageLoad: (xt, Qe, ti) => this.onImageLoad(xt, Qe, ti),
-        onFirstImageLoad: (xt) => this.onFirstImageLoaded(qe, xt),
+        onImageLoad: (xt, qe, ti) => this.onImageLoad(xt, qe, ti),
+        onFirstImageLoad: (xt) => this.onFirstImageLoaded(Qe, xt),
         onAllImagesLoad: this.onAllImagesLoaded.bind(this),
         onError: (xt) => this.emit("onError", xt)
       });
@@ -2686,9 +2706,9 @@ class Nt {
     this.allowSpinX ? Ce(wt, this.srcXConfig, le) : this.allowSpinY && Ce(It, this.srcYConfig, le);
   }
 }
-class Qo {
+class qo {
   constructor() {
-    this.views = /* @__PURE__ */ new Map(), this.initAll = this.initAll.bind(this), this.getViews = this.getViews.bind(this);
+    this.views = /* @__PURE__ */ new Map(), this.initAll = this.initAll.bind(this), this.getViews = this.getViews.bind(this), this.memoryObserver = null;
   }
   generateId() {
     return `ci360-${Math.random().toString(36).slice(2, 11)}`;
@@ -2731,8 +2751,37 @@ class Qo {
     const n = document.getElementById(t);
     return this.init(n, o);
   }
+  /**
+   * Enable automatic memory management for mobile devices.
+   * Releases memory for off-screen viewers and reloads when they become visible.
+   * Call this after initializing all viewers.
+   * @param {Object} options - Configuration options
+   * @param {string} options.rootMargin - IntersectionObserver rootMargin (default: '200px')
+   */
+  enableMemoryManagement(t = {}) {
+    this.memoryObserver && this.memoryObserver.disconnect();
+    const i = t.rootMargin || "200px";
+    this.memoryObserver = new IntersectionObserver(
+      (s) => {
+        s.forEach((o) => {
+          const n = this.getViewById(o.target.id);
+          n && (o.isIntersecting ? n.isMemoryReleased && n.reloadImages() : !n.isMemoryReleased && n.isReady && n.releaseMemory());
+        });
+      },
+      { rootMargin: i }
+    ), this.views.forEach((s, o) => {
+      const n = document.getElementById(o);
+      n && this.memoryObserver.observe(n);
+    });
+  }
+  /**
+   * Disable automatic memory management
+   */
+  disableMemoryManagement() {
+    this.memoryObserver && (this.memoryObserver.disconnect(), this.memoryObserver = null);
+  }
 }
 export {
-  Qo as default
+  qo as default
 };
-//# sourceMappingURL=ci360-CacQ7C6q.mjs.map
+//# sourceMappingURL=ci360-CvrOJnzb.mjs.map
