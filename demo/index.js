@@ -433,6 +433,14 @@ hintOptions.forEach((option) => {
 // Initialize all gallery examples with cloudimage-360 class
 instance.initAll();
 
+// Enable memory management on mobile/tablet devices to prevent crashes
+const isMobileOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  navigator.userAgent
+);
+if (isMobileOrTablet) {
+  instance.enableMemoryManagement();
+}
+
 // ===== Programmatic Control Section =====
 const programmaticViewer = instance.getViewById('programmatic-viewer');
 const frameDisplay = document.getElementById('frame-display');

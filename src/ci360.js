@@ -6,6 +6,7 @@ class CI360 {
     this.views = new Map();
     this.initAll = this.initAll.bind(this);
     this.getViews = this.getViews.bind(this);
+    this.memoryObserver = null;
   }
 
   generateId() {
@@ -76,6 +77,61 @@ class CI360 {
     view.destroy();
     const container = document.getElementById(id);
     return this.init(container, updatedConfig);
+  }
+
+  /**
+   * Enable automatic memory management for mobile devices.
+   * Releases memory for off-screen viewers and reloads when they become visible.
+   * Call this after initializing all viewers.
+   * @param {Object} options - Configuration options
+   * @param {string} options.rootMargin - IntersectionObserver rootMargin (default: '200px')
+   */
+  enableMemoryManagement(options = {}) {
+    if (this.memoryObserver) {
+      this.memoryObserver.disconnect();
+    }
+
+    const rootMargin = options.rootMargin || '200px';
+
+    this.memoryObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const view = this.getViewById(entry.target.id);
+          if (!view) return;
+
+          if (entry.isIntersecting) {
+            // Viewer is visible, reload images if memory was released
+            if (view.isMemoryReleased) {
+              view.reloadImages();
+            }
+          } else {
+            // Viewer is off-screen, release memory
+            if (!view.isMemoryReleased && view.isReady) {
+              view.releaseMemory();
+            }
+          }
+        });
+      },
+      { rootMargin }
+    );
+
+    // Observe all viewer containers
+    this.views.forEach((view, id) => {
+      const container = document.getElementById(id);
+      if (container) {
+        this.memoryObserver.observe(container);
+      }
+    });
+  }
+
+  /**
+   * Disable automatic memory management
+   */
+  disableMemoryManagement() {
+    if (this.memoryObserver) {
+      this.memoryObserver.disconnect();
+      this.memoryObserver = null;
+    }
   }
 }
 

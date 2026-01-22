@@ -1028,6 +1028,38 @@ class CI360Viewer {
     }
   }
 
+  /**
+   * Release memory by closing ImageBitmap objects without destroying the viewer.
+   * Useful for freeing memory when the viewer scrolls off-screen on mobile.
+   * Call reloadImages() to restore the images when the viewer becomes visible again.
+   */
+  releaseMemory() {
+    this.stopAutoplay();
+
+    // Close all ImageBitmap objects to free GPU memory
+    this.closeImageBitmaps(this.imagesX);
+    this.closeImageBitmaps(this.imagesY);
+    this.imagesX = [];
+    this.imagesY = [];
+    this.isMemoryReleased = true;
+  }
+
+  /**
+   * Reload images after memory was released.
+   * Call this when the viewer becomes visible again after releaseMemory() was called.
+   */
+  reloadImages() {
+    if (!this.isMemoryReleased) return;
+
+    this.isMemoryReleased = false;
+    const width = this.container.offsetWidth;
+
+    // Reload images using the existing configuration
+    this.loadHigherQualityImages(width, () => {
+      this.updateView();
+    });
+  }
+
   addInitialIcon() {
     if (this.initialIcon || this.hide360Logo) return;
 
