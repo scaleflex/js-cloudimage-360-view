@@ -30,8 +30,9 @@
 
 <p align="center">
   <a href="https://scaleflex.github.io/js-cloudimage-360-view/">View Demo</a> ·
-  <a href="https://github.com/scaleflex/js-cloudimage-360-view/issues">Report Bug</a> ·
-  <a href="https://github.com/scaleflex/js-cloudimage-360-view/issues">Request Feature</a>
+  <a href="https://codesandbox.io/p/sandbox/github/scaleflex/js-cloudimage-360-view/tree/master/codesandbox/react">React CodeSandbox</a> ·
+  <a href="https://codesandbox.io/p/sandbox/github/scaleflex/js-cloudimage-360-view/tree/master/codesandbox/vanilla">Vanilla CodeSandbox</a> ·
+  <a href="https://github.com/scaleflex/js-cloudimage-360-view/issues">Report Bug</a>
 </p>
 
 ---
