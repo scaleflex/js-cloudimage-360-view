@@ -886,10 +886,14 @@ class CI360Viewer {
   openFullscreenModal(event) {
     event.stopPropagation();
 
+    // Release memory from the original viewer to prevent doubling memory usage
+    // This is especially important on mobile devices with limited memory
+    this.releaseMemory();
+
     window.document.body.style.overflow = 'hidden';
     const fullscreenContainer = createFullscreenModal(this.container);
 
-    new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
+    this.fullscreenInstance = new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
     this.emit('onFullscreenOpen');
     this.announce('Opened fullscreen mode. Press Escape to exit.');
   }
@@ -897,8 +901,18 @@ class CI360Viewer {
   closeFullscreenModal(event) {
     event.stopPropagation();
 
+    // Destroy the fullscreen instance to free its memory
+    if (this.fullscreenInstance) {
+      this.fullscreenInstance.destroy();
+      this.fullscreenInstance = null;
+    }
+
     document.body.removeChild(this.container.parentNode);
     window.document.body.style.overflow = 'visible';
+
+    // Reload images for the original viewer
+    this.reloadImages();
+
     this.emit('onFullscreenClose');
     this.announce('Exited fullscreen mode');
   }
