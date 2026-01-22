@@ -1,21 +1,21 @@
-import { jsx as ce } from "react/jsx-runtime";
-import { useState as de, useRef as I, useId as pe, useEffect as fe, forwardRef as ye, useMemo as Ie, useImperativeHandle as Ce } from "react";
+import { jsx as pe } from "react/jsx-runtime";
+import { useState as de, useRef as I, useId as fe, useEffect as ye, forwardRef as Ie, useMemo as Ce, useImperativeHandle as Re } from "react";
 let y = null;
-function Re(c, t) {
-  const [p, d] = de(!1), n = I(null), s = I(null), i = pe();
-  return fe(() => {
+function he(c, t) {
+  const [d, p] = de(!1), n = I(null), s = I(null), i = fe();
+  return ye(() => {
     if (typeof window > "u" || !c.current || t.autoInit === !1) return;
     let l = !0;
     const a = c.current;
     return (async () => {
       try {
-        if (y || (y = (await import("./ci360-CbNlMnNZ.mjs")).default), !a || !l) return;
+        if (y || (y = (await import("./ci360-CJCqgguJ.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${i.replace(/:/g, "")}`);
         const r = {
           ...t,
           onReady: (u) => {
             var m;
-            l && (d(!0), (m = t.onReady) == null || m.call(t, u));
+            l && (p(!0), (m = t.onReady) == null || m.call(t, u));
           }
         };
         s.current = new y(), n.current = s.current.init(a, r);
@@ -30,7 +30,7 @@ function Re(c, t) {
         }
         n.current = null;
       }
-      s.current = null, d(!1);
+      s.current = null, p(!1);
     };
   }, [
     t.folder,
@@ -44,14 +44,14 @@ function Re(c, t) {
     i
   ]), {
     viewer: n.current,
-    isReady: p
+    isReady: d
   };
 }
-const he = (c, t) => {
+const ge = (c, t) => {
   const {
     // Container props
-    id: p,
-    className: d,
+    id: d,
+    className: p,
     style: n,
     // Image source
     folder: s,
@@ -99,21 +99,23 @@ const he = (c, t) => {
     // Hotspots
     hotspots: G,
     hotspotTimelineOnClick: J,
+    // Container
+    aspectRatio: K,
     // Event callbacks
-    onReady: K,
-    onLoad: Q,
-    onSpin: U,
-    onAutoplayStart: W,
-    onAutoplayStop: _,
-    onFullscreenOpen: ee,
-    onFullscreenClose: te,
-    onZoomIn: oe,
-    onZoomOut: ne,
-    onDragStart: ae,
-    onDragEnd: re,
-    onError: se,
-    ...ie
-  } = c, le = I(null), ue = Ie(
+    onReady: Q,
+    onLoad: U,
+    onSpin: W,
+    onAutoplayStart: _,
+    onAutoplayStop: ee,
+    onFullscreenOpen: te,
+    onFullscreenClose: oe,
+    onZoomIn: ne,
+    onZoomOut: ae,
+    onDragStart: re,
+    onDragEnd: se,
+    onError: le,
+    ...ue
+  } = c, ie = I(null), me = Ce(
     () => ({
       // Image source
       folder: s,
@@ -161,19 +163,21 @@ const he = (c, t) => {
       // Hotspots
       hotspots: G,
       hotspotTimelineOnClick: J,
+      // Container
+      aspectRatio: K,
       // Event callbacks
-      onReady: K,
-      onLoad: Q,
-      onSpin: U,
-      onAutoplayStart: W,
-      onAutoplayStop: _,
-      onFullscreenOpen: ee,
-      onFullscreenClose: te,
-      onZoomIn: oe,
-      onZoomOut: ne,
-      onDragStart: ae,
-      onDragEnd: re,
-      onError: se
+      onReady: Q,
+      onLoad: U,
+      onSpin: W,
+      onAutoplayStart: _,
+      onAutoplayStop: ee,
+      onFullscreenOpen: te,
+      onFullscreenClose: oe,
+      onZoomIn: ne,
+      onZoomOut: ae,
+      onDragStart: re,
+      onDragEnd: se,
+      onError: le
     }),
     [
       // Image source
@@ -222,8 +226,9 @@ const he = (c, t) => {
       // Hotspots
       G,
       J,
-      // Event callbacks
+      // Container
       K,
+      // Event callbacks
       Q,
       U,
       W,
@@ -234,10 +239,11 @@ const he = (c, t) => {
       ne,
       ae,
       re,
-      se
+      se,
+      le
     ]
-  ), { viewer: e } = Re(le, ue);
-  return Ce(
+  ), { viewer: e } = he(ie, me);
+  return Re(
     t,
     () => ({
       moveLeft: (o = 1) => e == null ? void 0 : e.moveLeft(!1, o),
@@ -248,26 +254,26 @@ const he = (c, t) => {
       stop: () => e == null ? void 0 : e.stopAutoplay(),
       zoomIn: () => e == null ? void 0 : e.toggleZoom(),
       zoomOut: () => e == null ? void 0 : e.removeZoom(),
-      goToFrame: (o, me) => e == null ? void 0 : e.animateToFrame(o, me),
+      goToFrame: (o, ce) => e == null ? void 0 : e.animateToFrame(o, ce),
       getViewer: () => e
     }),
     [e]
-  ), /* @__PURE__ */ ce(
+  ), /* @__PURE__ */ pe(
     "div",
     {
-      ref: le,
-      id: p,
-      className: d,
+      ref: ie,
+      id: d,
+      className: p,
       style: n,
-      ...ie
+      ...ue
     }
   );
-}, ge = ye(he);
-ge.displayName = "CI360Viewer";
+}, Le = Ie(ge);
+Le.displayName = "CI360Viewer";
 export {
-  ge as CI360Viewer,
-  ge as CI360ViewerDefault,
-  Re as useCI360,
-  Re as useCI360Default
+  Le as CI360Viewer,
+  Le as CI360ViewerDefault,
+  he as useCI360,
+  he as useCI360Default
 };
 //# sourceMappingURL=index.js.map
