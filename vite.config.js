@@ -9,7 +9,8 @@ export default defineConfig({
     copyPublicDir: false,
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
-      formats: ['es'],
+      name: 'CI360',
+      formats: ['iife'],
     },
     rollupOptions: {
       output: {

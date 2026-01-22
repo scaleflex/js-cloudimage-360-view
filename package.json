@@ -5,7 +5,6 @@
   "types": "src/types/ci360.d.ts",
   "files": [
     "dist/js-cloudimage-360-view.min.js",
-    "dist/js-cloudimage-360-view.min.css",
     "dist/react",
     "src/types",
     "src/react/types.d.ts"
@@ -16,15 +15,15 @@
       "import": "./dist/js-cloudimage-360-view.min.js",
       "require": "./dist/js-cloudimage-360-view.min.js"
     },
-    "./css": "./dist/js-cloudimage-360-view.min.css",
+    "./css": "./dist/react/style.css",
     "./react": {
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "require": "./dist/react/index.cjs"
     }
   },
-  "style": "dist/js-cloudimage-360-view.min.css",
-  "module": "dist/js-cloudimage-360-view.es.js",
+  "style": "dist/react/style.css",
+  "module": "dist/js-cloudimage-360-view.min.js",
   "description": "",
   "author": "scaleflex",
   "license": "MIT",
