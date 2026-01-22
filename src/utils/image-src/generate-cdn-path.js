@@ -19,7 +19,9 @@ export const generateCdnPath = (srcConfig, width) => {
 
   const src = `${folder}${filename}`;
 
-  if (!ciToken) return src;
+  // If no ciToken or width is 0/falsy, return plain src without CDN transformation
+  // Width can be 0 when container hasn't rendered yet (mobile, hidden elements)
+  if (!ciToken || !width) return src;
 
   const version = !FALSY_VALUES.includes(apiVersion) ? apiVersion : null;
   const finalApiVersion = version ? `${version}/` : '';

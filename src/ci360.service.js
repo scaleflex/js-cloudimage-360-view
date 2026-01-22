@@ -1285,6 +1285,10 @@ class CI360Viewer {
 
   addAllIcons() {
     this.removeLoader();
+
+    // If iconsContainer doesn't exist (e.g., all images failed to load), skip adding icons
+    if (!this.iconsContainer) return;
+
     this.innerBox.style.cursor = 'grab';
 
     if (this.pointerZoom) {
