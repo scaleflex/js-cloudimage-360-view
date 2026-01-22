@@ -432,3 +432,92 @@ hintOptions.forEach((option) => {
 
 // Initialize all gallery examples with cloudimage-360 class
 instance.initAll();
+
+// ===== Programmatic Control Section =====
+const programmaticViewer = instance.getViewById('programmatic-viewer');
+const frameDisplay = document.getElementById('frame-display');
+
+// Update frame display
+function updateFrameDisplay() {
+  if (programmaticViewer) {
+    const current = programmaticViewer.activeImageX + 1;
+    const total = programmaticViewer.amountX;
+    frameDisplay.textContent = `Frame: ${current} / ${total}`;
+  }
+}
+
+// Set up onSpin callback for the programmatic viewer to update display
+if (programmaticViewer) {
+  const originalOnSpin = programmaticViewer.onSpin;
+  programmaticViewer.onSpin = (data) => {
+    if (originalOnSpin) originalOnSpin(data);
+    updateFrameDisplay();
+  };
+  // Initial update
+  updateFrameDisplay();
+}
+
+// Helper to hide icons on first interaction
+function hideIconsOnInteraction() {
+  if (programmaticViewer) {
+    programmaticViewer.hideAllIcons();
+  }
+}
+
+// Play button
+document.getElementById('btn-play')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    hideIconsOnInteraction();
+    programmaticViewer.play();
+  }
+});
+
+// Stop button
+document.getElementById('btn-stop')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    programmaticViewer.stopAutoplay();
+  }
+});
+
+// Rotate Left button
+document.getElementById('btn-left')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    hideIconsOnInteraction();
+    programmaticViewer.moveLeft(false, 5);
+    updateFrameDisplay();
+  }
+});
+
+// Rotate Right button
+document.getElementById('btn-right')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    hideIconsOnInteraction();
+    programmaticViewer.moveRight(false, 5);
+    updateFrameDisplay();
+  }
+});
+
+// Frame navigation buttons
+document.getElementById('btn-frame-0')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    hideIconsOnInteraction();
+    programmaticViewer.animateToFrame(0);
+    setTimeout(updateFrameDisplay, 100);
+  }
+});
+
+document.getElementById('btn-frame-36')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    hideIconsOnInteraction();
+    programmaticViewer.animateToFrame(36);
+    setTimeout(updateFrameDisplay, 100);
+  }
+});
+
+document.getElementById('btn-frame-72')?.addEventListener('click', () => {
+  if (programmaticViewer) {
+    hideIconsOnInteraction();
+    programmaticViewer.animateToFrame(72);
+    setTimeout(updateFrameDisplay, 100);
+  }
+});

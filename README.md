@@ -842,14 +842,31 @@ viewer.updateView('my-viewer', { speed: 50, autoplay: true });
 ```javascript
 const view = viewer.getViewById('my-viewer');
 
-// Programmatically rotate the view
-view.onMoveHandler('right', 1, 0); // Move right by 1 frame
-view.onMoveHandler('left', 5, 0);  // Move left by 5 frames
-view.onMoveHandler('up', 0, 1);    // Move up by 1 frame (Y-axis)
-view.onMoveHandler('down', 0, 1);  // Move down by 1 frame (Y-axis)
+// Playback control
+view.play();                    // Start autoplay
+view.stopAutoplay();            // Stop autoplay
 
-// Destroy the viewer
-view.destroy();
+// Rotation (stopAtEdges: boolean, steps: number)
+view.moveLeft(false, 5);        // Rotate left by 5 frames
+view.moveRight(false, 5);       // Rotate right by 5 frames
+view.moveTop(false, 1);         // Rotate up by 1 frame (Y-axis)
+view.moveBottom(false, 1);      // Rotate down by 1 frame (Y-axis)
+
+// Navigation
+view.animateToFrame(36);        // Animate to frame 36
+view.animateToFrame(10, 'hotspot-1'); // Go to frame and show hotspot
+
+// UI control
+view.hideAllIcons();            // Hide all overlay icons
+
+// State
+view.activeImageX;              // Current X-axis frame (0-indexed)
+view.activeImageY;              // Current Y-axis frame (0-indexed)
+view.amountX;                   // Total X-axis frames
+view.amountY;                   // Total Y-axis frames
+
+// Cleanup
+view.destroy();                 // Destroy the viewer
 ```
 
 ---

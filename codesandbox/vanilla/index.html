@@ -194,22 +194,22 @@
 
       function stopViewer() {
         const viewer = ci360.getViewById("controlled");
-        if (viewer) viewer.stop();
+        if (viewer) viewer.stopAutoplay();
       }
 
       function moveLeft() {
         const viewer = ci360.getViewById("controlled");
-        if (viewer) viewer.moveLeft(5);
+        if (viewer) viewer.moveLeft(false, 5);
       }
 
       function moveRight() {
         const viewer = ci360.getViewById("controlled");
-        if (viewer) viewer.moveRight(5);
+        if (viewer) viewer.moveRight(false, 5);
       }
 
       function goToFrame(frame) {
         const viewer = ci360.getViewById("controlled");
-        if (viewer) viewer.goToFrame(frame);
+        if (viewer) viewer.animateToFrame(frame);
       }
     </script>
   </body>
