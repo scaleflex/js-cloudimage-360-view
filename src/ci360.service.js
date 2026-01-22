@@ -98,6 +98,20 @@ class CI360Viewer {
     this.init(this.container, config);
   }
 
+  /**
+   * Close ImageBitmap objects to free GPU memory
+   * @param {Array} images - Array of image objects with bitmapImage property
+   */
+  closeImageBitmaps(images) {
+    if (!images || !Array.isArray(images)) return;
+
+    images.forEach((imageData) => {
+      if (imageData?.bitmapImage?.close) {
+        imageData.bitmapImage.close();
+      }
+    });
+  }
+
   emit(eventName, data = {}) {
     const callback = this[eventName];
     if (typeof callback === 'function') {
@@ -311,6 +325,10 @@ class CI360Viewer {
       configX: this.srcXConfig,
       configY: this.srcYConfig,
       onAllImagesLoad: (loadedImagesX, loadedImagesY) => {
+        // Close old ImageBitmap objects to free memory before replacing
+        this.closeImageBitmaps(this.imagesX);
+        this.closeImageBitmaps(this.imagesY);
+
         this.imagesX = loadedImagesX;
         this.imagesY = loadedImagesY;
         onLoad();
@@ -972,6 +990,12 @@ class CI360Viewer {
 
     // Remove all event listeners
     this.removeEvents();
+
+    // Close all ImageBitmap objects to free GPU memory
+    this.closeImageBitmaps(this.imagesX);
+    this.closeImageBitmaps(this.imagesY);
+    this.imagesX = [];
+    this.imagesY = [];
 
     // Terminate the canvas worker
     if (this.canvasWorker) {
