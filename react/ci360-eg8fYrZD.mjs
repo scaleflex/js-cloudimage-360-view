@@ -2172,7 +2172,8 @@ class Nt {
   touchStart(t) {
     if (!this.isReady || this.glass || !t.touches || !t.touches.length) return;
     const i = t.target;
-    if (i && i.closest && i.closest(".cloudimage-360-button")) return;
+    if (i && i.closest && (i.closest(".cloudimage-360-button") || i.closest(".cloudimage-360-hotspot-timeline-dot") || i.closest(".cloudimage-360-hotspot")))
+      return;
     if (this.hideHints(), t.touches.length === 2 && this.pinchZoom && !this.isDragging) {
       t.preventDefault(), this.isPinching = !0, this.isClicked = !1, this.inertiaAnimationId && (cancelAnimationFrame(this.inertiaAnimationId), this.inertiaAnimationId = null);
       const n = t.touches[0], l = t.touches[1];
@@ -2789,4 +2790,4 @@ class Qo {
 export {
   Qo as default
 };
-//# sourceMappingURL=ci360-DzqmMYXC.mjs.map
+//# sourceMappingURL=ci360-eg8fYrZD.mjs.map
