@@ -549,3 +549,37 @@
     margin: 12px auto 6px;
   }
 }
+
+/* Fullscreen modal timeline positioning */
+.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: none;
+  margin: 0;
+  padding: 24px 40px 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 60%,
+    transparent 100%
+  );
+  z-index: 10;
+}
+
+.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-track {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Adjust indicator and dot colors for better visibility on dark background */
+.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-indicator {
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-dot {
+  border-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
