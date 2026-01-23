@@ -1,12 +1,17 @@
 import CI360Viewer from './ci360.service';
 import { hasConfigChanged } from './utils';
 
+// Detect mobile for auto-enabling memory management
+const IS_MOBILE = typeof navigator !== 'undefined' &&
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 class CI360 {
   constructor() {
     this.views = new Map();
     this.initAll = this.initAll.bind(this);
     this.getViews = this.getViews.bind(this);
     this.memoryObserver = null;
+    this.memoryManagementAutoEnabled = false;
   }
 
   generateId() {
@@ -24,6 +29,13 @@ class CI360 {
     const instance = new CI360Viewer(container, config, fullscreen);
     this.views.set(containerId, instance);
 
+    // Auto-enable memory management on mobile (first init only)
+    if (IS_MOBILE && !this.memoryManagementAutoEnabled) {
+      this.memoryManagementAutoEnabled = true;
+      // Delay to ensure viewer is fully initialized
+      setTimeout(() => this.enableMemoryManagement(), 100);
+    }
+
     return instance;
   }
 
@@ -40,6 +52,13 @@ class CI360 {
       const instance = new CI360Viewer(container);
       this.views.set(containerId, instance);
     });
+
+    // Auto-enable memory management on mobile (if not already enabled)
+    if (IS_MOBILE && !this.memoryManagementAutoEnabled && this.views.size > 0) {
+      this.memoryManagementAutoEnabled = true;
+      // Delay to ensure all viewers are fully initialized
+      setTimeout(() => this.enableMemoryManagement(), 100);
+    }
   }
 
   destroy(id) {
@@ -82,6 +101,7 @@ class CI360 {
   /**
    * Enable automatic memory management for mobile devices.
    * Releases memory for off-screen viewers and reloads when they become visible.
+   * Also releases memory when the page is backgrounded (visibilitychange).
    * Call this after initializing all viewers.
    * @param {Object} options - Configuration options
    * @param {string} options.rootMargin - IntersectionObserver rootMargin (default: '200px')
@@ -122,6 +142,33 @@ class CI360 {
         this.memoryObserver.observe(container);
       }
     });
+
+    // Release memory when page is backgrounded (critical for mobile Safari)
+    this.boundVisibilityHandler = () => {
+      if (document.hidden) {
+        // Page is hidden, release memory for all viewers
+        this.views.forEach((view) => {
+          if (!view.isMemoryReleased && view.isReady) {
+            view.releaseMemory();
+          }
+        });
+      } else {
+        // Page is visible again, reload visible viewers
+        this.views.forEach((view, id) => {
+          if (view.isMemoryReleased) {
+            const container = document.getElementById(id);
+            if (container) {
+              const rect = container.getBoundingClientRect();
+              const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+              if (isVisible) {
+                view.reloadImages();
+              }
+            }
+          }
+        });
+      }
+    };
+    document.addEventListener('visibilitychange', this.boundVisibilityHandler);
   }
 
   /**
@@ -131,6 +178,10 @@ class CI360 {
     if (this.memoryObserver) {
       this.memoryObserver.disconnect();
       this.memoryObserver = null;
+    }
+    if (this.boundVisibilityHandler) {
+      document.removeEventListener('visibilitychange', this.boundVisibilityHandler);
+      this.boundVisibilityHandler = null;
     }
   }
 }

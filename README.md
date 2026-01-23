@@ -915,6 +915,67 @@ const config = {
 
 ---
 
+## Mobile Considerations
+
+### Memory Limitations
+
+Mobile browsers (especially Safari) have strict memory limits that can cause tab crashes when loading many high-resolution images. The library includes built-in optimizations for mobile that are **automatically enabled**:
+
+- **Sequential image loading** (3 concurrent on mobile vs 6 on desktop)
+- **Main-thread canvas rendering** (avoids OffscreenCanvas memory issues on Safari)
+- **Reduced touch event rate** (30fps vs 100fps on desktop)
+- **Capped device pixel ratio** (max 2x on mobile)
+- **Automatic memory management** (releases off-screen viewers, frees memory when page backgrounded)
+
+### Recommended Settings for Mobile
+
+| Setting | Desktop | Mobile | Notes |
+|---------|---------|--------|-------|
+| `amountX` | 60-100+ | 30-40 max | Each image uses ~4MB GPU memory |
+| `pointerZoom` | ✅ | ❌ | Loads higher-res images |
+| `magnifier` | ✅ | ❌ | Loads higher-res images |
+
+### Detecting Mobile Devices
+
+The library automatically detects mobile devices, but you can also adjust your configuration:
+
+```javascript
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  navigator.userAgent
+);
+
+const viewer = new CI360();
+viewer.init(container, {
+  folder: 'https://example.com/images/',
+  filenameX: '{index}.jpg',
+  amountX: isMobile ? 36 : 72,           // Fewer images on mobile
+  pointerZoom: isMobile ? false : 2,     // Disable zoom on mobile
+  magnifier: isMobile ? false : 3,       // Disable magnifier on mobile
+});
+```
+
+### Memory Management API
+
+Memory management is **automatically enabled on mobile**. For desktop or manual control:
+
+```javascript
+const viewer = new CI360();
+viewer.initAll();
+
+// Manually enable (already auto-enabled on mobile)
+viewer.enableMemoryManagement();
+
+// Disable if needed
+viewer.disableMemoryManagement();
+```
+
+This uses IntersectionObserver to:
+- Release memory when viewers scroll off-screen
+- Reload images when viewers become visible again
+- Release all viewer memory when the page is backgrounded
+
+---
+
 ## Migration Guide (v3 → v4)
 
 Version 4 introduces significant improvements in performance, customization, and developer experience. This guide helps you upgrade from v3.

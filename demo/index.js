@@ -257,17 +257,17 @@ const suvCarContainer = document.getElementById('gurkha-suv');
 const config = {
   folder: 'https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/',
   filenameX: 'orange-{index}.jpg',
-  amountX: 73,
+  amountX: isMobileDevice ? 36 : 73, // Reduce images on mobile
   lazyload: true,
   speed: 120,
-  pointerZoom: 2,
+  pointerZoom: isMobileDevice ? false : 2, // Disable pointer zoom on mobile
   responsive: 'scaleflex',
   autoplay: true,
   fullscreen: true,
-  magnifier: 3,
+  magnifier: isMobileDevice ? false : 3, // Disable magnifier on mobile
   playOnce: true,
   bottomCircle: false,
-  hotspots: GURKHA_SUV_HOTSPOTS_CONFIG,
+  hotspots: isMobileDevice ? undefined : GURKHA_SUV_HOTSPOTS_CONFIG, // Disable hotspots on mobile
   inertia: true,
   hints: ['drag', 'click'],
 };
@@ -280,10 +280,10 @@ const demoGeneratorContainer = document.getElementById('demo-generator');
 const demoGeneratorConfig = {
   folder: 'https://scaleflex.cloudimg.io/v7/demo/earbuds/',
   filenameX: '{index}.jpg',
-  amountX: isMobileDevice ? 60 : 233, // ~60 images on mobile vs 233 on desktop
+  amountX: isMobileDevice ? 36 : 233, // ~36 images on mobile vs 233 on desktop
   autoplay: true,
   speed: 100,
-  pointerZoom: 1.5,
+  pointerZoom: isMobileDevice ? false : 1.5, // Disable pointer zoom on mobile
   dragSpeed: 100,
   bottomCircle: false,
   fullscreen: true,
@@ -291,40 +291,42 @@ const demoGeneratorConfig = {
   responsive: 'scaleflex',
   lazyload: true,
   hints: ['drag', 'click'],
-  // Event callbacks
-  onReady: (event) => {
-    console.log('onReady:', event.viewerId);
-  },
-  onLoad: (event) => {
-    console.log('onLoad:', `${event.imagesX} images loaded`);
-  },
-  onSpin: (event) => {
-    console.log('onSpin:', `Frame ${event.activeImageX + 1}/${event.amountX}`, event.direction);
-  },
-  onAutoplayStart: (event) => {
-    console.log('onAutoplayStart:', event.viewerId);
-  },
-  onAutoplayStop: (event) => {
-    console.log('onAutoplayStop:', event.viewerId);
-  },
-  onFullscreenOpen: (event) => {
-    console.log('onFullscreenOpen:', event.viewerId);
-  },
-  onFullscreenClose: (event) => {
-    console.log('onFullscreenClose:', event.viewerId);
-  },
-  onZoomIn: (event) => {
-    console.log('onZoomIn:', `zoom level ${event.zoomLevel}`);
-  },
-  onZoomOut: (event) => {
-    console.log('onZoomOut:', event.viewerId);
-  },
-  onDragStart: (event) => {
-    console.log('onDragStart:', event.viewerId);
-  },
-  onDragEnd: (event) => {
-    console.log('onDragEnd:', event.viewerId);
-  },
+  // Event callbacks - only log on desktop to avoid memory pressure from logging
+  ...(isMobileDevice ? {} : {
+    onReady: (event) => {
+      console.log('onReady:', event.viewerId);
+    },
+    onLoad: (event) => {
+      console.log('onLoad:', `${event.imagesX} images loaded`);
+    },
+    onSpin: (event) => {
+      console.log('onSpin:', `Frame ${event.activeImageX + 1}/${event.amountX}`, event.direction);
+    },
+    onAutoplayStart: (event) => {
+      console.log('onAutoplayStart:', event.viewerId);
+    },
+    onAutoplayStop: (event) => {
+      console.log('onAutoplayStop:', event.viewerId);
+    },
+    onFullscreenOpen: (event) => {
+      console.log('onFullscreenOpen:', event.viewerId);
+    },
+    onFullscreenClose: (event) => {
+      console.log('onFullscreenClose:', event.viewerId);
+    },
+    onZoomIn: (event) => {
+      console.log('onZoomIn:', `zoom level ${event.zoomLevel}`);
+    },
+    onZoomOut: (event) => {
+      console.log('onZoomOut:', event.viewerId);
+    },
+    onDragStart: (event) => {
+      console.log('onDragStart:', event.viewerId);
+    },
+    onDragEnd: (event) => {
+      console.log('onDragEnd:', event.viewerId);
+    },
+  }),
 };
 
 instance.init(demoGeneratorContainer, demoGeneratorConfig);
@@ -447,15 +449,8 @@ hintOptions.forEach((option) => {
 });
 
 // Initialize all gallery examples with cloudimage-360 class
+// Note: Memory management is automatically enabled on mobile devices
 instance.initAll();
-
-// Enable memory management on mobile/tablet devices to prevent crashes
-const isMobileOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-  navigator.userAgent
-);
-if (isMobileOrTablet) {
-  instance.enableMemoryManagement();
-}
 
 // ===== Programmatic Control Section =====
 const programmaticViewer = instance.getViewById('programmatic-viewer');
