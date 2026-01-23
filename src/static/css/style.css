@@ -105,6 +105,9 @@
   --ci360-timeline-indicator-color: #e0e0e0;
   --ci360-timeline-tooltip-bg: rgba(40, 40, 45, 0.95);
   --ci360-timeline-tooltip-color: #e0e0e0;
+  --ci360-loader-bg: rgba(40, 40, 45, 0.9);
+  --ci360-loader-color: #e0e0e0;
+  --ci360-loader-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================
@@ -214,7 +217,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: var(--ci360-initial-icon-size);
-  height: auto;
+  /* Height based on icon aspect ratio 150:87 */
+  aspect-ratio: 150 / 87;
   border-radius: var(--ci360-initial-icon-border-radius, 0);
   background-color: var(--ci360-initial-icon-bg);
   box-shadow: var(--ci360-initial-icon-shadow);
@@ -232,10 +236,40 @@
   height: auto;
   color: var(--ci360-initial-icon-color);
   fill: var(--ci360-initial-icon-color);
+  /* Drop shadow for visibility on any background */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
 .cloudimage-initial-icon:hover {
   transform: translate(-50%, -50%) scale(1.08);
+}
+
+/* ============================================
+   Loading Percentage Display
+   ============================================ */
+
+.cloudimage-360-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--ci360-loader-size, 70px);
+  height: var(--ci360-loader-size, 70px);
+  border-radius: 50%;
+  background-color: var(--ci360-loader-bg, rgba(255, 255, 255, 0.9));
+  box-shadow: var(--ci360-loader-shadow, 0 4px 20px rgba(0, 0, 0, 0.15));
+  transition: all 0.3s ease;
+  color: var(--ci360-loader-color, #505050);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 /* ============================================

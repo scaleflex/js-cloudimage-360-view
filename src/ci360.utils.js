@@ -1,7 +1,5 @@
 import { AUTOPLAY_BEHAVIOR } from './utils/constants';
 
-// Logo URL for 360 view branding
-const LOGO_SRC = 'https://scaleflex.cloudimg.io/v7/filerobot/js-cloudimage-360-view/360_view.svg';
 
 // Default values object
 const DEFAULTS_VALUES = {
@@ -41,7 +39,7 @@ const DEFAULTS_VALUES = {
   hotspots: null,
   hotspotTrigger: 'hover',
   hide360Logo: false,
-  logoSrc: LOGO_SRC,
+  logoSrc: null,
   inertia: false,
   pinchZoom: true,
   hints: true,
