@@ -9,7 +9,7 @@ function he(p, t) {
     const a = p.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-85fPJbOD.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-CzKohD8_.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
         const i = {
           ...t,
