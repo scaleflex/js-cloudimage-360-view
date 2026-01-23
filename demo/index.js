@@ -264,10 +264,31 @@ pluginCheckboxOptions.forEach((option) => {
 
 const suvCarContainer = document.getElementById('gurkha-suv');
 
+// Generate evenly distributed image list for mobile (every Nth image for full 360° coverage)
+const generateMobileImageList = (folder, pattern, totalImages, targetCount) => {
+  const step = Math.floor(totalImages / targetCount);
+  const images = [];
+  for (let i = 1; i <= totalImages && images.length < targetCount; i += step) {
+    images.push(`${folder}${pattern.replace('{index}', i)}`);
+  }
+  return images;
+};
+
+// SUV: 73 images -> 36 on mobile (every 2nd image for full rotation)
+const suvMobileImages = generateMobileImageList(
+  'https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/',
+  'orange-{index}.jpg',
+  73,
+  36
+);
+
 const config = {
   folder: 'https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360/',
   filenameX: 'orange-{index}.jpg',
-  amountX: isMobileDevice ? 36 : 73, // Reduce images on mobile
+  // On mobile: use evenly distributed images for full 360° coverage
+  ...(isMobileDevice
+    ? { imageListX: suvMobileImages }
+    : { amountX: 73 }),
   lazyload: true,
   speed: 120,
   pointerZoom: isMobileDevice ? false : 2, // Disable pointer zoom on mobile
@@ -286,11 +307,23 @@ instance.init(suvCarContainer, config);
 
 // Initialize demo-generator with event callbacks
 const demoGeneratorContainer = document.getElementById('demo-generator');
+
+// Earbuds: 233 images -> 36 on mobile (every ~6th image for full rotation)
+const earbudsMobileImages = generateMobileImageList(
+  'https://scaleflex.cloudimg.io/v7/demo/earbuds/',
+  '{index}.jpg',
+  233,
+  36
+);
+
 // Use fewer images on mobile to prevent memory crashes
 const demoGeneratorConfig = {
   folder: 'https://scaleflex.cloudimg.io/v7/demo/earbuds/',
   filenameX: '{index}.jpg',
-  amountX: isMobileDevice ? 36 : 233, // ~36 images on mobile vs 233 on desktop
+  // On mobile: use evenly distributed images for full 360° coverage
+  ...(isMobileDevice
+    ? { imageListX: earbudsMobileImages }
+    : { amountX: 233 }),
   autoplay: true,
   speed: 100,
   pointerZoom: isMobileDevice ? false : 1.5, // Disable pointer zoom on mobile
