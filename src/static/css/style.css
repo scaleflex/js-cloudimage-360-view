@@ -16,10 +16,10 @@
   --ci360-icon-size: 20px;
 
   /* Initial 360 icon */
-  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.9);
-  --ci360-initial-icon-color: #505050;
-  --ci360-initial-icon-size: 80px;
-  --ci360-initial-icon-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --ci360-initial-icon-bg: transparent;
+  --ci360-initial-icon-color: #ffffff;
+  --ci360-initial-icon-size: 100px;
+  --ci360-initial-icon-shadow: none;
 
   /* Loading spinner */
   --ci360-spinner-color: rgba(0, 0, 0, 0.2);
@@ -84,9 +84,9 @@
   --ci360-button-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   --ci360-icon-color: #e0e0e0;
   --ci360-icon-color-hover: #ffffff;
-  --ci360-initial-icon-bg: rgba(40, 40, 45, 0.9);
-  --ci360-initial-icon-color: #f5f5f5;
-  --ci360-initial-icon-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --ci360-initial-icon-bg: transparent;
+  --ci360-initial-icon-color: #ffffff;
+  --ci360-initial-icon-shadow: none;
   --ci360-spinner-color: rgba(255, 255, 255, 0.2);
   --ci360-spinner-accent: #e0e0e0;
   --ci360-fullscreen-bg: #1a1a1f;
@@ -214,8 +214,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: var(--ci360-initial-icon-size);
-  height: var(--ci360-initial-icon-size);
-  border-radius: 50%;
+  height: auto;
+  border-radius: var(--ci360-initial-icon-border-radius, 0);
   background-color: var(--ci360-initial-icon-bg);
   box-shadow: var(--ci360-initial-icon-shadow);
   transition: all 0.3s ease;
@@ -225,23 +225,12 @@
   justify-content: center;
   z-index: 2;
   user-select: none;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .cloudimage-initial-icon svg {
-  width: 70%;
-  height: 70%;
+  width: 100%;
+  height: auto;
   color: var(--ci360-initial-icon-color);
-  fill: var(--ci360-initial-icon-color);
-  stroke: var(--ci360-initial-icon-color);
-}
-
-.cloudimage-initial-icon svg path {
-  stroke: var(--ci360-initial-icon-color);
-}
-
-.cloudimage-initial-icon svg text {
   fill: var(--ci360-initial-icon-color);
 }
 
