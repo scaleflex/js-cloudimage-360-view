@@ -55,7 +55,13 @@ import {
 } from './utils';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
+import MainThreadCanvasRenderer from './canvas-renderer';
 import Hotspot from './hotspots';
+
+// Detect mobile for using main-thread canvas instead of OffscreenCanvas worker
+// OffscreenCanvas has known memory issues on mobile Safari
+const USE_MAIN_THREAD_CANVAS = typeof navigator !== 'undefined' &&
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 class CI360Viewer {
   constructor(container, config, fullscreen) {
@@ -64,7 +70,10 @@ class CI360Viewer {
     this.fullscreenView = !!fullscreen;
     this.imagesX = [];
     this.imagesY = [];
-    this.devicePixelRatio = Math.round(window.devicePixelRatio || 1);
+    // Cap DPR on mobile to reduce canvas memory usage
+    // Mobile devices with dPR 3 can create canvases 3x larger than needed
+    const rawDpr = Math.round(window.devicePixelRatio || 1);
+    this.devicePixelRatio = USE_MAIN_THREAD_CANVAS ? Math.min(rawDpr, 2) : rawDpr;
     this.id = container.id;
     this.movementStart = { x: 0, y: 0 };
     this.draggingDirection = null;
@@ -88,7 +97,9 @@ class CI360Viewer {
     // Pan while zoomed state
     this.panOffsetX = 0;
     this.panOffsetY = 0;
-    this.canvasWorker = new CanvasWorker();
+    // Use main-thread canvas on mobile to avoid OffscreenCanvas memory issues
+    this.useMainThreadCanvas = USE_MAIN_THREAD_CANVAS;
+    this.canvasWorker = this.useMainThreadCanvas ? new MainThreadCanvasRenderer() : new CanvasWorker();
     // Hotspot timeline state
     this.hotspotTimeline = null;
     this.hotspotTimelineIndicator = null;
@@ -413,9 +424,14 @@ class CI360Viewer {
   touchStart(event) {
     if (!this.isReady || this.glass || !event.touches || !event.touches.length) return;
 
-    // Don't handle touch on buttons - let them handle their own clicks
+    // Don't handle touch on interactive elements - let them handle their own clicks
     const target = event.target;
-    if (target && target.closest && target.closest('.cloudimage-360-button')) return;
+    if (target && target.closest) {
+      const isInteractiveElement = target.closest('.cloudimage-360-button') ||
+        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot');
+      if (isInteractiveElement) return;
+    }
 
     // Hide hints on first interaction
     this.hideHints();
@@ -1510,15 +1526,25 @@ class CI360Viewer {
     this.loader = createLoader(this.innerBox);
     this.ariaLiveRegion = createAriaLiveRegion(this.innerBox);
 
-    const offscreenCanvas = this.canvas.transferControlToOffscreen();
-    this.canvasWorker.postMessage(
-      {
+    if (this.useMainThreadCanvas) {
+      // Main-thread canvas - pass the canvas element directly
+      this.canvasWorker.postMessage({
         action: 'initCanvas',
-        offscreen: offscreenCanvas,
+        offscreen: this.canvas,
         devicePixelRatio: this.devicePixelRatio,
-      },
-      [offscreenCanvas]
-    );
+      });
+    } else {
+      // Worker-based rendering with OffscreenCanvas
+      const offscreenCanvas = this.canvas.transferControlToOffscreen();
+      this.canvasWorker.postMessage(
+        {
+          action: 'initCanvas',
+          offscreen: offscreenCanvas,
+          devicePixelRatio: this.devicePixelRatio,
+        },
+        [offscreenCanvas]
+      );
+    }
 
     if (this.fullscreenView) this.addCloseFullscreenIcon();
 

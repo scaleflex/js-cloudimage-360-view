@@ -1,3 +1,12 @@
+// Detect mobile for concurrency limits
+const isMobile = typeof navigator !== 'undefined' &&
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// Limit concurrent image loads to prevent memory spikes
+// Mobile: 3 concurrent (critical for Safari memory limits)
+// Desktop: 6 concurrent
+const MAX_CONCURRENT_LOADS = isMobile ? 3 : 6;
+
 export const loadImages = ({
   imagesUrls,
   onFirstImageLoad,
@@ -11,6 +20,11 @@ export const loadImages = ({
   const totalImages = imagesUrls.length;
   const loadedImages = [];
   const errors = [];
+
+  // Queue management for controlled concurrency
+  let activeLoads = 0;
+  let nextIndexToLoad = 0;
+  const indicesToLoad = [];
 
   const handleError = (url, index, isFirstImage = false) => {
     const error = {
@@ -36,7 +50,17 @@ export const loadImages = ({
     }
   };
 
-  const loadImage = (url, index) => {
+  // Process next image in queue
+  const loadNextInQueue = () => {
+    while (activeLoads < MAX_CONCURRENT_LOADS && nextIndexToLoad < indicesToLoad.length) {
+      const index = indicesToLoad[nextIndexToLoad];
+      nextIndexToLoad++;
+      loadImageWithConcurrency(imagesUrls[index], index);
+    }
+  };
+
+  const loadImageWithConcurrency = (url, index) => {
+    activeLoads++;
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.src = url;
@@ -52,25 +76,56 @@ export const loadImages = ({
           naturalHeight: img.naturalHeight,
         };
 
+        // Clean up Image element to help garbage collection on mobile
+        img.onload = null;
+        img.onerror = null;
+        img.src = '';
+
         loadedCount++;
+        activeLoads--;
         loadedImages[index] = imageData;
 
         onImageLoad?.(imageData, index);
         checkAllLoaded();
+
+        // Load next image in queue
+        loadNextInQueue();
       } catch (err) {
+        img.onload = null;
+        img.onerror = null;
+        img.src = '';
         loadedCount++;
+        activeLoads--;
         handleError(url, index);
         checkAllLoaded();
+        loadNextInQueue();
       }
     };
 
     img.onerror = () => {
+      img.onload = null;
+      img.onerror = null;
+      img.src = '';
       loadedCount++;
+      activeLoads--;
       handleError(url, index);
       checkAllLoaded();
+      loadNextInQueue();
     };
   };
 
+  // Build queue of indices to load (excluding first image)
+  const startLoadingRemaining = (firstIndex) => {
+    for (let i = 0; i < imagesUrls.length; i++) {
+      if (i !== firstIndex) {
+        indicesToLoad.push(i);
+      }
+    }
+    nextIndexToLoad = 0;
+    loadNextInQueue();
+  };
+
+  // Load first image immediately (for fast initial render)
   const firstImg = new Image();
   const firstIndex = autoplayReverse ? imagesUrls.length - 1 : 0;
   const src = imagesUrls[firstIndex];
@@ -88,48 +143,51 @@ export const loadImages = ({
         naturalHeight: firstImg.naturalHeight,
       };
 
+      // Clean up Image element
+      firstImg.onload = null;
+      firstImg.onerror = null;
+      firstImg.src = '';
+
       loadedImages[firstIndex] = imageData;
       loadedCount++;
 
       onFirstImageLoad?.(imageData);
       onImageLoad?.(imageData, firstIndex);
 
-      // Load remaining images
-      for (let i = 0; i < imagesUrls.length; i++) {
-        if (i !== firstIndex) {
-          loadImage(imagesUrls[i], i);
-        }
-      }
-
       // Check if this was the only image
-      checkAllLoaded();
+      if (totalImages === 1) {
+        checkAllLoaded();
+      } else {
+        // Load remaining images with concurrency limit
+        startLoadingRemaining(firstIndex);
+      }
     } catch (err) {
+      firstImg.onload = null;
+      firstImg.onerror = null;
+      firstImg.src = '';
       loadedCount++;
       handleError(src, firstIndex, true);
 
-      // Still try to load other images
-      for (let i = 0; i < imagesUrls.length; i++) {
-        if (i !== firstIndex) {
-          loadImage(imagesUrls[i], i);
-        }
+      if (totalImages === 1) {
+        checkAllLoaded();
+      } else {
+        startLoadingRemaining(firstIndex);
       }
-
-      checkAllLoaded();
     }
   };
 
   firstImg.onerror = () => {
+    firstImg.onload = null;
+    firstImg.onerror = null;
+    firstImg.src = '';
     loadedCount++;
     handleError(src, firstIndex, true);
 
-    // Still try to load other images
-    for (let i = 0; i < imagesUrls.length; i++) {
-      if (i !== firstIndex) {
-        loadImage(imagesUrls[i], i);
-      }
+    if (totalImages === 1) {
+      checkAllLoaded();
+    } else {
+      startLoadingRemaining(firstIndex);
     }
-
-    checkAllLoaded();
   };
 };
 

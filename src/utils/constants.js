@@ -31,7 +31,13 @@ export const PROPS_REQUIRE_RELOAD = [
 export const LEFT_RIGHT_KEYS = [37, 39];
 export const UP_DOWN_KEYS = [38, 40];
 
-export const THROTTLE_TIME = 10;
+// Detect mobile for throttle adjustment
+const isMobileDevice = typeof navigator !== 'undefined' &&
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// Touch/mouse throttle: 10ms (100fps) on desktop, 32ms (30fps) on mobile
+// Mobile needs slower rate to prevent memory pressure from event closures
+export const THROTTLE_TIME = isMobileDevice ? 32 : 10;
 
 // Timing constants
 export const DRAG_START_DELAY = 150;
