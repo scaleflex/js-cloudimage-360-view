@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.scaleflex.com/en/home">
-    <img src="https://scaleflex.cloudimg.io/v7/cloudimage.io/LOGO+WITH+SCALEFLEX-01.png?vh=f6080d&w=350" alt="Cloudimage logo">
+    <img width="350" src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/logo_scaleflex_on_white_bg.jpg?vh=91b12d&w=700" alt="Cloudimage logo">
   </a>
 </p>
 
