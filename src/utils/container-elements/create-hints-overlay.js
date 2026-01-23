@@ -11,22 +11,30 @@ const HINT_LABELS = {
   drag: 'Drag to rotate',
   swipe: 'Swipe to rotate',
   click: 'Click to zoom',
+  dblclick: 'Double-click to zoom',
   pinch: 'Pinch to zoom',
   keys: 'Use arrow keys',
   fullscreen: 'Click for fullscreen',
 };
 
-const createHintItem = (type) => {
+const createHintItem = (type, options = {}) => {
   const item = document.createElement('div');
   item.className = 'cloudimage-360-hint-item';
+
+  // Use appropriate label for click/dblclick based on pointerZoomTrigger
+  let label = HINT_LABELS[type];
+  if (type === 'click' && options.pointerZoomTrigger === 'dblclick') {
+    label = HINT_LABELS.dblclick;
+  }
+
   item.innerHTML = `
     ${HINT_ICONS[type]}
-    <span>${HINT_LABELS[type]}</span>
+    <span>${label}</span>
   `;
   return item;
 };
 
-export const createHintsOverlay = (container, hints = []) => {
+export const createHintsOverlay = (container, hints = [], options = {}) => {
   if (!hints || hints.length === 0) return null;
 
   const overlay = document.createElement('div');
@@ -39,7 +47,7 @@ export const createHintsOverlay = (container, hints = []) => {
 
   hints.forEach((hint) => {
     if (HINT_ICONS[hint]) {
-      hintsContainer.appendChild(createHintItem(hint));
+      hintsContainer.appendChild(createHintItem(hint, options));
     }
   });
 

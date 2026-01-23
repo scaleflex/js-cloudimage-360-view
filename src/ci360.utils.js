@@ -25,6 +25,7 @@ const DEFAULTS_VALUES = {
   playOnce: false,
   autoplayReverse: false,
   pointerZoom: 0,
+  pointerZoomTrigger: 'dblclick',
   fullscreen: false,
   magnifier: null,
   bottomCircle: true,
@@ -82,6 +83,7 @@ const getConfigFromImage = (image) => ({
   playOnce: isTrue(image, 'play-once', DEFAULTS_VALUES.playOnce),
   autoplayReverse: isTrue(image, 'autoplay-reverse', DEFAULTS_VALUES.autoplayReverse),
   pointerZoom: parseFloat(getAttr(image, 'pointer-zoom', DEFAULTS_VALUES.pointerZoom)),
+  pointerZoomTrigger: getAttr(image, 'pointer-zoom-trigger', DEFAULTS_VALUES.pointerZoomTrigger),
   fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen', DEFAULTS_VALUES.fullscreen),
   magnifier: parseFloat(getAttr(image, 'magnifier', DEFAULTS_VALUES.magnifier)),
   bottomCircleOffset: parseInt(
@@ -177,6 +179,7 @@ const adaptConfig = (config) => {
     playOnce: config.playOnce ?? DEFAULTS_VALUES.playOnce,
     autoplayReverse: config.autoplayReverse ?? DEFAULTS_VALUES.autoplayReverse,
     pointerZoom: parseFloat(config.pointerZoom ?? DEFAULTS_VALUES.pointerZoom),
+    pointerZoomTrigger: config.pointerZoomTrigger || DEFAULTS_VALUES.pointerZoomTrigger,
     fullscreen: config.fullscreen ?? DEFAULTS_VALUES.fullscreen,
     magnifier: parseFloat(config.magnifier ?? DEFAULTS_VALUES.magnifier),
     bottomCircleOffset: parseInt(config.bottomCircleOffset ?? DEFAULTS_VALUES.bottomCircleOffset, 10),

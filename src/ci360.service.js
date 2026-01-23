@@ -9,6 +9,7 @@ import {
   createCloseIcon,
   createFullscreenIcon,
   createMagnifierIcon,
+  createZoomOutIcon,
   createLoader,
   createInnerBox,
   createIconsContainer,
@@ -136,6 +137,15 @@ class CI360Viewer {
 
   mouseDown(event) {
     if (!this.isReady || this.glass) return;
+
+    // Don't handle mousedown on interactive elements - let them handle their own events
+    const target = event.target;
+    if (target && target.closest) {
+      const isInteractiveElement = target.closest('.cloudimage-360-button') ||
+        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot');
+      if (isInteractiveElement) return;
+    }
 
     const { pageX, pageY } = event;
 
@@ -297,7 +307,10 @@ class CI360Viewer {
   mouseMove(event) {
     if (!this.isReady || (!this.isClicked && !this.isZoomed) || this.glass) return;
 
-    this.hideAllIcons();
+    // Only hide icons when dragging (not when zoomed and panning)
+    if (!this.isZoomed) {
+      this.hideAllIcons();
+    }
     this.drag(event.pageX, event.pageY);
 
     if (this.isZoomed) this.applyZoom(event);
@@ -305,6 +318,15 @@ class CI360Viewer {
 
   mouseClick(event) {
     if (!this.isReady || this.isDragging) return;
+
+    // Don't handle click on interactive elements - let them handle their own clicks
+    const target = event.target;
+    if (target && target.closest) {
+      const isInteractiveElement = target.closest('.cloudimage-360-button') ||
+        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot');
+      if (isInteractiveElement) return;
+    }
 
     // If drag just ended, don't trigger zoom (click fires after mouseUp)
     if (this.dragJustEnded) {
@@ -323,7 +345,28 @@ class CI360Viewer {
       return;
     }
 
-    if (this.pointerZoom && !this.glass && !this.touchDevice) this.toggleZoom(event);
+    // Only trigger zoom on click if pointerZoomTrigger is 'click'
+    if (this.pointerZoomTrigger === 'click' && this.pointerZoom && !this.glass && !this.touchDevice) {
+      this.toggleZoom(event);
+    }
+  }
+
+  mouseDblClick(event) {
+    if (!this.isReady) return;
+
+    // Don't handle dblclick on interactive elements
+    const target = event.target;
+    if (target && target.closest) {
+      const isInteractiveElement = target.closest('.cloudimage-360-button') ||
+        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot');
+      if (isInteractiveElement) return;
+    }
+
+    // Only trigger zoom on dblclick if pointerZoomTrigger is 'dblclick'
+    if (this.pointerZoomTrigger === 'dblclick' && this.pointerZoom && !this.glass && !this.touchDevice) {
+      this.toggleZoom(event);
+    }
   }
 
   loadHigherQualityImages(width, onLoad) {
@@ -387,9 +430,41 @@ class CI360Viewer {
     this.isZoomed = false;
     this.updateView();
     this.showAllIcons();
+    this.hideZoomOutIcon();
     this.hideTransitionOverlay();
     this.emit('onZoomOut');
     this.announce('Zoomed out');
+  }
+
+  zoomIn(event) {
+    if (this.isZoomed || !this.pointerZoom) return;
+
+    event?.stopPropagation();
+
+    let width = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
+
+    this.hideHotspots();
+    this.hideAllIcons();
+    this.showLoadingSpinner();
+    this.loadHigherQualityImages(width, () => {
+      this.showTransitionOverlay();
+
+      setTimeout(() => {
+        this.applyZoom(event);
+      }, ZOOM_TRANSITION_DELAY);
+    });
+  }
+
+  zoomOut(event) {
+    if (!this.isZoomed) return;
+
+    event?.stopPropagation();
+
+    this.showTransitionOverlay();
+
+    setTimeout(() => {
+      this.removeZoom();
+    }, ZOOM_TRANSITION_DELAY);
   }
 
   mouseLeave() {
@@ -401,14 +476,18 @@ class CI360Viewer {
   applyZoom(event) {
     const { offsetX, offsetY } = calculateOffsetFromEvent(event, this.canvas, this.devicePixelRatio);
 
-    this.isZoomed = true;
-    this.hideAllIcons();
-    this.hideLoadingSpinner();
-    this.hideTransitionOverlay();
+    // Only do first-time zoom setup if not already zoomed
+    if (!this.isZoomed) {
+      this.isZoomed = true;
+      this.hideAllIcons();
+      this.hideLoadingSpinner();
+      this.hideTransitionOverlay();
+      this.showZoomOutIcon();
+      this.emit('onZoomIn', { zoomLevel: this.pointerZoom });
+      this.announce('Zoomed in. Move mouse to pan. Click to zoom out.');
+    }
 
     this.updateView(this.pointerZoom, offsetX, offsetY);
-    this.emit('onZoomIn', { zoomLevel: this.pointerZoom });
-    this.announce('Zoomed in. Move mouse to pan. Click to zoom out.');
   }
 
   touchOutside(event) {
@@ -868,7 +947,9 @@ class CI360Viewer {
         : this.hints;
 
       if (hintsToShow && hintsToShow.length > 0) {
-        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow);
+        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow, {
+          pointerZoomTrigger: this.pointerZoomTrigger,
+        });
         showHintsOverlay(this.hintsOverlay);
       }
     }
@@ -915,6 +996,9 @@ class CI360Viewer {
   openFullscreenModal(event) {
     event.stopPropagation();
 
+    // Close any open hotspot popups before entering fullscreen
+    this.hideHotspotPopper();
+
     // Release memory from the original viewer to prevent doubling memory usage
     // This is especially important on mobile devices with limited memory
     this.releaseMemory();
@@ -923,6 +1007,8 @@ class CI360Viewer {
     const fullscreenContainer = createFullscreenModal(this.container);
 
     this.fullscreenInstance = new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
+    // Store reference to original viewer so fullscreen can call back
+    this.fullscreenInstance.originalViewer = this;
     this.emit('onFullscreenOpen');
     this.announce('Opened fullscreen mode. Press Escape to exit.');
   }
@@ -930,20 +1016,33 @@ class CI360Viewer {
   closeFullscreenModal(event) {
     event.stopPropagation();
 
-    // Destroy the fullscreen instance to free its memory
-    if (this.fullscreenInstance) {
-      this.fullscreenInstance.destroy();
-      this.fullscreenInstance = null;
+    // Get reference to original viewer (if this is the fullscreen instance)
+    const originalViewer = this.originalViewer || this;
+    const fullscreenInstance = this.fullscreenView ? this : originalViewer.fullscreenInstance;
+
+    // Close any open hotspot popups and destroy the fullscreen instance
+    if (fullscreenInstance) {
+      fullscreenInstance.hideHotspotPopper();
+
+      // Remove fullscreen modal from DOM
+      const fullscreenModal = fullscreenInstance.container.parentNode;
+      if (fullscreenModal && fullscreenModal.parentNode) {
+        fullscreenModal.parentNode.removeChild(fullscreenModal);
+      }
+
+      fullscreenInstance.destroy();
+      if (originalViewer.fullscreenInstance) {
+        originalViewer.fullscreenInstance = null;
+      }
     }
 
-    document.body.removeChild(this.container.parentNode);
     window.document.body.style.overflow = 'visible';
 
     // Reload images for the original viewer
-    this.reloadImages();
+    originalViewer.reloadImages();
 
-    this.emit('onFullscreenClose');
-    this.announce('Exited fullscreen mode');
+    originalViewer.emit('onFullscreenClose');
+    originalViewer.announce('Exited fullscreen mode');
   }
 
   play() {
@@ -1016,7 +1115,9 @@ class CI360Viewer {
         : this.hints;
 
       if (hintsToShow && hintsToShow.length > 0) {
-        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow);
+        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow, {
+          pointerZoomTrigger: this.pointerZoomTrigger,
+        });
         showHintsOverlay(this.hintsOverlay);
       }
     }
@@ -1137,17 +1238,25 @@ class CI360Viewer {
   }
 
   addMagnifierIcon() {
-    if (!this.magnifier) return;
+    // Use pointerZoom for the magnifier/zoom-in button
+    if (!this.pointerZoom) return;
 
+    // Create zoom-in icon (magnifier with plus)
     this.magnifierIcon = createMagnifierIcon();
-    this.magnifierIcon.onclick = this.magnify.bind(this);
-
+    this.magnifierIcon.onclick = this.zoomIn.bind(this);
     this.iconsContainer.appendChild(this.magnifierIcon);
+
+    // Create zoom-out icon in the same position (initially hidden)
+    this.zoomOutIcon = createZoomOutIcon();
+    this.zoomOutIcon.onclick = this.zoomOut.bind(this);
+    this.zoomOutIcon.style.display = 'none';
+    this.iconsContainer.appendChild(this.zoomOutIcon);
   }
 
   showMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
+    this.magnifierIcon.style.display = '';
     this.magnifierIcon.style.visibility = 'visible';
     this.magnifierIcon.style.opacity = 1;
   }
@@ -1155,8 +1264,25 @@ class CI360Viewer {
   hideMagnifierIcon() {
     if (!this.magnifierIcon) return;
 
+    this.magnifierIcon.style.display = 'none';
     this.magnifierIcon.style.visibility = 'hidden';
     this.magnifierIcon.style.opacity = 0;
+  }
+
+  showZoomOutIcon() {
+    if (!this.zoomOutIcon) return;
+
+    this.zoomOutIcon.style.display = '';
+    this.zoomOutIcon.style.visibility = 'visible';
+    this.zoomOutIcon.style.opacity = 1;
+  }
+
+  hideZoomOutIcon() {
+    if (!this.zoomOutIcon) return;
+
+    this.zoomOutIcon.style.display = 'none';
+    this.zoomOutIcon.style.visibility = 'hidden';
+    this.zoomOutIcon.style.opacity = 0;
   }
 
   addFullscreenIcon() {
@@ -1264,6 +1390,9 @@ class CI360Viewer {
     dots.forEach((dot) => {
       dot.addEventListener('click', (event) => {
         event.stopPropagation();
+        // Hide icons and hints on timeline interaction
+        this.hideAllIcons();
+        this.hideHints();
         const targetFrame = parseInt(dot.getAttribute('data-frame'), 10);
         const hotspotId = dot.getAttribute('data-hotspot-id');
         if (!isNaN(targetFrame)) {
@@ -1413,8 +1542,9 @@ class CI360Viewer {
     this.hideInitialIcon();
     this.hide360ViewCircleIcon();
     this.hideMagnifierIcon();
+    this.hideZoomOutIcon();
     this.hideFullscreenIcon();
-    this.hideHotspotTimeline();
+    // Don't hide timeline - it should always remain visible
   }
 
   removeLoader() {
@@ -1448,12 +1578,14 @@ class CI360Viewer {
 
   addMouseEvents() {
     this.boundMouseClick = this.mouseClick.bind(this);
+    this.boundMouseDblClick = this.mouseDblClick.bind(this);
     this.boundMouseDown = this.mouseDown.bind(this);
     this.boundMouseMove = throttle(this.mouseMove.bind(this), THROTTLE_TIME);
     this.boundMouseUp = this.mouseUp.bind(this);
     this.boundMouseLeave = this.mouseLeave.bind(this);
 
     this.innerBox.addEventListener('click', this.boundMouseClick);
+    this.innerBox.addEventListener('dblclick', this.boundMouseDblClick);
     this.innerBox.addEventListener('mousedown', this.boundMouseDown);
     this.innerBox.addEventListener('mouseleave', this.boundMouseLeave);
     document.addEventListener('mousemove', this.boundMouseMove);
@@ -1502,6 +1634,7 @@ class CI360Viewer {
 
   removeMouseEvents() {
     this.innerBox.removeEventListener('click', this.boundMouseClick);
+    this.innerBox.removeEventListener('dblclick', this.boundMouseDblClick);
     this.innerBox.removeEventListener('mousedown', this.boundMouseDown);
     this.innerBox.removeEventListener('mouseleave', this.boundMouseLeave);
     document.removeEventListener('mousemove', this.boundMouseMove);
@@ -1593,6 +1726,7 @@ class CI360Viewer {
       dragSpeed,
       stopAtEdges,
       pointerZoom,
+      pointerZoomTrigger = 'dblclick',
       imageInfo = 'black',
       initialIconShown,
       bottomCircle,
@@ -1646,6 +1780,7 @@ class CI360Viewer {
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
     this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, MAX_POINTER_ZOOM) : null;
+    this.pointerZoomTrigger = pointerZoomTrigger;
     this.keysReverse = keysReverse;
     this.info = imageInfo;
     this.keys = keys;

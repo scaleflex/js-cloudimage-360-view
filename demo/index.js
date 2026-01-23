@@ -30,6 +30,7 @@ const copyText = document.getElementById('copy-text');
 const codeBlock = document.getElementById('code-block');
 const codeWrapper = document.getElementById('code-wrapper');
 const pointerZoomSelector = document.getElementById('pointer-zoom-selector');
+const pointerZoomTriggerSelector = document.getElementById('pointer-zoom-trigger');
 
 const copyButton = document.querySelector('.code-section .copy-button');
 const outputCode = document.querySelector('.output-code');
@@ -191,6 +192,14 @@ function changePointerZoomSelector(event) {
   updateCodeBlock(updatedView.viewerConfig);
 }
 
+function changePointerZoomTrigger(event) {
+  const { value } = event.target;
+
+  const updatedView = instance.updateView('demo-generator', { pointerZoomTrigger: value });
+
+  updateCodeBlock(updatedView.viewerConfig);
+}
+
 function pluginCheckboxOptionsHandler(event) {
   const checked = event.target.checked;
   const key = event.target.getAttribute('data-plugin-property');
@@ -242,6 +251,7 @@ autoplaySpeed.addEventListener('change', changeAutoplaySpeed);
 pointerZoomCheckbox.addEventListener('change', changePointerZoom);
 imageXAmountSelector.addEventListener('change', changeImageXAmount);
 pointerZoomSelector.addEventListener('change', changePointerZoomSelector);
+pointerZoomTriggerSelector.addEventListener('change', changePointerZoomTrigger);
 spinDirections.addEventListener('change', changeSpinDirectionHandler);
 copyButton.addEventListener('click', copyCodeHandler);
 folderPathInput.addEventListener('change', changeCustomFolder);

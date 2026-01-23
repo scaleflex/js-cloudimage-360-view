@@ -34,6 +34,7 @@ const PLUGIN_PROPS = {
   dragSpeed: { label: 'data-drag-speed', value: 120, isRequired: false },
   autoplay: { label: 'data-autoplay', isRequired: false },
   pointerZoom: { label: 'data-pointer-zoom', value: 1.5, isRequired: false },
+  pointerZoomTrigger: { label: 'data-pointer-zoom-trigger', value: 'dblclick', isRequired: false },
   autoplayBehavior: { label: 'data-autoplay-behavior', value: 'spin-xy', isRequired: false },
   magnifier: { label: 'data-magnifier', value: 1.5, isRequired: false },
   autoplayReverse: { label: 'data-autoplay-reverse', isRequired: false },
