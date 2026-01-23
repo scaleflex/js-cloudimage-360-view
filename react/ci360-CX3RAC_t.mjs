@@ -617,6 +617,7 @@ const me = /* @__PURE__ */ ai(Ei), R = {
   e && e.classList.remove("visible");
 }, Qt = (e, t = []) => {
   if (!e) return t;
+  if (Array.isArray(e)) return e;
   try {
     return JSON.parse(e);
   } catch (i) {
@@ -2993,4 +2994,4 @@ class cn {
 export {
   cn as default
 };
-//# sourceMappingURL=ci360-CzKohD8_.mjs.map
+//# sourceMappingURL=ci360-CX3RAC_t.mjs.map
