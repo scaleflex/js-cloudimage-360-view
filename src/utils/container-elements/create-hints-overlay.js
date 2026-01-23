@@ -58,9 +58,9 @@ export const createHintsOverlay = (container, hints = [], options = {}) => {
 };
 
 export const getHintsForConfig = (config, isTouchDevice) => {
-  // Default hints: drag and click for desktop, swipe for mobile
+  // Default hints: drag and click for desktop, swipe and pinch for mobile
   if (isTouchDevice) {
-    return ['swipe'];
+    return ['swipe', 'pinch'];
   }
   return ['drag', 'click'];
 };

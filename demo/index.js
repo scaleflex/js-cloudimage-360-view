@@ -279,7 +279,7 @@ const config = {
   bottomCircle: false,
   hotspots: isMobileDevice ? undefined : GURKHA_SUV_HOTSPOTS_CONFIG, // Disable hotspots on mobile
   inertia: true,
-  hints: ['drag', 'click'],
+  hints: true, // Auto-detect: swipe+pinch on mobile, drag+click on desktop
 };
 
 instance.init(suvCarContainer, config);
@@ -300,7 +300,7 @@ const demoGeneratorConfig = {
   keys: true,
   responsive: 'scaleflex',
   lazyload: true,
-  hints: ['drag', 'click'],
+  hints: true, // Auto-detect: swipe+pinch on mobile, drag+click on desktop
   // Event callbacks - only log on desktop to avoid memory pressure from logging
   ...(isMobileDevice ? {} : {
     onReady: (event) => {
