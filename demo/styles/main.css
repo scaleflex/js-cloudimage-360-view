@@ -391,7 +391,7 @@ body {
   padding: 10px 18px;
   border: none;
   border-radius: 8px;
-  background: #3b82f6;
+  background: #3daba4;
   color: white;
   font-size: 14px;
   font-weight: 500;
@@ -400,7 +400,7 @@ body {
 }
 
 .control-btn:hover {
-  background: #2563eb;
+  background: #35918a;
   transform: translateY(-1px);
 }
 
