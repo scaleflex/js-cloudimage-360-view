@@ -29,6 +29,83 @@ Types of changes:
 
 ---
 
+## 4.3.0 - 2026-01-23
+
+### Added
+
+- `pointerZoomTrigger` config option (`'click'` or `'dblclick'`, default `'dblclick'`) to control zoom activation
+- Zoom-in/zoom-out button pair that toggles in the same position
+- Hotspot timeline visible in fullscreen mode with gradient background
+- Auto-enable memory management on mobile devices
+- Mobile memory optimizations for Safari stability (main-thread canvas, capped DPR, throttled draws)
+- `hotspotTrigger` config option (`'hover'` or `'click'`) to control hotspot popup activation
+
+### Fixed
+
+- Mobile Safari memory crashes with multiple viewers
+- Timeline dots clickable in fullscreen mode (z-index fix)
+- Hotspot popper closing when opening/closing fullscreen
+- Fullscreen modal close issues (modal staying visible, drag not working)
+- Hotspot modal stuck open bug
+- Handle width=0 CDN error and missing iconsContainer crash
+- Close ImageBitmap objects to prevent memory leaks on mobile
+- Release memory when opening fullscreen to prevent crash on mobile
+
+### Changed
+
+- Default zoom trigger changed from single click to double-click
+- Timeline stays visible during interactions (not hidden on drag/zoom)
+- Demo page hides heavy sections on mobile to reduce memory usage
+
+---
+
+## 4.2.0 - 2026-01-22
+
+### Added
+
+- Programmatic control demo with play/stop/rotate buttons and frame navigation
+
+---
+
+## 4.1.4 - 2026-01-22
+
+### Fixed
+
+- React ref methods not working correctly
+- Hotspot modal not closing properly
+
+---
+
+## 4.1.3 - 2026-01-22
+
+### Added
+
+- `aspectRatio` config option for container sizing
+- React wrapper component (`CI360Viewer`) and hook (`useCI360`)
+- Hotspot timeline navigation bar
+- Hints overlay with drag/click/keys instructions
+- CSS theming system with light/dark themes and CSS variables
+- Event callbacks for viewer lifecycle (onReady, onLoad, onSpin, onZoomIn, etc.)
+- Inertia/momentum after drag release
+- Pinch-to-zoom for mobile devices
+- Styled hotspot modals with customizable content
+- CodeSandbox examples for vanilla JS and React
+
+### Fixed
+
+- Memory leaks with ImageBitmap objects
+- Page scrollbars visible in fullscreen mode
+- Sanitize hotspot HTML content to prevent XSS attacks
+- Close hotspots on drag interaction
+- Error handling and accessibility improvements
+
+### Changed
+
+- Switch to IIFE format with embedded CSS for CDN usage
+- Added CSS autoprefixer for better browser support
+
+---
+
 ## 4.0.0 - 2024-10-29
 
 ### Breaking Changes
