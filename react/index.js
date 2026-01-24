@@ -9,7 +9,7 @@ function ge(p, o) {
     const a = p.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-f42qsz25.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-CqY8pDnV.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
         const i = {
           ...o,
