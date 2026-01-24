@@ -1009,6 +1009,15 @@ class CI360Viewer {
     this.fullscreenInstance = new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
     // Store reference to original viewer so fullscreen can call back
     this.fullscreenInstance.originalViewer = this;
+
+    // Add resize listener to close fullscreen on window resize (e.g., device rotation)
+    this.boundResizeHandler = () => {
+      if (this.fullscreenInstance) {
+        this.closeFullscreenModal(new Event('resize'));
+      }
+    };
+    window.addEventListener('resize', this.boundResizeHandler);
+
     this.emit('onFullscreenOpen');
     this.announce('Opened fullscreen mode. Press Escape to exit.');
   }
@@ -1019,6 +1028,12 @@ class CI360Viewer {
     // Get reference to original viewer (if this is the fullscreen instance)
     const originalViewer = this.originalViewer || this;
     const fullscreenInstance = this.fullscreenView ? this : originalViewer.fullscreenInstance;
+
+    // Remove resize listener
+    if (originalViewer.boundResizeHandler) {
+      window.removeEventListener('resize', originalViewer.boundResizeHandler);
+      originalViewer.boundResizeHandler = null;
+    }
 
     // Close any open hotspot popups and destroy the fullscreen instance
     if (fullscreenInstance) {
