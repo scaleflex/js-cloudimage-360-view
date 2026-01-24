@@ -73,7 +73,7 @@ function ZoomExample() {
         folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
         filenameX="product-{index}.jpg"
         amountX={60}
-        aspectRatio="4/3"
+        aspectRatio="1/1"
         pointerZoom={3}
         fullscreen
         style={{ width: '100%' }}
