@@ -2594,24 +2594,22 @@ class Vt {
       }), Oe(this.hintsOverlay));
     }
   }
-  setOrientation(t) {
-    const s = {
+  setOrientation(t, i = !1) {
+    const o = {
       x: "spin-x",
       y: "spin-y",
       xy: "spin-xy",
       yx: "spin-yx"
     }[t];
-    s && (this.autoplayBehavior = s, this.spinDirection = Te(s, this.allowSpinX, this.allowSpinY), this.orientation = this.spinDirection === "x" ? k.X : k.Y, this.updateView());
+    o && (this.autoplayBehavior = o, this.spinDirection = Te(o, this.allowSpinX, this.allowSpinY), this.orientation = this.spinDirection === "x" ? k.X : k.Y, i || this.updateView());
   }
   onOrientationChange(t) {
     if (!this.responsiveOrientation || !this.allowSpinX || !this.allowSpinY) return;
     const s = t.matches ? "y" : "x";
-    if (this.setOrientation(s), this.fullscreenView && this.canvas) {
+    this.fullscreenView && this.canvas ? (this.setOrientation(s, !0), setTimeout(() => {
       const o = this.orientation === k.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
-      o && setTimeout(() => {
-        this.adaptCanvasSize(o), this.updateView();
-      }, 100);
-    }
+      o && (this.adaptCanvasSize(o), this.updateView());
+    }, 150)) : this.setOrientation(s);
   }
   destroy() {
     this.stopAutoplay(), this.inertiaAnimationId && (cancelAnimationFrame(this.inertiaAnimationId), this.inertiaAnimationId = null), this.removeEvents(), this.closeImageBitmaps(this.imagesX), this.closeImageBitmaps(this.imagesY), this.imagesX = [], this.imagesY = [], this.canvasWorker && (this.canvasWorker.terminate(), this.canvasWorker = null), this.hotspotsInstance && this.hotspotsInstance.destroy(), this.hintsOverlay && this.hintsOverlay.parentNode && (this.hintsOverlay.parentNode.removeChild(this.hintsOverlay), this.hintsOverlay = null), this.hotspotTimeline && this.hotspotTimeline.parentNode && (this.hotspotTimeline.parentNode.removeChild(this.hotspotTimeline), this.hotspotTimeline = null, this.hotspotTimelineIndicator = null), this.container && (this.container.classList.remove("ci360-theme-dark"), this.container.innerHTML = "");
@@ -3026,4 +3024,4 @@ class cn {
 export {
   cn as default
 };
-//# sourceMappingURL=ci360-CqY8pDnV.mjs.map
+//# sourceMappingURL=ci360-DnYjuNUM.mjs.map
