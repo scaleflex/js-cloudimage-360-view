@@ -96,10 +96,10 @@ const fe = /* @__PURE__ */ hi(Si), R = {
   SPIN_Y: "spin-y",
   SPIN_XY: "spin-xy",
   SPIN_YX: "spin-yx"
-}, Li = [!1, 0, null, void 0, "false", "0", "null", "undefined"], k = {
+}, Li = [!1, 0, null, void 0, "false", "0", "null", "undefined"], T = {
   X: "x-axis",
   Y: "y-axis"
-}, Ti = [37, 39], ki = [38, 40], Mi = typeof navigator < "u" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), ve = Mi ? 32 : 10, Pi = 150, Ht = 800, Yi = 150, Xi = 200, ge = 50, Ri = 50, Hi = 5, ye = 5, d = {
+}, ki = [37, 39], Ti = [38, 40], Mi = typeof navigator < "u" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), ve = Mi ? 32 : 10, Pi = 150, Ht = 800, Yi = 150, Xi = 200, ge = 50, Ri = 50, Hi = 5, ye = 5, d = {
   folder: "/",
   apiVersion: "v7",
   filenameX: "image-{index}.jpg",
@@ -381,7 +381,7 @@ const fe = /* @__PURE__ */ hi(Si), R = {
       l == null || l(h, c, O);
     }
   }, v = ({ cdnPath: O, config: E, orientation: w, loadedImages: y, loadStats: x, onFirstImageLoad: m }) => {
-    const g = w === k.X, C = E.imageList.length ? E.imageList : ji(O, E);
+    const g = w === T.X, C = E.imageList.length ? E.imageList : ji(O, E);
     _i({
       imagesUrls: C,
       onFirstImageLoad: m,
@@ -392,9 +392,9 @@ const fe = /* @__PURE__ */ hi(Si), R = {
         r == null || r({ ...A, orientation: w });
       },
       onAllImagesLoad: (A, S) => {
-        y.length = 0, A.forEach((T, X) => {
-          T && (y[X] = T);
-        }), x.errorCount = S.errorCount, x.errors = S.errors.map((T) => ({ ...T, orientation: w })), a[g ? "x" : "y"] = !0, b();
+        y.length = 0, A.forEach((k, X) => {
+          k && (y[X] = k);
+        }), x.errorCount = S.errorCount, x.errors = S.errors.map((k) => ({ ...k, orientation: w })), a[g ? "x" : "y"] = !0, b();
       },
       autoplayReverse: E.autoplayReverse
     });
@@ -402,14 +402,14 @@ const fe = /* @__PURE__ */ hi(Si), R = {
   p ? v({
     cdnPath: e,
     config: i,
-    orientation: k.X,
+    orientation: T.X,
     loadedImages: h,
     loadStats: u,
     onFirstImageLoad: o
   }) : a.x = !0, I ? v({
     cdnPath: t,
     config: s,
-    orientation: k.Y,
+    orientation: T.Y,
     loadedImages: c,
     loadStats: f,
     onFirstImageLoad: p ? void 0 : o
@@ -704,19 +704,19 @@ const fe = /* @__PURE__ */ hi(Si), R = {
     const n = new Error(`Failed to load image: ${e}`);
     n.url = e, n.event = o, i ? i(n) : console.error(n.message);
   };
-}, Ts = (e, t) => {
+}, ks = (e, t) => {
   const i = t.getBoundingClientRect(), s = e.touches ? e.touches[0].clientX : e.clientX, o = e.touches ? e.touches[0].clientY : e.clientY;
   return {
     x: s - i.left,
     y: o - i.top
   };
 }, Qt = (e, t, i) => {
-  const { container: s, w: o, h: n, zoom: l, bw: r, offsetX: a, offsetY: h } = t, c = Ts(e, s);
+  const { container: s, w: o, h: n, zoom: l, bw: r, offsetX: a, offsetY: h } = t, c = ks(e, s);
   let u = c.x, f = c.y;
   u = Math.max(o / l, Math.min(u, s.offsetWidth - o / l)), f = Math.max(n / l, Math.min(f, s.offsetHeight - n / l)), i.style.left = `${u - o}px`, i.style.top = `${f - n}px`;
   const p = (u - a) * l - o + r, I = (f - h) * l - n + r;
   i.style.backgroundPosition = `-${p}px -${I}px`;
-}, ks = (e, t, i, s, o, n) => {
+}, Ts = (e, t, i, s, o, n) => {
   const { x: l = 0, y: r = 0 } = i || {}, a = (t.offsetWidth - l * 2) * n, h = (t.offsetHeight - r * 2) * n;
   if (!o) return;
   o.setAttribute("class", "cloudimage-360-img-magnifier-glass"), t.prepend(o), o.style.backgroundImage = `url('${s.src}')`, o.style.backgroundSize = `${a}px ${h}px`;
@@ -804,7 +804,7 @@ const fe = /* @__PURE__ */ hi(Si), R = {
 }) => {
   const r = t === (n ? 0 : s - 1), a = i === (n ? 0 : o - 1);
   return e === R.SPIN_XY || e === R.SPIN_YX ? l === "x" && r || l === "y" && a : !1;
-}, Te = (e, t, i) => {
+}, ke = (e, t, i) => {
   if (!i) return "x";
   if (!t) return "y";
   switch (e) {
@@ -818,9 +818,9 @@ const fe = /* @__PURE__ */ hi(Si), R = {
     default:
       return "x";
   }
-}, Zs = (e) => e === "x" ? "y" : "x", ke = (e, t) => {
-  const i = [...Ti];
-  return t ? [...i, ...ki].includes(e) : i.includes(e);
+}, Zs = (e) => e === "x" ? "y" : "x", Te = (e, t) => {
+  const i = [...ki];
+  return t ? [...i, ...Ti].includes(e) : i.includes(e);
 }, Me = ({ deltaX: e, deltaY: t, reversed: i, allowSpinX: s, allowSpinY: o, threshold: n = 0 }) => {
   const l = s && !o || o && !s ? 0 : n, r = Math.abs(e), a = Math.abs(t);
   return s && r - l > a ? i ? e > 0 ? "left" : "right" : e > 0 ? "right" : "left" : o && a - l > r ? i ? t > 0 ? "up" : "down" : t > 0 ? "down" : "up" : null;
@@ -1068,7 +1068,7 @@ const Ns = /* @__PURE__ */ new Set([
     }
   };
   return i(t.content), t.innerHTML;
-}, $s = (e) => e === "x" ? k.X : k.Y, Gs = (e, t, i) => e.filter(
+}, $s = (e) => e === "x" ? T.X : T.Y, Gs = (e, t, i) => e.filter(
   (s) => $s(s.orientation) === i && t in s.positions
 ), _s = (e, t) => {
   const i = document.createElement("button");
@@ -1301,7 +1301,7 @@ function go(e) {
   }
   return null;
 }
-function Tt(e) {
+function kt(e) {
   for (var t = B(e), i = Re(e); i && vo(i) && Q(i).position === "static"; )
     i = Re(i);
   return i && (j(i) === "html" || j(i) === "body" && Q(i).position === "static") ? t : i || go(e) || t;
@@ -1340,7 +1340,7 @@ var bo = function(t, i) {
 function wo(e) {
   var t, i = e.state, s = e.name, o = e.options, n = i.elements.arrow, l = i.modifiersData.popperOffsets, r = z(i.placement), a = ne(r), h = [Z, V].indexOf(r) >= 0, c = h ? "height" : "width";
   if (!(!n || !l)) {
-    var u = bo(o.padding, i), f = oe(n), p = a === "y" ? H : Z, I = a === "y" ? F : V, b = i.rects.reference[c] + i.rects.reference[a] - l[a] - i.rects.popper[c], v = l[a] - i.rects.reference[a], O = Tt(n), E = O ? a === "y" ? O.clientHeight || 0 : O.clientWidth || 0 : 0, w = b / 2 - v / 2, y = u[p], x = E - f[c] - u[I], m = E / 2 - f[c] / 2 + w, g = Ot(y, m, x), C = a;
+    var u = bo(o.padding, i), f = oe(n), p = a === "y" ? H : Z, I = a === "y" ? F : V, b = i.rects.reference[c] + i.rects.reference[a] - l[a] - i.rects.popper[c], v = l[a] - i.rects.reference[a], O = kt(n), E = O ? a === "y" ? O.clientHeight || 0 : O.clientWidth || 0 : 0, w = b / 2 - v / 2, y = u[p], x = E - f[c] - u[I], m = E / 2 - f[c] / 2 + w, g = Ot(y, m, x), C = a;
     i.modifiersData[s] = (t = {}, t[C] = g, t.centerOffset = g - m, t);
   }
 }
@@ -1384,7 +1384,7 @@ function He(e) {
   p = v.x, b = v.y;
   var O = l.hasOwnProperty("x"), E = l.hasOwnProperty("y"), w = Z, y = H, x = window;
   if (h) {
-    var m = Tt(i), g = "clientHeight", C = "clientWidth";
+    var m = kt(i), g = "clientHeight", C = "clientWidth";
     if (m === B(i) && (m = q(i), Q(m).position !== "static" && r === "absolute" && (g = "scrollHeight", C = "scrollWidth")), m = m, o === H || (o === Z || o === V) && n === At) {
       y = F;
       var A = u && m === x && x.visualViewport ? x.visualViewport.height : (
@@ -1402,7 +1402,7 @@ function He(e) {
       p -= S - s.width, p *= a ? 1 : -1;
     }
   }
-  var T = Object.assign({
+  var k = Object.assign({
     position: r
   }, h && xo), X = c === !0 ? Oo({
     x: p,
@@ -1413,9 +1413,9 @@ function He(e) {
   };
   if (p = X.x, b = X.y, a) {
     var M;
-    return Object.assign({}, T, (M = {}, M[y] = E ? "0" : "", M[w] = O ? "0" : "", M.transform = (x.devicePixelRatio || 1) <= 1 ? "translate(" + p + "px, " + b + "px)" : "translate3d(" + p + "px, " + b + "px, 0)", M));
+    return Object.assign({}, k, (M = {}, M[y] = E ? "0" : "", M[w] = O ? "0" : "", M.transform = (x.devicePixelRatio || 1) <= 1 ? "translate(" + p + "px, " + b + "px)" : "translate3d(" + p + "px, " + b + "px, 0)", M));
   }
-  return Object.assign({}, T, (t = {}, t[y] = E ? b + "px" : "", t[w] = O ? p + "px" : "", t.transform = "", t));
+  return Object.assign({}, k, (t = {}, t[y] = E ? b + "px" : "", t[w] = O ? p + "px" : "", t.transform = "", t));
 }
 function Eo(e) {
   var t = e.state, i = e.options, s = i.gpuAcceleration, o = s === void 0 ? !0 : s, n = i.adaptive, l = n === void 0 ? !0 : n, r = i.roundOffsets, a = r === void 0 ? !0 : r, h = {
@@ -1469,7 +1469,7 @@ const Lo = {
   effect: So,
   data: {}
 };
-var To = {
+var ko = {
   left: "right",
   right: "left",
   bottom: "top",
@@ -1477,16 +1477,16 @@ var To = {
 };
 function Bt(e) {
   return e.replace(/left|right|bottom|top/g, function(t) {
-    return To[t];
+    return ko[t];
   });
 }
-var ko = {
+var To = {
   start: "end",
   end: "start"
 };
 function Ze(e) {
   return e.replace(/start|end/g, function(t) {
-    return ko[t];
+    return To[t];
   });
 }
 function re(e) {
@@ -1554,7 +1554,7 @@ function De(e, t, i) {
   return t === Ue ? ee(Mo(e, i)) : st(t) ? Yo(t, i) : ee(Po(q(e)));
 }
 function Xo(e) {
-  var t = Et(Nt(e)), i = ["absolute", "fixed"].indexOf(Q(e).position) >= 0, s = i && W(e) ? Tt(e) : e;
+  var t = Et(Nt(e)), i = ["absolute", "fixed"].indexOf(Q(e).position) >= 0, s = i && W(e) ? kt(e) : e;
   return st(s) ? t.filter(function(o) {
     return st(o) && Je(o, s) && j(o) !== "body";
   }) : [];
@@ -1624,9 +1624,9 @@ function St(e, t) {
     bottom: A.bottom - x.bottom + O.bottom,
     left: x.left - A.left + O.left,
     right: A.right - x.right + O.right
-  }, T = e.modifiersData.offset;
-  if (f === Ct && T) {
-    var X = T[o];
+  }, k = e.modifiersData.offset;
+  if (f === Ct && k) {
+    var X = k[o];
     Object.keys(S).forEach(function(M) {
       var $ = [V, F].indexOf(M) >= 0 ? 1 : -1, G = [H, F].indexOf(M) >= 0 ? "y" : "x";
       S[M] += X[G] * $;
@@ -1673,8 +1673,8 @@ function Do(e) {
         allowedAutoPlacements: b
       }) : N);
     }, []), x = t.rects.reference, m = t.rects.popper, g = /* @__PURE__ */ new Map(), C = !0, A = y[0], S = 0; S < y.length; S++) {
-      var T = y[S], X = z(T), M = vt(T) === pt, $ = [H, F].indexOf(X) >= 0, G = $ ? "width" : "height", Y = St(t, {
-        placement: T,
+      var k = y[S], X = z(k), M = vt(k) === pt, $ = [H, F].indexOf(X) >= 0, G = $ ? "width" : "height", Y = St(t, {
+        placement: k,
         boundary: c,
         rootBoundary: u,
         altBoundary: f,
@@ -1685,10 +1685,10 @@ function Do(e) {
       if (n && _.push(Y[X] <= 0), r && _.push(Y[D] <= 0, Y[ot] <= 0), _.every(function(J) {
         return J;
       })) {
-        A = T, C = !1;
+        A = k, C = !1;
         break;
       }
-      g.set(T, _);
+      g.set(k, _);
     }
     if (C)
       for (var nt = I ? 3 : 1, gt = function(N) {
@@ -1814,7 +1814,7 @@ function _o(e) {
   } : Object.assign({
     mainAxis: 0,
     altAxis: 0
-  }, A), T = t.modifiersData.offset ? t.modifiersData.offset[t.placement] : null, X = {
+  }, A), k = t.modifiersData.offset ? t.modifiersData.offset[t.placement] : null, X = {
     x: 0,
     y: 0
   };
@@ -1823,11 +1823,11 @@ function _o(e) {
       var M, $ = y === "y" ? H : Z, G = y === "y" ? F : V, Y = y === "y" ? "height" : "width", D = m[y], ot = D + v[$], _ = D - v[G], nt = p ? -C[Y] / 2 : 0, gt = E === pt ? g[Y] : C[Y], tt = E === pt ? -C[Y] : -g[Y], rt = t.elements.arrow, J = p && rt ? oe(rt) : {
         width: 0,
         height: 0
-      }, N = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : qe(), et = N[$], at = N[G], U = Ot(0, g[Y], J[Y]), lt = w ? g[Y] / 2 - nt - U - et - S.mainAxis : gt - U - et - S.mainAxis, zt = w ? -g[Y] / 2 + nt + U + at + S.mainAxis : tt + U + at + S.mainAxis, ht = t.elements.arrow && Tt(t.elements.arrow), jt = ht ? y === "y" ? ht.clientTop || 0 : ht.clientLeft || 0 : 0, kt = (M = T == null ? void 0 : T[y]) != null ? M : 0, $t = D + lt - kt - jt, Gt = D + zt - kt, Mt = Ot(p ? Ft(ot, $t) : ot, D, p ? it(_, Gt) : _);
+      }, N = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : qe(), et = N[$], at = N[G], U = Ot(0, g[Y], J[Y]), lt = w ? g[Y] / 2 - nt - U - et - S.mainAxis : gt - U - et - S.mainAxis, zt = w ? -g[Y] / 2 + nt + U + at + S.mainAxis : tt + U + at + S.mainAxis, ht = t.elements.arrow && kt(t.elements.arrow), jt = ht ? y === "y" ? ht.clientTop || 0 : ht.clientLeft || 0 : 0, Tt = (M = k == null ? void 0 : k[y]) != null ? M : 0, $t = D + lt - Tt - jt, Gt = D + zt - Tt, Mt = Ot(p ? Ft(ot, $t) : ot, D, p ? it(_, Gt) : _);
       m[y] = Mt, X[y] = Mt - D;
     }
     if (r) {
-      var Pt, _t = y === "x" ? H : Z, Ut = y === "x" ? F : V, K = m[x], ct = x === "y" ? "height" : "width", Yt = K + v[_t], Xt = K - v[Ut], yt = [H, Z].indexOf(O) !== -1, bt = (Pt = T == null ? void 0 : T[x]) != null ? Pt : 0, dt = yt ? Yt : K - g[ct] - C[ct] - bt + S.altAxis, ut = yt ? K + g[ct] + C[ct] - bt - S.altAxis : Xt, wt = p && yt ? yo(dt, K, ut) : Ot(p ? dt : Yt, K, p ? ut : Xt);
+      var Pt, _t = y === "x" ? H : Z, Ut = y === "x" ? F : V, K = m[x], ct = x === "y" ? "height" : "width", Yt = K + v[_t], Xt = K - v[Ut], yt = [H, Z].indexOf(O) !== -1, bt = (Pt = k == null ? void 0 : k[x]) != null ? Pt : 0, dt = yt ? Yt : K - g[ct] - C[ct] - bt + S.altAxis, ut = yt ? K + g[ct] + C[ct] - bt - S.altAxis : Xt, wt = p && yt ? yo(dt, K, ut) : Ot(p ? dt : Yt, K, p ? ut : Xt);
       m[x] = wt, X[x] = wt - K;
     }
     t.modifiersData[s] = X;
@@ -1970,7 +1970,7 @@ function nn(e) {
           var O = c.elements, E = O.reference, w = O.popper;
           if (Ve(E, w)) {
             c.rects = {
-              reference: qo(E, Tt(w), c.options.strategy === "fixed"),
+              reference: qo(E, kt(w), c.options.strategy === "fixed"),
               popper: oe(w)
             }, c.reset = !1, c.placement = c.options.placement, c.orderedModifiers.forEach(function(S) {
               return c.modifiersData[S.name] = Object.assign({}, S.data);
@@ -2409,7 +2409,7 @@ class Vt {
   keyDown(t) {
     if (!this.isReady) return;
     const { keyCode: i } = t, s = this.keysReverse;
-    switch (this.autoplay && this.stopAutoplay(), ke(i, this.allowSpinY) && (this.hasInteracted = !0, this.hideAllIcons(), this.hideHints()), i) {
+    switch (this.autoplay && this.stopAutoplay(), Te(i, this.allowSpinY) && (this.hasInteracted = !0, this.hideAllIcons(), this.hideHints()), i) {
       case 37:
         s ? this.moveLeft() : this.moveRight();
         break;
@@ -2426,19 +2426,19 @@ class Vt {
   }
   keyUp(t) {
     const { keyCode: i } = t;
-    ke(i, this.allowSpinY) && this.showAllIcons();
+    Te(i, this.allowSpinY) && this.showAllIcons();
   }
   moveActiveXIndexUp(t) {
-    this.orientation = k.X, this.activeImageX = (this.activeImageX + t) % this.amountX;
+    this.orientation = T.X, this.activeImageX = (this.activeImageX + t) % this.amountX;
   }
   moveActiveXIndexDown(t) {
-    this.orientation = k.X, this.activeImageX = (this.activeImageX - t + this.amountX) % this.amountX;
+    this.orientation = T.X, this.activeImageX = (this.activeImageX - t + this.amountX) % this.amountX;
   }
   moveActiveYIndexUp(t) {
-    this.orientation = k.Y, this.activeImageY = (this.activeImageY + t) % this.amountY;
+    this.orientation = T.Y, this.activeImageY = (this.activeImageY + t) % this.amountY;
   }
   moveActiveYIndexDown(t) {
-    this.orientation = k.Y, this.activeImageY = (this.activeImageY - t + this.amountY) % this.amountY;
+    this.orientation = T.Y, this.activeImageY = (this.activeImageY - t + this.amountY) % this.amountY;
   }
   moveRight(t, i = 1) {
     t && this.activeImageX >= this.imagesX.length - 1 || (this.moveActiveXIndexUp(i), this.isZoomed || this.updateView());
@@ -2462,8 +2462,8 @@ class Vt {
     });
   }
   updateView(t, i, s) {
-    const o = this.orientation === k.X ? this.activeImageX : this.activeImageY, n = this.orientation === k.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
-    this.hotspotsInstance && !this.isZoomed && !this.autoplay && this.hotspotsInstance.updateHotspotPosition(o, this.orientation), this.hotspotTimelineIndicator && this.orientation === k.X && this.updateHotspotTimelinePosition(), this.drawImageOnCanvas(n, t, i, s);
+    const o = this.orientation === T.X ? this.activeImageX : this.activeImageY, n = this.orientation === T.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
+    this.hotspotsInstance && !this.isZoomed && !this.autoplay && this.hotspotsInstance.updateHotspotPosition(o, this.orientation), this.hotspotTimelineIndicator && this.orientation === T.X && this.updateHotspotTimelinePosition(), this.drawImageOnCanvas(n, t, i, s);
   }
   updatePercentageInLoader(t = 0) {
     this.loader && (this.loader.innerText = t + "%");
@@ -2495,7 +2495,7 @@ class Vt {
     }));
   }
   pushImageToSet(t, i, s) {
-    s === k.X ? this.imagesX[i] = t : this.imagesY[i] = t;
+    s === T.X ? this.imagesX[i] = t : this.imagesY[i] = t;
   }
   calculatePercentage() {
     const t = this.amountX + this.amountY, i = this.imagesX.length + this.imagesY.length;
@@ -2520,9 +2520,9 @@ class Vt {
   }
   magnify(t) {
     t.stopPropagation();
-    const { src: i } = this.orientation === k.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX], o = (this.fullscreenView ? document.body : this.container).offsetWidth * this.magnifier, n = zi(i, o);
+    const { src: i } = this.orientation === T.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX], o = (this.fullscreenView ? document.body : this.container).offsetWidth * this.magnifier, n = zi(i, o);
     this.showLoadingSpinner(), this.createGlass(), Ls(n, (a) => {
-      this.hideLoadingSpinner(), this.magnified = !0, ks(t, this.innerBox, this.offset, a, this.glass, this.magnifier);
+      this.hideLoadingSpinner(), this.magnified = !0, Ts(t, this.innerBox, this.offset, a, this.glass, this.magnifier);
     }, (a) => {
       this.hideLoadingSpinner(), this.removeGlass(), this.emit("onError", {
         error: { message: a.message, url: a.url },
@@ -2594,22 +2594,23 @@ class Vt {
       }), Oe(this.hintsOverlay));
     }
   }
-  setOrientation(t, i = !1) {
-    const o = {
+  setOrientation(t) {
+    const s = {
       x: "spin-x",
       y: "spin-y",
       xy: "spin-xy",
       yx: "spin-yx"
     }[t];
-    o && (this.autoplayBehavior = o, this.spinDirection = Te(o, this.allowSpinX, this.allowSpinY), this.orientation = this.spinDirection === "x" ? k.X : k.Y, i || this.updateView());
+    s && (this.autoplayBehavior = s, this.spinDirection = ke(s, this.allowSpinX, this.allowSpinY), this.orientation = this.spinDirection === "x" ? T.X : T.Y, this.updateView());
   }
   onOrientationChange(t) {
     if (!this.responsiveOrientation || !this.allowSpinX || !this.allowSpinY) return;
     const s = t.matches ? "y" : "x";
-    this.fullscreenView && this.canvas ? (this.setOrientation(s, !0), setTimeout(() => {
-      const o = this.orientation === k.X ? this.imagesX[this.activeImageX] : this.imagesY[this.activeImageY];
-      o && (this.adaptCanvasSize(o), this.updateView());
-    }, 150)) : this.setOrientation(s);
+    if (this.fullscreenView) {
+      this.closeFullscreenModal(t);
+      return;
+    }
+    this.setOrientation(s);
   }
   destroy() {
     this.stopAutoplay(), this.inertiaAnimationId && (cancelAnimationFrame(this.inertiaAnimationId), this.inertiaAnimationId = null), this.removeEvents(), this.closeImageBitmaps(this.imagesX), this.closeImageBitmaps(this.imagesY), this.imagesX = [], this.imagesY = [], this.canvasWorker && (this.canvasWorker.terminate(), this.canvasWorker = null), this.hotspotsInstance && this.hotspotsInstance.destroy(), this.hintsOverlay && this.hintsOverlay.parentNode && (this.hintsOverlay.parentNode.removeChild(this.hintsOverlay), this.hintsOverlay = null), this.hotspotTimeline && this.hotspotTimeline.parentNode && (this.hotspotTimeline.parentNode.removeChild(this.hotspotTimeline), this.hotspotTimeline = null, this.hotspotTimelineIndicator = null), this.container && (this.container.classList.remove("ci360-theme-dark"), this.container.innerHTML = "");
@@ -2852,7 +2853,7 @@ class Vt {
       fullscreen: C,
       magnifier: A,
       ciToken: S,
-      ciFilters: T,
+      ciFilters: k,
       ciTransformation: X,
       lazyload: M,
       dragSpeed: $,
@@ -2875,7 +2876,7 @@ class Vt {
       aspectRatio: ht,
       responsiveOrientation: jt,
       // Event callbacks
-      onReady: kt,
+      onReady: Tt,
       onLoad: $t,
       onSpin: Gt,
       onAutoplayStart: Mt,
@@ -2887,8 +2888,8 @@ class Vt {
       onDragStart: Yt,
       onDragEnd: Xt,
       onError: yt
-    } = o, bt = { ciToken: S, ciFilters: T, ciTransformation: X }, dt = qt(h, []), ut = qt(c, []);
-    if (this.viewerConfig = o, this.amountX = dt.length || f, this.amountY = ut.length || p, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = g ? this.amountX - 1 : 0, this.activeImageY = g ? this.amountY - 1 : 0, this.bottomCircleOffset = E, this.autoplay = w, this.autoplayBehavior = y, this.playOnce = x, this.speed = m, this.autoplayReverse = g, this.fullscreen = C, this.magnifier = A > 1 ? Math.min(A, Hi) : 0, this.dragSpeed = Math.max($, Ri), this.stopAtEdges = G, this.ciParams = bt, this.apiVersion = l, this.pointerZoom = Y > 1 ? Math.min(Y, ye) : null, this.pointerZoomTrigger = D, this.keysReverse = O, this.info = ot, this.keys = v, this.innerBox = this.innerBox ?? is(this.container), ht && (this.container.style.aspectRatio = ht), this.initialIconShown = _, this.bottomCircle = nt, this.spinDirection = Te(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = rt, this.hotspots = gt, this.hotspotTrigger = tt, this.hide360Logo = J, this.logoSrc = N, this.inertia = et, this.pinchZoom = at, this.hints = U, this.hotspotTimelineOnClick = zt, this.responsiveOrientation = jt, lt === "dark" ? this.container.classList.add("ci360-theme-dark") : lt === "light" && this.container.classList.remove("ci360-theme-dark"), this.onReady = kt, this.onLoad = $t, this.onSpin = Gt, this.onAutoplayStart = Mt, this.onAutoplayStop = Pt, this.onFullscreenOpen = _t, this.onFullscreenClose = Ut, this.onZoomIn = K, this.onZoomOut = ct, this.onDragStart = Yt, this.onDragEnd = Xt, this.onError = yt, this.srcXConfig = {
+    } = o, bt = { ciToken: S, ciFilters: k, ciTransformation: X }, dt = qt(h, []), ut = qt(c, []);
+    if (this.viewerConfig = o, this.amountX = dt.length || f, this.amountY = ut.length || p, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = g ? this.amountX - 1 : 0, this.activeImageY = g ? this.amountY - 1 : 0, this.bottomCircleOffset = E, this.autoplay = w, this.autoplayBehavior = y, this.playOnce = x, this.speed = m, this.autoplayReverse = g, this.fullscreen = C, this.magnifier = A > 1 ? Math.min(A, Hi) : 0, this.dragSpeed = Math.max($, Ri), this.stopAtEdges = G, this.ciParams = bt, this.apiVersion = l, this.pointerZoom = Y > 1 ? Math.min(Y, ye) : null, this.pointerZoomTrigger = D, this.keysReverse = O, this.info = ot, this.keys = v, this.innerBox = this.innerBox ?? is(this.container), ht && (this.container.style.aspectRatio = ht), this.initialIconShown = _, this.bottomCircle = nt, this.spinDirection = ke(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = rt, this.hotspots = gt, this.hotspotTrigger = tt, this.hide360Logo = J, this.logoSrc = N, this.inertia = et, this.pinchZoom = at, this.hints = U, this.hotspotTimelineOnClick = zt, this.responsiveOrientation = jt, lt === "dark" ? this.container.classList.add("ci360-theme-dark") : lt === "light" && this.container.classList.remove("ci360-theme-dark"), this.onReady = Tt, this.onLoad = $t, this.onSpin = Gt, this.onAutoplayStart = Mt, this.onAutoplayStop = Pt, this.onFullscreenOpen = _t, this.onFullscreenClose = Ut, this.onZoomIn = K, this.onZoomOut = ct, this.onDragStart = Yt, this.onDragEnd = Xt, this.onError = yt, this.srcXConfig = {
       folder: n,
       filename: r,
       imageList: dt,
@@ -2900,12 +2901,12 @@ class Vt {
       amount: this.amountX,
       indexZeroBase: u,
       autoplayReverse: g,
-      orientation: k.X
+      orientation: T.X
     }, this.srcYConfig = {
       ...this.srcXConfig,
       filename: a,
       imageList: ut,
-      orientation: k.Y,
+      orientation: T.Y,
       amount: this.amountY
     }, s && this.removeEvents(), this.attachEvents(I, b, v), s) return;
     const wt = (this.fullscreenView ? document.body : this.container).offsetWidth, he = this.allowSpinX && !dt.length ? xt(this.srcXConfig, wt) : null, ce = this.allowSpinY && !ut.length ? xt(this.srcYConfig, wt) : null, de = (oi) => {
@@ -3024,4 +3025,4 @@ class cn {
 export {
   cn as default
 };
-//# sourceMappingURL=ci360-DnYjuNUM.mjs.map
+//# sourceMappingURL=ci360-BrkIJMCK.mjs.map
