@@ -116,6 +116,29 @@ npm publish
 git push && git push --tags
 ```
 
+### 4. Create GitHub Release
+
+After pushing the tag, create a GitHub release:
+
+```bash
+# Create release with release notes
+gh release create v4.x.x --title "v4.x.x" --notes "$(cat <<'EOF'
+## What's Changed
+
+- **feat:** Description of new features
+- **fix:** Description of bug fixes
+EOF
+)"
+
+# Or create release and open editor for notes
+gh release create v4.x.x --title "v4.x.x" --notes ""
+
+# Or generate notes automatically from commits
+gh release create v4.x.x --title "v4.x.x" --generate-notes
+```
+
+View releases at: https://github.com/scaleflex/js-cloudimage-360-view/releases
+
 ### Package Contents
 
 The npm package includes:
