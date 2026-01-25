@@ -188,27 +188,27 @@
 
       // Control functions
       function playViewer() {
-        const viewer = ci360.getViewById("controlled");
+        const viewer = ci360.getViewById("controlled-viewer");
         if (viewer) viewer.play();
       }
 
       function stopViewer() {
-        const viewer = ci360.getViewById("controlled");
+        const viewer = ci360.getViewById("controlled-viewer");
         if (viewer) viewer.stopAutoplay();
       }
 
       function moveLeft() {
-        const viewer = ci360.getViewById("controlled");
+        const viewer = ci360.getViewById("controlled-viewer");
         if (viewer) viewer.moveLeft(false, 5);
       }
 
       function moveRight() {
-        const viewer = ci360.getViewById("controlled");
+        const viewer = ci360.getViewById("controlled-viewer");
         if (viewer) viewer.moveRight(false, 5);
       }
 
       function goToFrame(frame) {
-        const viewer = ci360.getViewById("controlled");
+        const viewer = ci360.getViewById("controlled-viewer");
         if (viewer) viewer.animateToFrame(frame);
       }
     </script>
