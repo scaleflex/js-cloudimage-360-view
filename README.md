@@ -55,6 +55,7 @@
 - [Browser Support](#browser-support)
 - [Migration Guide (v3 → v4)](#migration-guide-v3--v4)
 - [Contributing](#contributing)
+- [Support](#support)
 - [License](#license)
 
 ---
@@ -1176,6 +1177,16 @@ npm run dev
   <img src="https://contrib.rocks/image?repo=Scaleflex/js-cloudimage-360-view" alt="Contributors">
 </a>
 </details>
+
+---
+
+## Support
+
+If this library helped your project, consider buying me a coffee!
+
+<a href="https://buymeacoffee.com/dzmitry.stramavus">
+  <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">
+</a>
 
 ---
 
