@@ -103,7 +103,14 @@ npm version minor
 npm version major
 ```
 
-### 3. Publish
+### 3. Update CodeSandbox examples
+
+After bumping the version, update the hardcoded version in the CodeSandbox examples:
+
+- `codesandbox/react/package.json` — `js-cloudimage-360-view` dependency version
+- `codesandbox/vanilla/index.html` — CDN script URL version and display version text
+
+### 4. Publish
 
 ```bash
 # Login to npm (if not already)
@@ -116,7 +123,7 @@ npm publish
 git push && git push --tags
 ```
 
-### 4. Create GitHub Release
+### 5. Create GitHub Release
 
 After pushing the tag, create a GitHub release:
 
