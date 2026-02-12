@@ -1192,7 +1192,7 @@ If this library helped your project, consider buying me a coffee!
 
 ## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License]([https://opensource.org/licenses/MIT](https://github.com/scaleflex/js-cloudimage-360-view/blob/master/LICENSE)).
 
 ---
 
