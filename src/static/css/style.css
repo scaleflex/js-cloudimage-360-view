@@ -63,7 +63,7 @@
 
   /* Hotspot timeline */
   --ci360-timeline-height: 6px;
-  --ci360-timeline-track-bg: rgba(0, 0, 0, 0.12);
+  --ci360-timeline-track-bg: rgba(255, 255, 255, 0.4);
   --ci360-timeline-dot-size: 18px;
   --ci360-timeline-dot-color: var(--ci360-hotspot-color);
   --ci360-timeline-dot-border: 2px solid #fff;
@@ -100,7 +100,7 @@
   --ci360-hints-color: #e0e0e0;
   --ci360-hints-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
   --ci360-circle-color: #b0b0b0;
-  --ci360-timeline-track-bg: rgba(255, 255, 255, 0.15);
+  --ci360-timeline-track-bg: rgba(255, 255, 255, 0.4);
   --ci360-timeline-dot-border: 2px solid rgba(255, 255, 255, 0.9);
   --ci360-timeline-indicator-color: #e0e0e0;
   --ci360-timeline-tooltip-bg: rgba(40, 40, 45, 0.95);

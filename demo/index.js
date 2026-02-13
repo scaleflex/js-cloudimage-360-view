@@ -1,6 +1,46 @@
 import './controllers.css';
 import CI360 from '../src';
 
+// ===== Scroll Reveal Animation =====
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.demo-reveal').forEach(el => revealObserver.observe(el));
+
+// ===== Nav Scroll Behavior =====
+const nav = document.getElementById('demo-nav');
+if (nav) {
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  // Active link highlighting
+  const navLinks = nav.querySelectorAll('.demo-nav-links a');
+  const sections = document.querySelectorAll('section[id]');
+
+  const updateActiveLink = () => {
+    const scrollPos = window.scrollY + 100;
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        const id = section.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  };
+
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+}
+
 import {
   EARBUDS_PLUGIN,
   GURKHA_SUV_HOTSPOTS_CONFIG,
@@ -499,24 +539,25 @@ instance.initAll();
 const programmaticViewer = instance.getViewById('programmatic-viewer');
 const frameDisplay = document.getElementById('frame-display');
 
-// Update frame display
+// Update frame display using rAF loop so it stays in sync during
+// autoplay, drag, and programmatic moves (onSpin only fires on drag)
+let lastDisplayedFrame = -1;
+
 function updateFrameDisplay() {
-  if (programmaticViewer) {
+  if (programmaticViewer && frameDisplay) {
     const current = programmaticViewer.activeImageX + 1;
     const total = programmaticViewer.amountX;
-    frameDisplay.textContent = `Frame: ${current} / ${total}`;
+
+    if (current !== lastDisplayedFrame) {
+      lastDisplayedFrame = current;
+      frameDisplay.textContent = `Frame: ${current} / ${total}`;
+    }
   }
+  requestAnimationFrame(updateFrameDisplay);
 }
 
-// Set up onSpin callback for the programmatic viewer to update display
 if (programmaticViewer) {
-  const originalOnSpin = programmaticViewer.onSpin;
-  programmaticViewer.onSpin = (data) => {
-    if (originalOnSpin) originalOnSpin(data);
-    updateFrameDisplay();
-  };
-  // Initial update
-  updateFrameDisplay();
+  requestAnimationFrame(updateFrameDisplay);
 }
 
 // Helper to hide icons on first interaction
