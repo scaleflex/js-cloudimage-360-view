@@ -513,6 +513,7 @@ body {
 .demo-viewer--hero {
   max-width: 940px;
   margin: 0 auto;
+  background: rgba(21, 91, 205, 0.1);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.06),
