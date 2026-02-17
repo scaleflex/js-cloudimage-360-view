@@ -624,3 +624,67 @@ document.getElementById('btn-frame-72')?.addEventListener('click', () => {
     setTimeout(updateFrameDisplay, 100);
   }
 });
+
+// ===== Also by Scaleflex — slide auto-rotation =====
+{
+  const slides = document.querySelectorAll('.demo-also-slide');
+  const dotsContainer = document.getElementById('also-dots');
+  if (slides.length > 0 && dotsContainer) {
+    let current = 0;
+    let animating = false;
+    let timer;
+
+    for (let i = 0; i < slides.length; i++) {
+      const dot = document.createElement('button');
+      dot.className = `demo-also-dot${i === 0 ? ' demo-also-dot--active' : ''}`;
+      dot.setAttribute('aria-label', `Slide ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(dot);
+    }
+
+    function clearAnimClasses(el) {
+      el.classList.remove(
+        'demo-also-slide--enter-right', 'demo-also-slide--enter-left',
+        'demo-also-slide--leave-left', 'demo-also-slide--leave-right',
+      );
+    }
+
+    function goTo(index) {
+      if (index === current || animating) return;
+      animating = true;
+      const forward = index > current || (current === slides.length - 1 && index === 0);
+      const prev = slides[current];
+      const next = slides[index];
+
+      clearAnimClasses(prev);
+      prev.classList.remove('demo-also-slide--active');
+      prev.classList.add(forward ? 'demo-also-slide--leave-left' : 'demo-also-slide--leave-right');
+
+      clearAnimClasses(next);
+      next.classList.add(forward ? 'demo-also-slide--enter-right' : 'demo-also-slide--enter-left');
+
+      next.addEventListener('animationend', function handler() {
+        next.removeEventListener('animationend', handler);
+        clearAnimClasses(prev);
+        clearAnimClasses(next);
+        next.classList.add('demo-also-slide--active');
+        animating = false;
+      });
+
+      current = index;
+      dotsContainer.querySelectorAll('.demo-also-dot').forEach((d, i) => {
+        d.classList.toggle('demo-also-dot--active', i === current);
+      });
+      resetTimer();
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        goTo((current + 1) % slides.length);
+      }, 5000);
+    }
+
+    resetTimer();
+  }
+}

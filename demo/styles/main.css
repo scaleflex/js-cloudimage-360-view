@@ -250,7 +250,6 @@ body {
   gap: 8px;
   font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--sf-accent);
   padding: 8px 20px;
@@ -302,7 +301,7 @@ body {
 .demo-subtitle {
   font-size: clamp(16px, 2vw, 19px);
   color: rgba(255, 255, 255, 0.55);
-  max-width: 560px;
+  max-width: 720px;
   margin: 0 auto 36px;
   line-height: 1.7;
 }
@@ -460,11 +459,30 @@ body {
   transform: translateY(0);
 }
 
+/* Sandboxes in light sections */
+.demo-section--alt .demo-hero-sandboxes-label {
+  color: var(--sf-text-secondary);
+}
+
+.demo-section--alt .demo-btn--chip {
+  background: #fff;
+  color: var(--sf-text-primary);
+  border-color: var(--sf-light-border);
+  backdrop-filter: none;
+}
+
+.demo-section--alt .demo-btn--chip:hover {
+  background: var(--sf-light-bg);
+  border-color: #cbd5e1;
+  color: var(--sf-text-primary);
+}
+
 .demo-hero-sandboxes {
   display: flex;
   align-items: center;
   gap: 10px;
   justify-content: center;
+  margin-top: 24px;
   margin-bottom: 36px;
 }
 
@@ -1158,6 +1176,94 @@ body {
   pointer-events: none;
 }
 
+/* Slider */
+.demo-also-slides {
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-also-slide {
+  display: none;
+}
+
+.demo-also-slide--active {
+  display: block;
+}
+
+.demo-also-slide--enter-right {
+  display: block;
+  animation: demo-also-slideInRight 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.demo-also-slide--enter-left {
+  display: block;
+  animation: demo-also-slideInLeft 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.demo-also-slide--leave-left {
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  animation: demo-also-slideOutLeft 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.demo-also-slide--leave-right {
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  animation: demo-also-slideOutRight 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes demo-also-slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes demo-also-slideOutLeft {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes demo-also-slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@keyframes demo-also-slideOutRight {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(100%); opacity: 0; }
+}
+
+/* Dot navigation */
+.demo-also-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.demo-also-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 300ms ease, transform 300ms ease;
+}
+
+.demo-also-dot:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.demo-also-dot--active {
+  background: var(--sf-primary-light);
+  transform: scale(1.25);
+}
+
 .demo-also-inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -1165,10 +1271,12 @@ body {
   align-items: center;
   gap: 60px;
   position: relative;
+  z-index: 1;
 }
 
 .demo-also-content {
   flex: 1;
+  min-width: 0;
 }
 
 .demo-also .demo-section-label {
@@ -1647,6 +1755,15 @@ body {
   background-color: var(--sf-primary);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .demo-also-slide--enter-right,
+  .demo-also-slide--enter-left,
+  .demo-also-slide--leave-left,
+  .demo-also-slide--leave-right {
+    animation: none;
+  }
+}
+
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 1200px) {
   .customize-grid {
@@ -1662,6 +1779,11 @@ body {
   .demo-also-inner {
     flex-direction: column;
     text-align: center;
+    gap: 32px;
+  }
+
+  .demo-also-content .demo-section-label {
+    justify-content: center;
   }
 
   .demo-also-desc {
@@ -1671,6 +1793,11 @@ body {
 
   .demo-also-actions {
     justify-content: center;
+  }
+
+  .demo-also-icon {
+    width: 130px;
+    height: 130px;
   }
 }
 
