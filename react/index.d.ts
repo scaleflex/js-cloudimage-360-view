@@ -43,11 +43,27 @@ export interface PopoverData {
 }
 
 /**
+ * Marker visual style
+ * - 'dot': Simple circular dot (default)
+ * - 'dot-label': Dot with adjacent text label pill
+ */
+export type MarkerStyle = 'dot' | 'dot-label';
+
+/**
+ * Marker theme for hotspot dots
+ * - 'default': Standard theme-aware markers
+ * - 'inverted': Markers blend with the background
+ * - 'brand': Uses brand accent color
+ */
+export type MarkerTheme = 'default' | 'inverted' | 'brand';
+
+/**
  * Hotspot configuration
  */
 export interface Hotspot {
   id: string;
   label?: string;
+  markerStyle?: MarkerStyle;
   orientation?: HotspotOrientation;
   containerSize?: [number, number];
   positions: Record<number, HotspotPosition>;
@@ -149,6 +165,8 @@ export interface CI360Config {
   imageInfo?: boolean;
   hints?: boolean | Hint[];
   theme?: Theme;
+  markerTheme?: MarkerTheme;
+  brandColor?: string;
   ciToken?: string | null;
   ciFilters?: string | null;
   ciTransformation?: string | null;
