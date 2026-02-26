@@ -29,6 +29,23 @@ Types of changes:
 
 ---
 
+## 4.4.0 - 2026-02-26
+
+### Added
+
+- Hotspot timeline overlay on image with popover template system
+- "Also by Scaleflex" slider with js-cloudimage-3d-view
+- Bento grid layout for demo showcases
+- Demo redesign with polished hero, playground section, and timeline track visibility
+
+### Fixed
+
+- Wrong id in demo page
+- MIT License link formatting in README
+- Dependabot security alerts by upgrading dev dependencies
+
+---
+
 ## 4.3.0 - 2026-01-23
 
 ### Added
