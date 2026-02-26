@@ -1,15 +1,15 @@
-import { jsx as de } from "react/jsx-runtime";
-import { useState as fe, useRef as I, useId as ye, useEffect as we, useCallback as ve, forwardRef as Ie, useMemo as Ce, useImperativeHandle as Re } from "react";
+import { jsx as fe } from "react/jsx-runtime";
+import { useState as ye, useRef as I, useId as we, useEffect as ve, useCallback as Ie, forwardRef as Ce, useMemo as he, useImperativeHandle as Re } from "react";
 let v = null;
-function he(p, t) {
-  const [y, d] = fe(!1), n = I(null), s = I(null), u = ye();
-  we(() => {
+function ge(p, t) {
+  const [y, d] = ye(!1), n = I(null), s = I(null), u = we();
+  ve(() => {
     if (typeof window > "u" || !p.current || t.autoInit === !1) return;
     let l = !0;
     const a = p.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-xUK7dmd6.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360--3KbDLtq.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
         const i = {
           ...t,
@@ -40,17 +40,18 @@ function he(p, t) {
     t.imageListY,
     t.amountX,
     t.amountY,
+    t.hotspots,
     t.theme,
     u
   ]);
-  const f = ve(() => n.current, []);
+  const f = Ie(() => n.current, []);
   return {
     viewer: n.current,
     isReady: y,
     getViewer: f
   };
 }
-const ge = (p, t) => {
+const Ve = (p, t) => {
   const {
     // Container props
     id: y,
@@ -68,8 +69,8 @@ const ge = (p, t) => {
     amountY: c,
     // Behavior
     draggable: C,
-    swipeable: R,
-    keys: h,
+    swipeable: h,
+    keys: R,
     keysReverse: g,
     autoplay: V,
     autoplayBehavior: L,
@@ -101,24 +102,25 @@ const ge = (p, t) => {
     lazyload: G,
     // Hotspots
     hotspots: J,
-    hotspotTimelineOnClick: K,
+    hotspotTrigger: K,
+    hotspotTimelineOnClick: Q,
     // Container
-    aspectRatio: Q,
+    aspectRatio: U,
     // Event callbacks
-    onReady: U,
-    onLoad: W,
-    onSpin: _,
-    onAutoplayStart: ee,
-    onAutoplayStop: te,
-    onFullscreenOpen: oe,
-    onFullscreenClose: re,
-    onZoomIn: ne,
-    onZoomOut: ae,
-    onDragStart: ie,
-    onDragEnd: se,
-    onError: le,
-    ...ce
-  } = p, ue = I(null), pe = Ce(
+    onReady: W,
+    onLoad: _,
+    onSpin: ee,
+    onAutoplayStart: te,
+    onAutoplayStop: oe,
+    onFullscreenOpen: re,
+    onFullscreenClose: ne,
+    onZoomIn: ae,
+    onZoomOut: ie,
+    onDragStart: se,
+    onDragEnd: le,
+    onError: ue,
+    ...pe
+  } = p, me = I(null), de = he(
     () => ({
       // Image source
       folder: s,
@@ -132,8 +134,8 @@ const ge = (p, t) => {
       amountY: c,
       // Behavior
       draggable: C,
-      swipeable: R,
-      keys: h,
+      swipeable: h,
+      keys: R,
       keysReverse: g,
       autoplay: V,
       autoplayBehavior: L,
@@ -165,22 +167,23 @@ const ge = (p, t) => {
       lazyload: G,
       // Hotspots
       hotspots: J,
-      hotspotTimelineOnClick: K,
+      hotspotTrigger: K,
+      hotspotTimelineOnClick: Q,
       // Container
-      aspectRatio: Q,
+      aspectRatio: U,
       // Event callbacks
-      onReady: U,
-      onLoad: W,
-      onSpin: _,
-      onAutoplayStart: ee,
-      onAutoplayStop: te,
-      onFullscreenOpen: oe,
-      onFullscreenClose: re,
-      onZoomIn: ne,
-      onZoomOut: ae,
-      onDragStart: ie,
-      onDragEnd: se,
-      onError: le
+      onReady: W,
+      onLoad: _,
+      onSpin: ee,
+      onAutoplayStart: te,
+      onAutoplayStop: oe,
+      onFullscreenOpen: re,
+      onFullscreenClose: ne,
+      onZoomIn: ae,
+      onZoomOut: ie,
+      onDragStart: se,
+      onDragEnd: le,
+      onError: ue
     }),
     [
       // Image source
@@ -195,8 +198,8 @@ const ge = (p, t) => {
       c,
       // Behavior
       C,
-      R,
       h,
+      R,
       g,
       V,
       L,
@@ -229,10 +232,10 @@ const ge = (p, t) => {
       // Hotspots
       J,
       K,
-      // Container
       Q,
-      // Event callbacks
+      // Container
       U,
+      // Event callbacks
       W,
       _,
       ee,
@@ -243,9 +246,10 @@ const ge = (p, t) => {
       ae,
       ie,
       se,
-      le
+      le,
+      ue
     ]
-  ), { getViewer: r } = he(ue, pe);
+  ), { getViewer: r } = ge(me, de);
   return Re(
     t,
     () => ({
@@ -282,28 +286,28 @@ const ge = (p, t) => {
         return (e = r()) == null ? void 0 : e.removeZoom();
       },
       goToFrame: (e, o) => {
-        var me;
-        return (me = r()) == null ? void 0 : me.animateToFrame(e, o);
+        var ce;
+        return (ce = r()) == null ? void 0 : ce.animateToFrame(e, o);
       },
       getViewer: () => r()
     }),
     [r]
-  ), /* @__PURE__ */ de(
+  ), /* @__PURE__ */ fe(
     "div",
     {
-      ref: ue,
+      ref: me,
       id: y,
       className: d,
       style: n,
-      ...ce
+      ...pe
     }
   );
-}, Ve = Ie(ge);
-Ve.displayName = "CI360Viewer";
+}, Le = Ce(Ve);
+Le.displayName = "CI360Viewer";
 export {
-  Ve as CI360Viewer,
-  Ve as CI360ViewerDefault,
-  he as useCI360,
-  he as useCI360Default
+  Le as CI360Viewer,
+  Le as CI360ViewerDefault,
+  ge as useCI360,
+  ge as useCI360Default
 };
 //# sourceMappingURL=index.js.map
