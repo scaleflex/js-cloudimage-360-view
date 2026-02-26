@@ -1183,9 +1183,10 @@ class CI360Viewer {
       this.innerBox.classList.remove('has-hotspot-timeline');
     }
 
-    // Remove theme class and clear container contents
+    // Remove theme and marker theme classes, clear container contents
     if (this.container) {
-      this.container.classList.remove('ci360-theme-dark');
+      this.container.classList.remove('ci360-theme-dark', 'ci360-hotspot-marker-inverted', 'ci360-hotspot-marker-brand');
+      this.container.style.removeProperty('--ci360-hotspot-brand-color');
       // Clear the container contents instead of replacing the element
       // This preserves React refs and other framework bindings
       this.container.innerHTML = '';
@@ -1760,6 +1761,8 @@ class CI360Viewer {
       pinchZoom,
       hints,
       theme,
+      markerTheme,
+      brandColor,
       hotspotTimelineOnClick = true,
       aspectRatio,
       // Event callbacks
@@ -1830,6 +1833,17 @@ class CI360Viewer {
       this.container.classList.add('ci360-theme-dark');
     } else if (theme === 'light') {
       this.container.classList.remove('ci360-theme-dark');
+    }
+
+    // Apply marker theme class
+    this.container.classList.remove('ci360-hotspot-marker-inverted', 'ci360-hotspot-marker-brand');
+    if (markerTheme === 'inverted') {
+      this.container.classList.add('ci360-hotspot-marker-inverted');
+    } else if (markerTheme === 'brand') {
+      this.container.classList.add('ci360-hotspot-marker-brand');
+      if (brandColor) {
+        this.container.style.setProperty('--ci360-hotspot-brand-color', brandColor);
+      }
     }
 
     // Event callbacks

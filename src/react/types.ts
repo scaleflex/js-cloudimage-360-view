@@ -49,6 +49,14 @@ export interface PopoverData {
 export type MarkerStyle = 'dot' | 'dot-label';
 
 /**
+ * Marker theme for hotspot dots
+ * - 'default': Standard theme-aware markers
+ * - 'inverted': Markers blend with the background
+ * - 'brand': Uses brand accent color
+ */
+export type MarkerTheme = 'default' | 'inverted' | 'brand';
+
+/**
  * Hotspot configuration
  */
 export interface Hotspot {
@@ -161,6 +169,8 @@ export interface CI360Config {
   imageInfo?: boolean;
   hints?: boolean | Hint[];
   theme?: Theme;
+  markerTheme?: MarkerTheme;
+  brandColor?: string;
 
   // Cloudimage CDN
   ciToken?: string | null;

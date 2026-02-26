@@ -12,7 +12,7 @@ export const findHotspotsForFrame = (hotspots, currentFrame, orientation) => {
 export const createHotspotElement = (id, label, markerStyle) => {
   const hotspotElement = document.createElement('button');
   hotspotElement.id = id;
-  hotspotElement.className = 'cloudimage-360-hotspot';
+  hotspotElement.className = 'cloudimage-360-hotspot cloudimage-360-hotspot--pulse';
   hotspotElement.dataset.hotspotId = id;
   hotspotElement.setAttribute('type', 'button');
   hotspotElement.setAttribute('aria-label', label || `Hotspot ${id}`);

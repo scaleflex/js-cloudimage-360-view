@@ -44,6 +44,8 @@ const DEFAULTS_VALUES = {
   pinchZoom: true,
   hints: true,
   theme: null,
+  markerTheme: null,
+  brandColor: null,
   hotspotTimelineOnClick: true,
   aspectRatio: null,
   // Event callbacks
@@ -103,6 +105,8 @@ const getConfigFromImage = (image) => ({
   pinchZoom: isTrue(image, 'pinch-zoom', DEFAULTS_VALUES.pinchZoom),
   hints: !isFalse(image, 'hints'),
   theme: getAttr(image, 'theme', DEFAULTS_VALUES.theme),
+  markerTheme: getAttr(image, 'marker-theme', DEFAULTS_VALUES.markerTheme),
+  brandColor: getAttr(image, 'brand-color', DEFAULTS_VALUES.brandColor),
   hotspotTrigger: getAttr(image, 'hotspot-trigger', DEFAULTS_VALUES.hotspotTrigger),
   hotspotTimelineOnClick: !isFalse(image, 'hotspot-timeline-on-click'),
   aspectRatio: getAttr(image, 'aspect-ratio', DEFAULTS_VALUES.aspectRatio),
@@ -198,6 +202,8 @@ const adaptConfig = (config) => {
     pinchZoom: config.pinchZoom ?? DEFAULTS_VALUES.pinchZoom,
     hints: config.hints ?? DEFAULTS_VALUES.hints,
     theme: config.theme || DEFAULTS_VALUES.theme,
+    markerTheme: config.markerTheme || DEFAULTS_VALUES.markerTheme,
+    brandColor: config.brandColor || DEFAULTS_VALUES.brandColor,
     hotspotTimelineOnClick: config.hotspotTimelineOnClick ?? DEFAULTS_VALUES.hotspotTimelineOnClick,
     aspectRatio: config.aspectRatio || DEFAULTS_VALUES.aspectRatio,
     // Event callbacks

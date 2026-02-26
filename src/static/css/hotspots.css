@@ -11,21 +11,20 @@
   transition: opacity 0.2s ease-in-out;
 }
 
+/* ---- Base hotspot dot ---- */
+
 .cloudimage-360-hotspot {
   display: inline-block;
   position: absolute;
   inset: 0;
   transform: translate(-50%, -50%);
-  background: var(--ci360-hotspot-color);
-  border: var(--ci360-hotspot-border);
+  background: var(--ci360-hotspot-marker-bg);
+  border: var(--ci360-hotspot-marker-border);
   border-radius: 50%;
-  height: var(--ci360-hotspot-size);
-  width: var(--ci360-hotspot-size);
-  box-shadow:
-    0 0 0 0 rgba(0, 170, 255, 0.6),
-    0 2px 6px rgba(0, 0, 0, 0.2);
+  height: var(--ci360-hotspot-marker-size);
+  width: var(--ci360-hotspot-marker-size);
+  box-shadow: var(--ci360-hotspot-marker-shadow);
   opacity: 0;
-  animation: pulse 2s infinite;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -39,106 +38,116 @@
 .cloudimage-360-hotspot:focus-visible {
   outline: 2px solid var(--ci360-focus-color, #0066cc);
   outline-offset: 2px;
-  animation: none;
 }
 
 .cloudimage-360-hotspot.visible {
   opacity: 1;
 }
 
-@keyframes pulse {
+/* Pulse needs overflow visible so the ::before ring isn't clipped */
+.cloudimage-360-hotspot--pulse {
+  overflow: visible;
+}
+
+/* ---- ::before pulse ring (background + scale + opacity) ---- */
+
+.cloudimage-360-hotspot--pulse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--ci360-hotspot-pulse-size);
+  height: var(--ci360-hotspot-pulse-size);
+  border-radius: 50%;
+  background: var(--ci360-hotspot-pulse-color);
+  transform: translate(-50%, -50%) scale(1);
+  animation: ci360-pulse-ring var(--ci360-hotspot-pulse-duration) ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ci360-pulse-ring {
   0% {
-    transform: scale(1);
-    box-shadow:
-      0 0 0 0 rgba(0, 170, 255, 0.6),
-      0 0 0 10px rgba(0, 170, 255, 0.4),
-      0 0 0 20px rgba(0, 170, 255, 0.2);
-  }
-  50% {
-    transform: scale(1.1);
-    box-shadow:
-      0 0 0 10px rgba(0, 170, 255, 0),
-      0 0 0 20px rgba(0, 170, 255, 0.1),
-      0 0 0 30px rgba(0, 170, 255, 0);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
   100% {
-    transform: scale(1);
-    box-shadow:
-      0 0 0 0 rgba(0, 170, 255, 0),
-      0 0 0 10px rgba(0, 170, 255, 0),
-      0 0 0 20px rgba(0, 170, 255, 0);
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
   }
+}
+
+/* ---- Breathe animation (scale 1 → 1.15 → 1) ---- */
+
+.cloudimage-360-hotspot--pulse {
+  animation: ci360-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes ci360-breathe {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+}
+
+/* Stop animations on hover/focus so they don't fight the transform */
+.cloudimage-360-hotspot--pulse:hover,
+.cloudimage-360-hotspot--pulse:focus-visible {
+  animation: none;
 }
 
 /* ---- Dot-label marker style ---- */
 
 .cloudimage-360-hotspot--dot-label {
-  overflow: visible;
-  /* Disable scale animation — the ::before ring provides the pulse effect instead */
+  /* Disable breathe — the ::before ring provides pulse effect instead */
   animation: none;
 }
 
-/* Pulse ring via pseudo-element so the label is not affected by scale transforms */
-.cloudimage-360-hotspot--dot-label::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  animation: pulse-ring 2s infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    box-shadow:
-      0 0 0 0 rgba(0, 170, 255, 0.6),
-      0 0 0 10px rgba(0, 170, 255, 0.4),
-      0 0 0 20px rgba(0, 170, 255, 0.2);
-  }
-  50% {
-    box-shadow:
-      0 0 0 10px rgba(0, 170, 255, 0),
-      0 0 0 20px rgba(0, 170, 255, 0.1),
-      0 0 0 30px rgba(0, 170, 255, 0);
-  }
-  100% {
-    box-shadow:
-      0 0 0 0 rgba(0, 170, 255, 0),
-      0 0 0 10px rgba(0, 170, 255, 0),
-      0 0 0 20px rgba(0, 170, 255, 0);
-  }
-}
+/* Dot-label keeps ::before pulse via the --pulse class (inherited) */
 
 .cloudimage-360-hotspot-label {
   position: absolute;
-  left: calc(50% + var(--ci360-hotspot-size) / 2 + 4px);
+  left: calc(50% + var(--ci360-hotspot-marker-size) / 2 + 4px);
   top: 50%;
   transform: translateY(-50%);
   padding: 3px 10px;
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
-  color: var(--ci360-hotspot-label-color, #ffffff);
-  background: var(--ci360-hotspot-label-bg, var(--ci360-hotspot-color));
-  border: var(--ci360-hotspot-border);
+  color: var(--ci360-hotspot-marker-color);
+  background: var(--ci360-hotspot-marker-bg);
+  border: var(--ci360-hotspot-marker-border);
   border-radius: 100px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--ci360-hotspot-marker-shadow);
   pointer-events: none;
 }
+
+/* ---- Hover states ---- */
 
 /* No scale on hover for dot-label — only enhance the dot shadow */
 .cloudimage-360-hotspot--dot-label:hover {
   transform: translate(-50%, -50%);
-  box-shadow:
-    0 0 0 5px rgba(0, 170, 255, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .cloudimage-360-hotspot:hover {
-  transform: scale(1.2);
-  box-shadow:
-    0 0 0 5px rgba(0, 170, 255, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%) scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cloudimage-360-hotspot--pulse {
+    animation: none;
+  }
+  .cloudimage-360-hotspot--pulse::before {
+    animation: none;
+  }
+}
+
+/* ---- Popper / Tooltip ---- */
 
 .cloudimage-360-popper {
   background: var(--ci360-popper-bg);

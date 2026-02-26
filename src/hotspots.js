@@ -209,16 +209,18 @@ class Hotspot {
           this.shouldHidePopper = true;
           this.checkAndHidePopper();
         });
-      }
 
-      // Always support focus for accessibility
-      hotspotElement.addEventListener('focus', () =>
-        this.showPopper({ hotspotElement, content, id, keepOpen })
-      );
-      hotspotElement.addEventListener('blur', () => {
-        this.shouldHidePopper = true;
-        this.checkAndHidePopper();
-      });
+        // Support focus for accessibility (hover mode only — in click mode
+        // the focus event fires before onclick, which causes the toggle logic
+        // to immediately close the popper that focus just opened).
+        hotspotElement.addEventListener('focus', () =>
+          this.showPopper({ hotspotElement, content, id, keepOpen })
+        );
+        hotspotElement.addEventListener('blur', () => {
+          this.shouldHidePopper = true;
+          this.checkAndHidePopper();
+        });
+      }
     }
 
     this.hotspotsContainer.appendChild(hotspotElement);
