@@ -142,7 +142,7 @@ class CI360Viewer {
     const target = event.target;
     if (target && target.closest) {
       const isInteractiveElement = target.closest('.cloudimage-360-button') ||
-        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot-timeline') ||
         target.closest('.cloudimage-360-hotspot');
       if (isInteractiveElement) return;
     }
@@ -323,7 +323,7 @@ class CI360Viewer {
     const target = event.target;
     if (target && target.closest) {
       const isInteractiveElement = target.closest('.cloudimage-360-button') ||
-        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot-timeline') ||
         target.closest('.cloudimage-360-hotspot');
       if (isInteractiveElement) return;
     }
@@ -358,7 +358,7 @@ class CI360Viewer {
     const target = event.target;
     if (target && target.closest) {
       const isInteractiveElement = target.closest('.cloudimage-360-button') ||
-        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot-timeline') ||
         target.closest('.cloudimage-360-hotspot');
       if (isInteractiveElement) return;
     }
@@ -507,7 +507,7 @@ class CI360Viewer {
     const target = event.target;
     if (target && target.closest) {
       const isInteractiveElement = target.closest('.cloudimage-360-button') ||
-        target.closest('.cloudimage-360-hotspot-timeline-dot') ||
+        target.closest('.cloudimage-360-hotspot-timeline') ||
         target.closest('.cloudimage-360-hotspot');
       if (isInteractiveElement) return;
     }
@@ -931,6 +931,8 @@ class CI360Viewer {
       this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio, {
         trigger: this.hotspotTrigger,
       });
+      // Show dots for the initial frame immediately
+      this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
       this.addHotspotTimeline();
       // Show timeline by default (unless autoplay is active - it will be hidden below)
       this.showHotspotTimeline();
@@ -1177,6 +1179,9 @@ class CI360Viewer {
       this.hotspotTimeline = null;
       this.hotspotTimelineIndicator = null;
     }
+    if (this.innerBox) {
+      this.innerBox.classList.remove('has-hotspot-timeline');
+    }
 
     // Remove theme class and clear container contents
     if (this.container) {
@@ -1393,12 +1398,13 @@ class CI360Viewer {
   addHotspotTimeline() {
     if (!this.hotspots || this.hotspotTimeline) return;
 
-    // Append to main container (not innerBox) so it appears below the image
-    const timelineData = createHotspotTimeline(this.container, this.amountX, this.hotspots);
+    // Append to innerBox so it overlays the bottom of the image
+    const timelineData = createHotspotTimeline(this.innerBox, this.amountX, this.hotspots);
     if (!timelineData) return;
 
     this.hotspotTimeline = timelineData.element;
     this.hotspotTimelineIndicator = timelineData.indicator;
+    this.innerBox.classList.add('has-hotspot-timeline');
 
     // Add click handlers to dots
     const dots = this.hotspotTimeline.querySelectorAll('.cloudimage-360-hotspot-timeline-dot');

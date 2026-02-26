@@ -28,6 +28,20 @@ export interface HotspotPosition {
 }
 
 /**
+ * Structured popover data for the built-in product-card template.
+ * Priority: content (raw HTML) > data (built-in template) > nothing.
+ */
+export interface PopoverData {
+  title?: string;
+  description?: string;
+  price?: string;
+  originalPrice?: string;
+  image?: string;
+  url?: string;
+  ctaText?: string;
+}
+
+/**
  * Hotspot configuration
  */
 export interface Hotspot {
@@ -37,6 +51,7 @@ export interface Hotspot {
   containerSize?: [number, number];
   positions: Record<number, HotspotPosition>;
   content?: string;
+  data?: PopoverData;
   className?: string;
 }
 
@@ -149,6 +164,7 @@ export interface CI360Config {
 
   // Hotspots
   hotspots?: Hotspot[] | null;
+  hotspotTrigger?: 'hover' | 'click';
   hotspotTimelineOnClick?: boolean;
 
   // Container

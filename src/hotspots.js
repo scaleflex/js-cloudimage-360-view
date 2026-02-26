@@ -4,9 +4,10 @@ import {
   calculateHotspotPositions,
   createHotspotElement,
   createPopperElement,
-  createPopperModifiers,
+  createPopperOptions,
   findHotspotsForFrame,
 } from './utils/hotspots';
+import { renderPopoverContent } from './utils/popover-template';
 import { createPopper } from '@popperjs/core';
 
 class Hotspot {
@@ -73,10 +74,7 @@ class Hotspot {
       this.hidePopper();
     }
 
-    const popperOptions = {
-      placement: 'top',
-      modifiers: createPopperModifiers(this.container),
-    };
+    const popperOptions = createPopperOptions(this.container);
 
     this.popper = createPopperElement(content, id);
     this.popper.setAttribute('data-show', '');
@@ -174,7 +172,8 @@ class Hotspot {
   }
 
   createHotspot(hotspot) {
-    const { id, content, keepOpen, onClick, label } = hotspot;
+    const { id, keepOpen, onClick, label } = hotspot;
+    const content = renderPopoverContent(hotspot);
     const hotspotElement = createHotspotElement(id, label);
 
     if (onClick || (content && this.trigger === 'click')) {
@@ -258,7 +257,10 @@ class Hotspot {
    */
   showHotspotById(hotspotId) {
     const hotspotConfig = this.hotspotsConfig.find((h) => h.id === hotspotId);
-    if (!hotspotConfig || !hotspotConfig.content) return;
+    if (!hotspotConfig) return;
+
+    const content = renderPopoverContent(hotspotConfig);
+    if (!content) return;
 
     const hotspotElement = this.hotspotsContainer.querySelector(`[data-hotspot-id="${hotspotId}"]`);
     if (!hotspotElement) return;
@@ -268,7 +270,7 @@ class Hotspot {
 
     this.showPopper({
       hotspotElement,
-      content: hotspotConfig.content,
+      content,
       id: hotspotId,
       keepOpen: hotspotConfig.keepOpen,
     });

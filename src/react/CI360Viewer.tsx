@@ -119,6 +119,7 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
 
     // Hotspots
     hotspots,
+    hotspotTrigger,
     hotspotTimelineOnClick,
 
     // Container
@@ -196,6 +197,7 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
 
       // Hotspots
       hotspots,
+      hotspotTrigger,
       hotspotTimelineOnClick,
 
       // Container
@@ -266,6 +268,7 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
 
       // Hotspots
       hotspots,
+      hotspotTrigger,
       hotspotTimelineOnClick,
 
       // Container

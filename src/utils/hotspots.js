@@ -55,20 +55,30 @@ export const fillEmptyPositions = (positions) => {
   return updatedPositions;
 };
 
-export const createPopperModifiers = (container) => [
-  {
-    name: 'offset',
-    options: {
-      offset: [0, 10],
+export const createPopperOptions = (container) => ({
+  placement: 'top',
+  modifiers: [
+    {
+      name: 'offset',
+      options: {
+        offset: [0, 10],
+      },
     },
-  },
-  {
-    name: 'preventOverflow',
-    options: {
-      boundary: container,
+    {
+      name: 'preventOverflow',
+      options: {
+        boundary: container,
+      },
     },
-  },
-];
+    {
+      name: 'flip',
+      options: {
+        boundary: container,
+        fallbackPlacements: ['bottom', 'right', 'left'],
+      },
+    },
+  ],
+});
 
 export const createPopperElement = (content, id) => {
   const popper = document.createElement('div');

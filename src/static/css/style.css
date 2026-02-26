@@ -45,11 +45,28 @@
   --ci360-hotspot-border: 2px solid #fff;
   --ci360-hotspot-size: 18px;
 
-  /* Popper/Tooltip */
-  --ci360-popper-bg: rgba(255, 255, 255, 0.95);
-  --ci360-popper-color: #333;
-  --ci360-popper-shadow: 0px 4px 16px rgba(0, 0, 0, 0.15);
-  --ci360-popper-border-radius: 8px;
+  /* Popper/Tooltip — matches js-cloudimage-hotspot popover design */
+  --ci360-popper-bg: #ffffff;
+  --ci360-popper-color: #1a1a1a;
+  --ci360-popper-border: 1px solid rgba(0, 0, 0, 0.1);
+  --ci360-popper-border-radius: 12px;
+  --ci360-popper-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --ci360-popper-padding: 16px;
+  --ci360-popper-max-width: 320px;
+  --ci360-popper-font-size: 14px;
+  --ci360-popper-line-height: 1.5;
+  --ci360-popper-title-font-size: 16px;
+  --ci360-popper-title-font-weight: 600;
+  --ci360-popper-title-color: #1a1a1a;
+  --ci360-popper-price-color: #2d8c3c;
+  --ci360-popper-price-font-size: 18px;
+  --ci360-popper-price-font-weight: 700;
+  --ci360-popper-original-price-color: #999999;
+  --ci360-popper-description-color: #666666;
+  --ci360-popper-cta-bg: #0058a3;
+  --ci360-popper-cta-color: #fff;
+  --ci360-popper-cta-border-radius: 8px;
+  --ci360-popper-cta-padding: 8px 16px;
 
   /* Hints overlay */
   --ci360-hints-bg: rgba(255, 255, 255, 0.9);
@@ -93,9 +110,13 @@
   --ci360-overlay-bg: rgba(26, 26, 31, 1);
   --ci360-magnifier-border: 2px solid rgba(255, 255, 255, 0.2);
   --ci360-magnifier-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-  --ci360-popper-bg: rgba(40, 40, 45, 0.95);
-  --ci360-popper-color: #e0e0e0;
-  --ci360-popper-shadow: 0px 4px 16px rgba(0, 0, 0, 0.4);
+  --ci360-popper-bg: #1a1a1a;
+  --ci360-popper-color: #f0f0f0;
+  --ci360-popper-border: 1px solid rgba(255, 255, 255, 0.1);
+  --ci360-popper-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --ci360-popper-title-color: #f0f0f0;
+  --ci360-popper-description-color: #aaaaaa;
+  --ci360-popper-original-price-color: #777777;
   --ci360-hints-bg: rgba(40, 40, 45, 0.9);
   --ci360-hints-color: #e0e0e0;
   --ci360-hints-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
@@ -432,6 +453,11 @@
   }
 }
 
+/* Push hints above the timeline when both are present */
+.cloudimage-360-inner-box.has-hotspot-timeline .cloudimage-360-hints-overlay {
+  padding-bottom: 56px;
+}
+
 /* ============================================
    Magnifier Glass
    ============================================ */
@@ -461,13 +487,22 @@
    ============================================ */
 
 .cloudimage-360-hotspot-timeline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  max-width: 500px;
-  margin: 16px auto 8px;
-  padding: 12px 20px;
+  padding: 20px;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+  z-index: 30;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.2) 60%,
+    transparent 100%
+  );
 }
 
 .cloudimage-360-hotspot-timeline.visible {
@@ -478,6 +513,8 @@
 .cloudimage-360-hotspot-timeline-track {
   position: relative;
   width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
   height: var(--ci360-timeline-height);
   background: var(--ci360-timeline-track-bg);
   border-radius: calc(var(--ci360-timeline-height) / 2);
@@ -567,20 +604,12 @@
 /* Mobile adjustments for timeline */
 @media (max-width: 480px) {
   .cloudimage-360-hotspot-timeline {
-    max-width: none;
-    padding: 10px 16px;
-    margin: 12px auto 6px;
+    padding: 14px 16px;
   }
 }
 
 /* Fullscreen modal timeline positioning */
 .cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: none;
-  margin: 0;
   padding: 24px 40px 20px;
   background: linear-gradient(
     to top,
@@ -588,13 +617,10 @@
     rgba(0, 0, 0, 0.3) 60%,
     transparent 100%
   );
-  /* Must be above inner-box to receive clicks */
-  z-index: 200;
 }
 
 .cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-track {
   max-width: 600px;
-  margin: 0 auto;
   /* Make track visible on dark gradient background */
   background: rgba(255, 255, 255, 0.3);
 }
@@ -615,7 +641,7 @@
   bottom: calc(100% + 20px);
 }
 
-/* Add padding to hints overlay in fullscreen to not overlap timeline */
-.cloudimage-360-fullscreen-modal .cloudimage-360-hints-overlay {
-  padding-bottom: 42px;
+/* Push hints above the timeline in fullscreen */
+.cloudimage-360-fullscreen-modal .cloudimage-360-inner-box.has-hotspot-timeline .cloudimage-360-hints-overlay {
+  padding-bottom: 64px;
 }

@@ -31,6 +31,7 @@ export type {
 
   // Hotspot types
   Hotspot,
+  PopoverData,
   HotspotOrientation,
   HotspotPosition,
   Hint,

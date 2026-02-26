@@ -103,12 +103,12 @@ const createTimelineDot = (hotspotId, frame, amountX, label) => {
 
 /**
  * Creates the hotspot timeline element with track, indicator, and dots
- * @param {HTMLElement} container - The main container to append to
+ * @param {HTMLElement} innerBox - The inner box to append to (overlays the image)
  * @param {number} amountX - Total number of frames
  * @param {Array} hotspotsConfig - Array of hotspot configurations
  * @returns {Object|null} Object containing element and indicator, or null if no hotspots
  */
-export const createHotspotTimeline = (container, amountX, hotspotsConfig) => {
+export const createHotspotTimeline = (innerBox, amountX, hotspotsConfig) => {
   const hotspotFrames = collectHotspotMiddleFrames(hotspotsConfig);
 
   // Don't create timeline if no hotspots have positions
@@ -136,7 +136,7 @@ export const createHotspotTimeline = (container, amountX, hotspotsConfig) => {
 
   track.appendChild(indicator);
   timeline.appendChild(track);
-  container.appendChild(timeline);
+  innerBox.appendChild(timeline);
 
   return {
     element: timeline,

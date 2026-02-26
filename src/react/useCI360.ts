@@ -107,6 +107,7 @@ export function useCI360(
     config.imageListY,
     config.amountX,
     config.amountY,
+    config.hotspots,
     config.theme,
     uniqueId,
   ]);
