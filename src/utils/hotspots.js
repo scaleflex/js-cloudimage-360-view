@@ -1,7 +1,7 @@
 import { ORIENTATIONS } from './constants';
 import { sanitizeHtml } from './sanitize-html';
 
-const adaptOrientation = (orientation) => (orientation === 'x' ? ORIENTATIONS.X : ORIENTATIONS.Y);
+const adaptOrientation = (orientation) => (orientation === 'y' ? ORIENTATIONS.Y : ORIENTATIONS.X);
 
 export const findHotspotsForFrame = (hotspots, currentFrame, orientation) => {
   return hotspots.filter(

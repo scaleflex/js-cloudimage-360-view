@@ -36,6 +36,8 @@ class Hotspot {
     this.initialContainerSize = containerSize || [container.offsetWidth, container.offsetHeight];
 
     this.initHotspots();
+    // Scale positions immediately for the current container size before ResizeObserver fires
+    this.updateHotspotsForResize(container.offsetWidth, container.offsetHeight);
     this.observeContainerResize();
   }
 
