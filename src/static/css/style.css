@@ -40,10 +40,18 @@
   /* Transition overlay */
   --ci360-overlay-bg: rgba(255, 255, 255, 1);
 
-  /* Hotspots */
-  --ci360-hotspot-color: #00aaff;
-  --ci360-hotspot-border: 2px solid #fff;
-  --ci360-hotspot-size: 18px;
+  /* Hotspot markers */
+  --ci360-hotspot-marker-size: 24px;
+  --ci360-hotspot-marker-bg: rgba(255, 255, 255, 0.8);
+  --ci360-hotspot-marker-color: #1a1a1a;
+  --ci360-hotspot-marker-border-width: 2px;
+  --ci360-hotspot-marker-border-color: rgba(255, 255, 255, 0.4);
+  --ci360-hotspot-marker-border: var(--ci360-hotspot-marker-border-width) solid var(--ci360-hotspot-marker-border-color);
+  --ci360-hotspot-marker-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --ci360-hotspot-pulse-color: rgba(0, 0, 0, 0.15);
+  --ci360-hotspot-pulse-size: 40px;
+  --ci360-hotspot-pulse-duration: 1.8s;
+  --ci360-hotspot-brand-color: #00aaff;
 
   /* Popper/Tooltip — matches js-cloudimage-hotspot popover design */
   --ci360-popper-bg: #ffffff;
@@ -82,10 +90,11 @@
   --ci360-timeline-height: 6px;
   --ci360-timeline-track-bg: rgba(255, 255, 255, 0.4);
   --ci360-timeline-dot-size: 18px;
-  --ci360-timeline-dot-color: var(--ci360-hotspot-color);
+  --ci360-timeline-dot-color: var(--ci360-hotspot-marker-bg);
+  --ci360-timeline-dot-active-color: var(--ci360-hotspot-brand-color);
   --ci360-timeline-dot-border: 2px solid #fff;
   --ci360-timeline-indicator-size: 12px;
-  --ci360-timeline-indicator-color: #333333;
+  --ci360-timeline-indicator-color: var(--ci360-hotspot-brand-color);
   --ci360-timeline-tooltip-bg: rgba(255, 255, 255, 0.95);
   --ci360-timeline-tooltip-color: #333333;
 }
@@ -123,12 +132,42 @@
   --ci360-circle-color: #b0b0b0;
   --ci360-timeline-track-bg: rgba(255, 255, 255, 0.4);
   --ci360-timeline-dot-border: 2px solid rgba(255, 255, 255, 0.9);
-  --ci360-timeline-indicator-color: #e0e0e0;
+  --ci360-timeline-indicator-color: var(--ci360-hotspot-brand-color);
   --ci360-timeline-tooltip-bg: rgba(40, 40, 45, 0.95);
   --ci360-timeline-tooltip-color: #e0e0e0;
   --ci360-loader-bg: rgba(40, 40, 45, 0.9);
   --ci360-loader-color: #e0e0e0;
   --ci360-loader-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --ci360-hotspot-marker-bg: rgba(0, 0, 0, 0.6);
+  --ci360-hotspot-marker-color: #ffffff;
+  --ci360-hotspot-marker-border-color: rgba(255, 255, 255, 0.6);
+  --ci360-hotspot-pulse-color: rgba(255, 255, 255, 0.15);
+  --ci360-timeline-dot-color: var(--ci360-hotspot-marker-bg);
+}
+
+/* Inverted Marker Theme — dots blend with the background */
+.ci360-hotspot-marker-inverted {
+  --ci360-hotspot-marker-bg: rgba(0, 0, 0, 0.6);
+  --ci360-hotspot-marker-color: #ffffff;
+  --ci360-hotspot-marker-border-color: rgba(255, 255, 255, 0.8);
+  --ci360-hotspot-marker-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --ci360-hotspot-pulse-color: rgba(0, 0, 0, 0.2);
+}
+
+.ci360-theme-dark.ci360-hotspot-marker-inverted {
+  --ci360-hotspot-marker-bg: rgba(255, 255, 255, 0.8);
+  --ci360-hotspot-marker-color: #1a1a1a;
+  --ci360-hotspot-marker-border-color: rgba(255, 255, 255, 0.4);
+  --ci360-hotspot-pulse-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Brand Marker Theme — uses brand accent color */
+.ci360-hotspot-marker-brand {
+  --ci360-hotspot-marker-bg: var(--ci360-hotspot-brand-color);
+  --ci360-hotspot-marker-color: #ffffff;
+  --ci360-hotspot-marker-border-color: rgba(255, 255, 255, 0.9);
+  --ci360-hotspot-marker-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --ci360-hotspot-pulse-color: var(--ci360-hotspot-brand-color);
 }
 
 /* ============================================
@@ -550,8 +589,9 @@
   cursor: pointer;
   transition:
     transform 0.15s ease,
-    box-shadow 0.15s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   /* Reset button styles */
   padding: 0;
   font: inherit;
@@ -559,8 +599,13 @@
 }
 
 .cloudimage-360-hotspot-timeline-dot:hover {
-  transform: translate(-50%, -50%) scale(1.25);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cloudimage-360-hotspot-timeline-dot.active {
+  background: var(--ci360-timeline-dot-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 .cloudimage-360-hotspot-timeline-dot:focus-visible {
@@ -631,13 +676,14 @@
 
 /* Adjust indicator and dot colors for better visibility on dark background */
 .cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-indicator {
-  background: #ffffff;
+  background: var(--ci360-hotspot-brand-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-dot {
+  background: var(--ci360-timeline-dot-color);
   border-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Position tooltips higher in fullscreen to not overlay timeline */
