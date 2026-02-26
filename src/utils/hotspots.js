@@ -9,7 +9,7 @@ export const findHotspotsForFrame = (hotspots, currentFrame, orientation) => {
   );
 };
 
-export const createHotspotElement = (id, label) => {
+export const createHotspotElement = (id, label, markerStyle) => {
   const hotspotElement = document.createElement('button');
   hotspotElement.id = id;
   hotspotElement.className = 'cloudimage-360-hotspot';
@@ -19,6 +19,14 @@ export const createHotspotElement = (id, label) => {
   hotspotElement.setAttribute('aria-haspopup', 'true');
   hotspotElement.setAttribute('aria-expanded', 'false');
   // aria-describedby is added dynamically when popper is shown
+
+  if (markerStyle === 'dot-label' && label) {
+    hotspotElement.classList.add('cloudimage-360-hotspot--dot-label');
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'cloudimage-360-hotspot-label';
+    labelSpan.textContent = label;
+    hotspotElement.appendChild(labelSpan);
+  }
 
   return hotspotElement;
 };

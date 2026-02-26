@@ -174,9 +174,9 @@ class Hotspot {
   }
 
   createHotspot(hotspot) {
-    const { id, keepOpen, onClick, label } = hotspot;
+    const { id, keepOpen, onClick, label, markerStyle } = hotspot;
     const content = renderPopoverContent(hotspot);
-    const hotspotElement = createHotspotElement(id, label);
+    const hotspotElement = createHotspotElement(id, label, markerStyle);
 
     if (onClick || (content && this.trigger === 'click')) {
       hotspotElement.style.cursor = 'pointer';

@@ -40,10 +40,11 @@ const GURKHA_SUV_HOTSPOTS_CONFIG = [
       </div>
     `,
   },
-  // Modal Style 2: Title and description - clean card
+  // Modal Style 2: Title and description - clean card (dot-label marker)
   {
     id: 'hotspot-2',
     label: 'All-Terrain Wheels',
+    markerStyle: 'dot-label',
     orientation: 'x',
     containerSize: [1220, 680],
     positions: {

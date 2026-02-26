@@ -42,11 +42,19 @@ export interface PopoverData {
 }
 
 /**
+ * Marker visual style
+ * - 'dot': Simple circular dot (default)
+ * - 'dot-label': Dot with adjacent text label pill
+ */
+export type MarkerStyle = 'dot' | 'dot-label';
+
+/**
  * Hotspot configuration
  */
 export interface Hotspot {
   id: string;
   label?: string;
+  markerStyle?: MarkerStyle;
   orientation?: HotspotOrientation;
   containerSize?: [number, number];
   positions: Record<number, HotspotPosition>;

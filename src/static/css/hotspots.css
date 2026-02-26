@@ -70,6 +70,69 @@
   }
 }
 
+/* ---- Dot-label marker style ---- */
+
+.cloudimage-360-hotspot--dot-label {
+  overflow: visible;
+  /* Disable scale animation — the ::before ring provides the pulse effect instead */
+  animation: none;
+}
+
+/* Pulse ring via pseudo-element so the label is not affected by scale transforms */
+.cloudimage-360-hotspot--dot-label::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(0, 170, 255, 0.6),
+      0 0 0 10px rgba(0, 170, 255, 0.4),
+      0 0 0 20px rgba(0, 170, 255, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(0, 170, 255, 0),
+      0 0 0 20px rgba(0, 170, 255, 0.1),
+      0 0 0 30px rgba(0, 170, 255, 0);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(0, 170, 255, 0),
+      0 0 0 10px rgba(0, 170, 255, 0),
+      0 0 0 20px rgba(0, 170, 255, 0);
+  }
+}
+
+.cloudimage-360-hotspot-label {
+  position: absolute;
+  left: calc(50% + var(--ci360-hotspot-size) / 2 + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ci360-hotspot-label-color, #ffffff);
+  background: var(--ci360-hotspot-label-bg, var(--ci360-hotspot-color));
+  border: var(--ci360-hotspot-border);
+  border-radius: 100px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* No scale on hover for dot-label — only enhance the dot shadow */
+.cloudimage-360-hotspot--dot-label:hover {
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 0 5px rgba(0, 170, 255, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .cloudimage-360-hotspot:hover {
   transform: scale(1.2);
   box-shadow:
