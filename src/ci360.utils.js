@@ -48,6 +48,8 @@ const DEFAULTS_VALUES = {
   brandColor: null,
   hotspotTimelineOnClick: true,
   aspectRatio: null,
+  cropAspectRatio: null,
+  cropGravity: null,
   // Event callbacks
   onReady: null,
   onLoad: null,
@@ -113,6 +115,8 @@ const getConfigFromImage = (image) => ({
   hotspotTrigger: getAttr(image, 'hotspot-trigger', DEFAULTS_VALUES.hotspotTrigger),
   hotspotTimelineOnClick: !isFalse(image, 'hotspot-timeline-on-click'),
   aspectRatio: getAttr(image, 'aspect-ratio', DEFAULTS_VALUES.aspectRatio),
+  cropAspectRatio: getAttr(image, 'crop-aspect-ratio', DEFAULTS_VALUES.cropAspectRatio),
+  cropGravity: getAttr(image, 'crop-gravity', DEFAULTS_VALUES.cropGravity),
 });
 
 const validateConfig = (config) => {
@@ -209,6 +213,8 @@ const adaptConfig = (config) => {
     brandColor: config.brandColor || DEFAULTS_VALUES.brandColor,
     hotspotTimelineOnClick: config.hotspotTimelineOnClick ?? DEFAULTS_VALUES.hotspotTimelineOnClick,
     aspectRatio: config.aspectRatio || DEFAULTS_VALUES.aspectRatio,
+    cropAspectRatio: config.cropAspectRatio || DEFAULTS_VALUES.cropAspectRatio,
+    cropGravity: config.cropGravity || DEFAULTS_VALUES.cropGravity,
     // Event callbacks
     onReady: config.onReady ?? DEFAULTS_VALUES.onReady,
     onLoad: config.onLoad ?? DEFAULTS_VALUES.onLoad,

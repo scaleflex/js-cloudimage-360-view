@@ -1768,6 +1768,8 @@ class CI360Viewer {
       brandColor,
       hotspotTimelineOnClick = true,
       aspectRatio,
+      cropAspectRatio,
+      cropGravity,
       // Event callbacks
       onReady,
       onLoad,
@@ -1786,7 +1788,7 @@ class CI360Viewer {
       onError,
     } = adaptedConfig;
 
-    const ciParams = { ciToken, ciFilters, ciTransformation };
+    const ciParams = { ciToken, ciFilters, ciTransformation, cropAspectRatio, cropGravity };
     const parsedImagesListX = safeJsonParse(imageListX, []);
     const parsedImagesListY = safeJsonParse(imageListY, []);
 

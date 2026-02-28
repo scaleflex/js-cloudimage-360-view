@@ -190,6 +190,12 @@ export interface CI360Config {
   /** Aspect ratio for the container (e.g., "16/9", "4/3", "1/1") */
   aspectRatio?: string | null;
 
+  // CDN crop
+  /** Aspect ratio for CDN image cropping (e.g., "16:9", "4:3") — appended as ?ar= param */
+  cropAspectRatio?: string | null;
+  /** Gravity for CDN image cropping (e.g., "center", "north") — appended as ?gravity= param */
+  cropGravity?: string | null;
+
   // Event callbacks
   onReady?: (data: BaseEventData) => void;
   onLoad?: (data: LoadEventData) => void;

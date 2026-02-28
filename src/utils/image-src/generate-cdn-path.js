@@ -15,7 +15,7 @@ const buildTransformationParams = ({ ciTransformation, responsiveWidth, ciFilter
 
 export const generateCdnPath = (srcConfig, width) => {
   const { folder, apiVersion, filename = '', ciParams } = srcConfig;
-  const { ciToken, ciFilters, ciTransformation } = ciParams || {};
+  const { ciToken, ciFilters, ciTransformation, cropAspectRatio, cropGravity } = ciParams || {};
 
   const src = `${folder}${filename}`;
 
@@ -34,5 +34,11 @@ export const generateCdnPath = (srcConfig, width) => {
     ciFilters,
   });
 
-  return `${cdn}${transformationParams ? '?' : ''}${transformationParams}`;
+  const cropParams = cropAspectRatio
+    ? `ar=${cropAspectRatio}&gravity=${cropGravity || 'auto'}`
+    : '';
+
+  const params = [transformationParams, cropParams].filter(Boolean).join('&');
+
+  return `${cdn}${params ? '?' : ''}${params}`;
 };

@@ -113,6 +113,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
     ciToken,
     ciFilters,
     ciTransformation,
+    cropAspectRatio,
+    cropGravity,
 
     // Loading
     lazyload,
@@ -193,6 +195,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       ciToken,
       ciFilters,
       ciTransformation,
+      cropAspectRatio,
+      cropGravity,
 
       // Loading
       lazyload,
@@ -266,6 +270,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       ciToken,
       ciFilters,
       ciTransformation,
+      cropAspectRatio,
+      cropGravity,
 
       // Loading
       lazyload,
