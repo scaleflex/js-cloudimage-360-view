@@ -1,26 +1,26 @@
-import { jsx as fe } from "react/jsx-runtime";
-import { useState as ye, useRef as I, useId as we, useEffect as ve, useCallback as Ie, forwardRef as Ce, useMemo as he, useImperativeHandle as Re } from "react";
+import { jsx as we } from "react/jsx-runtime";
+import { useState as ve, useRef as C, useId as Ce, useEffect as Ie, useCallback as Re, forwardRef as he, useMemo as ge, useImperativeHandle as Ve } from "react";
 let v = null;
-function ge(p, t) {
-  const [y, d] = ye(!1), n = I(null), s = I(null), u = we();
-  ve(() => {
-    if (typeof window > "u" || !p.current || t.autoInit === !1) return;
+function Le(c, t) {
+  const [y, d] = ve(!1), n = C(null), i = C(null), u = Ce();
+  Ie(() => {
+    if (typeof window > "u" || !c.current || t.autoInit === !1) return;
     let l = !0;
-    const a = p.current;
+    const a = c.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-BkPK8jTy.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-DwbrNm7H.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
-        const i = {
+        const s = {
           ...t,
           onReady: (m) => {
-            var c;
-            l && (d(!0), (c = t.onReady) == null || c.call(t, m));
+            var p;
+            l && (d(!0), (p = t.onReady) == null || p.call(t, m));
           }
         };
-        s.current = new v(), n.current = s.current.init(a, i);
-      } catch (i) {
-        console.error("Failed to initialize CI360 viewer:", i);
+        i.current = new v(), n.current = i.current.init(a, s);
+      } catch (s) {
+        console.error("Failed to initialize CI360 viewer:", s);
       }
     })(), () => {
       if (l = !1, n.current) {
@@ -30,7 +30,7 @@ function ge(p, t) {
         }
         n.current = null;
       }
-      s.current = null, d(!1);
+      i.current = null, d(!1);
     };
   }, [
     t.folder,
@@ -42,43 +42,44 @@ function ge(p, t) {
     t.amountY,
     t.hotspots,
     t.theme,
+    t.aspectRatio,
     u
   ]);
-  const f = Ie(() => n.current, []);
+  const f = Re(() => n.current, []);
   return {
     viewer: n.current,
     isReady: y,
     getViewer: f
   };
 }
-const Ve = (p, t) => {
+const Se = (c, t) => {
   const {
     // Container props
     id: y,
     className: d,
     style: n,
     // Image source
-    folder: s,
+    folder: i,
     apiVersion: u,
     filenameX: f,
     filenameY: l,
     imageListX: a,
     imageListY: w,
-    indexZeroBase: i,
+    indexZeroBase: s,
     amountX: m,
-    amountY: c,
+    amountY: p,
     // Behavior
-    draggable: C,
-    swipeable: h,
-    keys: R,
+    draggable: I,
+    swipeable: R,
+    keys: h,
     keysReverse: g,
     autoplay: V,
     autoplayBehavior: L,
     playOnce: S,
     speed: T,
-    autoplayReverse: Z,
-    dragSpeed: F,
-    dragReverse: O,
+    autoplayReverse: O,
+    dragSpeed: Z,
+    dragReverse: F,
     stopAtEdges: X,
     inertia: Y,
     // UI Features
@@ -90,12 +91,12 @@ const Ve = (p, t) => {
     bottomCircleOffset: D,
     initialIconShown: E,
     hide360Logo: x,
-    logoSrc: M,
-    imageInfo: N,
-    hints: j,
-    theme: q,
+    logoSrc: H,
+    imageInfo: M,
+    hints: N,
+    theme: j,
     // Cloudimage CDN
-    ciToken: H,
+    ciToken: q,
     ciFilters: P,
     ciTransformation: $,
     // Loading
@@ -115,35 +116,37 @@ const Ve = (p, t) => {
     onFullscreenOpen: re,
     onFullscreenClose: ne,
     onZoomIn: ae,
-    onZoomOut: ie,
-    onDragStart: se,
+    onZoomOut: se,
+    onDragStart: ie,
     onDragEnd: le,
-    onError: ue,
-    ...pe
-  } = p, me = I(null), de = he(
+    onHotspotOpen: ue,
+    onHotspotClose: me,
+    onError: pe,
+    ...fe
+  } = c, ce = C(null), ye = ge(
     () => ({
       // Image source
-      folder: s,
+      folder: i,
       apiVersion: u,
       filenameX: f,
       filenameY: l,
       imageListX: a,
       imageListY: w,
-      indexZeroBase: i,
+      indexZeroBase: s,
       amountX: m,
-      amountY: c,
+      amountY: p,
       // Behavior
-      draggable: C,
-      swipeable: h,
-      keys: R,
+      draggable: I,
+      swipeable: R,
+      keys: h,
       keysReverse: g,
       autoplay: V,
       autoplayBehavior: L,
       playOnce: S,
       speed: T,
-      autoplayReverse: Z,
-      dragSpeed: F,
-      dragReverse: O,
+      autoplayReverse: O,
+      dragSpeed: Z,
+      dragReverse: F,
       stopAtEdges: X,
       inertia: Y,
       // UI Features
@@ -155,12 +158,12 @@ const Ve = (p, t) => {
       bottomCircleOffset: D,
       initialIconShown: E,
       hide360Logo: x,
-      logoSrc: M,
-      imageInfo: N,
-      hints: j,
-      theme: q,
+      logoSrc: H,
+      imageInfo: M,
+      hints: N,
+      theme: j,
       // Cloudimage CDN
-      ciToken: H,
+      ciToken: q,
       ciFilters: P,
       ciTransformation: $,
       // Loading
@@ -180,34 +183,36 @@ const Ve = (p, t) => {
       onFullscreenOpen: re,
       onFullscreenClose: ne,
       onZoomIn: ae,
-      onZoomOut: ie,
-      onDragStart: se,
+      onZoomOut: se,
+      onDragStart: ie,
       onDragEnd: le,
-      onError: ue
+      onHotspotOpen: ue,
+      onHotspotClose: me,
+      onError: pe
     }),
     [
       // Image source
-      s,
+      i,
       u,
       f,
       l,
       a,
       w,
-      i,
+      s,
       m,
-      c,
+      p,
       // Behavior
-      C,
-      h,
+      I,
       R,
+      h,
       g,
       V,
       L,
       S,
       T,
+      O,
       Z,
       F,
-      O,
       X,
       Y,
       // UI Features
@@ -219,12 +224,12 @@ const Ve = (p, t) => {
       D,
       E,
       x,
+      H,
       M,
       N,
       j,
-      q,
       // Cloudimage CDN
-      H,
+      q,
       P,
       $,
       // Loading
@@ -244,13 +249,15 @@ const Ve = (p, t) => {
       re,
       ne,
       ae,
-      ie,
       se,
+      ie,
       le,
-      ue
+      ue,
+      me,
+      pe
     ]
-  ), { getViewer: r } = ge(me, de);
-  return Re(
+  ), { getViewer: r } = Le(ce, ye);
+  return Ve(
     t,
     () => ({
       moveLeft: (e = 1) => {
@@ -286,28 +293,28 @@ const Ve = (p, t) => {
         return (e = r()) == null ? void 0 : e.removeZoom();
       },
       goToFrame: (e, o) => {
-        var ce;
-        return (ce = r()) == null ? void 0 : ce.animateToFrame(e, o);
+        var de;
+        return (de = r()) == null ? void 0 : de.animateToFrame(e, o);
       },
       getViewer: () => r()
     }),
     [r]
-  ), /* @__PURE__ */ fe(
+  ), /* @__PURE__ */ we(
     "div",
     {
-      ref: me,
+      ref: ce,
       id: y,
       className: d,
       style: n,
-      ...pe
+      ...fe
     }
   );
-}, Le = Ce(Ve);
-Le.displayName = "CI360Viewer";
+}, Te = he(Se);
+Te.displayName = "CI360Viewer";
 export {
-  Le as CI360Viewer,
-  Le as CI360ViewerDefault,
-  ge as useCI360,
-  ge as useCI360Default
+  Te as CI360Viewer,
+  Te as CI360ViewerDefault,
+  Le as useCI360,
+  Le as useCI360Default
 };
 //# sourceMappingURL=index.js.map
