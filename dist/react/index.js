@@ -9,7 +9,7 @@ function Te(c, t) {
     const a = c.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-BYB2MAi0.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-DAD1LT-1.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
         const s = {
           ...t,

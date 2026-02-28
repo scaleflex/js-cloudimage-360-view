@@ -17,7 +17,7 @@ function Li(e, t, i) {
     var g = o, I = s;
     return o = s = void 0, h = m, l = e.apply(I, g), l;
   }
-  function w(m) {
+  function C(m) {
     return h = m, a = setTimeout(x, t), c ? u(m) : l;
   }
   function b(m) {
@@ -37,7 +37,7 @@ function Li(e, t, i) {
   function E(m) {
     return a = void 0, f && o ? u(m) : (o = s = void 0, l);
   }
-  function C() {
+  function w() {
     a !== void 0 && clearTimeout(a), h = 0, o = r = s = a = void 0;
   }
   function y() {
@@ -47,13 +47,13 @@ function Li(e, t, i) {
     var m = te(), g = v(m);
     if (o = arguments, s = this, r = m, g) {
       if (a === void 0)
-        return w(r);
+        return C(r);
       if (p)
         return a = setTimeout(x, t), u(r);
     }
     return a === void 0 && (a = setTimeout(x, t)), l;
   }
-  return O.cancel = C, O.flush = y, O;
+  return O.cancel = w, O.flush = y, O;
 }
 function Pi(e, t, i) {
   var o = !0, s = !0;
@@ -294,10 +294,14 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
   return `${s}${n}`;
 }, Ct = (e, t) => {
   const { folder: i, apiVersion: o, filename: s = "", ciParams: n } = e, { ciToken: l, ciFilters: a, ciTransformation: r, cropAspectRatio: h, cropGravity: c } = n || {}, p = `${i}${s}`;
-  if (!l || !t) return p;
-  const f = Hi.includes(o) ? null : o, u = f ? `${f}/` : "", w = Gi(t), b = _i(p, l, u), v = Ui({
+  if (!l || !t) {
+    if (!h) return p;
+    const w = p.includes("?") ? "&" : "?";
+    return `${p}${w}ar=${h}&gravity=${c || "auto"}`;
+  }
+  const f = Hi.includes(o) ? null : o, u = f ? `${f}/` : "", C = Gi(t), b = _i(p, l, u), v = Ui({
     ciTransformation: r,
-    responsiveWidth: w,
+    responsiveWidth: C,
     ciFilters: a
   }), x = h ? `ar=${h}&gravity=${c || "auto"}` : "", E = [v, x].filter(Boolean).join("&");
   return `${b}${E ? "?" : ""}${E}`;
@@ -318,7 +322,7 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
   let l = 0, a = 0;
   const r = e.length, h = [], c = [];
   let p = 0, f = 0;
-  const u = [], w = (m, g, I = !1) => {
+  const u = [], C = (m, g, I = !1) => {
     const k = {
       message: `Failed to load image: ${m}`,
       url: m,
@@ -351,30 +355,30 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
         };
         I.onload = null, I.onerror = null, I.src = "", l++, p--, h[g] = A, i == null || i(A, g), b(), v();
       } catch {
-        I.onload = null, I.onerror = null, I.src = "", l++, p--, w(m, g), b(), v();
+        I.onload = null, I.onerror = null, I.src = "", l++, p--, C(m, g), b(), v();
       }
     }, I.onerror = () => {
-      I.onload = null, I.onerror = null, I.src = "", l++, p--, w(m, g), b(), v();
+      I.onload = null, I.onerror = null, I.src = "", l++, p--, C(m, g), b(), v();
     };
   }, E = (m) => {
     for (let g = 0; g < e.length; g++)
       g !== m && u.push(g);
     f = 0, v();
-  }, C = new Image(), y = n ? e.length - 1 : 0, O = e[y];
-  C.crossOrigin = "anonymous", C.src = O, C.onload = async () => {
+  }, w = new Image(), y = n ? e.length - 1 : 0, O = e[y];
+  w.crossOrigin = "anonymous", w.src = O, w.onload = async () => {
     try {
-      const m = await createImageBitmap(C), g = {
+      const m = await createImageBitmap(w), g = {
         src: O,
         bitmapImage: m,
-        naturalWidth: C.naturalWidth,
-        naturalHeight: C.naturalHeight
+        naturalWidth: w.naturalWidth,
+        naturalHeight: w.naturalHeight
       };
-      C.onload = null, C.onerror = null, C.src = "", h[y] = g, l++, t == null || t(g), i == null || i(g, y), r === 1 ? b() : E(y);
+      w.onload = null, w.onerror = null, w.src = "", h[y] = g, l++, t == null || t(g), i == null || i(g, y), r === 1 ? b() : E(y);
     } catch {
-      C.onload = null, C.onerror = null, C.src = "", l++, w(O, y, !0), r === 1 ? b() : E(y);
+      w.onload = null, w.onerror = null, w.src = "", l++, C(O, y, !0), r === 1 ? b() : E(y);
     }
-  }, C.onerror = () => {
-    C.onload = null, C.onerror = null, C.src = "", l++, w(O, y, !0), r === 1 ? b() : E(y);
+  }, w.onerror = () => {
+    w.onload = null, w.onerror = null, w.src = "", l++, C(O, y, !0), r === 1 ? b() : E(y);
   };
 }, Ee = ({
   cdnPathX: e,
@@ -387,7 +391,7 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
   onError: a
 }) => {
   let r = { x: !1, y: !1 }, h = [], c = [], p = { errorCount: 0, errors: [] }, f = { errorCount: 0, errors: [] };
-  const u = e || i.imageList.length, w = t || o.imageList.length, b = () => {
+  const u = e || i.imageList.length, C = t || o.imageList.length, b = () => {
     if (r.x && r.y) {
       const x = {
         errorCount: p.errorCount + f.errorCount,
@@ -395,21 +399,21 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
       };
       l == null || l(h, c, x);
     }
-  }, v = ({ cdnPath: x, config: E, orientation: C, loadedImages: y, loadStats: O, onFirstImageLoad: m }) => {
-    const g = C === R.X, I = E.imageList.length ? E.imageList : Ji(x, E);
+  }, v = ({ cdnPath: x, config: E, orientation: w, loadedImages: y, loadStats: O, onFirstImageLoad: m }) => {
+    const g = w === R.X, I = E.imageList.length ? E.imageList : Ji(x, E);
     eo({
       imagesUrls: I,
       onFirstImageLoad: m,
       onImageLoad: (k, A) => {
-        n == null || n(k, A, C), y[A] = k;
+        n == null || n(k, A, w), y[A] = k;
       },
       onError: (k) => {
-        a == null || a({ ...k, orientation: C });
+        a == null || a({ ...k, orientation: w });
       },
       onAllImagesLoad: (k, A) => {
         y.length = 0, k.forEach((T, Y) => {
           T && (y[Y] = T);
-        }), O.errorCount = A.errorCount, O.errors = A.errors.map((T) => ({ ...T, orientation: C })), r[g ? "x" : "y"] = !0, b();
+        }), O.errorCount = A.errorCount, O.errors = A.errors.map((T) => ({ ...T, orientation: w })), r[g ? "x" : "y"] = !0, b();
       },
       autoplayReverse: E.autoplayReverse
     });
@@ -421,14 +425,14 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
     loadedImages: h,
     loadStats: p,
     onFirstImageLoad: s
-  }) : r.x = !0, w ? v({
+  }) : r.x = !0, C ? v({
     cdnPath: t,
     config: o,
     orientation: R.Y,
     loadedImages: c,
     loadStats: f,
     onFirstImageLoad: u ? void 0 : s
-  }) : r.y = !0, !u && !w && b();
+  }) : r.y = !0, !u && !C && b();
 }, io = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1052 156" aria-hidden="true">
   <path fill="currentColor" d="M409.9,145.6c-42.7-1.7-85.5-4.4-128.1-8.4c-21.3-2-42.6-4.3-63.8-7.1c-21.2-2.8-42.4-5.9-63.4-9.7c-21.1-3.8-42-8.2-62.7-13.7c-10.3-2.8-20.6-5.8-30.7-9.4c-10.1-3.5-20.1-7.6-29.5-12.7c-4.7-2.6-9.3-5.4-13.5-8.8c-2.1-1.7-4-3.6-5.8-5.6c-1.8-2-3.3-4.3-4.3-6.8c-1.1-2.5-1.6-5.3-1.4-8c0.2-2.7,1.1-5.4,2.4-7.7c2.7-4.8,6.7-8.5,11-11.7c8.6-6.4,18.4-10.9,28.3-15c9.9-4,20.1-7.3,30.4-10.3c-10.2,3.1-20.4,6.5-30.3,10.5c-9.8,4.1-19.6,8.7-28.1,15.1c-4.2,3.2-8.2,6.9-10.7,11.6c-1.2,2.3-2.1,4.8-2.3,7.5c-0.1,2.6,0.4,5.2,1.4,7.6c2.1,4.8,5.9,8.7,10,12.1c4.1,3.3,8.7,6.1,13.4,8.6c9.4,5,19.4,8.9,29.4,12.4c10.1,3.5,20.4,6.4,30.7,9.1c20.7,5.3,41.6,9.5,62.7,13.2c21,3.6,42.2,6.6,63.4,9.2c21.2,2.6,42.5,4.8,63.7,6.6c42.6,3.7,85.2,6,127.9,7.4L409.9,145.6z"/>
@@ -729,8 +733,8 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
   const { container: o, w: s, h: n, zoom: l, bw: a, offsetX: r, offsetY: h } = t, c = Zo(e, o);
   let p = c.x, f = c.y;
   p = Math.max(s / l, Math.min(p, o.offsetWidth - s / l)), f = Math.max(n / l, Math.min(f, o.offsetHeight - n / l)), i.style.left = `${p - s}px`, i.style.top = `${f - n}px`;
-  const u = (p - r) * l - s + a, w = (f - h) * l - n + a;
-  i.style.backgroundPosition = `-${u}px -${w}px`;
+  const u = (p - r) * l - s + a, C = (f - h) * l - n + a;
+  i.style.backgroundPosition = `-${u}px -${C}px`;
 }, Do = (e, t, i, o, s, n) => {
   const { x: l = 0, y: a = 0 } = i || {}, r = (t.offsetWidth - l * 2) * n, h = (t.offsetHeight - a * 2) * n;
   if (!s) return;
@@ -745,12 +749,12 @@ const Ce = /* @__PURE__ */ vi(Yi), H = {
     offsetY: a
   };
   ee(e, u, s);
-  const w = (v) => {
+  const C = (v) => {
     ee(v, u, s);
   }, b = (v) => {
     v.preventDefault(), ee(v, u, s);
   };
-  s.addEventListener("mousemove", w), t.addEventListener("mousemove", w), t.addEventListener("touchmove", b);
+  s.addEventListener("mousemove", C), t.addEventListener("mousemove", C), t.addEventListener("touchmove", b);
 }, Bo = (e, t, i) => {
   const { clientX: o, clientY: s } = e, n = t.getBoundingClientRect(), l = t.width / (n.width * i), a = t.height / (n.height * i), r = (o - n.left) * l, h = (s - n.top) * a;
   return { offsetX: r, offsetY: h };
@@ -1151,13 +1155,13 @@ const Jo = /* @__PURE__ */ new Set([
   let a = e, r = t, h = 0, c = 0;
   const p = e / t;
   o > p ? (r = e / o, c = (t - r) / 2) : (a = t * o, h = (e - a) / 2);
-  const u = a / n, w = r / l;
+  const u = a / n, C = r / l;
   return s.map((b) => {
     const v = {};
     return Object.entries(b.initialPositions).forEach(([x, E]) => {
       v[x] = {
         x: E.x * u + h,
-        y: E.y * w + c
+        y: E.y * C + c
       };
     }), { ...b, positions: v };
   });
@@ -1406,7 +1410,7 @@ var Ts = function(t, i) {
 function Ls(e) {
   var t, i = e.state, o = e.name, s = e.options, n = i.elements.arrow, l = i.modifiersData.popperOffsets, a = z(i.placement), r = ce(a), h = [Z, V].indexOf(a) >= 0, c = h ? "height" : "width";
   if (!(!n || !l)) {
-    var p = Ts(s.padding, i), f = le(n), u = r === "y" ? X : Z, w = r === "y" ? F : V, b = i.rects.reference[c] + i.rects.reference[r] - l[r] - i.rects.popper[c], v = l[r] - i.rects.reference[r], x = At(n), E = x ? r === "y" ? x.clientHeight || 0 : x.clientWidth || 0 : 0, C = b / 2 - v / 2, y = p[u], O = E - f[c] - p[w], m = E / 2 - f[c] / 2 + C, g = It(y, m, O), I = r;
+    var p = Ts(s.padding, i), f = le(n), u = r === "y" ? X : Z, C = r === "y" ? F : V, b = i.rects.reference[c] + i.rects.reference[r] - l[r] - i.rects.popper[c], v = l[r] - i.rects.reference[r], x = At(n), E = x ? r === "y" ? x.clientHeight || 0 : x.clientWidth || 0 : 0, w = b / 2 - v / 2, y = p[u], O = E - f[c] - p[C], m = E / 2 - f[c] / 2 + w, g = It(y, m, O), I = r;
     i.modifiersData[o] = (t = {}, t[I] = g, t.centerOffset = g - m, t);
   }
 }
@@ -1440,7 +1444,7 @@ function Ys(e, t) {
   };
 }
 function Ve(e) {
-  var t, i = e.popper, o = e.popperRect, s = e.placement, n = e.variation, l = e.offsets, a = e.position, r = e.gpuAcceleration, h = e.adaptive, c = e.roundOffsets, p = e.isFixed, f = l.x, u = f === void 0 ? 0 : f, w = l.y, b = w === void 0 ? 0 : w, v = typeof c == "function" ? c({
+  var t, i = e.popper, o = e.popperRect, s = e.placement, n = e.variation, l = e.offsets, a = e.position, r = e.gpuAcceleration, h = e.adaptive, c = e.roundOffsets, p = e.isFixed, f = l.x, u = f === void 0 ? 0 : f, C = l.y, b = C === void 0 ? 0 : C, v = typeof c == "function" ? c({
     x: u,
     y: b
   }) : {
@@ -1448,7 +1452,7 @@ function Ve(e) {
     y: b
   };
   u = v.x, b = v.y;
-  var x = l.hasOwnProperty("x"), E = l.hasOwnProperty("y"), C = Z, y = X, O = window;
+  var x = l.hasOwnProperty("x"), E = l.hasOwnProperty("y"), w = Z, y = X, O = window;
   if (h) {
     var m = At(i), g = "clientHeight", I = "clientWidth";
     if (m === B(i) && (m = Q(i), q(m).position !== "static" && a === "absolute" && (g = "scrollHeight", I = "scrollWidth")), m = m, s === X || (s === Z || s === V) && n === Ot) {
@@ -1460,7 +1464,7 @@ function Ve(e) {
       b -= k - o.height, b *= r ? 1 : -1;
     }
     if (s === Z || (s === X || s === F) && n === Ot) {
-      C = V;
+      w = V;
       var A = p && m === O && O.visualViewport ? O.visualViewport.width : (
         // $FlowFixMe[prop-missing]
         m[I]
@@ -1479,9 +1483,9 @@ function Ve(e) {
   };
   if (u = Y.x, b = Y.y, r) {
     var L;
-    return Object.assign({}, T, (L = {}, L[y] = E ? "0" : "", L[C] = x ? "0" : "", L.transform = (O.devicePixelRatio || 1) <= 1 ? "translate(" + u + "px, " + b + "px)" : "translate3d(" + u + "px, " + b + "px, 0)", L));
+    return Object.assign({}, T, (L = {}, L[y] = E ? "0" : "", L[w] = x ? "0" : "", L.transform = (O.devicePixelRatio || 1) <= 1 ? "translate(" + u + "px, " + b + "px)" : "translate3d(" + u + "px, " + b + "px, 0)", L));
   }
-  return Object.assign({}, T, (t = {}, t[y] = E ? b + "px" : "", t[C] = x ? u + "px" : "", t.transform = "", t));
+  return Object.assign({}, T, (t = {}, t[y] = E ? b + "px" : "", t[w] = x ? u + "px" : "", t.transform = "", t));
 }
 function Hs(e) {
   var t = e.state, i = e.options, o = i.gpuAcceleration, s = o === void 0 ? !0 : o, n = i.adaptive, l = n === void 0 ? !0 : n, a = i.roundOffsets, r = a === void 0 ? !0 : a, h = {
@@ -1681,11 +1685,11 @@ function ci(e) {
 }
 function Et(e, t) {
   t === void 0 && (t = {});
-  var i = t, o = i.placement, s = o === void 0 ? e.placement : o, n = i.strategy, l = n === void 0 ? e.strategy : n, a = i.boundary, r = a === void 0 ? ds : a, h = i.rootBoundary, c = h === void 0 ? ei : h, p = i.elementContext, f = p === void 0 ? wt : p, u = i.altBoundary, w = u === void 0 ? !1 : u, b = i.padding, v = b === void 0 ? 0 : b, x = ri(typeof v != "number" ? v : ai(v, kt)), E = f === wt ? ps : wt, C = e.rects.popper, y = e.elements[w ? E : f], O = $s(ot(y) ? y : y.contextElement || Q(e.elements.popper), r, c, l), m = mt(e.elements.reference), g = ci({
+  var i = t, o = i.placement, s = o === void 0 ? e.placement : o, n = i.strategy, l = n === void 0 ? e.strategy : n, a = i.boundary, r = a === void 0 ? ds : a, h = i.rootBoundary, c = h === void 0 ? ei : h, p = i.elementContext, f = p === void 0 ? wt : p, u = i.altBoundary, C = u === void 0 ? !1 : u, b = i.padding, v = b === void 0 ? 0 : b, x = ri(typeof v != "number" ? v : ai(v, kt)), E = f === wt ? ps : wt, w = e.rects.popper, y = e.elements[C ? E : f], O = $s(ot(y) ? y : y.contextElement || Q(e.elements.popper), r, c, l), m = mt(e.elements.reference), g = ci({
     reference: m,
-    element: C,
+    element: w,
     placement: s
-  }), I = ne(Object.assign({}, C, g)), k = f === wt ? I : m, A = {
+  }), I = ne(Object.assign({}, w, g)), k = f === wt ? I : m, A = {
     top: O.top - k.top + x.top,
     bottom: k.bottom - O.bottom + x.bottom,
     left: O.left - k.left + x.left,
@@ -1702,22 +1706,22 @@ function Et(e, t) {
 }
 function js(e, t) {
   t === void 0 && (t = {});
-  var i = t, o = i.placement, s = i.boundary, n = i.rootBoundary, l = i.padding, a = i.flipVariations, r = i.allowedAutoPlacements, h = r === void 0 ? ii : r, c = ft(o), p = c ? a ? We : We.filter(function(w) {
-    return ft(w) === c;
-  }) : kt, f = p.filter(function(w) {
-    return h.indexOf(w) >= 0;
+  var i = t, o = i.placement, s = i.boundary, n = i.rootBoundary, l = i.padding, a = i.flipVariations, r = i.allowedAutoPlacements, h = r === void 0 ? ii : r, c = ft(o), p = c ? a ? We : We.filter(function(C) {
+    return ft(C) === c;
+  }) : kt, f = p.filter(function(C) {
+    return h.indexOf(C) >= 0;
   });
   f.length === 0 && (f = p);
-  var u = f.reduce(function(w, b) {
-    return w[b] = Et(e, {
+  var u = f.reduce(function(C, b) {
+    return C[b] = Et(e, {
       placement: b,
       boundary: s,
       rootBoundary: n,
       padding: l
-    })[z(b)], w;
+    })[z(b)], C;
   }, {});
-  return Object.keys(u).sort(function(w, b) {
-    return u[w] - u[b];
+  return Object.keys(u).sort(function(C, b) {
+    return u[C] - u[b];
   });
 }
 function Gs(e) {
@@ -1729,13 +1733,13 @@ function Gs(e) {
 function _s(e) {
   var t = e.state, i = e.options, o = e.name;
   if (!t.modifiersData[o]._skip) {
-    for (var s = i.mainAxis, n = s === void 0 ? !0 : s, l = i.altAxis, a = l === void 0 ? !0 : l, r = i.fallbackPlacements, h = i.padding, c = i.boundary, p = i.rootBoundary, f = i.altBoundary, u = i.flipVariations, w = u === void 0 ? !0 : u, b = i.allowedAutoPlacements, v = t.options.placement, x = z(v), E = x === v, C = r || (E || !w ? [Wt(v)] : Gs(v)), y = [v].concat(C).reduce(function(J, N) {
+    for (var s = i.mainAxis, n = s === void 0 ? !0 : s, l = i.altAxis, a = l === void 0 ? !0 : l, r = i.fallbackPlacements, h = i.padding, c = i.boundary, p = i.rootBoundary, f = i.altBoundary, u = i.flipVariations, C = u === void 0 ? !0 : u, b = i.allowedAutoPlacements, v = t.options.placement, x = z(v), E = x === v, w = r || (E || !C ? [Wt(v)] : Gs(v)), y = [v].concat(w).reduce(function(J, N) {
       return J.concat(z(N) === re ? js(t, {
         placement: N,
         boundary: c,
         rootBoundary: p,
         padding: h,
-        flipVariations: w,
+        flipVariations: C,
         allowedAutoPlacements: b
       }) : N);
     }, []), O = t.rects.reference, m = t.rects.popper, g = /* @__PURE__ */ new Map(), I = !0, k = y[0], A = 0; A < y.length; A++) {
@@ -1757,7 +1761,7 @@ function _s(e) {
       g.set(T, _);
     }
     if (I)
-      for (var nt = w ? 3 : 1, vt = function(N) {
+      for (var nt = C ? 3 : 1, vt = function(N) {
         var et = y.find(function(at) {
           var U = g.get(at);
           if (U)
@@ -1867,12 +1871,12 @@ function sn(e) {
   return e === "x" ? "y" : "x";
 }
 function nn(e) {
-  var t = e.state, i = e.options, o = e.name, s = i.mainAxis, n = s === void 0 ? !0 : s, l = i.altAxis, a = l === void 0 ? !1 : l, r = i.boundary, h = i.rootBoundary, c = i.altBoundary, p = i.padding, f = i.tether, u = f === void 0 ? !0 : f, w = i.tetherOffset, b = w === void 0 ? 0 : w, v = Et(t, {
+  var t = e.state, i = e.options, o = e.name, s = i.mainAxis, n = s === void 0 ? !0 : s, l = i.altAxis, a = l === void 0 ? !1 : l, r = i.boundary, h = i.rootBoundary, c = i.altBoundary, p = i.padding, f = i.tether, u = f === void 0 ? !0 : f, C = i.tetherOffset, b = C === void 0 ? 0 : C, v = Et(t, {
     boundary: r,
     rootBoundary: h,
     padding: p,
     altBoundary: c
-  }), x = z(t.placement), E = ft(t.placement), C = !E, y = ce(x), O = sn(y), m = t.modifiersData.popperOffsets, g = t.rects.reference, I = t.rects.popper, k = typeof b == "function" ? b(Object.assign({}, t.rects, {
+  }), x = z(t.placement), E = ft(t.placement), w = !E, y = ce(x), O = sn(y), m = t.modifiersData.popperOffsets, g = t.rects.reference, I = t.rects.popper, k = typeof b == "function" ? b(Object.assign({}, t.rects, {
     placement: t.placement
   })) : b, A = typeof k == "number" ? {
     mainAxis: k,
@@ -1889,7 +1893,7 @@ function nn(e) {
       var L, j = y === "y" ? X : Z, G = y === "y" ? F : V, P = y === "y" ? "height" : "width", D = m[y], st = D + v[j], _ = D - v[G], nt = u ? -I[P] / 2 : 0, vt = E === pt ? g[P] : I[P], tt = E === pt ? -I[P] : -g[P], rt = t.elements.arrow, J = u && rt ? le(rt) : {
         width: 0,
         height: 0
-      }, N = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : ni(), et = N[j], at = N[G], U = It(0, g[P], J[P]), lt = C ? g[P] / 2 - nt - U - et - A.mainAxis : vt - U - et - A.mainAxis, St = C ? -g[P] / 2 + nt + U + at + A.mainAxis : tt + U + at + A.mainAxis, ct = t.elements.arrow && At(t.elements.arrow), $t = ct ? y === "y" ? ct.clientTop || 0 : ct.clientLeft || 0 : 0, Tt = (L = T == null ? void 0 : T[y]) != null ? L : 0, jt = D + lt - Tt - $t, Gt = D + St - Tt, Lt = It(u ? Vt(st, jt) : st, D, u ? it(_, Gt) : _);
+      }, N = t.modifiersData["arrow#persistent"] ? t.modifiersData["arrow#persistent"].padding : ni(), et = N[j], at = N[G], U = It(0, g[P], J[P]), lt = w ? g[P] / 2 - nt - U - et - A.mainAxis : vt - U - et - A.mainAxis, St = w ? -g[P] / 2 + nt + U + at + A.mainAxis : tt + U + at + A.mainAxis, ct = t.elements.arrow && At(t.elements.arrow), $t = ct ? y === "y" ? ct.clientTop || 0 : ct.clientLeft || 0 : 0, Tt = (L = T == null ? void 0 : T[y]) != null ? L : 0, jt = D + lt - Tt - $t, Gt = D + St - Tt, Lt = It(u ? Vt(st, jt) : st, D, u ? it(_, Gt) : _);
       m[y] = Lt, Y[y] = Lt - D;
     }
     if (a) {
@@ -2021,10 +2025,10 @@ function fn(e) {
           reference: ot(a) ? xt(a) : a.contextElement ? xt(a.contextElement) : [],
           popper: xt(r)
         };
-        var C = pn(mn([].concat(o, c.options.modifiers)));
-        return c.orderedModifiers = C.filter(function(y) {
+        var w = pn(mn([].concat(o, c.options.modifiers)));
+        return c.orderedModifiers = w.filter(function(y) {
           return y.enabled;
-        }), w(), u.update();
+        }), C(), u.update();
       },
       // Sync update – it will always be executed, even if not necessary. This
       // is useful for low frequency updates where sync behavior simplifies the
@@ -2033,11 +2037,11 @@ function fn(e) {
       // prefer the async Popper#update method
       forceUpdate: function() {
         if (!f) {
-          var x = c.elements, E = x.reference, C = x.popper;
-          if (_e(E, C)) {
+          var x = c.elements, E = x.reference, w = x.popper;
+          if (_e(E, w)) {
             c.rects = {
-              reference: hn(E, At(C), c.options.strategy === "fixed"),
-              popper: le(C)
+              reference: hn(E, At(w), c.options.strategy === "fixed"),
+              popper: le(w)
             }, c.reset = !1, c.placement = c.options.placement, c.orderedModifiers.forEach(function(A) {
               return c.modifiersData[A.name] = Object.assign({}, A.data);
             });
@@ -2073,15 +2077,15 @@ function fn(e) {
     u.setOptions(h).then(function(v) {
       !f && h.onFirstUpdate && h.onFirstUpdate(v);
     });
-    function w() {
+    function C() {
       c.orderedModifiers.forEach(function(v) {
-        var x = v.name, E = v.options, C = E === void 0 ? {} : E, y = v.effect;
+        var x = v.name, E = v.options, w = E === void 0 ? {} : E, y = v.effect;
         if (typeof y == "function") {
           var O = y({
             state: c,
             name: x,
             instance: u,
-            options: C
+            options: w
           }), m = function() {
           };
           p.push(O || m);
@@ -2158,8 +2162,8 @@ class yn {
       { element: t, event: "mouseenter", handler: h }
     ), this.onProductClick) {
       const p = this.onProductClick, f = (u) => {
-        const w = u.target.closest(".ci360-popper-cta[data-product-id]");
-        w && p(w.dataset.productId, o);
+        const C = u.target.closest(".ci360-popper-cta[data-product-id]");
+        C && p(C.dataset.productId, o);
       };
       this.popper.addEventListener("click", f), this.popperListeners.push(
         { element: this.popper, event: "click", handler: f }
@@ -2916,12 +2920,12 @@ class Nt {
       indexZeroBase: p,
       amountX: f,
       amountY: u,
-      draggable: w = !0,
+      draggable: C = !0,
       swipeable: b = !0,
       keys: v,
       keysReverse: x,
       bottomCircleOffset: E,
-      autoplay: C,
+      autoplay: w,
       autoplayBehavior: y,
       playOnce: O,
       speed: m,
@@ -2971,7 +2975,7 @@ class Nt {
       onProductClick: bn,
       onError: hi
     } = s, ue = { ciToken: A, ciFilters: T, ciTransformation: Y, cropAspectRatio: jt, cropGravity: Gt }, Jt = oe(h, []), Qt = oe(c, []);
-    if (this.viewerConfig = s, this.amountX = Jt.length || f, this.amountY = Qt.length || u, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = g ? this.amountX - 1 : 0, this.activeImageY = g ? this.amountY - 1 : 0, this.bottomCircleOffset = E, this.autoplay = C, this.autoplayBehavior = y, this.playOnce = O, this.speed = m, this.autoplayReverse = g, this.fullscreen = I, this.magnifier = k > 1 ? Math.min(k, Ni) : 0, this.dragSpeed = Math.max(j, Vi), this.stopAtEdges = G, this.ciParams = ue, this.apiVersion = l, this.pointerZoom = P > 1 ? Math.min(P, Oe) : null, this.pointerZoomTrigger = D, this.keysReverse = x, this.info = st, this.keys = v, this.innerBox = this.innerBox ?? co(this.container), this.container.style.aspectRatio = Tt || "", this.initialIconShown = _, this.bottomCircle = nt, this.spinDirection = $o(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = rt, this.hotspots = vt, this.hotspotTrigger = tt, this.hide360Logo = J, this.logoSrc = N, this.inertia = et, this.pinchZoom = at, this.hints = U, this.hotspotTimelineOnClick = $t, lt === "dark" ? this.container.classList.add("ci360-theme-dark") : lt === "light" && this.container.classList.remove("ci360-theme-dark"), this.container.classList.remove("ci360-hotspot-marker-inverted", "ci360-hotspot-marker-brand"), St === "inverted" ? this.container.classList.add("ci360-hotspot-marker-inverted") : St === "brand" && (this.container.classList.add("ci360-hotspot-marker-brand"), ct && this.container.style.setProperty("--ci360-hotspot-brand-color", ct)), this.onReady = Lt, this.onLoad = Pt, this.onSpin = _t, this.onAutoplayStart = Ut, this.onAutoplayStop = K, this.onFullscreenOpen = ht, this.onFullscreenClose = Mt, this.onZoomIn = Rt, this.onZoomOut = gt, this.onDragStart = Yt, this.onDragEnd = Ht, this.onError = hi, this.srcXConfig = {
+    if (this.viewerConfig = s, this.amountX = Jt.length || f, this.amountY = Qt.length || u, this.allowSpinX = !!this.amountX, this.allowSpinY = !!this.amountY, this.activeImageX = g ? this.amountX - 1 : 0, this.activeImageY = g ? this.amountY - 1 : 0, this.bottomCircleOffset = E, this.autoplay = w, this.autoplayBehavior = y, this.playOnce = O, this.speed = m, this.autoplayReverse = g, this.fullscreen = I, this.magnifier = k > 1 ? Math.min(k, Ni) : 0, this.dragSpeed = Math.max(j, Vi), this.stopAtEdges = G, this.ciParams = ue, this.apiVersion = l, this.pointerZoom = P > 1 ? Math.min(P, Oe) : null, this.pointerZoomTrigger = D, this.keysReverse = x, this.info = st, this.keys = v, this.innerBox = this.innerBox ?? co(this.container), this.container.style.aspectRatio = Tt || "", this.initialIconShown = _, this.bottomCircle = nt, this.spinDirection = $o(this.autoplayBehavior, this.allowSpinX, this.allowSpinY), this.dragReverse = rt, this.hotspots = vt, this.hotspotTrigger = tt, this.hide360Logo = J, this.logoSrc = N, this.inertia = et, this.pinchZoom = at, this.hints = U, this.hotspotTimelineOnClick = $t, lt === "dark" ? this.container.classList.add("ci360-theme-dark") : lt === "light" && this.container.classList.remove("ci360-theme-dark"), this.container.classList.remove("ci360-hotspot-marker-inverted", "ci360-hotspot-marker-brand"), St === "inverted" ? this.container.classList.add("ci360-hotspot-marker-inverted") : St === "brand" && (this.container.classList.add("ci360-hotspot-marker-brand"), ct && this.container.style.setProperty("--ci360-hotspot-brand-color", ct)), this.onReady = Lt, this.onLoad = Pt, this.onSpin = _t, this.onAutoplayStart = Ut, this.onAutoplayStop = K, this.onFullscreenOpen = ht, this.onFullscreenClose = Mt, this.onZoomIn = Rt, this.onZoomOut = gt, this.onDragStart = Yt, this.onDragEnd = Ht, this.onError = hi, this.srcXConfig = {
       folder: n,
       filename: a,
       imageList: Jt,
@@ -2990,7 +2994,7 @@ class Nt {
       imageList: Qt,
       orientation: R.Y,
       amount: this.amountY
-    }, o && this.removeEvents(), this.attachEvents(w, b, v), o) return;
+    }, o && this.removeEvents(), this.attachEvents(C, b, v), o) return;
     const me = (this.fullscreenView ? document.body : this.container).offsetWidth, fe = this.allowSpinX && !Jt.length ? Ct(this.srcXConfig, me) : null, ve = this.allowSpinY && !Qt.length ? Ct(this.srcYConfig, me) : null, ge = (di) => {
       Ee({
         cdnPathX: fe,
@@ -3098,4 +3102,4 @@ class Cn {
 export {
   Cn as default
 };
-//# sourceMappingURL=ci360-BYB2MAi0.mjs.map
+//# sourceMappingURL=ci360-DAD1LT-1.mjs.map
