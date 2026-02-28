@@ -60,6 +60,8 @@ const DEFAULTS_VALUES = {
   onZoomOut: null,
   onDragStart: null,
   onDragEnd: null,
+  onHotspotOpen: null,
+  onHotspotClose: null,
 };
 
 const getConfigFromImage = (image) => ({
@@ -218,6 +220,8 @@ const adaptConfig = (config) => {
     onZoomOut: config.onZoomOut ?? DEFAULTS_VALUES.onZoomOut,
     onDragStart: config.onDragStart ?? DEFAULTS_VALUES.onDragStart,
     onDragEnd: config.onDragEnd ?? DEFAULTS_VALUES.onDragEnd,
+    onHotspotOpen: config.onHotspotOpen ?? DEFAULTS_VALUES.onHotspotOpen,
+    onHotspotClose: config.onHotspotClose ?? DEFAULTS_VALUES.onHotspotClose,
   };
 };
 

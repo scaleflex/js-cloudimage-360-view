@@ -201,6 +201,8 @@ export interface CI360Config {
   onZoomOut?: (data: BaseEventData) => void;
   onDragStart?: (data: BaseEventData) => void;
   onDragEnd?: (data: BaseEventData) => void;
+  onHotspotOpen?: (hotspotId: string) => void;
+  onHotspotClose?: (hotspotId: string) => void;
   onError?: (data: ErrorEventData) => void;
 }
 

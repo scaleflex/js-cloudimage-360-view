@@ -930,6 +930,8 @@ class CI360Viewer {
     if (this.hotspots) {
       this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio, {
         trigger: this.hotspotTrigger,
+        onOpen: onHotspotOpen,
+        onClose: onHotspotClose,
       });
       // Show dots for the initial frame immediately
       this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
@@ -1777,6 +1779,8 @@ class CI360Viewer {
       onZoomOut,
       onDragStart,
       onDragEnd,
+      onHotspotOpen,
+      onHotspotClose,
       onError,
     } = adaptedConfig;
 
@@ -1810,10 +1814,8 @@ class CI360Viewer {
     this.keys = keys;
     this.innerBox = this.innerBox ?? createInnerBox(this.container);
 
-    // Apply aspect ratio to container if specified
-    if (aspectRatio) {
-      this.container.style.aspectRatio = aspectRatio;
-    }
+    // Apply or clear aspect ratio on container
+    this.container.style.aspectRatio = aspectRatio || '';
 
     this.initialIconShown = initialIconShown;
     this.bottomCircle = bottomCircle;

@@ -31,6 +31,8 @@ class Hotspot {
     this.hotspotElements = new Map();
     this.popperListeners = [];
     this.trigger = options.trigger || 'hover'; // 'hover' or 'click'
+    this.onOpen = options.onOpen || null;
+    this.onClose = options.onClose || null;
 
     const { containerSize } = hotspotsConfig[0];
     this.initialContainerSize = containerSize || [container.offsetWidth, container.offsetHeight];
@@ -117,6 +119,8 @@ class Hotspot {
       keepOpen,
       instanceId: id,
     };
+
+    try { this.onOpen?.(id); } catch (e) { console.warn('onHotspotOpen callback error:', e); }
   }
 
   checkAndHidePopper() {
@@ -134,6 +138,8 @@ class Hotspot {
       this.hidePopperTimeout = null;
     }
 
+    const closingId = this.popperInstance?.instanceId;
+
     this.cleanupPopperListeners();
 
     if (this.currentHotspotElement) {
@@ -145,6 +151,10 @@ class Hotspot {
     if (this.popperInstance) {
       this.popperInstance.destroy();
       this.popperInstance = null;
+    }
+
+    if (closingId != null) {
+      try { this.onClose?.(closingId); } catch (e) { console.warn('onHotspotClose callback error:', e); }
     }
 
     if (this.popper) {

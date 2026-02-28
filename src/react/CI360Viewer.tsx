@@ -137,6 +137,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
     onZoomOut,
     onDragStart,
     onDragEnd,
+    onHotspotOpen,
+    onHotspotClose,
     onError,
 
     ...restProps
@@ -215,6 +217,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       onZoomOut,
       onDragStart,
       onDragEnd,
+      onHotspotOpen,
+      onHotspotClose,
       onError,
     }),
     [
@@ -286,6 +290,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       onZoomOut,
       onDragStart,
       onDragEnd,
+      onHotspotOpen,
+      onHotspotClose,
       onError,
     ]
   );

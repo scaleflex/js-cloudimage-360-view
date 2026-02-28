@@ -109,6 +109,7 @@ export function useCI360(
     config.amountY,
     config.hotspots,
     config.theme,
+    config.aspectRatio,
     uniqueId,
   ]);
 
