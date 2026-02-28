@@ -932,6 +932,7 @@ class CI360Viewer {
         trigger: this.hotspotTrigger,
         onOpen: onHotspotOpen,
         onClose: onHotspotClose,
+        onProductClick,
       });
       // Show dots for the initial frame immediately
       this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
@@ -1781,6 +1782,7 @@ class CI360Viewer {
       onDragEnd,
       onHotspotOpen,
       onHotspotClose,
+      onProductClick,
       onError,
     } = adaptedConfig;
 

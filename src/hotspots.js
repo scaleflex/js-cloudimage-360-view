@@ -33,6 +33,7 @@ class Hotspot {
     this.trigger = options.trigger || 'hover'; // 'hover' or 'click'
     this.onOpen = options.onOpen || null;
     this.onClose = options.onClose || null;
+    this.onProductClick = options.onProductClick || null;
 
     const { containerSize } = hotspotsConfig[0];
     this.initialContainerSize = containerSize || [container.offsetWidth, container.offsetHeight];
@@ -113,6 +114,20 @@ class Hotspot {
       { element: hotspotElement, event: 'mouseleave', handler: hotspotLeaveHandler },
       { element: hotspotElement, event: 'mouseenter', handler: hotspotEnterHandler }
     );
+
+    // Delegated click handler for CTA buttons/links with product ID
+    if (this.onProductClick) {
+      const onProductClick = this.onProductClick;
+      const ctaHandler = (e) => {
+        const cta = e.target.closest('.ci360-popper-cta[data-product-id]');
+        if (!cta) return;
+        onProductClick(cta.dataset.productId, id);
+      };
+      this.popper.addEventListener('click', ctaHandler);
+      this.popperListeners.push(
+        { element: this.popper, event: 'click', handler: ctaHandler }
+      );
+    }
 
     this.popperInstance = {
       ...createPopper(hotspotElement, this.popper, popperOptions),

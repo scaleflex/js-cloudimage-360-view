@@ -32,6 +32,7 @@ export interface HotspotPosition {
  * Priority: content (raw HTML) > data (built-in template) > nothing.
  */
 export interface PopoverData {
+  id?: string;
   title?: string;
   description?: string;
   price?: string;
@@ -203,6 +204,7 @@ export interface CI360Config {
   onDragEnd?: (data: BaseEventData) => void;
   onHotspotOpen?: (hotspotId: string) => void;
   onHotspotClose?: (hotspotId: string) => void;
+  onProductClick?: (productId: string, hotspotId: string) => void;
   onError?: (data: ErrorEventData) => void;
 }
 

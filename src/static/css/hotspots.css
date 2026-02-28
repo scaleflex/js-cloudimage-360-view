@@ -247,3 +247,15 @@
 .ci360-popper-cta:hover {
   opacity: 0.9;
 }
+
+button.ci360-popper-cta {
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  width: 100%;
+}
+
+.ci360-popper-cta:focus-visible {
+  outline: 3px solid var(--ci360-focus-color, #0066cc);
+  outline-offset: 2px;
+}

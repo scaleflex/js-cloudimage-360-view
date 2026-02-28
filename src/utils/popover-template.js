@@ -8,6 +8,7 @@
 /**
  * Render the built-in product template from data fields.
  * @param {Object} data
+ * @param {string} [data.id]
  * @param {string} [data.title]
  * @param {string} [data.description]
  * @param {string} [data.price]
@@ -49,8 +50,14 @@ export function renderBuiltInTemplate(data) {
 
   if (data.url && isSafeUrl(data.url)) {
     const ctaText = data.ctaText || 'View details';
+    const productAttr = data.id ? ` data-product-id="${escapeAttr(data.id)}"` : '';
     bodyParts.push(
-      `<a class="ci360-popper-cta" href="${escapeAttr(data.url)}">${escapeHtml(String(ctaText))}</a>`
+      `<a class="ci360-popper-cta" href="${escapeAttr(data.url)}"${productAttr}>${escapeHtml(String(ctaText))}</a>`
+    );
+  } else if (data.id) {
+    const ctaText = data.ctaText || 'View details';
+    bodyParts.push(
+      `<button class="ci360-popper-cta" data-product-id="${escapeAttr(data.id)}">${escapeHtml(String(ctaText))}</button>`
     );
   }
 

@@ -62,6 +62,7 @@ const DEFAULTS_VALUES = {
   onDragEnd: null,
   onHotspotOpen: null,
   onHotspotClose: null,
+  onProductClick: null,
 };
 
 const getConfigFromImage = (image) => ({
@@ -222,6 +223,7 @@ const adaptConfig = (config) => {
     onDragEnd: config.onDragEnd ?? DEFAULTS_VALUES.onDragEnd,
     onHotspotOpen: config.onHotspotOpen ?? DEFAULTS_VALUES.onHotspotOpen,
     onHotspotClose: config.onHotspotClose ?? DEFAULTS_VALUES.onHotspotClose,
+    onProductClick: config.onProductClick ?? DEFAULTS_VALUES.onProductClick,
   };
 };
 
