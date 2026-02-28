@@ -1,15 +1,15 @@
-import { jsx as we } from "react/jsx-runtime";
-import { useState as ve, useRef as C, useId as Ce, useEffect as Ie, useCallback as Re, forwardRef as he, useMemo as ge, useImperativeHandle as Ve } from "react";
+import { jsx as Ce } from "react/jsx-runtime";
+import { useState as Ie, useRef as C, useId as Re, useEffect as he, useCallback as ge, forwardRef as Ve, useMemo as Le, useImperativeHandle as Se } from "react";
 let v = null;
-function Le(c, t) {
-  const [y, d] = ve(!1), n = C(null), i = C(null), u = Ce();
-  Ie(() => {
+function Te(c, t) {
+  const [y, d] = Ie(!1), n = C(null), i = C(null), u = Re();
+  he(() => {
     if (typeof window > "u" || !c.current || t.autoInit === !1) return;
     let l = !0;
     const a = c.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-DwbrNm7H.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-BYB2MAi0.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
         const s = {
           ...t,
@@ -45,14 +45,14 @@ function Le(c, t) {
     t.aspectRatio,
     u
   ]);
-  const f = Re(() => n.current, []);
+  const f = ge(() => n.current, []);
   return {
     viewer: n.current,
     isReady: y,
     getViewer: f
   };
 }
-const Se = (c, t) => {
+const Oe = (c, t) => {
   const {
     // Container props
     id: y,
@@ -85,8 +85,8 @@ const Se = (c, t) => {
     // UI Features
     fullscreen: b,
     magnifier: k,
-    pointerZoom: z,
-    pinchZoom: A,
+    pointerZoom: A,
+    pinchZoom: z,
     bottomCircle: B,
     bottomCircleOffset: D,
     initialIconShown: E,
@@ -97,33 +97,35 @@ const Se = (c, t) => {
     theme: j,
     // Cloudimage CDN
     ciToken: q,
-    ciFilters: P,
-    ciTransformation: $,
+    ciFilters: G,
+    ciTransformation: P,
+    cropAspectRatio: $,
+    cropGravity: J,
     // Loading
-    lazyload: G,
+    lazyload: K,
     // Hotspots
-    hotspots: J,
-    hotspotTrigger: K,
-    hotspotTimelineOnClick: Q,
+    hotspots: Q,
+    hotspotTrigger: U,
+    hotspotTimelineOnClick: W,
     // Container
-    aspectRatio: U,
+    aspectRatio: _,
     // Event callbacks
-    onReady: W,
-    onLoad: _,
-    onSpin: ee,
-    onAutoplayStart: te,
-    onAutoplayStop: oe,
-    onFullscreenOpen: re,
-    onFullscreenClose: ne,
-    onZoomIn: ae,
-    onZoomOut: se,
-    onDragStart: ie,
-    onDragEnd: le,
-    onHotspotOpen: ue,
-    onHotspotClose: me,
-    onError: pe,
-    ...fe
-  } = c, ce = C(null), ye = ge(
+    onReady: ee,
+    onLoad: te,
+    onSpin: oe,
+    onAutoplayStart: re,
+    onAutoplayStop: ne,
+    onFullscreenOpen: ae,
+    onFullscreenClose: se,
+    onZoomIn: ie,
+    onZoomOut: le,
+    onDragStart: ue,
+    onDragEnd: me,
+    onHotspotOpen: pe,
+    onHotspotClose: ce,
+    onError: de,
+    ...we
+  } = c, fe = C(null), ve = Le(
     () => ({
       // Image source
       folder: i,
@@ -152,8 +154,8 @@ const Se = (c, t) => {
       // UI Features
       fullscreen: b,
       magnifier: k,
-      pointerZoom: z,
-      pinchZoom: A,
+      pointerZoom: A,
+      pinchZoom: z,
       bottomCircle: B,
       bottomCircleOffset: D,
       initialIconShown: E,
@@ -164,31 +166,33 @@ const Se = (c, t) => {
       theme: j,
       // Cloudimage CDN
       ciToken: q,
-      ciFilters: P,
-      ciTransformation: $,
+      ciFilters: G,
+      ciTransformation: P,
+      cropAspectRatio: $,
+      cropGravity: J,
       // Loading
-      lazyload: G,
+      lazyload: K,
       // Hotspots
-      hotspots: J,
-      hotspotTrigger: K,
-      hotspotTimelineOnClick: Q,
+      hotspots: Q,
+      hotspotTrigger: U,
+      hotspotTimelineOnClick: W,
       // Container
-      aspectRatio: U,
+      aspectRatio: _,
       // Event callbacks
-      onReady: W,
-      onLoad: _,
-      onSpin: ee,
-      onAutoplayStart: te,
-      onAutoplayStop: oe,
-      onFullscreenOpen: re,
-      onFullscreenClose: ne,
-      onZoomIn: ae,
-      onZoomOut: se,
-      onDragStart: ie,
-      onDragEnd: le,
-      onHotspotOpen: ue,
-      onHotspotClose: me,
-      onError: pe
+      onReady: ee,
+      onLoad: te,
+      onSpin: oe,
+      onAutoplayStart: re,
+      onAutoplayStop: ne,
+      onFullscreenOpen: ae,
+      onFullscreenClose: se,
+      onZoomIn: ie,
+      onZoomOut: le,
+      onDragStart: ue,
+      onDragEnd: me,
+      onHotspotOpen: pe,
+      onHotspotClose: ce,
+      onError: de
     }),
     [
       // Image source
@@ -218,8 +222,8 @@ const Se = (c, t) => {
       // UI Features
       b,
       k,
-      z,
       A,
+      z,
       B,
       D,
       E,
@@ -230,19 +234,19 @@ const Se = (c, t) => {
       j,
       // Cloudimage CDN
       q,
+      G,
       P,
       $,
-      // Loading
-      G,
-      // Hotspots
       J,
+      // Loading
       K,
+      // Hotspots
       Q,
-      // Container
       U,
-      // Event callbacks
       W,
+      // Container
       _,
+      // Event callbacks
       ee,
       te,
       oe,
@@ -254,10 +258,12 @@ const Se = (c, t) => {
       le,
       ue,
       me,
-      pe
+      pe,
+      ce,
+      de
     ]
-  ), { getViewer: r } = Le(ce, ye);
-  return Ve(
+  ), { getViewer: r } = Te(fe, ve);
+  return Se(
     t,
     () => ({
       moveLeft: (e = 1) => {
@@ -293,28 +299,28 @@ const Se = (c, t) => {
         return (e = r()) == null ? void 0 : e.removeZoom();
       },
       goToFrame: (e, o) => {
-        var de;
-        return (de = r()) == null ? void 0 : de.animateToFrame(e, o);
+        var ye;
+        return (ye = r()) == null ? void 0 : ye.animateToFrame(e, o);
       },
       getViewer: () => r()
     }),
     [r]
-  ), /* @__PURE__ */ we(
+  ), /* @__PURE__ */ Ce(
     "div",
     {
-      ref: ce,
+      ref: fe,
       id: y,
       className: d,
       style: n,
-      ...fe
+      ...we
     }
   );
-}, Te = he(Se);
-Te.displayName = "CI360Viewer";
+}, Ze = Ve(Oe);
+Ze.displayName = "CI360Viewer";
 export {
-  Te as CI360Viewer,
-  Te as CI360ViewerDefault,
-  Le as useCI360,
-  Le as useCI360Default
+  Ze as CI360Viewer,
+  Ze as CI360ViewerDefault,
+  Te as useCI360,
+  Te as useCI360Default
 };
 //# sourceMappingURL=index.js.map
