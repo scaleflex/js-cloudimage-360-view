@@ -1,16 +1,16 @@
-import { jsx as Ce } from "react/jsx-runtime";
-import { useState as Ie, useRef as C, useId as Re, useEffect as he, useCallback as ge, forwardRef as Ve, useMemo as Le, useImperativeHandle as Se } from "react";
-let v = null;
+import { jsx as Re } from "react/jsx-runtime";
+import { useState as Ce, useRef as R, useId as Ie, useEffect as he, useCallback as ge, forwardRef as Ve, useMemo as Le, useImperativeHandle as Se } from "react";
+let w = null;
 function Te(c, t) {
-  const [y, d] = Ie(!1), n = C(null), i = C(null), u = Re();
+  const [y, d] = Ce(!1), a = R(null), i = R(null), u = Ie();
   he(() => {
     if (typeof window > "u" || !c.current || t.autoInit === !1) return;
     let l = !0;
-    const a = c.current;
+    const n = c.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-CAu4PLFX.mjs")).default), !a || !l) return;
-        a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
+        if (w || (w = (await import("./ci360-CAu4PLFX.mjs")).default), !n || !l) return;
+        n.id || (n.id = `ci360-${u.replace(/:/g, "")}`);
         const s = {
           ...t,
           onReady: (m) => {
@@ -18,17 +18,17 @@ function Te(c, t) {
             l && (d(!0), (p = t.onReady) == null || p.call(t, m));
           }
         };
-        i.current = new v(), n.current = i.current.init(a, s);
+        i.current = new w(), a.current = i.current.init(n, s);
       } catch (s) {
         console.error("Failed to initialize CI360 viewer:", s);
       }
     })(), () => {
-      if (l = !1, n.current) {
+      if (l = !1, a.current) {
         try {
-          n.current.destroy();
+          a.current.destroy();
         } catch {
         }
-        n.current = null;
+        a.current = null;
       }
       i.current = null, d(!1);
     };
@@ -43,11 +43,13 @@ function Te(c, t) {
     t.hotspots,
     t.theme,
     t.aspectRatio,
+    t.cropAspectRatio,
+    t.cropGravity,
     u
   ]);
-  const f = ge(() => n.current, []);
+  const f = ge(() => a.current, []);
   return {
-    viewer: n.current,
+    viewer: a.current,
     isReady: y,
     getViewer: f
   };
@@ -57,20 +59,20 @@ const Oe = (c, t) => {
     // Container props
     id: y,
     className: d,
-    style: n,
+    style: a,
     // Image source
     folder: i,
     apiVersion: u,
     filenameX: f,
     filenameY: l,
-    imageListX: a,
-    imageListY: w,
+    imageListX: n,
+    imageListY: v,
     indexZeroBase: s,
     amountX: m,
     amountY: p,
     // Behavior
-    draggable: I,
-    swipeable: R,
+    draggable: C,
+    swipeable: I,
     keys: h,
     keysReverse: g,
     autoplay: V,
@@ -79,25 +81,25 @@ const Oe = (c, t) => {
     speed: T,
     autoplayReverse: O,
     dragSpeed: Z,
-    dragReverse: F,
-    stopAtEdges: X,
-    inertia: Y,
+    dragReverse: A,
+    stopAtEdges: F,
+    inertia: X,
     // UI Features
-    fullscreen: b,
-    magnifier: k,
-    pointerZoom: A,
+    fullscreen: Y,
+    magnifier: b,
+    pointerZoom: k,
     pinchZoom: z,
     bottomCircle: B,
     bottomCircleOffset: D,
     initialIconShown: E,
     hide360Logo: x,
     logoSrc: H,
-    imageInfo: M,
-    hints: N,
-    theme: j,
+    imageInfo: G,
+    hints: M,
+    theme: N,
     // Cloudimage CDN
-    ciToken: q,
-    ciFilters: G,
+    ciToken: j,
+    ciFilters: q,
     ciTransformation: P,
     cropAspectRatio: $,
     cropGravity: J,
@@ -114,8 +116,8 @@ const Oe = (c, t) => {
     onLoad: te,
     onSpin: oe,
     onAutoplayStart: re,
-    onAutoplayStop: ne,
-    onFullscreenOpen: ae,
+    onAutoplayStop: ae,
+    onFullscreenOpen: ne,
     onFullscreenClose: se,
     onZoomIn: ie,
     onZoomOut: le,
@@ -124,22 +126,22 @@ const Oe = (c, t) => {
     onHotspotOpen: pe,
     onHotspotClose: ce,
     onError: de,
-    ...we
-  } = c, fe = C(null), ve = Le(
+    ...ve
+  } = c, fe = R(null), we = Le(
     () => ({
       // Image source
       folder: i,
       apiVersion: u,
       filenameX: f,
       filenameY: l,
-      imageListX: a,
-      imageListY: w,
+      imageListX: n,
+      imageListY: v,
       indexZeroBase: s,
       amountX: m,
       amountY: p,
       // Behavior
-      draggable: I,
-      swipeable: R,
+      draggable: C,
+      swipeable: I,
       keys: h,
       keysReverse: g,
       autoplay: V,
@@ -148,25 +150,25 @@ const Oe = (c, t) => {
       speed: T,
       autoplayReverse: O,
       dragSpeed: Z,
-      dragReverse: F,
-      stopAtEdges: X,
-      inertia: Y,
+      dragReverse: A,
+      stopAtEdges: F,
+      inertia: X,
       // UI Features
-      fullscreen: b,
-      magnifier: k,
-      pointerZoom: A,
+      fullscreen: Y,
+      magnifier: b,
+      pointerZoom: k,
       pinchZoom: z,
       bottomCircle: B,
       bottomCircleOffset: D,
       initialIconShown: E,
       hide360Logo: x,
       logoSrc: H,
-      imageInfo: M,
-      hints: N,
-      theme: j,
+      imageInfo: G,
+      hints: M,
+      theme: N,
       // Cloudimage CDN
-      ciToken: q,
-      ciFilters: G,
+      ciToken: j,
+      ciFilters: q,
       ciTransformation: P,
       cropAspectRatio: $,
       cropGravity: J,
@@ -183,8 +185,8 @@ const Oe = (c, t) => {
       onLoad: te,
       onSpin: oe,
       onAutoplayStart: re,
-      onAutoplayStop: ne,
-      onFullscreenOpen: ae,
+      onAutoplayStop: ae,
+      onFullscreenOpen: ne,
       onFullscreenClose: se,
       onZoomIn: ie,
       onZoomOut: le,
@@ -200,14 +202,14 @@ const Oe = (c, t) => {
       u,
       f,
       l,
-      a,
-      w,
+      n,
+      v,
       s,
       m,
       p,
       // Behavior
+      C,
       I,
-      R,
       h,
       g,
       V,
@@ -216,25 +218,25 @@ const Oe = (c, t) => {
       T,
       O,
       Z,
+      A,
       F,
       X,
-      Y,
       // UI Features
+      Y,
       b,
       k,
-      A,
       z,
       B,
       D,
       E,
       x,
       H,
+      G,
       M,
       N,
-      j,
       // Cloudimage CDN
+      j,
       q,
-      G,
       P,
       $,
       J,
@@ -251,8 +253,8 @@ const Oe = (c, t) => {
       te,
       oe,
       re,
-      ne,
       ae,
+      ne,
       se,
       ie,
       le,
@@ -262,7 +264,7 @@ const Oe = (c, t) => {
       ce,
       de
     ]
-  ), { getViewer: r } = Te(fe, ve);
+  ), { getViewer: r } = Te(fe, we);
   return Se(
     t,
     () => ({
@@ -305,14 +307,14 @@ const Oe = (c, t) => {
       getViewer: () => r()
     }),
     [r]
-  ), /* @__PURE__ */ Ce(
+  ), /* @__PURE__ */ Re(
     "div",
     {
       ref: fe,
       id: y,
       className: d,
-      style: n,
-      ...we
+      style: a,
+      ...ve
     }
   );
 }, Ze = Ve(Oe);

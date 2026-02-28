@@ -39,6 +39,7 @@ declare module CI360 {
     dragReverse?: boolean; // Default: false
     hide360Logo?: boolean; // Default: false (not documented)
     logoSrc?: string; // Default: Scaleflex 360 logo URL
+    aspectRatio?: string | null; // Default: null — CSS container aspect-ratio e.g. "16 / 9"
     cropAspectRatio?: string | null; // Default: null — CDN crop ratio e.g. "16:9"
     cropGravity?: string | null; // Default: null — CDN crop gravity e.g. "center"
   }

@@ -167,9 +167,12 @@ export interface CI360Config {
   theme?: Theme;
   markerTheme?: MarkerTheme;
   brandColor?: string;
+  aspectRatio?: string | null;
   ciToken?: string | null;
   ciFilters?: string | null;
   ciTransformation?: string | null;
+  cropAspectRatio?: string | null;
+  cropGravity?: string | null;
   lazyload?: boolean;
   hotspots?: Hotspot[] | null;
   hotspotTrigger?: HotspotTrigger;

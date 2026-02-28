@@ -110,6 +110,8 @@ export function useCI360(
     config.hotspots,
     config.theme,
     config.aspectRatio,
+    config.cropAspectRatio,
+    config.cropGravity,
     uniqueId,
   ]);
 
