@@ -6,6 +6,9 @@ const buildCdnUrl = (src, ciToken, finalApiVersion) => {
   return isCloudImageUrl ? src : `https://${ciToken}.cloudimg.io/${finalApiVersion}${src}`;
 };
 
+const buildCropParams = (cropAspectRatio, cropGravity) =>
+  cropAspectRatio ? `ar=${cropAspectRatio}&gravity=${cropGravity || 'auto'}` : '';
+
 const buildTransformationParams = ({ ciTransformation, responsiveWidth, ciFilters }) => {
   const sizeParam = `width=${responsiveWidth}`;
   const transformation = ciTransformation || sizeParam;
@@ -19,9 +22,15 @@ export const generateCdnPath = (srcConfig, width) => {
 
   const src = `${folder}${filename}`;
 
-  // If no ciToken or width is 0/falsy, return plain src without CDN transformation
+  // If no ciToken or width is 0/falsy, return src without CDN transformation
   // Width can be 0 when container hasn't rendered yet (mobile, hidden elements)
-  if (!ciToken || !width) return src;
+  // Still append crop params — Filerobot URLs support ?ar=&gravity= natively
+  if (!ciToken || !width) {
+    const cropParams = buildCropParams(cropAspectRatio, cropGravity);
+    if (!cropParams) return src;
+    const sep = src.includes('?') ? '&' : '?';
+    return `${src}${sep}${cropParams}`;
+  }
 
   const version = !FALSY_VALUES.includes(apiVersion) ? apiVersion : null;
   const finalApiVersion = version ? `${version}/` : '';
@@ -34,9 +43,7 @@ export const generateCdnPath = (srcConfig, width) => {
     ciFilters,
   });
 
-  const cropParams = cropAspectRatio
-    ? `ar=${cropAspectRatio}&gravity=${cropGravity || 'auto'}`
-    : '';
+  const cropParams = buildCropParams(cropAspectRatio, cropGravity);
 
   const params = [transformationParams, cropParams].filter(Boolean).join('&');
 
