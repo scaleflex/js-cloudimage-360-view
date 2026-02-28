@@ -9,7 +9,7 @@ function Le(c, t) {
     const a = c.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-BVEX7yX9.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-DwbrNm7H.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${u.replace(/:/g, "")}`);
         const s = {
           ...t,
