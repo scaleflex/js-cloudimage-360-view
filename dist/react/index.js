@@ -9,7 +9,7 @@ function Fe(d, t) {
     const a = d.current;
     return (async () => {
       try {
-        if (v || (v = (await import("./ci360-23B4uCh0.mjs")).default), !a || !l) return;
+        if (v || (v = (await import("./ci360-DdWAnSd4.mjs")).default), !a || !l) return;
         a.id || (a.id = `ci360-${m.replace(/:/g, "")}`);
         const s = {
           ...t,
