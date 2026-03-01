@@ -68,20 +68,20 @@ function RefControlExample() {
 function ZoomExample() {
   return (
     <div className="example">
-      <h2>Zoom & Magnifier</h2>
+      <h2>Zoom</h2>
       <CI360Viewer
         folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
         filenameX="product-{index}.jpg"
         amountX={60}
         aspectRatio="1/1"
-        pointerZoom={3}
+        zoomMax={3}
         fullscreen
         style={{ width: '100%' }}
       />
       <div className="features">
-        <span className="feature-tag">Pointer Zoom (3x)</span>
+        <span className="feature-tag">Zoom (3x max)</span>
         <span className="feature-tag">60 Frames</span>
-        <span className="feature-tag">Click to zoom</span>
+        <span className="feature-tag">Double-click to zoom</span>
       </div>
     </div>
   );

@@ -99,7 +99,7 @@ Add the library via CDN and create your first 360 viewer in seconds:
 
 ```html
 <!-- Add the library (CSS is auto-injected) -->
-<script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/4.5.3/js-cloudimage-360-view.min.js?vh=35cf56&func=proxy"></script>
+<script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/4.6.0/js-cloudimage-360-view.min.js?vh=055cc3&func=proxy"></script>
 
 <!-- Create a container with data attributes -->
 <div
@@ -123,7 +123,7 @@ Add the library via CDN and create your first 360 viewer in seconds:
 ### Option 1: CDN (Recommended for Quick Setup)
 
 ```html
-<script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/4.5.3/js-cloudimage-360-view.min.js?vh=35cf56&func=proxy"></script>
+<script src="https://scaleflex.cloudimg.io/v7/plugins/js-cloudimage-360-view/4.6.0/js-cloudimage-360-view.min.js?vh=055cc3&func=proxy"></script>
 ```
 
 > **Note:** CSS is automatically injected by the script - no separate stylesheet needed.
