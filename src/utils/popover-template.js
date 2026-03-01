@@ -52,7 +52,7 @@ export function renderBuiltInTemplate(data) {
     const ctaText = data.ctaText || 'View details';
     const productAttr = data.id ? ` data-product-id="${escapeAttr(data.id)}"` : '';
     bodyParts.push(
-      `<a class="ci360-popper-cta" href="${escapeAttr(data.url)}"${productAttr}>${escapeHtml(String(ctaText))}</a>`
+      `<a class="ci360-popper-cta" href="${escapeAttr(data.url)}" target="_top"${productAttr}>${escapeHtml(String(ctaText))}</a>`
     );
   } else if (data.id) {
     const ctaText = data.ctaText || 'View details';

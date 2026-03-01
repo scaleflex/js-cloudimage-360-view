@@ -801,6 +801,40 @@ class CI360Viewer {
 
     this.adaptCanvasSize(imageData);
     this.drawImageOnCanvas(imageData);
+
+    // Watch for container resizes (e.g. dialog open animations, window resize)
+    // and re-adapt canvas to prevent letterboxing from stale dimensions.
+    this.setupResizeObserver();
+  }
+
+  setupResizeObserver() {
+    if (this.resizeObserver || !this.container) return;
+
+    let lastWidth = this.container.offsetWidth;
+    this.resizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const newWidth = Math.round(entry.contentRect.width);
+      // Only re-adapt if width actually changed (height follows from aspect ratio)
+      if (newWidth === lastWidth || newWidth === 0) return;
+      lastWidth = newWidth;
+
+      requestAnimationFrame(() => {
+        if (this.imagesX.length > 0) {
+          this.adaptCanvasSize(this.imagesX[this.activeImageX]);
+
+          if (this.zoomPan) {
+            const dims = this.getDrawDimensions();
+            if (dims) {
+              this.zoomPan.setDrawSize(dims.drawWidth, dims.drawHeight, true);
+            }
+          }
+
+          this.updateView();
+        }
+      });
+    });
+    this.resizeObserver.observe(this.container);
   }
 
   onAllImagesLoaded() {
@@ -876,21 +910,8 @@ class CI360Viewer {
     this.container.classList.toggle('cloudimage-360--fullscreen', isFullscreen);
     setFullscreenIconState(this.fullscreenIcon, isFullscreen);
 
-    requestAnimationFrame(() => {
-      if (this.imagesX.length > 0) {
-        this.adaptCanvasSize(this.imagesX[this.activeImageX]);
-
-        // Update ZoomPan draw size after canvas resize (preserve pan position)
-        if (this.zoomPan) {
-          const dims = this.getDrawDimensions();
-          if (dims) {
-            this.zoomPan.setDrawSize(dims.drawWidth, dims.drawHeight, true);
-          }
-        }
-
-        this.updateView();
-      }
-    });
+    // Canvas resize is handled by the ResizeObserver (setupResizeObserver),
+    // which fires automatically when the container dimensions change.
 
     if (isFullscreen) {
       this.emit('onFullscreenOpen');
@@ -1006,6 +1027,12 @@ class CI360Viewer {
     this.closeImageBitmaps(this.imagesY);
     this.imagesX = [];
     this.imagesY = [];
+
+    // Disconnect container resize observer
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
 
     // Terminate the canvas worker
     if (this.canvasWorker) {

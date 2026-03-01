@@ -114,13 +114,13 @@ class Hotspot {
       { element: hotspotElement, event: 'mouseenter', handler: hotspotEnterHandler }
     );
 
-    // Delegated click handler for CTA buttons/links with product ID
+    // Delegated click handler for CTA buttons/links (with or without product ID)
     if (this.onProductClick) {
       const onProductClick = this.onProductClick;
       const ctaHandler = (e) => {
-        const cta = e.target.closest('.ci360-popper-cta[data-product-id]');
+        const cta = e.target.closest('.ci360-popper-cta');
         if (!cta) return;
-        onProductClick(cta.dataset.productId, id);
+        onProductClick(cta.dataset.productId ?? '', id);
       };
       this.popper.addEventListener('click', ctaHandler);
       this.popperListeners.push(
