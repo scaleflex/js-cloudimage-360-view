@@ -6,11 +6,6 @@
   z-index: 20;
 }
 
-.cloudimage-360-popper {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-}
-
 /* ---- Base hotspot dot ---- */
 
 .cloudimage-360-hotspot {
@@ -38,10 +33,6 @@
 .cloudimage-360-hotspot:focus-visible {
   outline: 2px solid var(--ci360-focus-color, #0066cc);
   outline-offset: 2px;
-}
-
-.cloudimage-360-hotspot.visible {
-  opacity: 1;
 }
 
 /* Pulse needs overflow visible so the ::before ring isn't clipped */

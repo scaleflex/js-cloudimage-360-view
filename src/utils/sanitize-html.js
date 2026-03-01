@@ -52,10 +52,9 @@ const SAFE_ATTRIBUTES = {
 
 // Dangerous patterns to remove from attribute values
 const DANGEROUS_PATTERNS = [
-  /javascript:/gi,
-  /vbscript:/gi,
-  /data:/gi,
-  /on\w+\s*=/gi,
+  /javascript:/i,
+  /vbscript:/i,
+  /on\w+\s*=/i,
 ];
 
 /**

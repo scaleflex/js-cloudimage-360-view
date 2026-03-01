@@ -26,6 +26,11 @@ const DEFAULTS_VALUES = {
   pointerZoomTrigger: 'dblclick',
   fullscreen: false,
   magnifier: null,
+  zoomMax: 5,
+  zoomStep: 0.5,
+  zoomControls: true,
+  zoomControlsPosition: 'bottom-right',
+  scrollHint: true,
   bottomCircle: true,
   bottomCircleOffset: 5,
   ciToken: null,
@@ -65,6 +70,7 @@ const DEFAULTS_VALUES = {
   onHotspotOpen: null,
   onHotspotClose: null,
   onProductClick: null,
+  onError: null,
 };
 
 const getConfigFromImage = (image) => ({
@@ -90,7 +96,12 @@ const getConfigFromImage = (image) => ({
   pointerZoom: parseFloat(getAttr(image, 'pointer-zoom', DEFAULTS_VALUES.pointerZoom)),
   pointerZoomTrigger: getAttr(image, 'pointer-zoom-trigger', DEFAULTS_VALUES.pointerZoomTrigger),
   fullscreen: isTrue(image, 'fullscreen') || isTrue(image, 'full-screen', DEFAULTS_VALUES.fullscreen),
-  magnifier: parseFloat(getAttr(image, 'magnifier', DEFAULTS_VALUES.magnifier)),
+  magnifier: getAttr(image, 'magnifier', null) != null ? parseFloat(getAttr(image, 'magnifier', null)) : null,
+  zoomMax: parseFloat(getAttr(image, 'zoom-max', DEFAULTS_VALUES.zoomMax)),
+  zoomStep: parseFloat(getAttr(image, 'zoom-step', DEFAULTS_VALUES.zoomStep)),
+  zoomControls: !isFalse(image, 'zoom-controls'),
+  zoomControlsPosition: getAttr(image, 'zoom-controls-position', DEFAULTS_VALUES.zoomControlsPosition),
+  scrollHint: !isFalse(image, 'scroll-hint'),
   bottomCircleOffset: parseInt(
     getAttr(image, 'bottom-circle-offset', DEFAULTS_VALUES.bottomCircleOffset),
     10
@@ -138,8 +149,11 @@ const validateConfig = (config) => {
   if (config.pointerZoom !== undefined && config.pointerZoom !== 0 && (config.pointerZoom < 1 || config.pointerZoom > 5)) {
     warnings.push('pointerZoom should be between 1 and 5 (or 0 to disable)');
   }
-  if (config.magnifier !== undefined && config.magnifier !== null && config.magnifier !== 0 && (config.magnifier < 1 || config.magnifier > 5)) {
-    warnings.push('magnifier should be between 1 and 5 (or 0/null to disable)');
+  if (config.magnifier !== undefined && config.magnifier !== null && config.magnifier !== 0) {
+    warnings.push('magnifier option is deprecated and will be ignored. Use zoomMax instead.');
+  }
+  if (config.pointerZoomTrigger === 'click') {
+    warnings.push('pointerZoomTrigger: "click" is deprecated. Zoom is now always triggered by double-click. Use dblclick trigger or the new zoom controls.');
   }
 
   // Validate required combinations
@@ -190,7 +204,12 @@ const adaptConfig = (config) => {
     pointerZoom: parseFloat(config.pointerZoom ?? DEFAULTS_VALUES.pointerZoom),
     pointerZoomTrigger: config.pointerZoomTrigger || DEFAULTS_VALUES.pointerZoomTrigger,
     fullscreen: config.fullscreen ?? DEFAULTS_VALUES.fullscreen,
-    magnifier: parseFloat(config.magnifier ?? DEFAULTS_VALUES.magnifier),
+    magnifier: config.magnifier != null ? parseFloat(config.magnifier) : null,
+    zoomMax: parseFloat(config.zoomMax ?? DEFAULTS_VALUES.zoomMax),
+    zoomStep: parseFloat(config.zoomStep ?? DEFAULTS_VALUES.zoomStep),
+    zoomControls: config.zoomControls ?? DEFAULTS_VALUES.zoomControls,
+    zoomControlsPosition: config.zoomControlsPosition || DEFAULTS_VALUES.zoomControlsPosition,
+    scrollHint: config.scrollHint ?? DEFAULTS_VALUES.scrollHint,
     bottomCircleOffset: parseInt(config.bottomCircleOffset ?? DEFAULTS_VALUES.bottomCircleOffset, 10),
     ciToken: config.ciToken || DEFAULTS_VALUES.ciToken,
     ciFilters: config.ciFilters || DEFAULTS_VALUES.ciFilters,
@@ -230,6 +249,7 @@ const adaptConfig = (config) => {
     onHotspotOpen: config.onHotspotOpen ?? DEFAULTS_VALUES.onHotspotOpen,
     onHotspotClose: config.onHotspotClose ?? DEFAULTS_VALUES.onHotspotClose,
     onProductClick: config.onProductClick ?? DEFAULTS_VALUES.onProductClick,
+    onError: config.onError ?? DEFAULTS_VALUES.onError,
   };
 };
 

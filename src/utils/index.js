@@ -7,8 +7,6 @@ export { preloadImages } from './load-images/preload-images';
 export { initLazyload } from './load-images/lazyload/init-lazyload';
 export { loadImage } from './load-images/load-image';
 
-export { magnify } from './magnify/magnify';
-
 export { calculateOffsetFromEvent } from './zoom/calculate-offsets-from-events';
 export { calculateZoomedDimensions } from './zoom/calculate-zoomed-dimensions';
 export { calculateZoomOffsets } from './zoom/calculate-zoomed-offset';

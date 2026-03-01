@@ -134,7 +134,7 @@
                   data-filename-x="{index}.jpg"
                   data-amount-x="16"
                   data-lazyload
-                  data-magnifier="3"
+                  data-zoom-max="3"
                   data-bottom-circle
                   data-responsive="scaleflex"
                   data-hints="false"
@@ -318,38 +318,31 @@
                 </div>
                 <div class="customize-grid">
                   <div class="customize-column">
-                    <h4 class="customize-group-title">Zoom</h4>
+                    <h4 class="customize-group-title">Zoom & Display</h4>
                     <div class="customize-group">
-                      <label class="checkbox-container">
-                        Pointer zoom
-                        <input class="customize-inputs" data-plugin-property="pointerZoom" type="checkbox" checked id="pointer-checkbox" />
-                        <span class="checkmark"></span>
-                      </label>
                       <div class="customize-selectors-wrappers">
-                        <label class="selectors-wrappers-text" for="pointer-zoom-selector">Zoom scale</label>
-                        <select class="customize-selectors plugin-selector" data-plugin-property="data-pointer-zoom" id="pointer-zoom-selector" plugin-input>
-                          <option selected value="1.5">1.5x</option>
+                        <label class="selectors-wrappers-text" for="zoom-max-selector">Max zoom</label>
+                        <select class="customize-selectors plugin-selector" data-plugin-property="data-zoom-max" id="zoom-max-selector" plugin-input>
                           <option value="2">2x</option>
-                          <option value="2.5">2.5x</option>
-                          <option value="3.5">3.5x</option>
-                          <option value="4">4x</option>
-                        </select>
-                      </div>
-                      <div class="customize-selectors-wrappers">
-                        <label class="selectors-wrappers-text" for="pointer-zoom-trigger">Zoom trigger</label>
-                        <select class="customize-selectors plugin-selector" id="pointer-zoom-trigger">
-                          <option value="dblclick" selected>Double-click</option>
-                          <option value="click">Single click</option>
+                          <option value="3">3x</option>
+                          <option value="5" selected>5x</option>
+                          <option value="8">8x</option>
+                          <option value="10">10x</option>
                         </select>
                       </div>
                       <label class="checkbox-container">
-                        Magnifier
-                        <input id="image-magnifier" class="customize-inputs plugin-option" data-plugin-property="magnifier" data-plugin-value="2" type="checkbox" />
+                        Zoom controls
+                        <input data-plugin-property="zoomControls" class="plugin-option" type="checkbox" checked />
                         <span class="checkmark"></span>
                       </label>
                       <label class="checkbox-container">
                         Fullscreen
                         <input data-plugin-property="fullscreen" class="plugin-option" type="checkbox" checked />
+                        <span class="checkmark"></span>
+                      </label>
+                      <label class="checkbox-container">
+                        Pinch zoom (touch)
+                        <input data-plugin-property="pinchZoom" class="plugin-option" type="checkbox" checked />
                         <span class="checkmark"></span>
                       </label>
                     </div>
@@ -447,12 +440,12 @@
                         <span class="hints-label">Hints:</span>
                         <label class="checkbox-container checkbox-inline">
                           Drag
-                          <input id="hint-drag" class="hint-option" data-hint="drag" type="checkbox" checked />
+                          <input id="hint-drag" class="hint-option" data-hint="drag" type="checkbox" />
                           <span class="checkmark"></span>
                         </label>
                         <label class="checkbox-container checkbox-inline">
-                          Click
-                          <input id="hint-click" class="hint-option" data-hint="click" type="checkbox" checked />
+                          Dblclick
+                          <input id="hint-dblclick" class="hint-option" data-hint="dblclick" type="checkbox" />
                           <span class="checkmark"></span>
                         </label>
                         <label class="checkbox-container checkbox-inline">

@@ -82,7 +82,7 @@ JS Cloudimage 360 View enables you to create stunning, interactive 360-degree pr
 | **Touch & Drag** | Intuitive mouse and touch controls with inertia/momentum |
 | **Pinch-to-Zoom** | Natural pinch gesture zooming on mobile devices |
 | **Autoplay** | Automatic rotation with configurable behavior and direction |
-| **Zoom** | Pointer zoom and magnifier glass for detailed views |
+| **Zoom** | Double-click, Ctrl+scroll, or pinch-to-zoom with pan controls |
 | **Fullscreen** | Immersive fullscreen mode with ESC key support |
 | **Hotspots** | Interactive markers with tooltips for highlighting features |
 | **Keyboard Navigation** | Arrow key support for accessibility |
@@ -165,7 +165,7 @@ The simplest way to create a 360 viewer using HTML data attributes:
   data-amount-x="36"
   data-autoplay
   data-fullscreen
-  data-magnifier="2"
+  data-zoom-max="3"
 ></div>
 
 <script>
@@ -191,8 +191,7 @@ const config = {
   speed: 100,
   dragSpeed: 150,
   fullscreen: true,
-  magnifier: 2,
-  pointerZoom: 2,
+  zoomMax: 3,
   inertia: true,
 
   // Event callbacks
@@ -436,8 +435,11 @@ All options can be set via JavaScript config or HTML data attributes.
 |--------|----------------|---------|-------------|
 | `aspectRatio` | `data-aspect-ratio` | `null` | Aspect ratio for the container (e.g., `"16/9"`, `"4/3"`, `"1/1"`) |
 | `fullscreen` | `data-fullscreen` | `false` | Show fullscreen button |
-| `magnifier` | `data-magnifier` | `null` | Magnifier zoom level (1-5) |
-| `pointerZoom` | `data-pointer-zoom` | `0` | Pointer zoom level on click (1-5) |
+| `zoomMax` | `data-zoom-max` | `5` | Maximum zoom level (1-10) |
+| `zoomStep` | `data-zoom-step` | `0.5` | Zoom increment per step |
+| `zoomControls` | `data-zoom-controls` | `true` | Show zoom control buttons (zoom in, zoom out, reset) |
+| `zoomControlsPosition` | `data-zoom-controls-position` | `'bottom-right'` | Position of zoom controls toolbar. Values: `'top-left'`, `'top-center'`, `'top-right'`, `'bottom-left'`, `'bottom-center'`, `'bottom-right'` |
+| `scrollHint` | `data-scroll-hint` | `true` | Show "Ctrl + scroll to zoom" hint on scroll |
 | `bottomCircle` | `data-bottom-circle` | `true` | Show 360° progress indicator |
 | `bottomCircleOffset` | `data-bottom-circle-offset` | `5` | Progress indicator offset (px) |
 | `initialIconShown` | `data-initial-icon` | `true` | Show 360° icon on load |
@@ -659,7 +661,7 @@ const config = {
   hints: false,
 
   // Custom hints array
-  hints: ['drag', 'click', 'keys'],
+  hints: ['drag', 'dblclick', 'keys'],
 };
 ```
 
@@ -669,7 +671,7 @@ const config = {
 |------|---------|--------|-------------|
 | `drag` | ✓ | - | "Drag to rotate" |
 | `swipe` | - | ✓ | "Swipe to rotate" |
-| `click` | ✓ | - | "Click to zoom" (when pointerZoom enabled) |
+| `dblclick` | ✓ | - | "Double-click to zoom" |
 | `pinch` | - | ✓ | "Pinch to zoom" (when pinchZoom enabled) |
 | `keys` | ✓ | - | "Use arrow keys" (when keys enabled) |
 
@@ -724,10 +726,18 @@ The easiest way to customize the viewer appearance:
   /* Fullscreen */
   --ci360-fullscreen-bg: #fff;
 
-  /* Magnifier */
-  --ci360-magnifier-size: 250px;
-  --ci360-magnifier-border: 2px solid rgba(0, 0, 0, 0.3);
-  --ci360-magnifier-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  /* Zoom Controls */
+  --ci360-zoom-controls-bg: rgba(255, 255, 255, 0.9);
+  --ci360-zoom-controls-bg-hover: rgba(255, 255, 255, 1);
+  --ci360-zoom-controls-color: #505050;
+  --ci360-zoom-controls-color-hover: #333333;
+  --ci360-zoom-controls-border-radius: 8px;
+  --ci360-zoom-controls-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  /* Scroll Hint */
+  --ci360-scroll-hint-bg: rgba(0, 0, 0, 0.7);
+  --ci360-scroll-hint-color: #ffffff;
+  --ci360-scroll-hint-border-radius: 20px;
 
   /* Hotspots */
   --ci360-hotspot-color: #00aaff;
@@ -802,7 +812,7 @@ If you prefer to customize beyond the built-in dark theme:
 | `.cloudimage-360-view-360-circle` | Bottom progress indicator |
 | `.cloudimage-loading-spinner` | Loading spinner |
 | `.cloudimage-360-fullscreen-modal` | Fullscreen container |
-| `.cloudimage-360-img-magnifier-glass` | Magnifier element |
+| `.cloudimage-360-zoom-controls` | Zoom controls toolbar |
 | `.cloudimage-360-hotspot` | Hotspot marker |
 | `.cloudimage-360-popper` | Hotspot tooltip |
 | `.cloudimage-360-hints-overlay` | Hints overlay container |
@@ -933,8 +943,7 @@ Mobile browsers (especially Safari) have strict memory limits that can cause tab
 | Setting | Desktop | Mobile | Notes |
 |---------|---------|--------|-------|
 | `amountX` | 60-100+ | 30-40 max | Each image uses ~4MB GPU memory |
-| `pointerZoom` | ✅ | ❌ | Loads higher-res images |
-| `magnifier` | ✅ | ❌ | Loads higher-res images |
+| `zoomMax` | `3-5` | `2-3` | Higher zoom loads more pixels |
 
 ### Detecting Mobile Devices
 
@@ -950,8 +959,7 @@ viewer.init(container, {
   folder: 'https://example.com/images/',
   filenameX: '{index}.jpg',
   amountX: isMobile ? 36 : 72,           // Fewer images on mobile
-  pointerZoom: isMobile ? false : 2,     // Disable zoom on mobile
-  magnifier: isMobile ? false : 3,       // Disable magnifier on mobile
+  zoomMax: isMobile ? 2 : 5,             // Lower zoom on mobile
 });
 ```
 
@@ -1126,7 +1134,7 @@ const config = {
 const config = {
   hints: true,  // Auto-detect hints
   // or
-  hints: ['drag', 'click', 'keys'],  // Custom hints
+  hints: ['drag', 'dblclick', 'keys'],  // Custom hints
 };
 ```
 

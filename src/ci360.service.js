@@ -7,38 +7,29 @@ import {
   generateCdnPath,
   preloadImages,
   createFullscreenIcon,
-  createMagnifierIcon,
-  createZoomOutIcon,
   createLoader,
   createInnerBox,
   createIconsContainer,
   createCanvas,
   create360ViewCircleIcon,
-  magnify,
   isCompletedOneCycle,
   getMovingDirection,
   loop,
   initLazyload,
   createInitialIcon,
   removeElementFromContainer,
-  generateHighPreviewCdnUrl,
-  loadImage,
   delay,
   shouldSwitchSpinDirection,
   switchSpinDirection,
   ORIENTATIONS,
   THROTTLE_TIME,
   DRAG_START_DELAY,
-  ZOOM_TRANSITION_DELAY,
   DRAG_SPEED_DIVISOR,
   MIN_DRAG_SPEED,
-  MAX_MAGNIFIER_LEVEL,
-  MAX_POINTER_ZOOM,
+  PAN_STEP_KEYBOARD,
   getDefaultSpinDirection,
   isSpinKeysPressed,
-  calculateOffsetFromEvent,
   createLoadingSpinner,
-  createTransitionOverlay,
   isTouchDevice,
   safeJsonParse,
   createAriaLiveRegion,
@@ -54,6 +45,10 @@ import {
 } from './utils';
 import { setFullscreenIconState } from './utils/container-elements/create-fullscreen-icon';
 import { isFullscreenEnabled, getFullscreenElement, requestFullscreen, exitFullscreen } from './utils/fullscreen';
+import { ZoomPan } from './utils/zoom/zoom-pan';
+import { GestureRecognizer } from './utils/zoom/gestures';
+import { createZoomControls } from './utils/zoom/controls';
+import { createScrollHint } from './utils/zoom/scroll-hint';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
 import MainThreadCanvasRenderer from './canvas-renderer';
@@ -85,18 +80,14 @@ class CI360Viewer {
     this.lastDragY = 0;
     this.inertiaAnimationId = null;
     this.hasInteracted = false;
-    this.currentZoomScale = 1;
     this.touchDevice = isTouchDevice();
     this.dragJustEnded = false;
-    // Pinch-to-zoom state
-    this.isPinching = false;
-    this.initialPinchDistance = 0;
-    this.pinchZoomLevel = 1;
-    this.pinchZoomEmitted = false;
-    this.lastEmittedZoom = 1;
-    // Pan while zoomed state
-    this.panOffsetX = 0;
-    this.panOffsetY = 0;
+    // Zoom modules (initialized in initZoom)
+    this.zoomPan = null;
+    this.gestureRecognizer = null;
+    this.zoomControlsUI = null;
+    this.scrollHintUI = null;
+    this.highResLoaded = false;
     // Use main-thread canvas on mobile to avoid OffscreenCanvas memory issues
     this.useMainThreadCanvas = USE_MAIN_THREAD_CANVAS;
     this.canvasWorker = this.useMainThreadCanvas ? new MainThreadCanvasRenderer() : new CanvasWorker();
@@ -135,14 +126,15 @@ class CI360Viewer {
   }
 
   mouseDown(event) {
-    if (!this.isReady || this.glass) return;
+    if (!this.isReady) return;
 
     // Don't handle mousedown on interactive elements - let them handle their own events
     const target = event.target;
     if (target && target.closest) {
       const isInteractiveElement = target.closest('.cloudimage-360-button') ||
         target.closest('.cloudimage-360-hotspot-timeline') ||
-        target.closest('.cloudimage-360-hotspot');
+        target.closest('.cloudimage-360-hotspot') ||
+        target.closest('.cloudimage-360-zoom-controls');
       if (isInteractiveElement) return;
     }
 
@@ -164,6 +156,12 @@ class CI360Viewer {
       this.stopAutoplay();
       this.autoplay = false;
       this.autoplayJustStopped = true;
+    }
+
+    // If zoomed, delegate to ZoomPan for drag-to-pan
+    if (this.isZoomed && this.zoomPan) {
+      this.zoomPan.startPan(pageX, pageY);
+      return;
     }
 
     this.movementStart = { x: pageX, y: pageY };
@@ -302,68 +300,21 @@ class CI360Viewer {
   }
 
   mouseMove(event) {
-    if (!this.isReady || (!this.isClicked && !this.isZoomed) || this.glass) return;
+    if (!this.isReady || !this.isClicked) return;
 
-    // Only hide icons when dragging (not when zoomed and panning)
-    if (!this.isZoomed) {
-      this.hideAllIcons();
-    }
+    // When zoomed, pan is handled by ZoomPan mouse listeners
+    if (this.isZoomed) return;
+
+    this.hideAllIcons();
     this.drag(event.pageX, event.pageY);
-
-    if (this.isZoomed) this.applyZoom(event);
   }
 
-  mouseClick(event) {
-    if (!this.isReady || this.isDragging) return;
-
-    // Don't handle click on interactive elements - let them handle their own clicks
-    const target = event.target;
-    if (target && target.closest) {
-      const isInteractiveElement = target.closest('.cloudimage-360-button') ||
-        target.closest('.cloudimage-360-hotspot-timeline') ||
-        target.closest('.cloudimage-360-hotspot');
-      if (isInteractiveElement) return;
-    }
-
-    // If drag just ended, don't trigger zoom (click fires after mouseUp)
-    if (this.dragJustEnded) {
-      this.dragJustEnded = false;
-      return;
-    }
-
-    // If autoplay was just stopped by this click, don't trigger zoom
-    if (this.autoplayJustStopped) {
-      this.autoplayJustStopped = false;
-      return;
-    }
-
-    if (this.glass && this.magnified) {
-      this.removeGlass();
-      return;
-    }
-
-    // Only trigger zoom on click if pointerZoomTrigger is 'click'
-    if (this.pointerZoomTrigger === 'click' && this.pointerZoom && !this.glass && !this.touchDevice) {
-      this.toggleZoom(event);
-    }
-  }
-
-  mouseDblClick(event) {
-    if (!this.isReady) return;
-
-    // Don't handle dblclick on interactive elements
-    const target = event.target;
-    if (target && target.closest) {
-      const isInteractiveElement = target.closest('.cloudimage-360-button') ||
-        target.closest('.cloudimage-360-hotspot-timeline') ||
-        target.closest('.cloudimage-360-hotspot');
-      if (isInteractiveElement) return;
-    }
-
-    // Only trigger zoom on dblclick if pointerZoomTrigger is 'dblclick'
-    if (this.pointerZoomTrigger === 'dblclick' && this.pointerZoom && !this.glass && !this.touchDevice) {
-      this.toggleZoom(event);
-    }
+  mouseClick() {
+    // Click handler kept intentionally minimal.
+    // Zoom is handled by ZoomPan's dblclick handler, not single click.
+    // Reset transient flags so they don't leak to subsequent interactions.
+    this.dragJustEnded = false;
+    this.autoplayJustStopped = false;
   }
 
   loadHigherQualityImages(width, onLoad) {
@@ -401,151 +352,171 @@ class CI360Viewer {
     this.hotspotsInstance.forceHidePopper();
   }
 
-  toggleZoom(event) {
-    if (this.isZoomed) {
-      this.showTransitionOverlay();
+  /**
+   * Compute the actual image draw dimensions (CSS pixels) matching the renderer.
+   * For wide images, drawWidth = containerWidth. For tall/portrait images,
+   * drawWidth = containerHeight * imageAspectRatio (centered within the canvas).
+   */
+  getDrawDimensions() {
+    if (!this.canvas || !this.imageAspectRatio) return null;
+    const containerWidth = this.canvas.clientWidth;
+    const containerHeight = containerWidth / this.imageAspectRatio;
+    const containerAspectRatio = containerWidth / containerHeight;
+    // This mirrors the renderer's wideImage logic
+    if (this.imageAspectRatio > containerAspectRatio) {
+      return { drawWidth: containerWidth, drawHeight: containerWidth / this.imageAspectRatio };
+    }
+    return { drawWidth: containerHeight * this.imageAspectRatio, drawHeight: containerHeight };
+  }
 
-      setTimeout(() => {
-        this.removeZoom();
-      }, ZOOM_TRANSITION_DELAY);
-    } else {
-      let width = (this.pointerZoom ? document.body : this.container).offsetWidth;
+  initZoom() {
+    const zoomMax = this.zoomMax || 5;
+    const zoomStep = this.zoomStep || 0.5;
 
-      this.hideHotspots();
-      this.showLoadingSpinner();
-      this.loadHigherQualityImages(width, () => {
-        this.showTransitionOverlay();
+    // Core zoom/pan manager
+    this.zoomPan = new ZoomPan(this.innerBox, {
+      zoomMax,
+      zoomStep,
+      onZoomChange: (zoom, panX, panY) => this.onZoomChange(zoom, panX, panY),
+    });
 
-        setTimeout(() => {
-          this.applyZoom(event);
-        }, ZOOM_TRANSITION_DELAY);
+    // Set draw size once canvas is ready (must match drawWidth/drawHeight in renderer)
+    const dims = this.getDrawDimensions();
+    if (dims) {
+      this.zoomPan.setDrawSize(dims.drawWidth, dims.drawHeight);
+    }
+
+    // Touch gesture recognizer (mobile, if pinchZoom not disabled)
+    if (this.touchDevice && this.pinchZoom !== false) {
+      this.gestureRecognizer = new GestureRecognizer(this.innerBox, {
+        zoomMax,
+        getZoom: () => this.zoomPan ? this.zoomPan.getZoom() : 1,
+        onPinchZoom: (newZoom, centerX, centerY) => {
+          if (!this.zoomPan) return;
+          if (centerX !== undefined) {
+            this.zoomPan.zoomTowardPoint(newZoom, centerX, centerY);
+          } else {
+            this.zoomPan.applyTouchZoom(newZoom);
+          }
+        },
+        onPan: (dx, dy) => {
+          if (this.zoomPan) this.zoomPan.applyTouchPan(dx, dy);
+        },
+        onDoubleTap: (clientX, clientY) => {
+          if (!this.zoomPan) return;
+          if (this.zoomPan.isZoomed()) {
+            this.zoomPan.resetZoom();
+          } else {
+            this.zoomPan.zoomTowardPoint(2, clientX, clientY);
+          }
+        },
       });
     }
+
+    // Zoom UI controls
+    if (this.zoomControls && !this.touchDevice) {
+      this.zoomControlsUI = createZoomControls(this.innerBox, {
+        position: this.zoomControlsPosition || 'bottom-left',
+        zoomMax,
+        onZoomIn: () => this.zoomPan && this.zoomPan.zoomIn(),
+        onZoomOut: () => this.zoomPan && this.zoomPan.zoomOut(),
+        onReset: () => this.zoomPan && this.zoomPan.resetZoom(),
+      });
+    }
+
+    // Scroll hint toast (desktop only, non-touch)
+    // Disabled: the hints overlay already provides interaction guidance
+    // if (this.scrollHint && !this.touchDevice) {
+    //   this.scrollHintUI = createScrollHint(this.innerBox);
+    // }
+  }
+
+  onZoomChange(zoom, panX, panY) {
+    // Cancel inertia when zoom changes
+    if (this.inertiaAnimationId) {
+      cancelAnimationFrame(this.inertiaAnimationId);
+      this.inertiaAnimationId = null;
+    }
+
+    const wasZoomed = this.isZoomed;
+    this.isZoomed = zoom > 1;
+
+    // First zoom above 1x: load higher-quality images (once)
+    if (this.isZoomed && !wasZoomed) {
+      this.hideAllIcons();
+      this.hideHotspots();
+      if (this.zoomControlsUI) this.zoomControlsUI.show();
+
+      if (!this.highResLoaded) {
+        this.highResLoaded = true;
+        const width = document.body.offsetWidth;
+        this.loadHigherQualityImages(width, () => {
+          // Use current zoom state (not stale closure values from when load started)
+          if (this.zoomPan) {
+            this.updateView(this.zoomPan.getZoom(), this.zoomPan.panX, this.zoomPan.panY);
+          }
+        });
+      }
+
+      this.emit('onZoomIn', { zoomLevel: zoom });
+      this.announce('Zoomed in. Use mouse drag or arrow keys to pan. Double-click or press 0 to reset.');
+    }
+
+    // Back to 1x
+    if (!this.isZoomed && wasZoomed) {
+      this.showAllIcons();
+      this.emit('onZoomOut');
+      this.announce('Zoomed out');
+    }
+
+    // Update zoom control button states
+    if (this.zoomControlsUI) {
+      this.zoomControlsUI.updateState(zoom);
+    }
+
+    this.updateView(zoom, panX, panY);
   }
 
   removeZoom() {
-    this.isZoomed = false;
-    this.updateView();
-    this.showAllIcons();
-    this.hideZoomOutIcon();
-    this.hideTransitionOverlay();
-    this.emit('onZoomOut');
-    this.announce('Zoomed out');
+    if (this.zoomPan) {
+      this.zoomPan.resetZoom();
+    }
   }
 
-  zoomIn(event) {
-    if (this.isZoomed || !this.pointerZoom) return;
-
-    event?.stopPropagation();
-
-    let width = (this.pointerZoom ? document.body : this.container).offsetWidth;
-
-    this.hideHotspots();
-    this.hideAllIcons();
-    this.showLoadingSpinner();
-    this.loadHigherQualityImages(width, () => {
-      this.showTransitionOverlay();
-
-      setTimeout(() => {
-        this.applyZoom(event);
-      }, ZOOM_TRANSITION_DELAY);
-    });
-  }
-
-  zoomOut(event) {
-    if (!this.isZoomed) return;
-
-    event?.stopPropagation();
-
-    this.showTransitionOverlay();
-
-    setTimeout(() => {
-      this.removeZoom();
-    }, ZOOM_TRANSITION_DELAY);
-  }
-
-  mouseLeave() {
+  toggleZoom() {
+    if (!this.zoomPan) return;
     if (this.isZoomed) {
-      this.removeZoom();
-    }
-  }
-
-  applyZoom(event) {
-    const { offsetX, offsetY } = calculateOffsetFromEvent(event, this.canvas, this.devicePixelRatio);
-
-    // Only do first-time zoom setup if not already zoomed
-    if (!this.isZoomed) {
-      this.isZoomed = true;
-      this.hideAllIcons();
-      this.hideLoadingSpinner();
-      this.hideTransitionOverlay();
-      this.showZoomOutIcon();
-      this.emit('onZoomIn', { zoomLevel: this.pointerZoom });
-      this.announce('Zoomed in. Move mouse to pan. Click to zoom out.');
-    }
-
-    this.updateView(this.pointerZoom, offsetX, offsetY);
-  }
-
-  touchOutside(event) {
-    if (!this.glass) return;
-
-    const isOutside = !this.canvas.contains(event.target);
-
-    if (isOutside) {
-      this.removeGlass();
+      this.zoomPan.resetZoom();
+    } else {
+      this.zoomPan.setZoom(2);
     }
   }
 
   touchStart(event) {
-    if (!this.isReady || this.glass || !event.touches || !event.touches.length) return;
+    if (!this.isReady || !event.touches || !event.touches.length) return;
 
-    // Don't handle touch on interactive elements - let them handle their own clicks
+    // Don't handle touch on interactive elements
     const target = event.target;
     if (target && target.closest) {
       const isInteractiveElement = target.closest('.cloudimage-360-button') ||
         target.closest('.cloudimage-360-hotspot-timeline') ||
-        target.closest('.cloudimage-360-hotspot');
+        target.closest('.cloudimage-360-hotspot') ||
+        target.closest('.cloudimage-360-zoom-controls');
       if (isInteractiveElement) return;
     }
 
     // Hide hints on first interaction
     this.hideHints();
 
-    // Handle pinch-to-zoom with two fingers
-    // Don't enter pinch mode if already dragging (prevents accidental activation)
-    if (event.touches.length === 2 && this.pinchZoom && !this.isDragging) {
-      event.preventDefault();
-      this.isPinching = true;
-      this.isClicked = false;
-
-      // Cancel any running inertia animation
-      if (this.inertiaAnimationId) {
-        cancelAnimationFrame(this.inertiaAnimationId);
-        this.inertiaAnimationId = null;
-      }
-
-      const touch1 = event.touches[0];
-      const touch2 = event.touches[1];
-      this.initialPinchDistance = this.getPinchDistance(touch1, touch2);
-
-      // Stop autoplay when pinching
-      if (this.autoplay || this.loopTimeoutId) {
-        this.stopAutoplay();
-        this.autoplay = false;
-      }
-
-      // If not already zoomed, load higher quality images
-      if (!this.isZoomed && this.pinchZoomLevel === 1) {
-        const width = this.container.offsetWidth;
-        this.hideHotspots();
-        this.loadHigherQualityImages(width, () => {});
-      }
+    // Two-finger pinch and double-tap are handled by GestureRecognizer
+    // We only handle single-finger rotation here when not zoomed
+    if (event.touches.length > 1) {
+      this.isClicked = false; // Cancel any ongoing single-finger drag
       return;
     }
 
-    // Single finger - normal rotation
-    if (event.touches.length > 1) return;
+    // If zoomed, single-finger pan is handled by GestureRecognizer
+    if (this.isZoomed) return;
 
     const { pageX, pageY } = event.touches[0];
 
@@ -576,55 +547,12 @@ class CI360Viewer {
     }
   }
 
-  getPinchDistance(touch1, touch2) {
-    const dx = touch1.pageX - touch2.pageX;
-    const dy = touch1.pageY - touch2.pageY;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  getPinchCenter(touch1, touch2) {
-    return {
-      x: (touch1.pageX + touch2.pageX) / 2,
-      y: (touch1.pageY + touch2.pageY) / 2,
-    };
-  }
-
   touchEnd(event) {
     if (!this.isReady) return;
 
-    // Handle pinch end
-    if (this.isPinching) {
-      // Only end pinching if no fingers remain or only one finger
-      if (!event.touches || event.touches.length < 2) {
-        this.isPinching = false;
-        this.initialPinchDistance = 0;
-
-        // If zoomed out completely, reset zoom state
-        if (this.pinchZoomLevel <= 1) {
-          const wasZoomed = this.pinchZoomEmitted;
-          this.pinchZoomLevel = 1;
-          this.pinchZoomEmitted = false;
-          this.lastEmittedZoom = 1;
-          this.isZoomed = false;
-          this.panOffsetX = 0;
-          this.panOffsetY = 0;
-          this.showAllIcons();
-          this.updateView();
-          // Only emit onZoomOut if onZoomIn was previously emitted
-          if (wasZoomed) {
-            this.emit('onZoomOut');
-          }
-        } else if (this.canvas) {
-          // Still zoomed - initialize pan offset to canvas center for panning
-          const rect = this.canvas.getBoundingClientRect();
-          this.panOffsetX = rect.width / 2 * this.devicePixelRatio;
-          this.panOffsetY = rect.height / 2 * this.devicePixelRatio;
-        }
-      }
-      return;
+    if (!this.isZoomed) {
+      this.showAllIcons();
     }
-
-    this.showAllIcons();
 
     // Start inertia animation if enabled and has velocity
     if (this.inertia && this.isDragging && (Math.abs(this.velocityX) > 0.1 || Math.abs(this.velocityY) > 0.1)) {
@@ -637,78 +565,18 @@ class CI360Viewer {
   }
 
   touchMove(event) {
-    if (!this.isReady || this.glass) return;
+    if (!this.isReady) return;
 
-    // Handle pinch zoom
-    if (this.isPinching && event.touches.length === 2) {
-      event.preventDefault();
+    // When zoomed, all touch handling is delegated to GestureRecognizer
+    if (this.isZoomed) return;
 
-      const touch1 = event.touches[0];
-      const touch2 = event.touches[1];
-      const currentDistance = this.getPinchDistance(touch1, touch2);
+    // Skip multi-touch (pinch handled by GestureRecognizer)
+    if (event.touches && event.touches.length > 1) return;
 
-      // Guard against division by zero
-      if (this.initialPinchDistance === 0) {
-        this.initialPinchDistance = currentDistance;
-        return;
-      }
-
-      // Calculate zoom scale based on pinch distance change
-      const scale = currentDistance / this.initialPinchDistance;
-      const newZoomLevel = Math.max(1, Math.min(this.pinchZoomLevel * scale, MAX_POINTER_ZOOM));
-
-      // Update pinch reference for smooth continuous zoom
-      this.initialPinchDistance = currentDistance;
-      this.pinchZoomLevel = newZoomLevel;
-
-      // Calculate offset relative to canvas center for zoom
-      if (!this.canvas) return;
-      const rect = this.canvas.getBoundingClientRect();
-      const canvasCenterX = rect.width / 2 * this.devicePixelRatio;
-      const canvasCenterY = rect.height / 2 * this.devicePixelRatio;
-
-      if (newZoomLevel > 1) {
-        this.isZoomed = true;
-        this.hideAllIcons();
-        // Use canvas center for zoom (simpler and more stable)
-        this.updateView(newZoomLevel, canvasCenterX, canvasCenterY);
-
-        if (!this.pinchZoomEmitted || newZoomLevel > this.lastEmittedZoom) {
-          this.emit('onZoomIn', { zoomLevel: newZoomLevel });
-          this.pinchZoomEmitted = true;
-          this.lastEmittedZoom = newZoomLevel;
-        }
-      } else {
-        this.isZoomed = false;
-        this.panOffsetX = 0;
-        this.panOffsetY = 0;
-        // Don't reset pinchZoomEmitted here - we need it in touchEnd to know if onZoomOut should fire
-        this.updateView();
-      }
-      return;
-    }
-
-    // Normal single-finger drag
+    // Normal single-finger drag for rotation
     if (!this.isClicked || !event.touches || !event.touches[0]) return;
     const { pageX, pageY } = event.touches[0];
     event.preventDefault();
-
-    // Pan when zoomed instead of rotating
-    if (this.isZoomed && this.pinchZoomLevel > 1) {
-      const deltaX = pageX - this.movementStart.x;
-      const deltaY = pageY - this.movementStart.y;
-
-      // Update pan offset - subtract to follow finger direction (like scrolling)
-      this.panOffsetX -= deltaX * this.devicePixelRatio;
-      this.panOffsetY -= deltaY * this.devicePixelRatio;
-
-      // Update movement start for next frame
-      this.movementStart = { x: pageX, y: pageY };
-
-      // Apply pan with current zoom level
-      this.updateView(this.pinchZoomLevel, this.panOffsetX, this.panOffsetY);
-      return;
-    }
 
     this.drag(pageX, pageY);
   }
@@ -716,10 +584,29 @@ class CI360Viewer {
   keyDown(event) {
     if (!this.isReady) return;
 
+    // Don't intercept keyboard events in form elements
+    const tag = event.target && event.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || (event.target && event.target.isContentEditable)) return;
+
     const { keyCode } = event;
     const isReverse = this.keysReverse;
 
     if (this.autoplay) this.stopAutoplay();
+
+    // Handle zoom keyboard shortcuts (+/-/0)
+    if (this.zoomPan && this.zoomPan.handleKeyZoom(keyCode)) {
+      event.preventDefault();
+      this.hideHints();
+      return;
+    }
+
+    // When zoomed, arrow keys pan instead of rotate
+    if (this.isZoomed && this.zoomPan) {
+      if (this.zoomPan.handleKeyPan(keyCode, PAN_STEP_KEYBOARD)) {
+        event.preventDefault();
+        return;
+      }
+    }
 
     if (isSpinKeysPressed(keyCode, this.allowSpinY)) {
       this.hasInteracted = true;
@@ -855,9 +742,6 @@ class CI360Viewer {
     const { naturalWidth, naturalHeight } = imageData;
     this.imageAspectRatio = naturalWidth / naturalHeight;
 
-    // Canvas always uses width:100%; height:auto — it fills the container width
-    // and the height follows from the image aspect ratio.
-    // In fullscreen, CSS flexbox on the inner-box centers it vertically.
     const containerWidth = this.canvas.clientWidth;
     const containerHeight = containerWidth / this.imageAspectRatio;
 
@@ -935,11 +819,16 @@ class CI360Viewer {
         onClose: this.onHotspotClose,
         onProductClick: this.onProductClick,
       });
-      // Show dots for the initial frame immediately
-      this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
       this.addHotspotTimeline();
-      // Show timeline by default (unless autoplay is active - it will be hidden below)
-      this.showHotspotTimeline();
+
+      // Hide hotspots during autoplay — they'll be shown when autoplay stops
+      if (this.autoplay) {
+        this.hotspotsInstance.hideHotspots();
+        this.hideHotspotTimeline();
+      } else {
+        this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
+        this.showHotspotTimeline();
+      }
     }
 
     this.emit('onLoad', { imagesX: this.imagesX.length, imagesY: this.imagesY.length });
@@ -953,9 +842,7 @@ class CI360Viewer {
         : this.hints;
 
       if (hintsToShow && hintsToShow.length > 0) {
-        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow, {
-          pointerZoomTrigger: this.pointerZoomTrigger,
-        });
+        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow);
         showHintsOverlay(this.hintsOverlay);
       }
     }
@@ -966,37 +853,6 @@ class CI360Viewer {
 
       delayedPlay();
     }
-  }
-
-  magnify(event) {
-    event.stopPropagation();
-    const { src } =
-      this.orientation === ORIENTATIONS.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX];
-    const width = this.container.offsetWidth;
-    const imageWidth = width * this.magnifier;
-    const highPreviewCdnUrl = generateHighPreviewCdnUrl(src, imageWidth);
-
-    this.showLoadingSpinner();
-    this.createGlass();
-
-    const onLoadImage = (image) => {
-      this.hideLoadingSpinner();
-      this.magnified = true;
-      magnify(event, this.innerBox, this.offset, image, this.glass, this.magnifier);
-    };
-
-    const onErrorImage = (error) => {
-      this.hideLoadingSpinner();
-      this.removeGlass();
-      this.emit('onError', {
-        error: { message: error.message, url: error.url },
-        errorCount: 1,
-        totalImages: 1,
-        errors: [{ message: error.message, url: error.url }],
-      });
-    };
-
-    loadImage(highPreviewCdnUrl, onLoadImage, onErrorImage);
   }
 
   toggleFullscreen(event) {
@@ -1023,6 +879,15 @@ class CI360Viewer {
     requestAnimationFrame(() => {
       if (this.imagesX.length > 0) {
         this.adaptCanvasSize(this.imagesX[this.activeImageX]);
+
+        // Update ZoomPan draw size after canvas resize (preserve pan position)
+        if (this.zoomPan) {
+          const dims = this.getDrawDimensions();
+          if (dims) {
+            this.zoomPan.setDrawSize(dims.drawWidth, dims.drawHeight, true);
+          }
+        }
+
         this.updateView();
       }
     });
@@ -1099,6 +964,12 @@ class CI360Viewer {
     this.loopTimeoutId = null;
     this.emit('onAutoplayStop');
 
+    // Show hotspots and timeline after autoplay stops
+    if (this.hotspotsInstance) {
+      this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
+      this.showHotspotTimeline();
+    }
+
     // Show hints after autoplay stops (if hints are enabled and not created yet)
     if (this.hints !== false && !this.hintsOverlay && !this.hintsHidden) {
       const hintsToShow = this.hints === true
@@ -1106,9 +977,7 @@ class CI360Viewer {
         : this.hints;
 
       if (hintsToShow && hintsToShow.length > 0) {
-        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow, {
-          pointerZoomTrigger: this.pointerZoomTrigger,
-        });
+        this.hintsOverlay = createHintsOverlay(this.innerBox, hintsToShow);
         showHintsOverlay(this.hintsOverlay);
       }
     }
@@ -1125,6 +994,12 @@ class CI360Viewer {
 
     // Remove all event listeners
     this.removeEvents();
+
+    // Destroy zoom modules
+    if (this.zoomPan) { this.zoomPan.destroy(); this.zoomPan = null; }
+    if (this.gestureRecognizer) { this.gestureRecognizer.destroy(); this.gestureRecognizer = null; }
+    if (this.zoomControlsUI) { this.zoomControlsUI.destroy(); this.zoomControlsUI = null; }
+    if (this.scrollHintUI) { this.scrollHintUI.destroy(); this.scrollHintUI = null; }
 
     // Close all ImageBitmap objects to free GPU memory
     this.closeImageBitmaps(this.imagesX);
@@ -1223,68 +1098,6 @@ class CI360Viewer {
     this.initialIcon.style.opacity = 0;
   }
 
-  createGlass() {
-    this.hideAllIcons();
-    this.glass = document.createElement('div');
-    this.innerBox.appendChild(this.glass);
-    this.innerBox.style.cursor = 'default';
-  }
-
-  removeGlass() {
-    this.showAllIcons();
-    this.innerBox.removeChild(this.glass);
-    this.glass = null;
-    this.magnified = false;
-  }
-
-  addMagnifierIcon() {
-    // Use pointerZoom for the magnifier/zoom-in button
-    if (!this.pointerZoom) return;
-
-    // Create zoom-in icon (magnifier with plus)
-    this.magnifierIcon = createMagnifierIcon();
-    this.magnifierIcon.onclick = this.zoomIn.bind(this);
-    this.iconsContainer.appendChild(this.magnifierIcon);
-
-    // Create zoom-out icon in the same position (initially hidden)
-    this.zoomOutIcon = createZoomOutIcon();
-    this.zoomOutIcon.onclick = this.zoomOut.bind(this);
-    this.zoomOutIcon.style.display = 'none';
-    this.iconsContainer.appendChild(this.zoomOutIcon);
-  }
-
-  showMagnifierIcon() {
-    if (!this.magnifierIcon) return;
-
-    this.magnifierIcon.style.display = '';
-    this.magnifierIcon.style.visibility = 'visible';
-    this.magnifierIcon.style.opacity = 1;
-  }
-
-  hideMagnifierIcon() {
-    if (!this.magnifierIcon) return;
-
-    this.magnifierIcon.style.display = 'none';
-    this.magnifierIcon.style.visibility = 'hidden';
-    this.magnifierIcon.style.opacity = 0;
-  }
-
-  showZoomOutIcon() {
-    if (!this.zoomOutIcon) return;
-
-    this.zoomOutIcon.style.display = '';
-    this.zoomOutIcon.style.visibility = 'visible';
-    this.zoomOutIcon.style.opacity = 1;
-  }
-
-  hideZoomOutIcon() {
-    if (!this.zoomOutIcon) return;
-
-    this.zoomOutIcon.style.display = 'none';
-    this.zoomOutIcon.style.visibility = 'hidden';
-    this.zoomOutIcon.style.opacity = 0;
-  }
-
   addFullscreenIcon() {
     if (!this.fullscreen || !isFullscreenEnabled()) return;
 
@@ -1335,24 +1148,6 @@ class CI360Viewer {
 
     this.hideAllIcons();
     this.loadingSpinner.style.opacity = 1;
-  }
-
-  createTransitionOverlay() {
-    this.transitionOverlay = createTransitionOverlay();
-    this.innerBox.appendChild(this.transitionOverlay);
-  }
-
-  showTransitionOverlay() {
-    if (!this.transitionOverlay) return;
-
-    this.hideAllIcons();
-    this.transitionOverlay.style.opacity = 1;
-  }
-
-  hideTransitionOverlay() {
-    if (!this.transitionOverlay) return;
-
-    this.transitionOverlay.style.opacity = 0;
   }
 
   hideLoadingSpinner() {
@@ -1513,31 +1308,28 @@ class CI360Viewer {
 
     this.innerBox.style.cursor = 'grab';
 
-    if (this.pointerZoom) {
-      this.createTransitionOverlay();
-      this.addLoadingSpinner();
-    }
-
-    if (!this.touchDevice) this.addMagnifierIcon();
+    this.addLoadingSpinner();
     this.addFullscreenIcon();
     if (this.initialIconShown) this.addInitialIcon();
     if (this.bottomCircle) this.add360ViewCircleIcon();
+
+    // Initialize new zoom system
+    this.initZoom();
   }
 
   showAllIcons() {
     this.showInitialIcon();
     this.show360ViewCircleIcon();
-    this.showMagnifierIcon();
     this.showFullscreenIcon();
     this.showHotspotTimeline();
+    if (this.zoomControlsUI) this.zoomControlsUI.show();
   }
 
   hideAllIcons() {
     this.hideInitialIcon();
     this.hide360ViewCircleIcon();
-    this.hideMagnifierIcon();
-    this.hideZoomOutIcon();
     this.hideFullscreenIcon();
+    if (this.zoomControlsUI) this.zoomControlsUI.hide();
     // Don't hide timeline - it should always remain visible
   }
 
@@ -1574,30 +1366,24 @@ class CI360Viewer {
 
   addMouseEvents() {
     this.boundMouseClick = this.mouseClick.bind(this);
-    this.boundMouseDblClick = this.mouseDblClick.bind(this);
     this.boundMouseDown = this.mouseDown.bind(this);
     this.boundMouseMove = throttle(this.mouseMove.bind(this), THROTTLE_TIME);
     this.boundMouseUp = this.mouseUp.bind(this);
-    this.boundMouseLeave = this.mouseLeave.bind(this);
 
     this.innerBox.addEventListener('click', this.boundMouseClick);
-    this.innerBox.addEventListener('dblclick', this.boundMouseDblClick);
     this.innerBox.addEventListener('mousedown', this.boundMouseDown);
-    this.innerBox.addEventListener('mouseleave', this.boundMouseLeave);
     document.addEventListener('mousemove', this.boundMouseMove);
     document.addEventListener('mouseup', this.boundMouseUp);
   }
 
   addTouchEvents() {
-    this.boundTouchOutside = this.touchOutside.bind(this);
     this.boundTouchStart = this.touchStart.bind(this);
     this.boundTouchEnd = this.touchEnd.bind(this);
     this.boundTouchMove = throttle(this.touchMove.bind(this), THROTTLE_TIME);
 
-    document.addEventListener('touchstart', this.boundTouchOutside);
-    this.container.addEventListener('touchstart', this.boundTouchStart);
+    this.container.addEventListener('touchstart', this.boundTouchStart, { passive: false });
     this.container.addEventListener('touchend', this.boundTouchEnd);
-    this.container.addEventListener('touchmove', this.boundTouchMove);
+    this.container.addEventListener('touchmove', this.boundTouchMove, { passive: false });
   }
 
   addKeyboardEvents() {
@@ -1614,8 +1400,6 @@ class CI360Viewer {
 
       if (this.isZoomed) {
         this.removeZoom();
-      } else if (this.glass) {
-        this.removeGlass();
       }
     };
 
@@ -1639,15 +1423,12 @@ class CI360Viewer {
 
   removeMouseEvents() {
     this.innerBox.removeEventListener('click', this.boundMouseClick);
-    this.innerBox.removeEventListener('dblclick', this.boundMouseDblClick);
     this.innerBox.removeEventListener('mousedown', this.boundMouseDown);
-    this.innerBox.removeEventListener('mouseleave', this.boundMouseLeave);
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
   }
 
   removeTouchEvents() {
-    document.removeEventListener('touchstart', this.boundTouchOutside);
     this.container.removeEventListener('touchstart', this.boundTouchStart);
     this.container.removeEventListener('touchend', this.boundTouchEnd);
     this.container.removeEventListener('touchmove', this.boundTouchMove);
@@ -1691,6 +1472,15 @@ class CI360Viewer {
     if (!this.isReady) return;
 
     this.stopAutoplay();
+
+    // Clean up zoom modules before re-init
+    if (this.zoomPan) { this.zoomPan.destroy(); this.zoomPan = null; }
+    if (this.gestureRecognizer) { this.gestureRecognizer.destroy(); this.gestureRecognizer = null; }
+    if (this.zoomControlsUI) { this.zoomControlsUI.destroy(); this.zoomControlsUI = null; }
+    if (this.scrollHintUI) { this.scrollHintUI.destroy(); this.scrollHintUI = null; }
+    this.isZoomed = false;
+    this.highResLoaded = false;
+
     removeElementFromContainer(this.innerBox, '.cloudimage-360-icons-container');
     this.init(this.container, newConfig, true);
     this.iconsContainer = createIconsContainer(this.innerBox);
@@ -1722,14 +1512,18 @@ class CI360Viewer {
       autoplayReverse,
       fullscreen,
       magnifier,
+      pointerZoom,
+      zoomMax,
+      zoomStep,
+      zoomControls,
+      zoomControlsPosition,
+      scrollHint,
       ciToken,
       ciFilters,
       ciTransformation,
       lazyload,
       dragSpeed,
       stopAtEdges,
-      pointerZoom,
-      pointerZoomTrigger = 'dblclick',
       imageInfo = 'black',
       initialIconShown,
       bottomCircle,
@@ -1770,11 +1564,17 @@ class CI360Viewer {
     const parsedImagesListX = safeJsonParse(imageListX, []);
     const parsedImagesListY = safeJsonParse(imageListY, []);
 
+    // Backward compatibility: pointerZoom > 0 maps to zoomMax if not explicitly set
+    const effectiveZoomMax = (adaptedConfig.zoomMax === 5 && pointerZoom > 1)
+      ? Math.min(pointerZoom, 5)
+      : (zoomMax || 5);
+
     this.viewerConfig = adaptedConfig;
     this.amountX = parsedImagesListX.length || amountX;
     this.amountY = parsedImagesListY.length || amountY;
     this.allowSpinX = !!this.amountX;
     this.allowSpinY = !!this.amountY;
+    this.orientation = this.allowSpinX ? ORIENTATIONS.X : ORIENTATIONS.Y;
     this.activeImageX = autoplayReverse ? this.amountX - 1 : 0;
     this.activeImageY = autoplayReverse ? this.amountY - 1 : 0;
     this.bottomCircleOffset = bottomCircleOffset;
@@ -1784,13 +1584,15 @@ class CI360Viewer {
     this.speed = speed;
     this.autoplayReverse = autoplayReverse;
     this.fullscreen = fullscreen;
-    this.magnifier = magnifier > 1 ? Math.min(magnifier, MAX_MAGNIFIER_LEVEL) : 0;
+    this.zoomMax = effectiveZoomMax;
+    this.zoomStep = zoomStep || 0.5;
+    this.zoomControls = zoomControls ?? true;
+    this.zoomControlsPosition = zoomControlsPosition || 'bottom-left';
+    this.scrollHint = scrollHint ?? true;
     this.dragSpeed = Math.max(dragSpeed, MIN_DRAG_SPEED);
     this.stopAtEdges = stopAtEdges;
     this.ciParams = ciParams;
     this.apiVersion = apiVersion;
-    this.pointerZoom = pointerZoom > 1 ? Math.min(pointerZoom, MAX_POINTER_ZOOM) : null;
-    this.pointerZoomTrigger = pointerZoomTrigger;
     this.keysReverse = keysReverse;
     this.info = imageInfo;
     this.keys = keys;

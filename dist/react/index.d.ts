@@ -11,6 +11,11 @@ export type AutoplayBehavior = 'spin-x' | 'spin-y' | 'spin-xy' | 'spin-yx';
 export type Theme = 'light' | 'dark';
 
 /**
+ * Position options for the zoom controls toolbar
+ */
+export type ZoomControlsPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+
+/**
  * Hotspot trigger mode - hover or click
  */
 export type HotspotTrigger = 'hover' | 'click';
@@ -33,6 +38,7 @@ export interface HotspotPosition {
  * Priority: content (raw HTML) > data (built-in template) > nothing.
  */
 export interface PopoverData {
+  id?: string;
   title?: string;
   description?: string;
   price?: string;
@@ -73,12 +79,9 @@ export interface Hotspot {
 }
 
 /**
- * Hint configuration
+ * Valid hint types for the interaction hints overlay
  */
-export interface Hint {
-  text: string;
-  icon?: 'drag' | 'scroll' | 'pinch' | 'keys';
-}
+export type HintType = 'drag' | 'swipe' | 'click' | 'dblclick' | 'pinch' | 'keys' | 'fullscreen';
 
 /**
  * Spin event data
@@ -154,16 +157,23 @@ export interface CI360Config {
   stopAtEdges?: boolean;
   inertia?: boolean;
   fullscreen?: boolean;
+  /** @deprecated Use zoomMax instead. Will be ignored. */
   magnifier?: number | null;
+  /** @deprecated Zoom is now always via double-click, Ctrl+scroll, buttons. */
   pointerZoom?: number;
   pinchZoom?: boolean;
+  zoomMax?: number;
+  zoomStep?: number;
+  zoomControls?: boolean;
+  zoomControlsPosition?: ZoomControlsPosition;
+  scrollHint?: boolean;
   bottomCircle?: boolean;
   bottomCircleOffset?: number;
   initialIconShown?: boolean;
   hide360Logo?: boolean;
   logoSrc?: string;
   imageInfo?: boolean;
-  hints?: boolean | Hint[];
+  hints?: boolean | HintType[];
   theme?: Theme;
   markerTheme?: MarkerTheme;
   brandColor?: string;
@@ -188,6 +198,9 @@ export interface CI360Config {
   onZoomOut?: (data: BaseEventData) => void;
   onDragStart?: (data: BaseEventData) => void;
   onDragEnd?: (data: BaseEventData) => void;
+  onHotspotOpen?: (hotspotId: string) => void;
+  onHotspotClose?: (hotspotId: string) => void;
+  onProductClick?: (productId: string, hotspotId: string) => void;
   onError?: (data: ErrorEventData) => void;
 }
 
@@ -203,6 +216,15 @@ export interface CI360ViewerInstance {
   stopAutoplay: () => void;
   toggleZoom: (event?: MouseEvent) => void;
   removeZoom: () => void;
+  zoomPan?: {
+    zoomIn: () => void;
+    zoomOut: () => void;
+    resetZoom: () => void;
+    setZoom: (level: number) => void;
+    zoomTowardPoint: (level: number, clientX: number, clientY: number) => void;
+    getZoom: () => number;
+    isZoomed: () => boolean;
+  };
   animateToFrame: (frame: number, hotspotId?: string) => void;
   destroy: () => void;
   update: (config: Partial<CI360Config>) => void;
@@ -236,6 +258,8 @@ export interface CI360ViewerRef {
   stop: () => void;
   zoomIn: () => void;
   zoomOut: () => void;
+  resetZoom: () => void;
+  setZoom: (level: number) => void;
   goToFrame: (frame: number, hotspotId?: string) => void;
   getViewer: () => CI360ViewerInstance | null;
 }
@@ -246,6 +270,7 @@ export interface CI360ViewerRef {
 export interface UseCI360Return {
   viewer: CI360ViewerInstance | null;
   isReady: boolean;
+  getViewer: () => CI360ViewerInstance | null;
 }
 
 /**

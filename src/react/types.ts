@@ -15,6 +15,17 @@ export type AutoplayBehavior =
 export type Theme = 'light' | 'dark';
 
 /**
+ * Position options for the zoom controls toolbar
+ */
+export type ZoomControlsPosition =
+  | 'top-left'
+  | 'top-center'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right';
+
+/**
  * Hotspot orientation
  */
 export type HotspotOrientation = 'x' | 'y';
@@ -73,12 +84,9 @@ export interface Hotspot {
 }
 
 /**
- * Hint configuration
+ * Valid hint types for the interaction hints overlay
  */
-export interface Hint {
-  text: string;
-  icon?: 'drag' | 'scroll' | 'pinch' | 'keys';
-}
+export type HintType = 'drag' | 'swipe' | 'click' | 'dblclick' | 'pinch' | 'keys' | 'fullscreen';
 
 /**
  * Spin event data
@@ -159,16 +167,23 @@ export interface CI360Config {
 
   // UI Features
   fullscreen?: boolean;
+  /** @deprecated Use zoomMax instead. Will be ignored. */
   magnifier?: number | null;
+  /** @deprecated Zoom is now always via double-click, Ctrl+scroll, buttons. */
   pointerZoom?: number;
   pinchZoom?: boolean;
+  zoomMax?: number;
+  zoomStep?: number;
+  zoomControls?: boolean;
+  zoomControlsPosition?: ZoomControlsPosition;
+  scrollHint?: boolean;
   bottomCircle?: boolean;
   bottomCircleOffset?: number;
   initialIconShown?: boolean;
   hide360Logo?: boolean;
   logoSrc?: string;
   imageInfo?: boolean;
-  hints?: boolean | Hint[];
+  hints?: boolean | HintType[];
   theme?: Theme;
   markerTheme?: MarkerTheme;
   brandColor?: string;
@@ -231,6 +246,15 @@ export interface CI360ViewerInstance {
   // Zoom
   toggleZoom: (event?: MouseEvent) => void;
   removeZoom: () => void;
+  zoomPan?: {
+    zoomIn: () => void;
+    zoomOut: () => void;
+    resetZoom: () => void;
+    setZoom: (level: number) => void;
+    zoomTowardPoint: (level: number, clientX: number, clientY: number) => void;
+    getZoom: () => number;
+    isZoomed: () => boolean;
+  };
 
   // Navigation
   animateToFrame: (frame: number, hotspotId?: string) => void;
@@ -298,14 +322,25 @@ export interface CI360ViewerRef {
   stop: () => void;
 
   /**
-   * Toggle zoom in
+   * Zoom in by one step
    */
   zoomIn: () => void;
 
   /**
-   * Zoom out
+   * Zoom out by one step
    */
   zoomOut: () => void;
+
+  /**
+   * Reset zoom to 1x
+   */
+  resetZoom: () => void;
+
+  /**
+   * Set zoom to a specific level
+   * @param level - Zoom level (1 = no zoom)
+   */
+  setZoom: (level: number) => void;
 
   /**
    * Animate to a specific frame

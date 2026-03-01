@@ -34,5 +34,7 @@ export type {
   PopoverData,
   HotspotOrientation,
   HotspotPosition,
-  Hint,
+  HintType,
+  MarkerStyle,
+  MarkerTheme,
 } from './types';

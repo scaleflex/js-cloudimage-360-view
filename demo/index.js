@@ -69,12 +69,8 @@ const spinDirections = document.getElementById('spin-directions');
 const copyText = document.getElementById('copy-text');
 const codeBlock = document.getElementById('code-block');
 const codeWrapper = document.getElementById('code-wrapper');
-const pointerZoomSelector = document.getElementById('pointer-zoom-selector');
-const pointerZoomTriggerSelector = document.getElementById('pointer-zoom-trigger');
-
 const copyButton = document.querySelector('.code-section .copy-button');
 const outputCode = document.querySelector('.output-code');
-const pointerZoomCheckbox = document.getElementById('pointer-checkbox');
 const pluginCheckboxOptions = document.querySelectorAll('.plugin-option');
 const imageXAmountSelector = document.getElementById('x-images-selector');
 const imageYSelector = document.getElementById('images-y');
@@ -215,31 +211,6 @@ function changeImageXAmount(event) {
   updateCodeBlock(updatedView.viewerConfig);
 }
 
-function changePointerZoom(event) {
-  const checked = event.target.checked;
-  const value = parseFloat(pointerZoomSelector.value, 10);
-  const updatedView = instance.updateView('demo-generator', { pointerZoom: checked ? value : false });
-  pointerZoomSelector.disabled = !checked;
-
-  updateCodeBlock(updatedView.viewerConfig);
-}
-
-function changePointerZoomSelector(event) {
-  const { value } = event.target;
-
-  const updatedView = instance.updateView('demo-generator', { pointerZoom: parseFloat(value, 10) });
-
-  updateCodeBlock(updatedView.viewerConfig);
-}
-
-function changePointerZoomTrigger(event) {
-  const { value } = event.target;
-
-  const updatedView = instance.updateView('demo-generator', { pointerZoomTrigger: value });
-
-  updateCodeBlock(updatedView.viewerConfig);
-}
-
 function pluginCheckboxOptionsHandler(event) {
   const checked = event.target.checked;
   const key = event.target.getAttribute('data-plugin-property');
@@ -288,10 +259,7 @@ function updateCodeBlock(config) {
 
 dragSpeed.addEventListener('change', changeDragSpeed);
 autoplaySpeed.addEventListener('change', changeAutoplaySpeed);
-pointerZoomCheckbox.addEventListener('change', changePointerZoom);
 imageXAmountSelector.addEventListener('change', changeImageXAmount);
-pointerZoomSelector.addEventListener('change', changePointerZoomSelector);
-pointerZoomTriggerSelector.addEventListener('change', changePointerZoomTrigger);
 spinDirections.addEventListener('change', changeSpinDirectionHandler);
 copyButton.addEventListener('click', copyCodeHandler);
 folderPathInput.addEventListener('change', changeCustomFolder);
@@ -331,11 +299,10 @@ const config = {
     : { amountX: 73 }),
   lazyload: true,
   speed: 120,
-  pointerZoom: isMobileDevice ? false : 2, // Disable pointer zoom on mobile
+  zoomMax: 3,
   responsive: 'scaleflex',
   autoplay: true,
   fullscreen: true,
-  magnifier: isMobileDevice ? false : 3, // Disable magnifier on mobile
   playOnce: true,
   bottomCircle: false,
   hotspots: isMobileDevice ? undefined : GURKHA_SUV_HOTSPOTS_CONFIG, // Disable hotspots on mobile
@@ -366,14 +333,13 @@ const demoGeneratorConfig = {
     : { amountX: 233 }),
   autoplay: true,
   speed: 100,
-  pointerZoom: isMobileDevice ? false : 1.5, // Disable pointer zoom on mobile
   dragSpeed: 100,
   bottomCircle: false,
   fullscreen: true,
   keys: true,
   responsive: 'scaleflex',
   lazyload: true,
-  hints: true, // Auto-detect: swipe+pinch on mobile, drag+click on desktop
+  hints: false,
   // Event callbacks - only log on desktop to avoid memory pressure from logging
   ...(isMobileDevice ? {} : {
     onReady: (event) => {

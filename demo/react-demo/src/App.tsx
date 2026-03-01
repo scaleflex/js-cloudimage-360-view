@@ -79,13 +79,13 @@ function TwoAxisExample() {
 function ZoomExample() {
   return (
     <div className="demo-section">
-      <h2>Pointer Zoom</h2>
-      <p>Click to zoom in and move mouse to pan. Click again to zoom out.</p>
+      <h2>Zoom</h2>
+      <p>Double-click to zoom in, Ctrl+scroll to zoom, or use zoom controls. Drag to pan when zoomed.</p>
       <CI360Viewer
         folder="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile/"
         filenameX="product-{index}.jpg"
         amountX={60}
-        pointerZoom={3}
+        zoomMax={3}
         fullscreen
         aspectRatio="1/1"
         style={{ width: '100%', maxWidth: 400 }}
@@ -139,7 +139,7 @@ function EventsExample() {
         onDragEnd={() => addEvent('onDragEnd')}
         onZoomIn={(data) => addEvent(`onZoomIn (level: ${data.zoomLevel})`)}
         onZoomOut={() => addEvent('onZoomOut')}
-        pointerZoom={2}
+        zoomMax={2}
         aspectRatio="1/1"
         style={{ width: '100%', maxWidth: 400 }}
       />

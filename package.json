@@ -1,6 +1,6 @@
 {
   "name": "js-cloudimage-360-view",
-  "version": "4.5.3",
+  "version": "4.5.4",
   "main": "dist/js-cloudimage-360-view.min.js",
   "types": "src/types/ci360.d.ts",
   "files": [

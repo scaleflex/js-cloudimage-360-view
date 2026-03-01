@@ -41,7 +41,6 @@ export const THROTTLE_TIME = isMobileDevice ? 32 : 10;
 
 // Timing constants
 export const DRAG_START_DELAY = 150;
-export const ZOOM_TRANSITION_DELAY = 800;
 export const POPPER_HIDE_DELAY = 150;
 export const POPPER_REMOVE_DELAY = 200;
 
@@ -49,6 +48,6 @@ export const POPPER_REMOVE_DELAY = 200;
 export const DRAG_SPEED_DIVISOR = 50;
 export const MIN_DRAG_SPEED = 50;
 
-// Zoom constraints
-export const MAX_MAGNIFIER_LEVEL = 5;
-export const MAX_POINTER_ZOOM = 5;
+// Zoom defaults
+export const ZOOM_STEP_DEFAULT = 0.5;
+export const PAN_STEP_KEYBOARD = 50;

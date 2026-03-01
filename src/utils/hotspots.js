@@ -54,8 +54,8 @@ export const fillEmptyPositions = (positions) => {
       }
 
       updatedPositions[key] = {
-        x: x || lastValidX,
-        y: y || lastValidY,
+        x: x ?? lastValidX,
+        y: y ?? lastValidY,
       };
     }
   }
@@ -108,15 +108,10 @@ export const createPopperElement = (content, id, parentElement) => {
 };
 
 export const adaptHotspotConfig = (hotspotsConfig) => {
-  const updatedHotspotConfig = [...hotspotsConfig];
-
-  updatedHotspotConfig.forEach((hotspot, index) => {
+  return hotspotsConfig.map((hotspot) => {
     const updatedPositions = { ...fillEmptyPositions(hotspot.positions) };
-    updatedHotspotConfig[index].initialPositions = updatedPositions;
-    updatedHotspotConfig[index].positions = updatedPositions;
+    return { ...hotspot, initialPositions: updatedPositions, positions: updatedPositions };
   });
-
-  return updatedHotspotConfig;
 };
 
 export const calculateHotspotPositions = ({

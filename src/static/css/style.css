@@ -16,10 +16,11 @@
   --ci360-icon-size: 20px;
 
   /* Initial 360 icon */
-  --ci360-initial-icon-bg: transparent;
+  --ci360-initial-icon-bg: rgba(255, 255, 255, 0.15);
   --ci360-initial-icon-color: #ffffff;
   --ci360-initial-icon-size: 100px;
-  --ci360-initial-icon-shadow: none;
+  --ci360-initial-icon-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  --ci360-initial-icon-border-radius: 16px;
 
   /* Loading spinner */
   --ci360-spinner-color: rgba(0, 0, 0, 0.2);
@@ -29,16 +30,16 @@
   /* Fullscreen */
   --ci360-fullscreen-bg: #ffffff;
 
-  /* Magnifier */
-  --ci360-magnifier-size: 250px;
-  --ci360-magnifier-border: 2px solid rgba(0, 0, 0, 0.2);
-  --ci360-magnifier-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  /* Zoom controls (border-radius only; bg/color/shadow fall back to button vars at use site) */
+  --ci360-zoom-controls-border-radius: 8px;
+
+  /* Scroll hint */
+  --ci360-scroll-hint-bg: rgba(0, 0, 0, 0.7);
+  --ci360-scroll-hint-color: #ffffff;
+  --ci360-scroll-hint-border-radius: 20px;
 
   /* Focus */
   --ci360-focus-color: #0066cc;
-
-  /* Transition overlay */
-  --ci360-overlay-bg: rgba(255, 255, 255, 1);
 
   /* Hotspot markers */
   --ci360-hotspot-marker-size: 24px;
@@ -110,15 +111,16 @@
   --ci360-button-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   --ci360-icon-color: #e0e0e0;
   --ci360-icon-color-hover: #ffffff;
-  --ci360-initial-icon-bg: transparent;
-  --ci360-initial-icon-color: #ffffff;
-  --ci360-initial-icon-shadow: none;
   --ci360-spinner-color: rgba(255, 255, 255, 0.2);
   --ci360-spinner-accent: #e0e0e0;
   --ci360-fullscreen-bg: #1a1a1f;
-  --ci360-overlay-bg: rgba(26, 26, 31, 1);
-  --ci360-magnifier-border: 2px solid rgba(255, 255, 255, 0.2);
-  --ci360-magnifier-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --ci360-zoom-controls-bg: rgba(40, 40, 45, 0.9);
+  --ci360-zoom-controls-bg-hover: rgba(55, 55, 60, 0.95);
+  --ci360-zoom-controls-color: #e0e0e0;
+  --ci360-zoom-controls-color-hover: #ffffff;
+  --ci360-zoom-controls-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --ci360-scroll-hint-bg: rgba(255, 255, 255, 0.15);
+  --ci360-scroll-hint-color: #e0e0e0;
   --ci360-popper-bg: #1a1a1a;
   --ci360-popper-color: #f0f0f0;
   --ci360-popper-border: 1px solid rgba(255, 255, 255, 0.1);
@@ -206,17 +208,6 @@
   gap: 8px;
 }
 
-.cloudimage-360-transition-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--ci360-overlay-bg);
-  opacity: 0;
-  transition: all 1s ease-out;
-  z-index: 10;
-}
 
 /* ============================================
    Buttons
@@ -279,16 +270,19 @@
   width: var(--ci360-initial-icon-size);
   /* Height based on icon aspect ratio 150:87 */
   aspect-ratio: 150 / 87;
-  border-radius: var(--ci360-initial-icon-border-radius, 0);
+  border-radius: var(--ci360-initial-icon-border-radius);
   background-color: var(--ci360-initial-icon-bg);
   box-shadow: var(--ci360-initial-icon-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s ease;
   color: var(--ci360-initial-icon-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  z-index: 21;
   user-select: none;
+  padding: 12px 16px;
 }
 
 .cloudimage-initial-icon svg {
@@ -296,8 +290,6 @@
   height: auto;
   color: var(--ci360-initial-icon-color);
   fill: var(--ci360-initial-icon-color);
-  /* Drop shadow for visibility on any background */
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
 .cloudimage-initial-icon:hover {
@@ -391,6 +383,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Fit canvas within the viewport in fullscreen (contain, not fill).
+   Canvas is a replaced element so auto + max constraints preserve aspect ratio.
+   !important overrides the inline width:100% set during canvas creation. */
+.cloudimage-360--fullscreen canvas {
+  width: auto !important;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /* ============================================
@@ -499,27 +500,138 @@
 }
 
 /* ============================================
-   Magnifier Glass
+   Zoom Controls
    ============================================ */
 
-.cloudimage-360-img-magnifier-glass {
-  background-color: #fff;
-  background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.9));
-  background-repeat: no-repeat;
+.cloudimage-360-zoom-controls {
   position: absolute;
-  border: var(--ci360-magnifier-border);
-  border-radius: 50%;
-  line-height: 200px;
-  text-align: center;
-  z-index: 1000;
-  width: var(--ci360-magnifier-size);
-  height: var(--ci360-magnifier-size);
-  top: -75px;
-  right: -85px;
-  box-shadow: var(--ci360-magnifier-shadow);
-  transition: box-shadow 200ms ease;
-  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  z-index: 100;
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.2s ease;
+  background: var(--ci360-zoom-controls-bg, var(--ci360-button-bg));
+  border-radius: var(--ci360-zoom-controls-border-radius);
+  box-shadow: var(--ci360-zoom-controls-shadow, var(--ci360-button-shadow));
+  padding: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cloudimage-360-zoom-controls.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Position variants */
+.cloudimage-360-zoom-controls[data-position="bottom-left"] {
+  bottom: 12px;
+  left: 12px;
+}
+
+.cloudimage-360-zoom-controls[data-position="bottom-right"] {
+  bottom: 12px;
+  right: 12px;
+}
+
+.cloudimage-360-zoom-controls[data-position="top-left"] {
+  top: 12px;
+  left: 12px;
+}
+
+.cloudimage-360-zoom-controls[data-position="top-right"] {
+  top: 12px;
+  right: 12px;
+}
+
+.cloudimage-360-zoom-controls[data-position="top-center"] {
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cloudimage-360-zoom-controls[data-position="bottom-center"] {
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cloudimage-360-zoom-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--ci360-zoom-controls-border-radius) - 2px);
+  cursor: pointer;
+  padding: 0;
+  color: var(--ci360-zoom-controls-color, var(--ci360-icon-color));
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cloudimage-360-zoom-btn:hover:not(:disabled) {
+  background: var(--ci360-zoom-controls-bg-hover, var(--ci360-button-bg-hover));
+  color: var(--ci360-zoom-controls-color-hover, var(--ci360-icon-color-hover));
+}
+
+.cloudimage-360-zoom-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.cloudimage-360-zoom-btn:focus {
+  outline: none;
+}
+
+.cloudimage-360-zoom-btn:focus-visible {
+  outline: 2px solid var(--ci360-focus-color);
+  outline-offset: -2px;
+}
+
+.cloudimage-360-zoom-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+/* Separator between zoom out and reset */
+.cloudimage-360-zoom-btn-reset {
+  border-left: 1px solid rgba(128, 128, 128, 0.2);
+  padding-left: 4px;
+  margin-left: 0;
+}
+
+/* ============================================
+   Scroll Hint Toast
+   ============================================ */
+
+.cloudimage-360-scroll-hint {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  background: var(--ci360-scroll-hint-bg);
+  color: var(--ci360-scroll-hint-color);
+  padding: 8px 16px;
+  border-radius: var(--ci360-scroll-hint-border-radius);
+  font-size: 13px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cloudimage-360-scroll-hint.visible {
+  opacity: 1;
 }
 
 /* ============================================
@@ -654,41 +766,25 @@
   }
 }
 
-/* Fullscreen timeline positioning */
+/* Fullscreen: keep timeline on the image (same style as normal mode) with edge spacing */
 .cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline {
-  padding: 24px 40px 20px;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.3) 60%,
-    transparent 100%
-  );
+  bottom: 0;
 }
 
-.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-track {
-  max-width: 600px;
-  /* Make track visible on dark gradient background */
-  background: rgba(255, 255, 255, 0.3);
+/* Fullscreen bottom spacing for hints, zoom controls, and timeline */
+.cloudimage-360--fullscreen .cloudimage-360-hints-overlay {
+  padding-bottom: 32px;
 }
 
-/* Adjust indicator and dot colors for better visibility on dark background */
-.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-indicator {
-  background: var(--ci360-hotspot-brand-color);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+.cloudimage-360--fullscreen .cloudimage-360-zoom-controls[data-position^="bottom"] {
+  bottom: 38px;
 }
 
-.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-dot {
-  background: var(--ci360-timeline-dot-color);
-  border-color: #ffffff;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* Position tooltips higher in fullscreen to not overlay timeline */
-.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-tooltip {
-  bottom: calc(100% + 20px);
-}
-
-/* Push hints above the timeline in fullscreen */
+/* Push hints and zoom controls above the timeline in fullscreen */
 .cloudimage-360--fullscreen .cloudimage-360-inner-box.has-hotspot-timeline .cloudimage-360-hints-overlay {
-  padding-bottom: 64px;
+  padding-bottom: 72px;
+}
+
+.cloudimage-360--fullscreen .cloudimage-360-inner-box.has-hotspot-timeline .cloudimage-360-zoom-controls[data-position^="bottom"] {
+  bottom: 72px;
 }

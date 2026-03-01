@@ -100,6 +100,11 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
     magnifier,
     pointerZoom,
     pinchZoom,
+    zoomMax,
+    zoomStep,
+    zoomControls,
+    zoomControlsPosition,
+    scrollHint,
     bottomCircle,
     bottomCircleOffset,
     initialIconShown,
@@ -108,6 +113,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
     imageInfo,
     hints,
     theme,
+    markerTheme,
+    brandColor,
 
     // Cloudimage CDN
     ciToken,
@@ -141,6 +148,7 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
     onDragEnd,
     onHotspotOpen,
     onHotspotClose,
+    onProductClick,
     onError,
 
     ...restProps
@@ -182,6 +190,11 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       magnifier,
       pointerZoom,
       pinchZoom,
+      zoomMax,
+      zoomStep,
+      zoomControls,
+      zoomControlsPosition,
+      scrollHint,
       bottomCircle,
       bottomCircleOffset,
       initialIconShown,
@@ -190,6 +203,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       imageInfo,
       hints,
       theme,
+      markerTheme,
+      brandColor,
 
       // Cloudimage CDN
       ciToken,
@@ -223,6 +238,7 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       onDragEnd,
       onHotspotOpen,
       onHotspotClose,
+      onProductClick,
       onError,
     }),
     [
@@ -257,6 +273,11 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       magnifier,
       pointerZoom,
       pinchZoom,
+      zoomMax,
+      zoomStep,
+      zoomControls,
+      zoomControlsPosition,
+      scrollHint,
       bottomCircle,
       bottomCircleOffset,
       initialIconShown,
@@ -265,6 +286,8 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       imageInfo,
       hints,
       theme,
+      markerTheme,
+      brandColor,
 
       // Cloudimage CDN
       ciToken,
@@ -298,6 +321,7 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       onDragEnd,
       onHotspotOpen,
       onHotspotClose,
+      onProductClick,
       onError,
     ]
   );
@@ -316,8 +340,10 @@ const CI360ViewerComponent: ForwardRefRenderFunction<
       moveBottom: (steps = 1) => getViewer()?.moveBottom(false, steps),
       play: () => getViewer()?.play(),
       stop: () => getViewer()?.stopAutoplay(),
-      zoomIn: () => getViewer()?.toggleZoom(),
-      zoomOut: () => getViewer()?.removeZoom(),
+      zoomIn: () => getViewer()?.zoomPan?.zoomIn(),
+      zoomOut: () => getViewer()?.zoomPan?.zoomOut(),
+      resetZoom: () => getViewer()?.zoomPan?.resetZoom(),
+      setZoom: (level: number) => getViewer()?.zoomPan?.setZoom(level),
       goToFrame: (frame: number, hotspotId?: string) =>
         getViewer()?.animateToFrame(frame, hotspotId),
       getViewer: () => getViewer(),

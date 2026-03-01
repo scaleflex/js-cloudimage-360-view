@@ -28,7 +28,6 @@ class Hotspot {
     this.hidePopper = this.hidePopper.bind(this);
     this.forceHidePopper = this.forceHidePopper.bind(this);
     this.imageAspectRatio = imageAspectRatio;
-    this.hotspotElements = new Map();
     this.popperListeners = [];
     this.trigger = options.trigger || 'hover'; // 'hover' or 'click'
     this.onOpen = options.onOpen || null;
@@ -82,7 +81,7 @@ class Hotspot {
     const popperOptions = createPopperOptions(this.container);
 
     this.popper = createPopperElement(content, id, this.container.parentElement);
-    this.popper.setAttribute('data-show', '');
+    // Don't set data-show yet — wait for Popper.js to position the element first
     this.currentHotspotElement = hotspotElement;
     hotspotElement.setAttribute('aria-expanded', 'true');
     hotspotElement.setAttribute('aria-describedby', `cloudimage-360-popper-${id}`);
@@ -129,8 +128,17 @@ class Hotspot {
       );
     }
 
+    const popperJs = createPopper(hotspotElement, this.popper, popperOptions);
+
+    // Synchronously compute position before revealing the popper.
+    // Without this, the element is briefly visible at its default DOM position
+    // (e.g. top-left corner) before Popper.js repositions it asynchronously.
+    popperJs.forceUpdate();
+    this.popper.setAttribute('data-show', '');
+    this.shouldHidePopper = false;
+
     this.popperInstance = {
-      ...createPopper(hotspotElement, this.popper, popperOptions),
+      ...popperJs,
       keepOpen,
       instanceId: id,
     };
@@ -140,6 +148,7 @@ class Hotspot {
 
   checkAndHidePopper() {
     if (this.shouldHidePopper && !this.popperInstance?.keepOpen) {
+      if (this.hidePopperTimeout) clearTimeout(this.hidePopperTimeout);
       this.hidePopperTimeout = setTimeout(() => {
         if (this.shouldHidePopper) this.hidePopper();
       }, POPPER_HIDE_DELAY);
@@ -163,10 +172,11 @@ class Hotspot {
       this.currentHotspotElement = null;
     }
 
-    if (this.popperInstance) {
-      this.popperInstance.destroy();
-      this.popperInstance = null;
-    }
+    // Capture the Popper.js instance but don't destroy yet — destroying resets
+    // position styles, which would cause the element to jump to its default
+    // DOM position during the fade-out opacity transition.
+    const popperInstanceToDestroy = this.popperInstance;
+    this.popperInstance = null;
 
     if (closingId != null) {
       try { this.onClose?.(closingId); } catch (e) { console.warn('onHotspotClose callback error:', e); }
@@ -178,8 +188,11 @@ class Hotspot {
       const popperToRemove = this.popper;
       this.popper = null;
       setTimeout(() => {
+        popperInstanceToDestroy?.destroy();
         popperToRemove.remove();
       }, POPPER_REMOVE_DELAY);
+    } else {
+      popperInstanceToDestroy?.destroy();
     }
 
     // Reset state
@@ -320,7 +333,6 @@ class Hotspot {
 
     this.resizeObserver.disconnect();
     this.hidePopper();
-    this.hotspotElements.clear();
     this.hotspotsContainer.innerHTML = '';
   }
 }
