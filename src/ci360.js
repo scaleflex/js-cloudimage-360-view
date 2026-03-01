@@ -18,7 +18,7 @@ class CI360 {
     return `ci360-${Math.random().toString(36).slice(2, 11)}`;
   }
 
-  init(container, config, fullscreen) {
+  init(container, config) {
     if (!container) return;
 
     const containerId = container.id || this.generateId();
@@ -26,7 +26,7 @@ class CI360 {
       container.id = containerId;
     }
 
-    const instance = new CI360Viewer(container, config, fullscreen);
+    const instance = new CI360Viewer(container, config);
     this.views.set(containerId, instance);
 
     // Auto-enable memory management on mobile (first init only)

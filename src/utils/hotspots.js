@@ -88,7 +88,7 @@ export const createPopperOptions = (container) => ({
   ],
 });
 
-export const createPopperElement = (content, id) => {
+export const createPopperElement = (content, id, parentElement) => {
   const popper = document.createElement('div');
   popper.className = 'cloudimage-360-popper';
   popper.id = `cloudimage-360-popper-${id}`;
@@ -103,7 +103,7 @@ export const createPopperElement = (content, id) => {
     popper.textContent = content;
   }
 
-  document.body.appendChild(popper);
+  (parentElement || document.body).appendChild(popper);
   return popper;
 };
 

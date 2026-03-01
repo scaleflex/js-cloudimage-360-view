@@ -1,14 +1,12 @@
 export { create360ViewCircleIcon } from './create-360-view-circle-icon';
 export { createInitialIcon } from './create-initial-icon';
 export { createCanvas } from './create-canvas';
-export { createCloseIcon } from './create-close-icon';
 export { createFullscreenIcon } from './create-fullscreen-icon';
 export { createIconsContainer } from './create-icons-container';
 export { createInnerBox } from './create-inner-box';
 export { createMagnifierIcon } from './create-magnifier-icon';
 export { createZoomOutIcon } from './create-zoom-out-icon';
 export { createLoader } from './create-loader';
-export { createFullscreenModal } from './create-fullscreen-modal';
 export { removeElementFromContainer } from './remove-element-from-container';
 export { createLoadingSpinner } from './create-loading-spinner';
 export { createTransitionOverlay } from './create-transition-overlay';

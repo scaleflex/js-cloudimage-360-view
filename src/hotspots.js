@@ -81,7 +81,7 @@ class Hotspot {
 
     const popperOptions = createPopperOptions(this.container);
 
-    this.popper = createPopperElement(content, id);
+    this.popper = createPopperElement(content, id, this.container.parentElement);
     this.popper.setAttribute('data-show', '');
     this.currentHotspotElement = hotspotElement;
     hotspotElement.setAttribute('aria-expanded', 'true');

@@ -6,7 +6,6 @@ import './static/css/hotspots.css';
 import {
   generateCdnPath,
   preloadImages,
-  createCloseIcon,
   createFullscreenIcon,
   createMagnifierIcon,
   createZoomOutIcon,
@@ -15,7 +14,6 @@ import {
   createIconsContainer,
   createCanvas,
   create360ViewCircleIcon,
-  createFullscreenModal,
   magnify,
   isCompletedOneCycle,
   getMovingDirection,
@@ -54,6 +52,8 @@ import {
   showHotspotTimeline,
   hideHotspotTimeline,
 } from './utils';
+import { setFullscreenIconState } from './utils/container-elements/create-fullscreen-icon';
+import { isFullscreenEnabled, getFullscreenElement, requestFullscreen, exitFullscreen } from './utils/fullscreen';
 
 import CanvasWorker from './canvas.worker.js?worker&inline';
 import MainThreadCanvasRenderer from './canvas-renderer';
@@ -65,10 +65,9 @@ const USE_MAIN_THREAD_CANVAS = typeof navigator !== 'undefined' &&
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 class CI360Viewer {
-  constructor(container, config, fullscreen) {
+  constructor(container, config) {
     this.container = container;
     this.isClicked = false;
-    this.fullscreenView = !!fullscreen;
     this.imagesX = [];
     this.imagesY = [];
     // Cap DPR on mobile to reduce canvas memory usage
@@ -208,10 +207,9 @@ class CI360Viewer {
   startInertia() {
     const friction = 0.95;
     const minVelocity = 0.01;
-    const container = this.fullscreenView ? document.body : this.container;
     const dragFactor = this.dragSpeed / DRAG_SPEED_DIVISOR;
-    const speedFactorX = dragFactor * (this.amountX / container.offsetWidth);
-    const speedFactorY = dragFactor * (this.amountY / container.offsetHeight);
+    const speedFactorX = dragFactor * (this.amountX / this.container.offsetWidth);
+    const speedFactorY = dragFactor * (this.amountY / this.container.offsetHeight);
 
     const animate = () => {
       // Apply friction
@@ -279,11 +277,10 @@ class CI360Viewer {
         allowSpinY: this.allowSpinY,
       }) || this.draggingDirection;
 
-    const container = this.fullscreenView ? document.body : this.container;
     const dragFactor = this.dragSpeed / DRAG_SPEED_DIVISOR;
 
-    const speedFactorX = dragFactor * (this.amountX / container.offsetWidth);
-    const speedFactorY = dragFactor * (this.amountY / container.offsetHeight);
+    const speedFactorX = dragFactor * (this.amountX / this.container.offsetWidth);
+    const speedFactorY = dragFactor * (this.amountY / this.container.offsetHeight);
     const itemsSkippedX = this.allowSpinX ? Math.abs(Math.round(deltaX * speedFactorX)) : 0;
     const itemsSkippedY = this.allowSpinY ? Math.abs(Math.round(deltaY * speedFactorY)) : 0;
 
@@ -412,7 +409,7 @@ class CI360Viewer {
         this.removeZoom();
       }, ZOOM_TRANSITION_DELAY);
     } else {
-      let width = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
+      let width = (this.pointerZoom ? document.body : this.container).offsetWidth;
 
       this.hideHotspots();
       this.showLoadingSpinner();
@@ -441,7 +438,7 @@ class CI360Viewer {
 
     event?.stopPropagation();
 
-    let width = (this.fullscreenView || this.pointerZoom ? document.body : this.container).offsetWidth;
+    let width = (this.pointerZoom ? document.body : this.container).offsetWidth;
 
     this.hideHotspots();
     this.hideAllIcons();
@@ -540,7 +537,7 @@ class CI360Viewer {
 
       // If not already zoomed, load higher quality images
       if (!this.isZoomed && this.pinchZoomLevel === 1) {
-        const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
+        const width = this.container.offsetWidth;
         this.hideHotspots();
         this.loadHigherQualityImages(width, () => {});
       }
@@ -857,8 +854,12 @@ class CI360Viewer {
   adaptCanvasSize(imageData) {
     const { naturalWidth, naturalHeight } = imageData;
     this.imageAspectRatio = naturalWidth / naturalHeight;
-    const containerWidth = this.fullscreenView ? window.innerWidth : this.canvas.clientWidth;
-    const containerHeight = this.fullscreenView ? window.innerHeight : this.canvas.clientHeight;
+
+    // Canvas always uses width:100%; height:auto — it fills the container width
+    // and the height follows from the image aspect ratio.
+    // In fullscreen, CSS flexbox on the inner-box centers it vertically.
+    const containerWidth = this.canvas.clientWidth;
+    const containerHeight = containerWidth / this.imageAspectRatio;
 
     this.canvasWorker.postMessage({
       action: 'adaptCanvasSize',
@@ -930,9 +931,9 @@ class CI360Viewer {
     if (this.hotspots) {
       this.hotspotsInstance = new Hotspot(this.hotspots, this.innerBox, this.imageAspectRatio, {
         trigger: this.hotspotTrigger,
-        onOpen: onHotspotOpen,
-        onClose: onHotspotClose,
-        onProductClick,
+        onOpen: this.onHotspotOpen,
+        onClose: this.onHotspotClose,
+        onProductClick: this.onProductClick,
       });
       // Show dots for the initial frame immediately
       this.hotspotsInstance.updateHotspotPosition(this.activeImageX, this.orientation);
@@ -971,7 +972,7 @@ class CI360Viewer {
     event.stopPropagation();
     const { src } =
       this.orientation === ORIENTATIONS.Y ? this.imagesY[this.activeImageY] : this.imagesX[this.activeImageX];
-    const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
+    const width = this.container.offsetWidth;
     const imageWidth = width * this.magnifier;
     const highPreviewCdnUrl = generateHighPreviewCdnUrl(src, imageWidth);
 
@@ -998,71 +999,41 @@ class CI360Viewer {
     loadImage(highPreviewCdnUrl, onLoadImage, onErrorImage);
   }
 
-  openFullscreenModal(event) {
+  toggleFullscreen(event) {
     event.stopPropagation();
 
-    // Close any open hotspot popups before entering fullscreen
     this.hideHotspotPopper();
 
-    // Release memory from the original viewer to prevent doubling memory usage
-    // This is especially important on mobile devices with limited memory
-    this.releaseMemory();
-
-    window.document.body.style.overflow = 'hidden';
-    const fullscreenContainer = createFullscreenModal(this.container);
-
-    this.fullscreenInstance = new CI360Viewer(fullscreenContainer, this.viewerConfig, true);
-    // Store reference to original viewer so fullscreen can call back
-    this.fullscreenInstance.originalViewer = this;
-
-    // Add resize listener to close fullscreen on window resize (e.g., device rotation)
-    this.boundResizeHandler = () => {
-      if (this.fullscreenInstance) {
-        this.closeFullscreenModal(new Event('resize'));
-      }
-    };
-    window.addEventListener('resize', this.boundResizeHandler);
-
-    this.emit('onFullscreenOpen');
-    this.announce('Opened fullscreen mode. Press Escape to exit.');
+    if (getFullscreenElement()) {
+      exitFullscreen();
+    } else {
+      requestFullscreen(this.container);
+    }
   }
 
-  closeFullscreenModal(event) {
-    event.stopPropagation();
+  onFullscreenChange() {
+    const isFullscreen = getFullscreenElement() === this.container;
+    const wasFullscreen = this.container.classList.contains('cloudimage-360--fullscreen');
 
-    // Get reference to original viewer (if this is the fullscreen instance)
-    const originalViewer = this.originalViewer || this;
-    const fullscreenInstance = this.fullscreenView ? this : originalViewer.fullscreenInstance;
+    if (isFullscreen === wasFullscreen) return;
 
-    // Remove resize listener
-    if (originalViewer.boundResizeHandler) {
-      window.removeEventListener('resize', originalViewer.boundResizeHandler);
-      originalViewer.boundResizeHandler = null;
-    }
+    this.container.classList.toggle('cloudimage-360--fullscreen', isFullscreen);
+    setFullscreenIconState(this.fullscreenIcon, isFullscreen);
 
-    // Close any open hotspot popups and destroy the fullscreen instance
-    if (fullscreenInstance) {
-      fullscreenInstance.hideHotspotPopper();
-
-      // Remove fullscreen modal from DOM
-      const fullscreenModal = fullscreenInstance.container.parentNode;
-      if (fullscreenModal && fullscreenModal.parentNode) {
-        fullscreenModal.parentNode.removeChild(fullscreenModal);
+    requestAnimationFrame(() => {
+      if (this.imagesX.length > 0) {
+        this.adaptCanvasSize(this.imagesX[this.activeImageX]);
+        this.updateView();
       }
+    });
 
-      fullscreenInstance.destroy();
-      if (originalViewer.fullscreenInstance) {
-        originalViewer.fullscreenInstance = null;
-      }
+    if (isFullscreen) {
+      this.emit('onFullscreenOpen');
+      this.announce('Opened fullscreen mode. Press Escape to exit.');
+    } else {
+      this.emit('onFullscreenClose');
+      this.announce('Exited fullscreen mode');
     }
-
-    window.document.body.style.overflow = 'visible';
-
-    // Reload images for the original viewer
-    originalViewer.reloadImages();
-
-    originalViewer.emit('onFullscreenClose');
-    originalViewer.announce('Exited fullscreen mode');
   }
 
   play() {
@@ -1186,9 +1157,14 @@ class CI360Viewer {
       this.innerBox.classList.remove('has-hotspot-timeline');
     }
 
+    // Exit fullscreen if active and clean up fullscreen class
+    if (getFullscreenElement() === this.container) {
+      exitFullscreen();
+    }
+
     // Remove theme and marker theme classes, clear container contents
     if (this.container) {
-      this.container.classList.remove('ci360-theme-dark', 'ci360-hotspot-marker-inverted', 'ci360-hotspot-marker-brand');
+      this.container.classList.remove('ci360-theme-dark', 'ci360-hotspot-marker-inverted', 'ci360-hotspot-marker-brand', 'cloudimage-360--fullscreen');
       this.container.style.removeProperty('--ci360-hotspot-brand-color');
       // Clear the container contents instead of replacing the element
       // This preserves React refs and other framework bindings
@@ -1310,19 +1286,12 @@ class CI360Viewer {
   }
 
   addFullscreenIcon() {
-    if (!this.fullscreen) return;
+    if (!this.fullscreen || !isFullscreenEnabled()) return;
 
     this.fullscreenIcon = createFullscreenIcon();
-    this.fullscreenIcon.onclick = this.openFullscreenModal.bind(this);
+    this.fullscreenIcon.onclick = this.toggleFullscreen.bind(this);
 
     this.iconsContainer.appendChild(this.fullscreenIcon);
-  }
-
-  addCloseFullscreenIcon() {
-    this.fullscreenCloseIcon = createCloseIcon();
-    this.fullscreenCloseIcon.onclick = this.closeFullscreenModal.bind(this);
-
-    this.iconsContainer.appendChild(this.fullscreenCloseIcon);
   }
 
   showFullscreenIcon() {
@@ -1549,8 +1518,8 @@ class CI360Viewer {
       this.addLoadingSpinner();
     }
 
-    if (!this.fullscreenView && !this.touchDevice) this.addMagnifierIcon();
-    if (!this.fullscreenView) this.addFullscreenIcon();
+    if (!this.touchDevice) this.addMagnifierIcon();
+    this.addFullscreenIcon();
     if (this.initialIconShown) this.addInitialIcon();
     if (this.bottomCircle) this.add360ViewCircleIcon();
   }
@@ -1592,6 +1561,7 @@ class CI360Viewer {
     }
 
     this.addEscKeyHandler();
+    this.addFullscreenChangeHandler();
   }
 
   removeEvents() {
@@ -1599,6 +1569,7 @@ class CI360Viewer {
     this.removeTouchEvents();
     this.removeKeyboardEvents();
     this.removeEscKeyHandler();
+    this.removeFullscreenChangeHandler();
   }
 
   addMouseEvents() {
@@ -1641,9 +1612,7 @@ class CI360Viewer {
     this.boundEscHandler = (event) => {
       if (event.keyCode !== 27) return;
 
-      if (this.fullscreenView) {
-        this.closeFullscreenModal(event);
-      } else if (this.isZoomed) {
+      if (this.isZoomed) {
         this.removeZoom();
       } else if (this.glass) {
         this.removeGlass();
@@ -1655,6 +1624,17 @@ class CI360Viewer {
 
   removeEscKeyHandler() {
     document.removeEventListener('keydown', this.boundEscHandler);
+  }
+
+  addFullscreenChangeHandler() {
+    this.boundFullscreenChange = this.onFullscreenChange.bind(this);
+    document.addEventListener('fullscreenchange', this.boundFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', this.boundFullscreenChange);
+  }
+
+  removeFullscreenChangeHandler() {
+    document.removeEventListener('fullscreenchange', this.boundFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', this.boundFullscreenChange);
   }
 
   removeMouseEvents() {
@@ -1703,8 +1683,6 @@ class CI360Viewer {
         [offscreenCanvas]
       );
     }
-
-    if (this.fullscreenView) this.addCloseFullscreenIcon();
 
     removeElementFromContainer(this.innerBox, '.cloudimage-360-placeholder');
   }
@@ -1827,6 +1805,9 @@ class CI360Viewer {
     this.dragReverse = dragReverse;
     this.hotspots = hotspots;
     this.hotspotTrigger = hotspotTrigger;
+    this.onHotspotOpen = onHotspotOpen;
+    this.onHotspotClose = onHotspotClose;
+    this.onProductClick = onProductClick;
     this.hide360Logo = hide360Logo;
     this.logoSrc = logoSrc;
     this.inertia = inertia;
@@ -1894,7 +1875,7 @@ class CI360Viewer {
 
     if (update) return;
 
-    const width = (this.fullscreenView ? document.body : this.container).offsetWidth;
+    const width = this.container.offsetWidth;
     const cdnPathX =
       this.allowSpinX && !parsedImagesListX.length ? generateCdnPath(this.srcXConfig, width) : null;
     const cdnPathY =

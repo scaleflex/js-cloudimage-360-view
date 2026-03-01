@@ -377,23 +377,20 @@
 }
 
 /* ============================================
-   Fullscreen Modal
+   Fullscreen (native browser Fullscreen API)
    ============================================ */
 
-.cloudimage-360-fullscreen-modal {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.cloudimage-360--fullscreen {
   width: 100%;
   height: 100%;
-  z-index: 999;
   background-color: var(--ci360-fullscreen-bg);
 }
 
-.cloudimage-360-fullscreen-modal .cloudimage-360-inner-box {
+.cloudimage-360--fullscreen .cloudimage-360-inner-box {
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ============================================
@@ -657,8 +654,8 @@
   }
 }
 
-/* Fullscreen modal timeline positioning */
-.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline {
+/* Fullscreen timeline positioning */
+.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline {
   padding: 24px 40px 20px;
   background: linear-gradient(
     to top,
@@ -668,30 +665,30 @@
   );
 }
 
-.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-track {
+.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-track {
   max-width: 600px;
   /* Make track visible on dark gradient background */
   background: rgba(255, 255, 255, 0.3);
 }
 
 /* Adjust indicator and dot colors for better visibility on dark background */
-.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-indicator {
+.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-indicator {
   background: var(--ci360-hotspot-brand-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-dot {
+.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-dot {
   background: var(--ci360-timeline-dot-color);
   border-color: #ffffff;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Position tooltips higher in fullscreen to not overlay timeline */
-.cloudimage-360-fullscreen-modal .cloudimage-360-hotspot-timeline-tooltip {
+.cloudimage-360--fullscreen .cloudimage-360-hotspot-timeline-tooltip {
   bottom: calc(100% + 20px);
 }
 
 /* Push hints above the timeline in fullscreen */
-.cloudimage-360-fullscreen-modal .cloudimage-360-inner-box.has-hotspot-timeline .cloudimage-360-hints-overlay {
+.cloudimage-360--fullscreen .cloudimage-360-inner-box.has-hotspot-timeline .cloudimage-360-hints-overlay {
   padding-bottom: 64px;
 }
