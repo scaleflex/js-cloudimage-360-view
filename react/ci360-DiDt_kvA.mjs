@@ -1359,7 +1359,7 @@ function vs(e) {
   if (e.description && i.push(`<p class="ci360-popper-description">${dt(e.description)}</p>`), e.url && gs(e.url)) {
     const o = e.ctaText || "View details", s = e.id ? ` data-product-id="${xt(e.id)}"` : "";
     i.push(
-      `<a class="ci360-popper-cta" href="${xt(e.url)}"${s}>${dt(String(o))}</a>`
+      `<a class="ci360-popper-cta" href="${xt(e.url)}" target="_top"${s}>${dt(String(o))}</a>`
     );
   } else if (e.id) {
     const o = e.ctaText || "View details";
@@ -2342,8 +2342,8 @@ class En {
       { element: t, event: "mouseenter", handler: c }
     ), this.onProductClick) {
       const f = this.onProductClick, m = (x) => {
-        const y = x.target.closest(".ci360-popper-cta[data-product-id]");
-        y && f(y.dataset.productId, o);
+        const y = x.target.closest(".ci360-popper-cta");
+        y && f(y.dataset.productId ?? "", o);
       };
       this.popper.addEventListener("click", m), this.popperListeners.push(
         { element: this.popper, event: "click", handler: m }
@@ -2742,7 +2742,25 @@ class $e {
     this.pushImageToSet(t, i, o), this.updatePercentageInLoader(this.calculatePercentage());
   }
   onFirstImageLoaded(t, i) {
-    this.createContainers(t), this.adaptCanvasSize(i), this.drawImageOnCanvas(i);
+    this.createContainers(t), this.adaptCanvasSize(i), this.drawImageOnCanvas(i), this.setupResizeObserver();
+  }
+  setupResizeObserver() {
+    if (this.resizeObserver || !this.container) return;
+    let t = this.container.offsetWidth;
+    this.resizeObserver = new ResizeObserver((i) => {
+      const o = i[0];
+      if (!o) return;
+      const s = Math.round(o.contentRect.width);
+      s === t || s === 0 || (t = s, requestAnimationFrame(() => {
+        if (this.imagesX.length > 0) {
+          if (this.adaptCanvasSize(this.imagesX[this.activeImageX]), this.zoomPan) {
+            const n = this.getDrawDimensions();
+            n && this.zoomPan.setDrawSize(n.drawWidth, n.drawHeight, !0);
+          }
+          this.updateView();
+        }
+      }));
+    }), this.resizeObserver.observe(this.container);
   }
   onAllImagesLoaded() {
     if (this.addAllIcons(), this.isReady = !0, this.amountX = this.imagesX.length, this.amountY = this.imagesY.length, this.activeImageX = this.autoplayReverse ? this.amountX - 1 : 0, this.activeImageY = this.autoplayReverse ? this.amountY - 1 : 0, this.hotspots && (this.hotspotsInstance = new En(this.hotspots, this.innerBox, this.imageAspectRatio, {
@@ -2761,15 +2779,7 @@ class $e {
   }
   onFullscreenChange() {
     const t = te() === this.container, i = this.container.classList.contains("cloudimage-360--fullscreen");
-    t !== i && (this.container.classList.toggle("cloudimage-360--fullscreen", t), fo(this.fullscreenIcon, t), requestAnimationFrame(() => {
-      if (this.imagesX.length > 0) {
-        if (this.adaptCanvasSize(this.imagesX[this.activeImageX]), this.zoomPan) {
-          const o = this.getDrawDimensions();
-          o && this.zoomPan.setDrawSize(o.drawWidth, o.drawHeight, !0);
-        }
-        this.updateView();
-      }
-    }), t ? (this.emit("onFullscreenOpen"), this.announce("Opened fullscreen mode. Press Escape to exit.")) : (this.emit("onFullscreenClose"), this.announce("Exited fullscreen mode")));
+    t !== i && (this.container.classList.toggle("cloudimage-360--fullscreen", t), fo(this.fullscreenIcon, t), t ? (this.emit("onFullscreenOpen"), this.announce("Opened fullscreen mode. Press Escape to exit.")) : (this.emit("onFullscreenClose"), this.announce("Exited fullscreen mode")));
   }
   play() {
     if (this.isClicked) return;
@@ -2817,7 +2827,7 @@ class $e {
     }
   }
   destroy() {
-    this.stopAutoplay(), this.inertiaAnimationId && (cancelAnimationFrame(this.inertiaAnimationId), this.inertiaAnimationId = null), this.removeEvents(), this.zoomPan && (this.zoomPan.destroy(), this.zoomPan = null), this.gestureRecognizer && (this.gestureRecognizer.destroy(), this.gestureRecognizer = null), this.zoomControlsUI && (this.zoomControlsUI.destroy(), this.zoomControlsUI = null), this.scrollHintUI && (this.scrollHintUI.destroy(), this.scrollHintUI = null), this.closeImageBitmaps(this.imagesX), this.closeImageBitmaps(this.imagesY), this.imagesX = [], this.imagesY = [], this.canvasWorker && (this.canvasWorker.terminate(), this.canvasWorker = null), this.hotspotsInstance && this.hotspotsInstance.destroy(), this.hintsOverlay && this.hintsOverlay.parentNode && (this.hintsOverlay.parentNode.removeChild(this.hintsOverlay), this.hintsOverlay = null), this.hotspotTimeline && this.hotspotTimeline.parentNode && (this.hotspotTimeline.parentNode.removeChild(this.hotspotTimeline), this.hotspotTimeline = null, this.hotspotTimelineIndicator = null), this.innerBox && this.innerBox.classList.remove("has-hotspot-timeline"), te() === this.container && He(), this.container && (this.container.classList.remove("ci360-theme-dark", "ci360-hotspot-marker-inverted", "ci360-hotspot-marker-brand", "cloudimage-360--fullscreen"), this.container.style.removeProperty("--ci360-hotspot-brand-color"), this.container.innerHTML = "");
+    this.stopAutoplay(), this.inertiaAnimationId && (cancelAnimationFrame(this.inertiaAnimationId), this.inertiaAnimationId = null), this.removeEvents(), this.zoomPan && (this.zoomPan.destroy(), this.zoomPan = null), this.gestureRecognizer && (this.gestureRecognizer.destroy(), this.gestureRecognizer = null), this.zoomControlsUI && (this.zoomControlsUI.destroy(), this.zoomControlsUI = null), this.scrollHintUI && (this.scrollHintUI.destroy(), this.scrollHintUI = null), this.closeImageBitmaps(this.imagesX), this.closeImageBitmaps(this.imagesY), this.imagesX = [], this.imagesY = [], this.resizeObserver && (this.resizeObserver.disconnect(), this.resizeObserver = null), this.canvasWorker && (this.canvasWorker.terminate(), this.canvasWorker = null), this.hotspotsInstance && this.hotspotsInstance.destroy(), this.hintsOverlay && this.hintsOverlay.parentNode && (this.hintsOverlay.parentNode.removeChild(this.hintsOverlay), this.hintsOverlay = null), this.hotspotTimeline && this.hotspotTimeline.parentNode && (this.hotspotTimeline.parentNode.removeChild(this.hotspotTimeline), this.hotspotTimeline = null, this.hotspotTimelineIndicator = null), this.innerBox && this.innerBox.classList.remove("has-hotspot-timeline"), te() === this.container && He(), this.container && (this.container.classList.remove("ci360-theme-dark", "ci360-hotspot-marker-inverted", "ci360-hotspot-marker-brand", "cloudimage-360--fullscreen"), this.container.style.removeProperty("--ci360-hotspot-brand-color"), this.container.innerHTML = "");
   }
   /**
    * Release memory by closing ImageBitmap objects without destroying the viewer.
@@ -3203,4 +3213,4 @@ class Tn {
 export {
   Tn as default
 };
-//# sourceMappingURL=ci360-23B4uCh0.mjs.map
+//# sourceMappingURL=ci360-DiDt_kvA.mjs.map
