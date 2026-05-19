@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Issue #190 — Y-axis-only rotation</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 24px;
+        background: #f5f5f5;
+        color: #333;
+      }
+      h1 { margin: 0 0 6px; }
+      .lead { color: #555; max-width: 760px; margin-bottom: 24px; line-height: 1.5; }
+      code { background: #eef; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+      .row { display: flex; gap: 24px; flex-wrap: wrap; max-width: 1200px; }
+      .card { flex: 1 1 420px; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+      .card h2 { margin: 0 0 8px; font-size: 17px; color: #1a73e8; }
+      .card p { color: #666; font-size: 14px; margin: 0 0 14px; }
+      .viewer { width: 100%; aspect-ratio: 1 / 1; background: #fafafa; border-radius: 8px; overflow: hidden; }
+      .tag { display: inline-block; background: #e6f4ea; color: #137333; padding: 3px 10px; border-radius: 4px; font-size: 12px; margin-right: 6px; }
+    </style>
+  </head>
+  <body>
+    <h1>Issue #190 — Y-axis-only rotation</h1>
+    <p class="lead">
+      Live reproduction of <a href="https://github.com/scaleflex/cloudimage-360-view/issues/190" target="_blank" rel="noopener">issue #190</a>:
+      using only <code>data-image-list-y</code> + <code>data-amount-y</code> (no X-axis).
+      <strong>Drag up/down</strong> on the viewer below to rotate vertically.
+      Built with <code>@cloudimage/360-view@4.10.0</code>.
+    </p>
+
+    <div class="row">
+      <div class="card">
+        <h2>Y-only via data-image-list-y</h2>
+        <p>JSON array of Y-axis image URLs + <code>data-amount-y="36"</code>. Drag <strong>vertically</strong>.</p>
+        <div
+          id="y-only-list"
+          class="viewer cloudimage-360"
+          data-amount-y="36"
+          data-hide-360-logo
+        ></div>
+        <div style="margin-top:10px;">
+          <span class="tag">data-image-list-y</span>
+          <span class="tag">amount-y=36</span>
+          <span class="tag">no X axis</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Y-only via filename-y pattern</h2>
+        <p>Equivalent setup using <code>data-folder</code> + <code>data-filename-y</code>.</p>
+        <div
+          class="viewer cloudimage-360"
+          data-folder="https://scaleflex.cloudimg.io/v7/demo/360-nike/"
+          data-filename-y="nike-y-{index}.jpg"
+          data-amount-y="36"
+          data-hide-360-logo
+        ></div>
+        <div style="margin-top:10px;">
+          <span class="tag">filename-y</span>
+          <span class="tag">amount-y=36</span>
+          <span class="tag">no X axis</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.cloudimage.io/360-view/4.10.0/360-view.min.js"></script>
+    <script>
+      // Build the JSON image list for the first viewer.
+      var base = "https://scaleflex.cloudimg.io/v7/demo/360-nike/nike-y-";
+      var urls = [];
+      for (var i = 1; i <= 36; i++) urls.push(base + i + ".jpg");
+      document
+        .getElementById("y-only-list")
+        .setAttribute("data-image-list-y", JSON.stringify(urls));
+
+      window.CI360.initAll();
+    </script>
+  </body>
+</html>
