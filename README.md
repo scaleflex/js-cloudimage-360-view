@@ -32,6 +32,7 @@
   <a href="https://scaleflex.github.io/cloudimage-360-view/">View Demo</a> ·
   <a href="https://codesandbox.io/p/sandbox/github/scaleflex/cloudimage-360-view/tree/master/codesandbox/react">React CodeSandbox</a> ·
   <a href="https://codesandbox.io/p/sandbox/github/scaleflex/cloudimage-360-view/tree/master/codesandbox/vanilla">Vanilla CodeSandbox</a> ·
+  <a href="https://codesandbox.io/p/sandbox/github/scaleflex/cloudimage-360-view/tree/master/codesandbox/issue-190-y-only">Y-Axis Only CodeSandbox</a> ·
   <a href="https://github.com/scaleflex/cloudimage-360-view/issues">Report Bug</a>
 </p>
 
