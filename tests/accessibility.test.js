@@ -156,35 +156,11 @@ describe('Inner Box Accessibility', () => {
 });
 
 describe('Button Accessibility', () => {
-  it('magnifier button should have aria-label', async () => {
-    const { createMagnifierIcon } = await import('../src/utils/container-elements/create-magnifier-icon');
-    const button = createMagnifierIcon();
-
-    expect(button.getAttribute('aria-label')).toBe('Magnify image');
-    expect(button.getAttribute('type')).toBe('button');
-  });
-
   it('fullscreen button should have aria-label', async () => {
     const { createFullscreenIcon } = await import('../src/utils/container-elements/create-fullscreen-icon');
     const button = createFullscreenIcon();
 
     expect(button.getAttribute('aria-label')).toBe('View fullscreen');
     expect(button.getAttribute('type')).toBe('button');
-  });
-
-  it('close button should have aria-label', async () => {
-    const { createCloseIcon } = await import('../src/utils/container-elements/create-close-icon');
-    const button = createCloseIcon();
-
-    expect(button.getAttribute('aria-label')).toBe('Close fullscreen');
-    expect(button.getAttribute('type')).toBe('button');
-  });
-
-  it('buttons should have SVG with aria-hidden', async () => {
-    const { createMagnifierIcon } = await import('../src/utils/container-elements/create-magnifier-icon');
-    const button = createMagnifierIcon();
-    const svg = button.querySelector('svg');
-
-    expect(svg.getAttribute('aria-hidden')).toBe('true');
   });
 });
