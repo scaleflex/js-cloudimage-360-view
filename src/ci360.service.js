@@ -596,7 +596,7 @@ class CI360Viewer {
     // Normal single-finger drag for rotation
     if (!this.isClicked || !event.touches || !event.touches[0]) return;
     const { pageX, pageY } = event.touches[0];
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault();
 
     this.drag(pageX, pageY);
   }

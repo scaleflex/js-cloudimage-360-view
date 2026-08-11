@@ -56,7 +56,7 @@ export class GestureRecognizer {
 
     // Two-finger pinch start
     if (event.touches.length === 2) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       this.isPinching = true;
       this.initialPinchDistance = this._getPinchDistance(event.touches[0], event.touches[1]);
       this.pinchBaseZoom = typeof this.getZoom === 'function' ? this.getZoom() : 1;
@@ -77,7 +77,7 @@ export class GestureRecognizer {
 
       if (dt < 300 && dx < 30 && dy < 30) {
         // Double-tap detected
-        event.preventDefault();
+        if (event.cancelable) event.preventDefault();
         event.stopPropagation(); // Prevent service touchStart from setting drag state
         this.lastTapTime = 0;
         if (typeof this.onDoubleTap === 'function') {
@@ -97,7 +97,7 @@ export class GestureRecognizer {
 
     // Pinch zoom
     if (this.isPinching && event.touches.length === 2) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
 
       const currentDistance = this._getPinchDistance(event.touches[0], event.touches[1]);
       if (this.initialPinchDistance === 0) {
@@ -123,7 +123,7 @@ export class GestureRecognizer {
       const currentZoom = typeof this.getZoom === 'function' ? this.getZoom() : 1;
       if (currentZoom <= 1) return; // Let 360 rotation handle it
 
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       const touch = event.touches[0];
       const dx = touch.pageX - this.lastTouchX;
       const dy = touch.pageY - this.lastTouchY;
