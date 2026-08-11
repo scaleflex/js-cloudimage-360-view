@@ -1,0 +1,11 @@
+{
+  "name": "cloudimage-360-issue-190-y-only",
+  "version": "1.0.0",
+  "description": "Live repro for issue #190 — Y-axis-only rotation with data-image-list-y / data-amount-y",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -l 5175"
+  },
+  "keywords": ["360-view", "y-axis", "issue-190", "cloudimage"],
+  "license": "MIT"
+}
